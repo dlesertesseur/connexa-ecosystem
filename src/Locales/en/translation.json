@@ -1,0 +1,605 @@
+{
+  "main": {
+    "title": "CONNEXA",
+    "subtitle": "Retail platform"
+  },
+
+  "signIn": "Sign In",
+  "forgotPassword": "Forgot Password",
+
+  "auth": {
+    "title": "Welcome back!",
+    "forgotPassword": "Forgot password?",
+    "doNotHaveAccount": "Do not have an account yet?",
+    "haveAccount": "Already have an account?",
+    "createAccount": "Create account"
+  },
+
+  "signUp": {
+    "title": "Create an account",
+    "message": "We are very glad that you are here, connexa is a platform that has many tools to help you with management and planning."
+  },
+
+  "message": {
+    "update": "Update was successful",
+    "savingData": "Updating data on the server",
+    "savingDataSub": "Please wait until the information is finished updating."
+  },
+
+  "status": {
+    "ok": "Success",
+    "error": "Something was wrong !!!"
+  },
+
+  "button": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "resetPassword": "Reset Password",
+    "back": "Back",
+    "accept": "Accept",
+    "cancel": "Cancel",
+    "dashboard": "Dashboard",
+    "refresh": "Refresh",
+    "seeMore": "See more",
+    "close": "Close",
+    "uploadImage": "Upload image",
+    "upload": "Upload products",
+    "download": "Dowload products",
+    "detailBysite": "Detail by site",
+    "logout": "Logout",
+    "save": "Save",
+    "finishEditing": "Finish editing",
+    "addPart": "Add part",
+    "backImage": "Back image",
+    "pixelMeterRelation": "Pixel/Meter",
+    "deleteImage": "Delete image",
+    "addLabel": "Add label",
+    "seek":"Seek",
+    "create":"Create",
+    "createAnyway":"Create anyway",
+    "createWorkerRelation":"Connect with this organization",
+    "photos":"Photos"
+  },
+
+  "label": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email address",
+    "password": "Password",
+    "enterprise": "Enterprise",
+    "receiveInfo": "I want to receive marketing promotions and updates via email.",
+    "name": "Name",
+    "value": "Value",
+    "principalMenu": "Main menu",
+    "crud": {
+      "create": "New",
+      "update": "Update",
+      "delete": "Delete",
+      "filter": "Filter",
+      "images": "Images"
+    },
+    "applications": "Applications",
+    "description": "Description",
+    "icon": "Icon",
+    "path": "Path",
+    "parameter": "Parameter",
+    "organization": "Origanization",
+    "project": "Project",
+    "creationDate": "Created",
+    "inRole": "Added to role",
+    "phone": "Phone",
+    "address": "Address",
+    "sku": "SKU",
+    "ean": "EAN",
+    "brand": "Brand",
+    "price": "Price",
+    "currency": "Currency",
+    "countryOfOrigin": "Origin",
+    "status": "Status",
+    "translations": "Translations",
+    "measureType": "Measure type",
+    "measureUnit": "Measure unit",
+    "measurementTypeForContentText": "Measurement type for content",
+    "measurementUnitForContentText": "Measurement unit for content",
+    "measurementTypeForSaleText": "Measurement type for sale",
+    "measurementUnitForSaleText": "Measurement unit for sale",
+    "measurementTypeForPriceText": "Measurement type for price",
+    "measurementUnitForPriceText": "Measurement unit for price",
+    "context": "Context",
+    "roles": "Roles",
+    "id": "Id",
+    "authorizations": "Authorizations",
+    "role": "Role",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "active": "Active",
+    "inactive": "Inactive",
+    "keepMeConnected": "Keep me connected",
+    "conditions": "I accept terms and conditions",
+    "selectedSite": "You are working on",
+    "noData": "Nothing found",
+    "site": "Site",
+    "siteDesc": "Select a site to see the defined plants",
+    "floor": "Floor",
+    "floorDesc": "Select a floor to see the plan",
+    "select": "Please select one",
+    "true": "True",
+    "false": "False",
+    "activateEdition": "Activate Edition",
+    "adjustImage": "Adjust image",
+    "dropZone": "Drag images here or click to select files",
+    "dropZoneSub": "Attach as many files as you like, each file should not exceed 5mb",
+    "measurementControl": "Measurement control",
+    "markerText": "Marker text",
+    "fontFamily": "Font family",
+    "fontSize": "Font size",
+    "textAlign": "Text align",
+    "left": "Left",
+    "center": "Center",
+    "right": "Right",
+    "textColor": "Text color"
+  },
+
+  "placeholder": {
+    "email": "you@connexa.com",
+    "password": "Your password",
+    "firstName": "Your first name",
+    "lastName": "Your last name",
+    "search": "Search by any field"
+  },
+
+  "language": {
+    "es": "Spanish",
+    "en": "English"
+  },
+
+  "validation": {
+    "required": "Required field",
+    "numeric": "Numeric value",
+    "emailFormat": "Wrong email format",
+    "idNumberFormat":"Wrong id number format",
+    "phoneNumberFormat":"Wrong phone number format",
+    "passwordFormat": "Password should include at least 6 characters",
+    "terms": "You have to accept the terms and conditions"
+  },
+
+  "errors": {
+    "title": "ERROR",
+    "notImplemented": "The application has not been implemented yet",
+    "loadApp": "Could not run application",
+    "1001": "Error trying to login",
+    "1002": "Registration error",
+    "404": "Invalid username or password"
+  },
+
+  "notification": {
+    "title": "Notification",
+    "signUpOK": "User was created successfully",
+    "delete": "Are you sure you want to delete the record?",
+    "createWorker": "The collaborator is not registered in any organization configured in the platform.",
+    "createWorkerRelation":"The collaborator is already registered on the platform. Do you want to associate it with this organization?",
+    "workerAlreadyExist": "The collaborator is already registered with this organization."
+  },
+
+  "app": {
+    "name": "zeeTrex - Platform",
+    "dashboard": {
+      "name": "DASHBOARD"
+    }
+  },
+
+  "userOptions": {
+    "profile": "Profile",
+    "account": "My account",
+    "logout": "Logout"
+  },
+
+  "crud": {
+    "application": {
+      "name": "APPLICATIONS",
+      "title": {
+        "create": "Create a new application",
+        "update": "Update application",
+        "delete": "Delete application"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "path": "Path",
+        "icon": "Icon"
+      },
+      "placeholder": {
+        "path": "/Cruds/"
+      },
+      "columns": ["Icon", "Name", "Description", "Path"],
+      "align": ["center", "left", "left", "left"],
+      "width": ["5%", "30%", "45%", "20%"],
+      "translation": {
+        "columns": ["Locale", "Language", "Name", "Description"],
+        "align": ["center", "left", "left", "left"],
+        "width": ["5%", "10%", "30%", "55%"]
+      }
+    },
+    "parameter": {
+      "name": "PARAMENTERS",
+      "title": "PARAMETERS CRUD",
+      "columns": ["Name", "Value"],
+      "align": ["left", "left"],
+      "width": ["30%", "70%"]
+    },
+    "brands":{
+      "name": "BRANDS",
+      "title": "BRANDS CRUD",
+      "columns": ["Name"],
+      "align": ["left"],
+      "width": ["100%"]
+    },
+    "organization": {
+      "name": "ORGANIZATION",
+      "title": {
+        "create": "Create a new organization",
+        "update": "Update organization",
+        "delete": "Delete organization"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description"
+      },
+      "columns": ["Name", "Description", "Creation date"],
+      "align": ["left", "left", "center"],
+      "width": ["30%", "50%", "20%"]
+    },
+
+    "project": {
+      "name": "PROJECTS",
+      "title": "CRUD PROJECTS",
+      "columns": ["Name", "Description", "Creation date"],
+      "align": ["left", "left", "center"],
+      "width": ["30%", "50%", "20%"]
+    },
+
+    "role": {
+      "name": "ROLES",
+      "title": {
+        "create": "Create a new role",
+        "update": "Update role",
+        "delete": "Delete role",
+        "assignApps": "Assign Apps"
+      },
+      "label": {
+        "name": "Name",
+        "context": "Context",
+        "applications": "Applications"
+      },
+      "columns": ["Name", "Context"],
+      "align": ["left", "left"],
+      "width": ["30%", "65%"],
+      "selectApplications": "Select applications",
+      "translation": {
+        "columns": ["Locale", "Language", "Name"],
+        "align": ["center", "left", "left"],
+        "width": ["15%", "15%", "70%"]
+      }
+    },
+
+    "toolbar": {
+      "create": "Create",
+      "update": "Update",
+      "remove": "Remove",
+      "search": "Search",
+      "translation": "Translation"
+    },
+
+    "site": {
+      "columns": ["Name", "Address", "Phone", "Context"],
+      "label": {
+        "name": "Name",
+        "address": "Address",
+        "phone": "Phone",
+        "context": "Context"
+      },
+      "placeholder": {
+        "name": "Site name",
+        "address": "Site address",
+        "phone": "Phone",
+        "context": "Context"
+      },
+      "title": {
+        "create": "Create a new site",
+        "update": "Update site",
+        "delete": "Delete site"
+      },
+      "message": {},
+      "check": {
+        "columns": ["Name", "Context"]
+      }
+    },
+
+    "brand": {
+      "title": {
+        "create": "Create a new brand",
+        "update": "Update brand",
+        "delete": "Delete brand"
+      },
+      "label":{
+        "name":"Name"
+      },
+      "placeholder":{
+        "name":"Storage structure name"
+      },
+      "name": "BRANDS",
+      "columns": ["Name"],
+      "align": ["left"],
+      "width": ["100%"]
+    },
+
+    "category": {
+      "title": {
+        "create": "Create a new category",
+        "update": "Update category",
+        "delete": "Delete category"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "toChildren": "Inspect",
+        "toParent": "Back"
+      },
+      "columns": ["Name", "Descrption", ""],
+      "align": ["left", "left"],
+      "width": ["25%", "60%"],
+      "menu": {
+        "add": "Add category",
+        "remove": "Remove category"
+      }
+    },
+
+    "product": {
+      "name": "PRODUCTS",
+      "title": {
+        "create": "Create a new product",
+        "update": "Update product",
+        "delete": "Delete product"
+      },
+      "label": {
+        "sku": "SKU",
+        "ean": "EAN",
+        "description": "Description",
+        "brand": "Brand",
+        "status": "Status",
+        "countryOfOrigin": "Country of origin"
+      },
+      "columns": ["Image", "SKU", "EAN", "Description", "Brand", "Country of origin", "Status"],
+      "align": ["center", "right", "right", "left", "left", "left"],
+      "width": ["5%", "5%", "10%", "50%", "10%", "10%", "10%"],
+      "tab1": "General information",
+      "tab2": "Measurement units",
+      "tab3": "Media",
+      "tab4": "3D"
+    },
+
+    "user": {
+      "name": "USER",
+      "title": "CRUD USER",
+      "columns": ["Last Name", "First Name", "Email", "Active"],
+      "align": ["left", "left", "left", "left"],
+      "width": ["30%", "30%", "35%", "5%"],
+      "selectRoles": "ROLES",
+      "selectSites": "SITES"
+    },
+
+    "context": {
+      "name": "CONTEXT",
+      "title": "CONTEXT CRUD",
+      "columns": ["ID", "Name", "Description"],
+      "align": ["right", "left", "left"],
+      "width": ["5%", "40%", "55%"]
+    },
+
+    "categorizer": {
+      "title": {
+        "addProducts": "Add products to category",
+        "categoriesTree": "Categories tree"
+      },
+      "label": {
+        "addProducts": "Add products",
+        "search": "Search",
+        "noData:": "Nothing here",
+        "assignedProducts": "Assigned products",
+        "unassignedProducts": "Unassigned products"
+      },
+      "columns": ["", "", "SKU", "EAN", "Description", "Status"],
+      "align": ["center", "center", "right", "left", "left", "left"],
+      "width": ["5%", "5%", "10%", "15%", "50%", "15%"]
+    },
+
+    "storageStructure": {
+      "columns": [
+        "Name",
+        "Width (m)",
+        "Height (m)",
+        "Depth (m)",
+        "X Position",
+        "Y Position",
+        "Z Position",
+        "Rotation (°)",
+        "Visible"
+      ],
+      "label": {
+        "name": "Name",
+        "numberOfModules": "Mumber of modules",
+        "moduleWidth": "Module width",
+        "moduleHeight": "Module height",
+        "moduleDepth": "Module depth",
+        "baseHeight": "Base height",
+        "shelfHeight": "Shelf height",
+        "verticalPanelWidth": "Vertical panel width",
+        "initialXPosition": "Initial X position",
+        "numberOfShelvesByModule": "Mumber of shelves by module",
+        "panelWidth": "Panel width",
+        "spaceHeight": "Space height",
+        "visible": "Visible"
+      },
+      "placeholder": {
+        "name": "Storage structure name",
+        "numberOfModules": "Mumber of modules",
+        "moduleWidth": "Module width",
+        "moduleHeight": "Module height",
+        "moduleDepth": "Module depth",
+        "baseHeight": "Base height",
+        "shelfHeight": "Shelf height",
+        "verticalPanelWidth": "Vertical panel width",
+        "initialXPosition": "Initial X position",
+        "numberOfShelvesByModule": "Mumber of shelves by module",
+        "panelWidth": "Panel width",
+        "spaceHeight": "Space height",
+        "visible": "Visible"
+      }
+    },
+
+    "floor": {
+      "columns": ["Name", "Description"],
+      "label": {
+        "name": "Name",
+        "description": "Description"
+      },
+      "placeholder": {
+        "name": "Floor name",
+        "description": "Description"
+      },
+
+      "title": {
+        "create": "Create a new Floor",
+        "update": "Update a Floor",
+        "delete": "Delete a Floor",
+        "images": "Add images to floor"
+      },
+      "message": {}
+    },
+
+    "worker": {
+      "name": "WORKERS",
+      "title": {
+        "create": "Create a new worker",
+        "update": "Update worker",
+        "delete": "Delete worker",
+        "findWorker": "Find worker",
+        "organizationList":"Organizations to which the collaborator belongs.",
+        "photos":"Associated photos list"
+      },
+      "label": {
+        "nid": "Identification (ID)",
+        "lastname": "Surnames",
+        "firstname": "Names",
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email",
+        "country": "Country",
+        "city": "City",
+        "status": "Status",
+        "active": "Active",
+        "birthDate": "Date of birth"
+      },
+      "placeholder":{
+        "phone": "054 11 5555 5555"
+      },
+      "columns": ["Image","ID","Surnames", "Names", "Birth date", "Address", "Phone", "Email", "Country", "City", "Status"],
+      "align": ["right","left", "left", "left", "left", "left", "left", "left", "left", "left"],
+      "findWorkerColumns": ["Origanization", "Since"],
+      "findWorkerAlign": ["left", "left"]
+    },
+
+    "shift": {
+      "name": "SHIFT",
+      "title": {
+        "create": "Create a new shift",
+        "update": "Update shift",
+        "delete": "Delete shift"
+      },
+      "label": {
+        "startTime":"Start time",
+        "durationsInHours": "Durations in hours",
+        "pauseType": "Pause type",
+        "pauseStartTime": "Pause start time",
+        "pauseDurationsInMinutes": "Pause duration",
+        "jobType": "Job type",
+        "retailer":"Retailer",
+        "store":"Store",
+        "retailerDesc": "Select a retailer to see the stores",
+        "storeDesc": "Select a store",
+        "date":"Date",
+        "pause":"Pause",
+        "worker":"Assigned to",
+        "timeline1":"Enter the store",
+        "timeline2":"Start of",
+        "timeline3":"End of",
+        "timeline4":"End of shift",
+        "radius":"Minimum distance for position detection"
+      },
+      "placeholder":{
+        "date": "YYYY/MM/DD"
+      },
+      "columns": ["Job","Start date and time","End date and time", "Pause type", "Pause start date and time", "Pause end date and time", "Start date", "End date"]
+    }
+  },
+
+  "title": {
+    "dialog": {
+      "alert": {
+        "delete": "Delete"
+      }
+    }
+  },
+
+  "dialog": {
+    "storageStructure": {
+      "title": "Storage Structure"
+    },
+    "textEditor": {
+      "title": "Text editor"
+    }
+  },
+
+  "constant": {
+    "category": {
+      "defaultName": "New category"
+    }
+  },
+
+  "view": {
+    "dashboard": {
+      "line1": {
+        "card": {
+          "totaSales": "Total sales",
+          "totalProductsSold": "Total products sold",
+          "totalOrders": "Total orders",
+          "averageTicket": "Average Ticket"
+        }
+      },
+      "line2": {
+        "card": {
+          "totalCustomer": "Total Customer",
+          "totalMoneyReturned": "Total Money Returned",
+          "totalReturnedProducts": "Total Returned Products",
+          "usersConnected": "Users Connected"
+        }
+      }
+    }
+  },
+
+  "tooltip": {
+    "operatorsStatus": "Shows the position and activity that operators are performing in real time",
+    "lockMove": "Blocks movement and rotation of storage structures"
+  },
+
+  "partType": {
+    "wall": "Wall",
+    "column": "Column",
+    "zone": "Zone"
+  },
+
+  "stageContextMenu": {
+    "addMarker": "Add marker"
+  }
+}
