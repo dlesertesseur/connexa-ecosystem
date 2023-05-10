@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API } from "../../Constants";
+import { config } from "../../Constants/config";
 
 const getUserLS = () => {
   const value = localStorage.getItem("user");
@@ -85,11 +86,18 @@ export const signIn = createAsyncThunk("auth/signIn", async (parameters, asyncTh
   const requestOptions = {
     method: "POST",
     mode: "cors",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": config.API_BASE + ":" + config.PORT,
+      "Access-Control-Request-Headers": "Content-Type, Authorization",
+    },
     body: body,
   };
 
   try {
+    console.log("signIn apiUrl -> ", apiUrl);
+    console.log("signIn requestOptions -> ", requestOptions);
+
     const res = await fetch(apiUrl, requestOptions);
     const data = await res.json();
 
@@ -167,7 +175,6 @@ export const assignRole = createAsyncThunk("auth/assignRole", async (parameters,
     await fetch(url, requestOptions).then((response) => {
       return response;
     });
-
   } catch (error) {
     return asyncThunk.rejectWithValue(error);
   }
@@ -184,16 +191,11 @@ export const unassignRole = createAsyncThunk("auth/unassignRole", async (paramet
       },
     };
 
-    let url =
-      API.auth.unassignRole +
-      parameters.siteId + "/" +
-      parameters.userId +"/" +
-      parameters.roleId;
+    let url = API.auth.unassignRole + parameters.siteId + "/" + parameters.userId + "/" + parameters.roleId;
 
     await fetch(url, requestOptions).then((response) => {
       return response;
     });
-
   } catch (error) {
     return asyncThunk.rejectWithValue(error);
   }
@@ -251,7 +253,6 @@ export const authSlice = createSlice({
     setAppError: (state, { payload }) => {
       state.value.appError = payload;
     },
-
   },
   extraReducers: {
     //SIGNUP
@@ -280,15 +281,14 @@ export const authSlice = createSlice({
     [signIn.fulfilled]: (state, { payload }) => {
       if (payload.error) {
         state.value.error = payload;
-      }
-      else{
+      } else {
         state.value.user.token = payload.token;
         state.value.user.email = payload.user.email;
         state.value.user.firstName = payload.user.firstname;
         state.value.user.lastName = payload.user.lastname;
         state.value.user.id = payload.user.id;
         state.value.error = null;
-  
+
         setUserLS(state.value.user);
       }
 
@@ -296,6 +296,7 @@ export const authSlice = createSlice({
     },
 
     [signIn.rejected]: (state, { payload }) => {
+      console.log("[signIn.rejected] ->", payload);
       state.value.loading = false;
       state.value.user.token = null;
       state.value.user.email = null;
@@ -407,7 +408,15 @@ export const authSlice = createSlice({
   },
 });
 
-export const { resetAuthData, logOut, getUserName, clearError, selectSite, selectProject, selectOrganization, setAppError } =
-  authSlice.actions;
+export const {
+  resetAuthData,
+  logOut,
+  getUserName,
+  clearError,
+  selectSite,
+  selectProject,
+  selectOrganization,
+  setAppError,
+} = authSlice.actions;
 
 export default authSlice.reducer;

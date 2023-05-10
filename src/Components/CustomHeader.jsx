@@ -3,16 +3,17 @@ import UserButton from "./UserButton";
 import LanguageSelector from "./LanguageSelector";
 import { Group, ActionIcon, useMantineColorScheme, Image } from "@mantine/core";
 import { IconSun, IconMoonStars } from "@tabler/icons";
+import { config } from "../Constants/config";
 
 export default function CustomHeader() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   return (
     <Group position="apart" align={"center"} sx={{ width: "100%" }}>
       <Group>
-        <div style={{ width: 240, marginLeft: "auto", marginRight: "auto" }}>
+        <div style={{ width: 80, marginLeft: "auto", marginRight: "auto" }}>
           <Image
             radius="xs"
-            src={process.env.PUBLIC_URL + '/images/connexa_logo.png'}
+            src={config.PUBLIC_URL + 'images/connexa_logo.png'}
             alt="logo"
           />
         </div>
