@@ -1,5 +1,6 @@
 import { config } from "./config";
 
+export const HEADER_HIGHT = 220;
 export const TOOLBAR_HIGHT = 42;
 export const VIEW_HEADER_HIGHT = 48;
 export const DIVIDER_HIGHT = 20;

@@ -280,13 +280,29 @@
         "name": "Nombre",
         "address": "Direccion",
         "phone": "Telefono",
-        "context": "Contexto"
+        "context": "Contexto",
+        "description":"Descripcion",
+        "city":"Cuidad",
+        "country":"Pais",
+        "province":"Provincia",
+        "type":"Tipo",
+        "latitude":"Latitud",
+        "longitude":"Longitud",
+        "actionRatio":"Radio de accion"
       },
       "placeholder": {
         "name": "Nombre de la sucursal",
         "address": "Direccion de la sucursal",
         "phone": "Telefono",
-        "context": "Contexto"
+        "context": "Contexto",
+        "description":"Descripcion",
+        "city":"Cuidad",
+        "country":"Pais",
+        "province":"Provincia",
+        "type":"Tipo",
+        "latitude":"Latitud",
+        "longitude":"Longitud",
+        "actionRatio":"Radio de accion"
       },
       "title": {
         "create": "Crear una nueva sucursal",

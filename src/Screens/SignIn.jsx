@@ -71,6 +71,7 @@ export function SignIn() {
         </Text> */}
 
         <Paper
+        sx={{width:500}}
           withBorder
           shadow="md"
           p={30}

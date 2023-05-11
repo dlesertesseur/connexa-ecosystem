@@ -87,9 +87,7 @@ export const signIn = createAsyncThunk("auth/signIn", async (parameters, asyncTh
     method: "POST",
     mode: "cors",
     headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": config.API_BASE + ":" + config.PORT,
-      "Access-Control-Request-Headers": "Content-Type, Authorization",
+      "Content-Type": "application/json"
     },
     body: body,
   };

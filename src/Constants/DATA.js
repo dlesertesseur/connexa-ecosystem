@@ -52,9 +52,15 @@ const radius = [
   { value: 1000, label: "1000 mts." },
 ];
 
+const storeType = [
+  {value:"Minimercado", label:"Minimercado"},
+  {value:"Supermercado", label:"Supermercado"},
+  {value:"Hipermercado", label:"Hipermercado"},
+]
+
 //const jobType = ["generalReplacement","technicalVerification"];
 const jobType = ["Reposición General","Verificación técnica"];
 
 const pauseType = ["Desayuno","Almuerzo","Merienda","Cena"];
 
-export { hours, shiftDurations, pauseDurations, jobType, pauseType, radius};
+export { hours, shiftDurations, pauseDurations, jobType, pauseType, radius, storeType};
