@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { IconAlertCircle } from "@tabler/icons";
 import Logo from "../Components/Logo";
-import { Text } from "react-konva";
 
 export function SignIn() {
   const { t } = useTranslation();
@@ -71,7 +70,7 @@ export function SignIn() {
         </Text> */}
 
         <Paper
-        sx={{width:500}}
+        sx={{width:400}}
           withBorder
           shadow="md"
           p={30}

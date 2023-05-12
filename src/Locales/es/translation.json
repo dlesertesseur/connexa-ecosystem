@@ -138,7 +138,9 @@
     "left": "Izquierda",
     "center": "Centro",
     "right": "Derecha",
-    "textColor": "Color de texto"
+    "textColor": "Color de texto",
+    "openingTime":"Apertura",
+    "closingTime":"Cierre"
   },
 
   "placeholder": {
@@ -279,30 +281,32 @@
       "label": {
         "name": "Nombre",
         "address": "Direccion",
-        "phone": "Telefono",
-        "context": "Contexto",
-        "description":"Descripcion",
-        "city":"Cuidad",
-        "country":"Pais",
-        "province":"Provincia",
-        "type":"Tipo",
-        "latitude":"Latitud",
-        "longitude":"Longitud",
-        "actionRatio":"Radio de accion"
+        "phones": "Telefonos",
+        "contextId": "Contexto",
+        "description": "Descripcion",
+        "city": "Cuidad",
+        "country": "Pais",
+        "province": "Provincia",
+        "type": "Tipo",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "radius_in_meters": "Radio de accion",
+        "status": "Estado"
       },
       "placeholder": {
         "name": "Nombre de la sucursal",
         "address": "Direccion de la sucursal",
-        "phone": "Telefono",
-        "context": "Contexto",
-        "description":"Descripcion",
-        "city":"Cuidad",
-        "country":"Pais",
-        "province":"Provincia",
-        "type":"Tipo",
-        "latitude":"Latitud",
-        "longitude":"Longitud",
-        "actionRatio":"Radio de accion"
+        "phones": "Telefonos",
+        "contextId": "Contexto",
+        "description": "Descripcion",
+        "city": "Cuidad",
+        "country": "Pais",
+        "province": "Provincia",
+        "type": "Tipo",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "radius_in_meters": "Radio de accion",
+        "status": "Estado"
       },
       "title": {
         "create": "Crear una nueva sucursal",
@@ -321,11 +325,11 @@
         "update": "Update brand",
         "delete": "Delete brand"
       },
-      "label":{
-        "name":"Nombre"
+      "label": {
+        "name": "Nombre"
       },
-      "placeholder":{
-        "name":"Un nombre"
+      "placeholder": {
+        "name": "Un nombre"
       },
       "name": "MARCAS",
       "columns": ["Nombre"],
@@ -639,5 +643,15 @@
 
   "stageContextMenu": {
     "addMarker": "Agregar etiqueta"
+  },
+  
+  "datesOfWeek": {
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado",
+    "sunday": "Domingo"
   }
 }

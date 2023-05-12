@@ -22,7 +22,7 @@ function App() {
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
         <NotificationsProvider>
           <Provider store={store}>
-            <BrowserRouter basename="/platform">
+            <BrowserRouter basename="/connexa/platform">
               <Routes>
                 <Route path="*" element={<NotFound />} />
                 <Route exact path="/" element={<SignIn />} />

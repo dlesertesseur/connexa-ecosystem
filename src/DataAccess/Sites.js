@@ -2,12 +2,7 @@ import { API } from "../Constants";
 
 async function createSite(parameters) {
   try {
-    const body = JSON.stringify({
-      name: parameters.name,
-      phone: parameters.phone,
-      address: parameters.address,
-      contextId: parameters.contextId,
-    });
+    const body = JSON.stringify(parameters.data);
 
     const requestOptions = {
       method: "POST",
@@ -19,7 +14,8 @@ async function createSite(parameters) {
       body: body,
     };
 
-    const url = API.site.create + parameters.projectId;
+    const url = API.site.create;
+
     const res = await fetch(url, requestOptions);
     const data = await res.json();
     return data;
@@ -30,13 +26,7 @@ async function createSite(parameters) {
 
 async function updateSite(parameters) {
   try {
-    const body = JSON.stringify({
-      id: parameters.id,
-      name: parameters.name,
-      phone: parameters.phone,
-      address: parameters.address,
-      contextId: parameters.contextId,
-    });
+    const body = JSON.stringify(parameters.data);
 
     const requestOptions = {
       method: "PUT",
@@ -156,4 +146,4 @@ async function findSiteById(parameters) {
   }
 }
 
-export { createSite, updateSite, deleteSite, findAllSitesByPage, findAllSitesByProjectId, findAllSites, findSiteById};
+export { createSite, updateSite, deleteSite, findAllSitesByPage, findAllSitesByProjectId, findAllSites, findSiteById };

@@ -1,5 +1,17 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
-import { TextInput, Title, Container, Button, Group, LoadingOverlay, Select, Stack, ScrollArea } from "@mantine/core";
+import {
+  TextInput,
+  Title,
+  Container,
+  Button,
+  Group,
+  LoadingOverlay,
+  Select,
+  Stack,
+  ScrollArea,
+  Paper,
+  Space,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -8,7 +20,8 @@ import { createSite } from "../../../DataAccess/Sites";
 import { useWindowSize } from "../../../Hook";
 import { HEADER_HIGHT } from "../../../Constants";
 import { countries } from "../../../Constants/countries";
-import { radius, storeType } from "../../../Constants/DATA";
+import { hours, radius, statusList, storeType } from "../../../Constants/DATA";
+import DailySchedule from "../../../Components/DailySchedule";
 
 export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
   const { t } = useTranslation();
@@ -36,14 +49,10 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
     })
   );
 
-  const [storeTypeList] = useState(
-    storeType.map((s) => {
-      return { value: s.value, label: s.label };
-    })
-  );
+  const [storeTypeList] = useState(storeType);
 
   const [country, setCountry] = useState(null);
-  const [context, setContext] = useState(null);
+  const [contextId, setContextId] = useState(null);
   const [province, setProvince] = useState(null);
   const [provinces, setProvinces] = useState([]);
 
@@ -53,8 +62,8 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
   };
 
   const selectContext = (event) => {
-    setContext(event);
-    form.setFieldValue("context", event);
+    setContextId(event);
+    form.setFieldValue("contextId", event);
 
     /*TIPO TIENDA*/
     if (event !== 3) {
@@ -73,7 +82,7 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
 
     if (ret?.provinces) {
       const list = ret.provinces.map((c) => {
-        return { value: c.id, label: c.name };
+        return { value: c.name, label: c.name };
       });
 
       setProvince(null);
@@ -86,30 +95,46 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
   const form = useForm({
     initialValues: {
       name: "",
-      description: "",
-      phone: "",
-      context: "",
+      address: "",
+      phones: "",
+      contextId: "",
       city: "",
       country: "",
       province: "",
       type: "",
       latitude: "",
       longitude: "",
-      actionRatio: "",
+      radius_in_meters: "",
+      status: "",
+      monday: "",
+      tuesday: "",
+      wednesday: "",
+      thursday: "",
+      friday: "",
+      saturday: "",
+      sunday: "",
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
-      description: (val) => (val ? null : t("validation.required")),
-      phone: (val) => (val ? null : t("validation.required")),
-      context: (val) => (val ? null : t("validation.required")),
+      address: (val) => (val ? null : t("validation.required")),
+      phones: (val) => (val ? null : t("validation.required")),
+      contextId: (val) => (val ? null : t("validation.required")),
       city: (val) => (val ? null : t("validation.required")),
       country: (val) => (val ? null : t("validation.required")),
       province: (val) => (val ? null : t("validation.required")),
       type: (val) => (val ? null : t("validation.required")),
       latitude: (val) => (val ? null : t("validation.required")),
       longitude: (val) => (val ? null : t("validation.required")),
-      actionRatio: (val) => (val ? null : t("validation.required")),
+      radius_in_meters: (val) => (val ? null : t("validation.required")),
+      status: (val) => (val ? null : t("validation.required")),
+      monday: (val) => (val ? null : t("validation.required")),
+      tuesday: (val) => (val ? null : t("validation.required")),
+      wednesday: (val) => (val ? null : t("validation.required")),
+      thursday: (val) => (val ? null : t("validation.required")),
+      friday: (val) => (val ? null : t("validation.required")),
+      saturday: (val) => (val ? null : t("validation.required")),
+      sunday: (val) => (val ? null : t("validation.required")),
     },
   });
 
@@ -175,29 +200,20 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
   };
 
   const onCreate = (values) => {
-
     setWorking(true);
     const params = {
       token: user.token,
       data: values,
     };
+
     createSite(params)
       .then((ret) => {
         setWorking(false);
-
-        if (ret.status) {
-          setResponse({
-            code: ret.status,
-            title: ret.status ? t("status.error") : t("status.ok"),
-            text: ret.status ? ret.message : t("message.create"),
-          });
-          setResponseModalOpen(true);
-        } else {
-          onLoadGrid();
-          navigate(back);
-        }
+        onLoadGrid();
+        navigate(back);
       })
       .catch((error) => {
+        console.log("createSite error -> ", error);
         setResponse({ code: error.status, title: t("status.error"), text: error.message });
         setResponseModalOpen(true);
       });
@@ -232,7 +248,7 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
           {t("crud.site.title.create")}
         </Title>
 
-        <ScrollArea h={wSize.height - HEADER_HIGHT}>
+        <ScrollArea h={wSize.height - HEADER_HIGHT} pr={"md"}>
           <form
             onSubmit={form.onSubmit((values) => {
               onCreate(values);
@@ -242,9 +258,10 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
               {createTextField("name")}
             </Group>
             <Group grow mb={"md"}>
-              {createTextField("description")}
+              {createTextField("address")}
             </Group>
-            <Group mb={"md"}>{createTextField("phone")}</Group>
+
+            <Group mb={"md"}>{createTextField("phones")}</Group>
 
             <Group mb={"md"}>
               {createSelectFieldControled(
@@ -270,17 +287,90 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
 
             <Group mb={"md"}>
               {createSelectFieldControled(
-                "context",
-                context,
+                "contextId",
+                contextId,
                 selectContext,
-                form.getInputProps("context").error,
+                form.getInputProps("contextId").error,
                 contextList
               )}
 
               {/* SI ES IGUAL A TIENDA */}
-              {form.getInputProps("context")?.value === 3 ? createSelectField("type", storeTypeList) : null}
+              {form.getInputProps("contextId")?.value === 3 ? createSelectField("type", storeTypeList) : null}
             </Group>
-            <Group mb={"md"}>{createSelectField("actionRatio", radiusList)}</Group>
+            <Group mb={"md"}>{createSelectField("radius_in_meters", radiusList)}</Group>
+            <Group mb={"md"}>{createSelectField("status", statusList)}</Group>
+
+            <Paper withBorder p={"xs"}>
+              <DailySchedule
+                dayName={t("datesOfWeek.monday")}
+                openingTimeTitle={t("label.openingTime")}
+                closingTimeTitle={t("label.closingTime")}
+                openingTimeList={hours}
+                closingTimeList={hours}
+                form={form}
+                field={"monday"}
+              />
+              <Space m={"md"} />
+              <DailySchedule
+                dayName={t("datesOfWeek.tuesday")}
+                openingTimeTitle={t("label.openingTime")}
+                closingTimeTitle={t("label.closingTime")}
+                openingTimeList={hours}
+                closingTimeList={hours}
+                form={form}
+                field={"tuesday"}
+              />
+              <Space m={"md"} />
+              <DailySchedule
+                dayName={t("datesOfWeek.wednesday")}
+                openingTimeTitle={t("label.openingTime")}
+                closingTimeTitle={t("label.closingTime")}
+                openingTimeList={hours}
+                closingTimeList={hours}
+                form={form}
+                field={"wednesday"}
+              />
+              <Space m={"md"} />
+              <DailySchedule
+                dayName={t("datesOfWeek.thursday")}
+                openingTimeTitle={t("label.openingTime")}
+                closingTimeTitle={t("label.closingTime")}
+                openingTimeList={hours}
+                closingTimeList={hours}
+                form={form}
+                field={"thursday"}
+              />
+              <Space m={"md"} />
+              <DailySchedule
+                dayName={t("datesOfWeek.friday")}
+                openingTimeTitle={t("label.openingTime")}
+                closingTimeTitle={t("label.closingTime")}
+                openingTimeList={hours}
+                closingTimeList={hours}
+                form={form}
+                field={"friday"}
+              />
+              <Space m={"md"} />
+              <DailySchedule
+                dayName={t("datesOfWeek.saturday")}
+                openingTimeTitle={t("label.openingTime")}
+                closingTimeTitle={t("label.closingTime")}
+                openingTimeList={hours}
+                closingTimeList={hours}
+                form={form}
+                field={"saturday"}
+              />
+              <Space m={"md"} />
+              <DailySchedule
+                dayName={t("datesOfWeek.sunday")}
+                openingTimeTitle={t("label.openingTime")}
+                closingTimeTitle={t("label.closingTime")}
+                openingTimeList={hours}
+                closingTimeList={hours}
+                form={form}
+                field={"sunday"}
+              />
+            </Paper>
 
             <Group position="right" mt="xl" mb="xs">
               <Button

@@ -1,5 +1,6 @@
 import React from "react";
 import { Group, Image} from "@mantine/core";
+import { config } from "../Constants/config";
 // import useImage from "use-image";
 // import { useTranslation } from "react-i18next";
 
@@ -16,7 +17,7 @@ const Logo = () => {
       >
         {t("main.title")}
       </Title> */}
-      <Image src="/images/connexa_logo.png" alt="image" width={200}/>
+      <Image src= {config.PUBLIC_URL + "/images/connexa_logo.png"} alt="image" width={200}/>
     </Group>
   );
 };

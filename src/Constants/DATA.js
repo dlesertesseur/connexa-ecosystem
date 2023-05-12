@@ -58,9 +58,15 @@ const storeType = [
   {value:"Hipermercado", label:"Hipermercado"},
 ]
 
+const statusList = [
+  {value:"actived", label:"Activa"},
+  {value:"inactive", label:"Inactiva"},
+  {value:"error", label:"Error"},
+]
+
 //const jobType = ["generalReplacement","technicalVerification"];
 const jobType = ["Reposición General","Verificación técnica"];
 
 const pauseType = ["Desayuno","Almuerzo","Merienda","Cena"];
 
-export { hours, shiftDurations, pauseDurations, jobType, pauseType, radius, storeType};
+export { hours, shiftDurations, pauseDurations, jobType, pauseType, radius, storeType, statusList};
