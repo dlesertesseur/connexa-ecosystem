@@ -93,8 +93,8 @@ export const signIn = createAsyncThunk("auth/signIn", async (parameters, asyncTh
   };
 
   try {
-    console.log("signIn apiUrl -> ", apiUrl);
-    console.log("signIn requestOptions -> ", requestOptions);
+    // console.log("signIn apiUrl -> ", apiUrl);
+    // console.log("signIn requestOptions -> ", requestOptions);
 
     const res = await fetch(apiUrl, requestOptions);
     const data = await res.json();

@@ -140,7 +140,12 @@
     "right": "Right",
     "textColor": "Text color",
     "openingTime":"Opening",
-    "closingTime":"Closing"
+    "closingTime":"Closing",
+    "url":"http://www.zeetrex.com",
+    "copyright":"© 2023 zeeTrex",
+    "settings":"Settings",
+    "selectLanguage":"Select your preferred language",
+    "basicUser":"User"
   },
 
   "placeholder": {

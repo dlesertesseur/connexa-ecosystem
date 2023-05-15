@@ -7,7 +7,6 @@ import { findTranslatedField } from "../Util";
 import { useNavigate } from "react-router";
 import React from "react";
 
-
 const CustomOptions = () => {
   const [links, setLinks] = useState(null);
   const { i18n, t } = useTranslation();
@@ -34,14 +33,17 @@ const CustomOptions = () => {
               key={link.id}
               onClick={(event) => navigate("/menu" + link.link)}
             >
-              <Group position="apart" >
-                <Stack spacing={0} > 
+              <Group position="apart" noWrap spacing={0}>
+                <Stack spacing={0}>
                   <Text weight={600}>{link.label}</Text>
-                  <Text size={"xs"} weight={100} >
+                  <Text size={"xs"} weight={450}>
                     {link.description}
                   </Text>
                 </Stack>
-                <IconChevronRight size={16}/>
+
+                <Stack spacing={0}>
+                  <IconChevronRight size={16} />
+                </Stack>
               </Group>
             </UnstyledButton>
           );
@@ -80,7 +82,7 @@ const CustomOptions = () => {
 
   return (
     <ScrollArea px={"xs"} h={"100%"}>
-      <Stack justify="flex-start" h={"100%"} m={0} spacing={"xs"} s>
+      <Stack justify="flex-start" h={"100%"} m={0} spacing={"xs"}>
         {links}
       </Stack>
     </ScrollArea>

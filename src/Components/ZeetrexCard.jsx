@@ -1,14 +1,9 @@
-import {
-  Group,
-  Image,
-  Paper,
-  Stack,
-  Text,
-  useMantineTheme,
-} from "@mantine/core";
+import { Group, Image, Paper, Stack, Text, useMantineTheme } from "@mantine/core";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const ZeetrexCard = () => {
+  const { t } = useTranslation();
   const theme = useMantineTheme();
   const bgColor = theme.colors.gray[1];
   return (
@@ -20,11 +15,11 @@ const ZeetrexCard = () => {
             alt="logo"
             width={100}
             component="a"
-            href="http://www.zeetrex.com"
+            href={t("label.url")}
             target="_blank"
           />
-          <Text size={"xs"} weight={100}>
-            © 2023 zeeTrex
+          <Text size={"xs"} weight={500} color="gray">
+            {t("label.copyright")}
           </Text>
         </Group>
       </Paper>

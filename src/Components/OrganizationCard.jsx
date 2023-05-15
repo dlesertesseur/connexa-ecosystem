@@ -47,7 +47,7 @@ const OrganizationCard = () => {
         </Group> */}
         <Group position="apart" mb={"xs"}>
           <Text size={"lg"} weight={500}>
-            {organizationSelected.name}
+            {organizationSelected?.name}
           </Text>
           <Badge color="green" variant="filled">
             Activa

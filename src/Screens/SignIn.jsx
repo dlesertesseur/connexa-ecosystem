@@ -11,6 +11,8 @@ import {
   Stack,
   Center,
   useMantineTheme,
+  Image,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
@@ -20,6 +22,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { IconAlertCircle } from "@tabler/icons-react";
 import Logo from "../Components/Logo";
+import LanguageSelector from "../Components/LanguageSelector";
+import ZeetrexCard from "../Components/ZeetrexCard";
 
 export function SignIn() {
   const { t } = useTranslation();
@@ -43,10 +47,8 @@ export function SignIn() {
 
     // CANBIAR LA VALIDACION DE LA CLAVE a minimo 6 caracteres
     validate: {
-      email: (val) =>
-        /^\S+@\S+$/.test(val) ? null : t("validation.emailFormat"),
-      password: (val) =>
-        val.length <= 2 ? t("validation.passwordFormat") : null,
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : t("validation.emailFormat")),
+      password: (val) => (val.length <= 2 ? t("validation.passwordFormat") : null),
     },
   });
 
@@ -69,28 +71,17 @@ export function SignIn() {
           </Anchor>
         </Text> */}
 
-        <Paper
-        sx={{width:400}}
-          withBorder
-          shadow="md"
-          p={30}
-          radius="md"
-          bg={theme.colors.gray[0]}
-        >
+        <Paper sx={{ width: 400 }} withBorder shadow="md" p={30} radius="md" bg={theme.colors.gray[0]}>
           <Logo />
           <form
             onSubmit={form.onSubmit((values) => {
-              dispatch(
-                signIn({ email: values.email, password: values.password })
-              );
+              dispatch(signIn({ email: values.email, password: values.password }));
             })}
           >
             <TextInput
               label={t("label.email")}
               placeholder={t("placeholder.email")}
-              onChange={(event) =>
-                form.setFieldValue("email", event.currentTarget.value)
-              }
+              onChange={(event) => form.setFieldValue("email", event.currentTarget.value)}
               error={form.errors.email}
             />
             <PasswordInput
@@ -98,29 +89,17 @@ export function SignIn() {
               placeholder={t("placeholder.password")}
               autoComplete="off"
               mt="md"
-              onChange={(event) =>
-                form.setFieldValue("password", event.currentTarget.value)
-              }
+              onChange={(event) => form.setFieldValue("password", event.currentTarget.value)}
               error={form.errors.password}
             />
 
             <Group position="apart" mt="md">
               <Checkbox label={t("label.keepMeConnected")} />
-              <Anchor
-                onClick={(event) => event.preventDefault()}
-                href="#"
-                size="sm"
-              >
+              <Anchor onClick={(event) => event.preventDefault()} href="#" size="sm">
                 {t("auth.forgotPassword")}
               </Anchor>
             </Group>
-            <Button
-              type="submit"
-              fullWidth
-              mt="xl"
-              loading={loading}
-              loaderPosition={"left"}
-            >
+            <Button type="submit" fullWidth mt="xl" loading={loading} loaderPosition={"left"}>
               {t("button.signIn")}
             </Button>
           </form>
@@ -136,12 +115,24 @@ export function SignIn() {
             </Alert>
           ) : null}
 
-          {/* <Group mt={"xl"}>
-            <Text lineClamp={1}>
-              zeeTrex
-            </Text>
-          </Group> */}
+          <Group grow mt={"xl"}>
+            <LanguageSelector />
+          </Group>
         </Paper>
+
+        <Group position="apart" mt={"xl"} >
+            <Image
+              src="/connexa/zeetrex.png"
+              alt="logo"
+              width={100}
+              component="a"
+              href={t("label.url")}
+              target="_blank"
+            />
+            <Text size={"xs"} weight={500} color="gray">
+              {t("label.copyright")}
+            </Text>
+          </Group>
       </Stack>
     </Center>
   );

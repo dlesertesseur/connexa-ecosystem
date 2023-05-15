@@ -140,11 +140,16 @@
     "right": "Derecha",
     "textColor": "Color de texto",
     "openingTime":"Apertura",
-    "closingTime":"Cierre"
+    "closingTime":"Cierre",
+    "url":"http://www.zeetrex.com",
+    "copyright":"© 2023 zeeTrex",
+    "settings":"Ajustes",
+    "selectLanguage":"Seleccione su idioma de preferencia",
+    "basicUser":"Usuario"
   },
 
   "placeholder": {
-    "email": "you@connexa.com",
+    "email": "tu@connexa.com",
     "password": "Su contraseña",
     "firstName": "Su nombre",
     "lastName": "Su apellido",
