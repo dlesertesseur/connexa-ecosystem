@@ -1,6 +1,6 @@
 import { Modal, Group, Button, useMantineTheme, Stack, Alert } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconAlertTriangle } from "@tabler/icons";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 const DeleteConfirmation = ({ opened, onClose, onConfirm, title, text }) => {
   const { t } = useTranslation();

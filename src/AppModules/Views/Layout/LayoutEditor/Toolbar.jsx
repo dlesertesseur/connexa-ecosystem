@@ -6,7 +6,7 @@ import {
   IconRulerMeasure,
   IconRuler3,
   IconCheck,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import { ActionIcon, Button, Divider, Group, Indicator, NumberInput, Switch, Tooltip } from "@mantine/core";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
 import { useTranslation } from "react-i18next";

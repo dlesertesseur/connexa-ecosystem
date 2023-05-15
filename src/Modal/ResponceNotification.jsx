@@ -1,6 +1,6 @@
 import { Modal, Group, Button, useMantineTheme, Stack, Alert } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconAlertCircle } from "@tabler/icons";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 const ResponceNotification = ({ opened, onClose, title, text, code }) => {
   const { t } = useTranslation();

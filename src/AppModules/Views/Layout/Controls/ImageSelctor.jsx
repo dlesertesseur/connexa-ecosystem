@@ -1,6 +1,6 @@
 import { Button, Menu } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconPolaroid } from "@tabler/icons";
+import { IconPolaroid } from "@tabler/icons-react";
 
 function ImageSelctor({ loadImage, imageList, disabled }) {
   const { t } = useTranslation();

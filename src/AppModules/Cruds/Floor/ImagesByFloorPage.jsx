@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteImage, findAllImagesByFloorById, uploadImage } from "../../../DataAccess/Floors";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconUpload, IconX, IconPhoto } from "@tabler/icons";
+import { IconUpload, IconX, IconPhoto } from "@tabler/icons-react";
 import { Carousel } from "@mantine/carousel";
 import { API } from "../../../Constants";
 

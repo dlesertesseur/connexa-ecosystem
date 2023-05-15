@@ -1,6 +1,6 @@
 import React from "react";
 import { Group, Switch, Tooltip } from "@mantine/core";
-import { IconLock, IconLockOpen } from "@tabler/icons";
+import { IconLock, IconLockOpen } from "@tabler/icons-react";
 
 const LockAction = ({ checked, setChecked, toolTip, disabled }) => {
   return (

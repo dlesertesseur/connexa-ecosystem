@@ -1,41 +1,37 @@
 import React from "react";
-import UserButton from "./UserButton";
-import LanguageSelector from "./LanguageSelector";
-import { Group, ActionIcon, useMantineColorScheme, Image } from "@mantine/core";
-import { IconSun, IconMoonStars } from "@tabler/icons";
-import { config } from "../Constants/config";
+import {
+  Burger,
+  Group,
+  Header,
+  MediaQuery,
+  useMantineTheme,
+} from "@mantine/core";
+import UserMenu from "./UserMenu";
+import Logo from "./Logo";
 
-export default function CustomHeader() {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+export default function CustomHeader({isOpen, setIsOpen}) {
+  const theme = useMantineTheme();
   return (
-    <Group position="apart" align={"center"} sx={{ width: "100%" }}>
-      <Group>
-        <div style={{ width: 80, marginLeft: "auto", marginRight: "auto" }}>
-          <Image
-            radius="xs"
-            src={config.PUBLIC_URL + 'images/connexa_logo.png'}
-            alt="logo"
+    <Header height={60}>
+      <Group position={"apart"} align={"center"} h={60}>
+        <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+          <Burger
+            opened={isOpen}
+            onClick={setIsOpen}
+            size="md"
+            color={theme.colors.gray[6]}
+            mx="xs"
           />
-        </div>
+        </MediaQuery>
 
-        {/* <Title
-          align="center"
-          sx={(theme) => ({
-            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-            fontWeight: 900,
-          })}
-        >
-          {t("main.title")}
-        </Title> */}
+        <Logo />
 
+        <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+          <Group mx={"xs"} w={40} h={"100%"}></Group>
+        </MediaQuery>
+
+        <UserMenu/>
       </Group>
-      <Group>
-        <UserButton />
-        <LanguageSelector />
-        <ActionIcon variant="default" onClick={() => toggleColorScheme()} size={36}>
-          {colorScheme === "dark" ? <IconSun size={16} /> : <IconMoonStars size={16} />}
-        </ActionIcon>
-      </Group>
-    </Group>
+    </Header>
   );
 }

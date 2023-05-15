@@ -18,7 +18,7 @@ import { signIn } from "../Features/Auth";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { IconAlertCircle } from "@tabler/icons";
+import { IconAlertCircle } from "@tabler/icons-react";
 import Logo from "../Components/Logo";
 
 export function SignIn() {

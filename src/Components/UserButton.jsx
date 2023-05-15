@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu, Avatar } from "@mantine/core";
-import { IconSettings, IconUser, IconLogout } from "@tabler/icons";
+import { IconSettings, IconUser, IconLogout } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { logOut } from "../Features/Auth";

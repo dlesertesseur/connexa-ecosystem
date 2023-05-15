@@ -6,7 +6,7 @@ import {
   IconDiscount2,
   IconReceipt2,
   IconCoin,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 
 const icons = {
   up: IconArrowUpRight,

@@ -13,7 +13,7 @@ import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/S
 import { t } from "i18next";
 import { hideNotification, showNotification } from "@mantine/notifications";
 import { findAllLayoutMarkersById, saveLayoutMarkers } from "../../../../DataAccess/LayoutsMarkers";
-import { IconTag } from "@tabler/icons";
+import { IconTag } from "@tabler/icons-react";
 import TextEditor from "../../../../Components/TextEditor";
 
 const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {

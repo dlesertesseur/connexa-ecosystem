@@ -1,7 +1,7 @@
 import { Popover, Button, Stack } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IconPolygon } from "@tabler/icons";
+import { IconPolygon } from "@tabler/icons-react";
 
 function PartSelector({ disabled, onOption }) {
   const { t } = useTranslation();

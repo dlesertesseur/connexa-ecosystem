@@ -1,6 +1,6 @@
 import React from "react";
 import LockAction from "../../../../Components/LockAction";
-import { IconRefresh, IconDeviceFloppy } from "@tabler/icons";
+import { IconRefresh, IconDeviceFloppy } from "@tabler/icons-react";
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
 import { useTranslation } from "react-i18next";

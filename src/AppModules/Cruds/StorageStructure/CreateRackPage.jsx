@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
-import { IconBellRinging } from "@tabler/icons";
+import { IconBellRinging } from "@tabler/icons-react";
 import { useState } from "react";
 import { createRack } from "../../../DataAccess/Racks";
 import { useNavigate } from "react-router-dom";

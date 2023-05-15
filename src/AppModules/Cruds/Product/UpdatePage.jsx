@@ -29,7 +29,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { findAllBrands } from "../../../Features/Brand";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconUpload, IconX, IconPhoto } from "@tabler/icons";
+import { IconUpload, IconX, IconPhoto } from "@tabler/icons-react";
 import { Carousel } from "@mantine/carousel";
 import { actions, API } from "../../../Constants";
 import { useViewportSize } from "@mantine/hooks";

@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { hours, shiftDurations, pauseDurations, jobType, pauseType, radius } from "../../../Constants/DATA";
 import { useContext, useEffect, useState } from "react";
-import { IconClock, IconToolsKitchen2, IconToolsKitchen2Off } from "@tabler/icons";
+import { IconClock, IconToolsKitchen2, IconToolsKitchen2Off } from "@tabler/icons-react";
 import { formatDateToDDMMYYYY } from "../../../Util";
 import { findAllWorkersByOrganization } from "../../../DataAccess/Worker";
 import { deleteShift, findShiftById } from "../../../DataAccess/Shift";

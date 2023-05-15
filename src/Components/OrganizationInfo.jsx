@@ -1,5 +1,5 @@
 import { createStyles, Text, Group, Image, Paper } from "@mantine/core";
-import { IconPhoneCall } from "@tabler/icons";
+import { IconPhoneCall } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
   icon: {

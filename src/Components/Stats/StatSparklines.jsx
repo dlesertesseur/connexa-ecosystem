@@ -6,7 +6,7 @@ import {
   IconCoin,
   IconArrowUpRight,
   IconArrowDownRight,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
 
 const useStyles = createStyles((theme) => ({

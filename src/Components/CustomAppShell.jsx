@@ -1,18 +1,13 @@
 import { useEffect, useState } from "react";
-import {
-  AppShell,
-  Navbar,
-  Header,
-  MediaQuery,
-  Burger,
-  useMantineTheme,
-} from "@mantine/core";
-import CustomHeader from "./CustomHeader";
-import CustomNavbar from "./CustomNavbar";
-// import CustomFooter from "./CustomFooter";
-import CustomBody from "./CustomBody";
+import { AppShell, useMantineTheme } from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
 import { byUserId } from "../Features/Auth";
+import "react-modern-drawer/dist/index.css";
+import Drawer from "react-modern-drawer";
+import CustomHeader from "./CustomHeader";
+import CustomMenu from "./CustomMenu";
+import CustomNavbar from "./CustomNavbar";
+import CustomBody from "./CustomBody";
 
 export default function CustomAppShell() {
   const { user } = useSelector((state) => state.auth.value);
@@ -24,13 +19,19 @@ export default function CustomAppShell() {
         id: user.id,
         token: user.token,
       };
-  
+
       dispatch(byUserId(obj));
-    } 
+    }
   }, [dispatch, user]);
 
   const theme = useMantineTheme();
-  const [opened, setOpened] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDrawer = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+
   return (
     <AppShell
       styles={{
@@ -41,51 +42,22 @@ export default function CustomAppShell() {
               : theme.colors.gray[0],
         },
       }}
-      navbarOffsetBreakpoint="sm"
-      asideOffsetBreakpoint="sm"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 300, lg: 300 }}
-        >
-          <CustomNavbar />
-        </Navbar>
-      }
-      // aside={
-      //   <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-      //     <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-      //       <Text>Application sidebar</Text>
-      //     </Aside>
-      //   </MediaQuery>
-      // }
-      // footer={
-      //   <Footer height={60} p="md">
-      //    <CustomFooter/>
-      //   </Footer>
-      // }
-      header={
-        <Header height={60} p="md">
-          <div
-            style={{ display: "flex", alignItems: "center", height: "100%"}}
-          >
-            <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                color={theme.colors.gray[6]}
-                mr="xl"
-              />
-            </MediaQuery>
-
-            <CustomHeader/>
-          </div>
-        </Header>
-      }
+      navbar={<CustomNavbar />}
+      header={<CustomHeader isOpen={isOpen} setIsOpen={setIsOpen} user={user}/>}
+      aside={null}
+      footer={null}
     >
       <CustomBody />
+
+      <Drawer
+        size={280}
+        open={isOpen}
+        onClose={toggleDrawer}
+        direction="left"
+        className="bla bla bla"
+      >
+        <CustomMenu />
+      </Drawer>
     </AppShell>
   );
 }

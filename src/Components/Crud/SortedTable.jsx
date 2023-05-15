@@ -15,7 +15,7 @@ import {
   Image,
 } from "@mantine/core";
 import { keys } from "@mantine/utils";
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from "@tabler/icons";
+import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { API } from "../../Constants";

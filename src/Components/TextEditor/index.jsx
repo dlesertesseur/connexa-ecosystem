@@ -14,7 +14,7 @@ import {
   ColorInput,
 } from "@mantine/core";
 import { t } from "i18next";
-import { IconAlignCenter, IconAlignRight, IconAlignLeft } from "@tabler/icons";
+import { IconAlignCenter, IconAlignRight, IconAlignLeft } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import { colorList } from "../../Util";
 

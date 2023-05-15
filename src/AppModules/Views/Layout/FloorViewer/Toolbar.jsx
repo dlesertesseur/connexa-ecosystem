@@ -1,5 +1,5 @@
 import React from "react";
-import { IconHeartbeat } from "@tabler/icons";
+import { IconHeartbeat } from "@tabler/icons-react";
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
 import { useTranslation } from "react-i18next";

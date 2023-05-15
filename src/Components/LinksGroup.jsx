@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Group, Box, Collapse, ThemeIcon, Text, UnstyledButton, createStyles, Stack } from "@mantine/core";
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons";
 import { useNavigate } from "react-router-dom";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
   control: {

@@ -11,7 +11,7 @@ import {
   findAllOrganizationsByWorker,
   findAllWorkerByIdentification,
 } from "../../../Features/Worker";
-import { IconAlertCircle } from "@tabler/icons";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 export function FindWorker() {
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createStyles, Table, ScrollArea, UnstyledButton, Group, Text, Center, TextInput, Button } from "@mantine/core";
 import { keys } from "@mantine/utils";
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from "@tabler/icons";
+import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 

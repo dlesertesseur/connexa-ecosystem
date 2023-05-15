@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Center } from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 const DynamicLauncherApp = ({ app }) => {
   const [component, setComponent] = useState(null);
