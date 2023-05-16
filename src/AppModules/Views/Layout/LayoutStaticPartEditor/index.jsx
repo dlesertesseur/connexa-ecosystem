@@ -1,7 +1,6 @@
 import Editor from "./Editor";
 
-const DynamicApp = ({app}) => {
-  
+const DynamicApp = ({ app }) => {
   const inspectRack = (rack) => {
     // setRack(rack);
   };

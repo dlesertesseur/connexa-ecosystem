@@ -282,6 +282,6 @@ const Editor = ({ inspectRack, drawCenter = true, app }) => {
       {/* {console.log("REPAINT -> " + repaint)} */}
     </Stack>
   );
-};
+}
 
 export default Editor;

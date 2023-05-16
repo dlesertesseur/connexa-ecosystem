@@ -1,4 +1,11 @@
-import { Group, ScrollArea, Stack, Text, UnstyledButton } from "@mantine/core";
+import {
+  Group,
+  Loader,
+  ScrollArea,
+  Stack,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import { IconApps, IconChevronRight } from "@tabler/icons-react";
 import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -57,6 +64,7 @@ const CustomOptions = () => {
 
   useEffect(() => {
     if (siteSelected) {
+
       const l = siteSelected.roles.map((role) => {
         const item = {
           label: findTranslatedField(i18n.language, role, "name"),
@@ -76,17 +84,24 @@ const CustomOptions = () => {
 
         return createMenuGroup(role, item);
       });
+
       setLinks(l);
     }
   }, [i18n.language, siteSelected]);
 
-  return (
+  const draw = links ? (
     <ScrollArea px={"xs"} h={"100%"}>
-      <Stack justify="flex-start" h={"100%"} m={0} spacing={"xs"}>
+      <Stack justify="center" h={"100%"} m={0} spacing={"xs"}>
         {links}
       </Stack>
     </ScrollArea>
+  ) : (
+    <Group grow h={"100%"}>
+      <Loader size="sm" />
+    </Group>
   );
+
+  return draw;
 };
 
 export default CustomOptions;

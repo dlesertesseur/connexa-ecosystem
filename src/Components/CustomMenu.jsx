@@ -2,15 +2,18 @@ import React from "react";
 import CustomOptions from "./CustomOptions";
 import ZeetrexCard from "./ZeetrexCard";
 import OrganizationCard from "./OrganizationCard";
-import { SimpleGrid } from "@mantine/core";
+import { Stack } from "@mantine/core";
+import { useWindowSize } from "../Hook";
 
 const CustomMenu = () => {
+  const wSize = useWindowSize();
+
   return (
-    <SimpleGrid cols={1} spacing={"xs"} h={"100%"}>
+    <Stack justify="space-between" spacing="xs" h={"100%"}>
       <OrganizationCard />
       <CustomOptions />
       <ZeetrexCard />
-    </SimpleGrid>
+    </Stack>
   );
 };
 

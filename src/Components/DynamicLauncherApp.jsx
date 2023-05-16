@@ -7,12 +7,15 @@ const DynamicLauncherApp = ({ app }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+
     import(/* @vite-ignore */ "../AppModules" + app.path)
       .then((comp) => {
         const { default: DynamicApp } = comp;
         setComponent(<DynamicApp app={app} />);
       })
       .catch((error) => {
+        console.log("DynamicLauncherApp error ->", error);
+
         setError(error);
       });
   }, [app]);

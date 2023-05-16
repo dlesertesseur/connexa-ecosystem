@@ -265,7 +265,7 @@ function transformerActor(stageRef, obj) {
 function clearSelection(stageRef) {
   const layers = stageRef.find("#selection-layer");
 
-  console.log("#################### clearSelection()", layers);
+  // console.log("#################### clearSelection()", layers);
 
   if (layers) {
     const layer = layers[0];
