@@ -294,49 +294,56 @@ export function UpdatePage() {
     const duration = form.getInputProps("pauseDurationsInMinutes").value;
     let sd = null;
 
-    if (startShift > start) {
+    if(startShift > start){
       //Next day
       const day = moment(selectedDate).add(1, "d");
-      sd = moment(day.format("DDMMYYYY") + " " + start, "DDMMYYYY HH:mm").add(duration, "m");
-    } else {
-      sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm").add(duration, "m");
+      sd = moment(day.format("DDMMYYYY") + " " + start, "DDMMYYYY HH:mm:ss").add(duration, "m");
+    }else{
+      sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm:ss").add(duration, "m");
     }
 
-    return sd.format("YYYY-MM-DD HH:mm");
+    return sd.format("YYYY-MM-DD HH:mm:ss");
   };
 
   const calculateStartPause = () => {
     const start = form.getInputProps("pauseStartTime").value;
     const startShift = form.getInputProps("startTime").value;
     let sd = null;
-    if (startShift > start) {
+    if(startShift > start){
       //Next day
       const day = moment(selectedDate).add(1, "d");
-      sd = moment(day.format("DDMMYYYY") + " " + start, "DDMMYYYY HH:mm");
-    } else {
-      sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm");
+      sd = moment(day.format("DDMMYYYY") + " " + start, "DDMMYYYY HH:mm:ss");
+    }else{
+      sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm:ss");
     }
-    return sd.format("YYYY-MM-DD HH:mm");
+    return sd.format("YYYY-MM-DD HH:mm:ss");
   };
 
   const calculateEndShift = () => {
-    const start = form.getInputProps("startTime").value;
-    const duration = form.getInputProps("durationsInHours").value;
-    let sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm").add(duration, "h");
-    return sd.format("YYYY-MM-DD HH:mm");
+    const start = form.getInputProps("pauseStartTime").value;
+    const startShift = form.getInputProps("startTime").value;
+    let sd = null;
+    if(startShift > start){
+      //Next day
+      const day = moment(selectedDate).add(1, "d");
+      sd = moment(day.format("DDMMYYYY") + " " + start, "DDMMYYYY HH:mm:ss");
+    }else{
+      sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm:ss");
+    }
+    return sd.format("YYYY-MM-DD HH:mm:ss");
   };
 
   const calculateEndDateShift = () => {
     const start = form.getInputProps("startTime").value;
     const duration = form.getInputProps("durationsInHours").value;
-    let sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm").add(duration, "h");
+    let sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm:ss").add(duration, "h");
     return sd.format("YYYYMMDD");
   };
 
   const calculateStartShift = () => {
     const start = form.getInputProps("startTime").value;
-    let sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm");
-    return sd.format("YYYY-MM-DD HH:mm");
+    let sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm:ss");
+    return sd.format("YYYY-MM-DD HH:mm:ss");
   };
 
   return (

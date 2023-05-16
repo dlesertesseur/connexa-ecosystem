@@ -23,7 +23,6 @@ import { useNavigate } from "react-router-dom";
 import { IconAlertCircle } from "@tabler/icons-react";
 import Logo from "../Components/Logo";
 import LanguageSelector from "../Components/LanguageSelector";
-import ZeetrexCard from "../Components/ZeetrexCard";
 
 export function SignIn() {
   const { t } = useTranslation();
@@ -72,7 +71,7 @@ export function SignIn() {
         </Text> */}
 
         <Paper sx={{ width: 400 }} withBorder shadow="md" p={30} radius="md" bg={theme.colors.gray[0]}>
-          <Logo />
+          <Logo width={150}/>
           <form
             onSubmit={form.onSubmit((values) => {
               dispatch(signIn({ email: values.email, password: values.password }));

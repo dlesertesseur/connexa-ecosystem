@@ -68,6 +68,7 @@ const DynamicApp = ({ app }) => {
     { headerName: cols[col++], fieldName: "pauseEndDateAndTime", align: "center" },
     { headerName: cols[col++], fieldName: "startDate", align: "center" },
     { headerName: cols[col++], fieldName: "endDate", align: "center" },
+    { headerName: cols[col++], fieldName: "status", align: "left" },
   ];
 
   const ret = rows ? (

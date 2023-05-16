@@ -575,7 +575,8 @@
         "timeline2": "Inicio de",
         "timeline3": "Fin de",
         "timeline4": "Fin del turno",
-        "radius": "Distancia minima para detección de posición"
+        "radius": "Distancia minima para detección de posición",
+        "status": "Estado"
       },
       "placeholder": {},
       "columns": [
@@ -586,7 +587,8 @@
         "Fecha/Hora inicio pausa",
         "Fecha/Hora fin pausa",
         "Dia de inicio",
-        "Dia de fin"
+        "Dia de fin",
+        "Estado"
       ]
     }
   },

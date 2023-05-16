@@ -560,12 +560,13 @@
         "timeline2":"Start of",
         "timeline3":"End of",
         "timeline4":"End of shift",
-        "radius":"Minimum distance for position detection"
+        "radius":"Minimum distance for position detection",
+        "status":"Status"
       },
       "placeholder":{
         "date": "YYYY/MM/DD"
       },
-      "columns": ["Job","Start date and time","End date and time", "Pause type", "Pause start date and time", "Pause end date and time", "Start date", "End date"]
+      "columns": ["Job","Start date and time","End date and time", "Pause type", "Pause start date and time", "Pause end date and time", "Start date", "End date", "Status"]
     }
   },
 
