@@ -1,11 +1,4 @@
-import {
-  Group,
-  Loader,
-  ScrollArea,
-  Stack,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
+import { Group, Loader, ScrollArea, Stack, Text, UnstyledButton } from "@mantine/core";
 import { IconApps, IconChevronRight } from "@tabler/icons-react";
 import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -64,7 +57,6 @@ const CustomOptions = () => {
 
   useEffect(() => {
     if (siteSelected) {
-
       const l = siteSelected.roles.map((role) => {
         const item = {
           label: findTranslatedField(i18n.language, role, "name"),
@@ -80,6 +72,19 @@ const CustomOptions = () => {
             link: app.path,
           };
           return subItem;
+        });
+
+        /*Ordena por label*/
+        item.links.sort((a, b) => {
+          const nameA = a.label.toUpperCase();
+          const nameB = b.label.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
         });
 
         return createMenuGroup(role, item);
