@@ -11,7 +11,6 @@ const CategoryPage = () => {
   const { height } = useViewportSize();
   const { t } = useTranslation();
 
-
   const dispatch = useDispatch();
 
   const onSelectCategory = (event) => {

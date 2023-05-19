@@ -106,6 +106,7 @@ const DynamicApp = ({ app }) => {
         },
       ]}
       breadcrumbs={createPath()}
+      headerHeight={260}
     />
   ) : null;
 

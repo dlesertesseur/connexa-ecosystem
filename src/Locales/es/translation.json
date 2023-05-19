@@ -139,13 +139,15 @@
     "center": "Centro",
     "right": "Derecha",
     "textColor": "Color de texto",
-    "openingTime":"Apertura",
-    "closingTime":"Cierre",
-    "url":"http://www.zeetrex.com",
-    "copyright":"© 2023 zeeTrex",
-    "settings":"Ajustes",
-    "selectLanguage":"Seleccione su idioma de preferencia",
-    "basicUser":"Usuario"
+    "openingTime": "Apertura",
+    "closingTime": "Cierre",
+    "url": "http://www.zeetrex.com",
+    "copyright": "© 2023 zeeTrex",
+    "settings": "Ajustes",
+    "selectLanguage": "Seleccione su idioma de preferencia",
+    "basicUser": "Usuario",
+    "retailer": "Retailers (cadennas)",
+    "retailerDesc": "Seleccione un retailer (cadeena) para ver los destinos definidos"
   },
 
   "placeholder": {
@@ -324,6 +326,64 @@
       }
     },
 
+    "retailer": {
+      "columns": ["Nombre", "Direccion", "Telefono", "Contexto"],
+      "label": {
+        "name": "Nombre",
+        "image": "Logo"
+      },
+      "placeholder": {
+        "name": "Nombre",
+        "image": "Logo"
+      },
+      "title": {
+        "create": "Crear un nuevo retailer",
+        "update": "Modificar un retailer",
+        "delete": "Eliminar un retailer"
+      },
+      "message": {}
+    },
+
+    "retailerStore": {
+      "columns": ["Nombre", "Direccion", "Pais", "Provincia", "Ciudad", "Tipo"],
+      "label": {
+        "name": "Nombre",
+        "address": "Direccion",
+        "phones": "Telefonos",
+        "contextId": "Contexto",
+        "description": "Descripcion",
+        "city": "Cuidad",
+        "country": "Pais",
+        "province": "Provincia",
+        "type": "Tipo",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "radius_in_meters": "Radio de accion",
+        "status": "Estado"
+      },
+      "placeholder": {
+        "name": "Nombre de la sucursal",
+        "address": "Direccion de la sucursal",
+        "phones": "Telefonos",
+        "contextId": "Contexto",
+        "description": "Descripcion",
+        "city": "Cuidad",
+        "country": "Pais",
+        "province": "Provincia",
+        "type": "Tipo",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "radius_in_meters": "Radio de accion",
+        "status": "Estado"
+      },
+      "title": {
+        "create": "Crear un nuevo destino",
+        "update": "Modificar un destino",
+        "delete": "Eliminar un destino"
+      },
+      "message": {}
+    },
+
     "brand": {
       "title": {
         "create": "Create a new brand",
@@ -387,7 +447,15 @@
         "status": "Estado",
         "countryOfOrigin": "Pais de origen"
       },
-      "columns": ["Imagen", "SKU", "EAN", "Descripcion", "Marca", "País de origen", "Estado"],
+      "columns": [
+        "Imagen",
+        "SKU",
+        "EAN",
+        "Descripcion",
+        "Marca",
+        "País de origen",
+        "Estado"
+      ],
       "align": ["center", "right", "right", "left", "left", "left"],
       "width": ["5%", "5%", "10%", "50%", "10%", "10%", "10%"],
       "tab1": "Informacion general",
@@ -546,7 +614,18 @@
         "Ciudad",
         "Estado"
       ],
-      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
+      "align": [
+        "right",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left"
+      ],
       "findWorkerColumns": ["Organización", "Desde"],
       "findWorkerAlign": ["left", "left"]
     },
@@ -651,7 +730,7 @@
   "stageContextMenu": {
     "addMarker": "Agregar etiqueta"
   },
-  
+
   "datesOfWeek": {
     "monday": "Lunes",
     "tuesday": "Martes",

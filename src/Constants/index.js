@@ -122,6 +122,14 @@ export const API = {
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/brands/",
   },
 
+  retailer: {
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/retailers/",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/retailers/",
+    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/retailers/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/retailers",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/retailers/",
+  },
+
   category: {
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/categories/",
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/categories",

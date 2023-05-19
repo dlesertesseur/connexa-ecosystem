@@ -20,7 +20,8 @@ const CrudFrame = ({
   filterControl = null,
   filterSelection = null,
   loading = false,
-  breadcrumbs = null
+  breadcrumbs = null,
+  headerHeight= 230
 }) => {
   const { i18n } = useTranslation();
 
@@ -72,6 +73,7 @@ const CrudFrame = ({
                 rowSelected={rowSelected}
                 setRowSelected={setRowSelected}
                 relationship={relationshipPages}
+                headerHeight={headerHeight}
               />
             }
           />
