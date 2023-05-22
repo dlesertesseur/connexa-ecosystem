@@ -188,7 +188,9 @@
     "delete": "¿Esta seguro de eliminar el registro?",
     "createWorker": "El colaborador no está registrado en ninguna organización configurada en la platarforma.",
     "createWorkerRelation": "El colaborador ya está registrado en la plataforma. ¿Desa relacionarlo con esta organización?",
-    "workerAlreadyExist": "El colaborador ya está registrado en esta organización."
+    "workerAlreadyExist": "El colaborador ya está registrado en esta organización.",
+    "userAllreadyExist":"El usuario ya está registrado en esta organización.",
+    "createUser": "El usuario no está registrado en la organización."
   },
 
   "app": {
@@ -464,16 +466,6 @@
       "tab4": "3D"
     },
 
-    "user": {
-      "name": "USUARIOS",
-      "title": "ABM USUARIOS",
-      "columns": ["Apellido", "Nombre", "Email", "Activo"],
-      "align": ["left", "left", "left", "left"],
-      "width": ["30%", "30%", "35%", "5%"],
-      "selectRoles": "ROLES",
-      "selectSites": "SITIOS"
-    },
-
     "context": {
       "name": "CONTEXTO",
       "title": "ABM CONTEXTO",
@@ -628,6 +620,60 @@
       ],
       "findWorkerColumns": ["Organización", "Desde"],
       "findWorkerAlign": ["left", "left"]
+    },
+
+    "user": {
+      "name": "USERS",
+      "title": {
+        "create": "Crear un nuevo usuario",
+        "update": "Modificar los datos de un usuario",
+        "delete": "Eliminar los datos de un usuario",
+        "findUser": "Buscar a un usuario",
+        "photos": "Lista de fotos asociadas"
+      },
+      "label": {
+        "nid": "DNI",
+        "lastname": "Apellido",
+        "firstname": "Nombre",
+        "address": "Direccion",
+        "phone": "Telefono",
+        "email": "Email",
+        "country": "Pais",
+        "city": "Cuidad",
+        "status": "Estado",
+        "active": "Activo",
+        "birthDate": "Fecha de nacimiento"
+      },
+      "placeholder": {
+        "phone": "054 11 5555 5555"
+      },
+      "columns": [
+        "Image",
+        "DNI",
+        "Apellido",
+        "Nombre",
+        "Fecha de macimiento",
+        "Direccion",
+        "Telefono",
+        "Email",
+        "Pais",
+        "Ciudad",
+        "Estado"
+      ],
+      "align": [
+        "right",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left"
+      ],
+      "findUserColumns": ["Organización", "Desde"],
+      "findUserAlign": ["left", "left"]
     },
 
     "shift": {

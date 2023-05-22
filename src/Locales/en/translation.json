@@ -188,7 +188,9 @@
     "delete": "Are you sure you want to delete the record?",
     "createWorker": "The collaborator is not registered in any organization configured in the platform.",
     "createWorkerRelation":"The collaborator is already registered on the platform. Do you want to associate it with this organization?",
-    "workerAlreadyExist": "The collaborator is already registered with this organization."
+    "workerAlreadyExist": "The collaborator is already registered with this organization.",
+    "userAllreadyExist":"The user is already registered with this organization.",
+    "createUser": "The user is not registered in organization."
   },
 
   "app": {
@@ -468,16 +470,6 @@
       "tab4": "3D"
     },
 
-    "user": {
-      "name": "USER",
-      "title": "CRUD USER",
-      "columns": ["Last Name", "First Name", "Email", "Active"],
-      "align": ["left", "left", "left", "left"],
-      "width": ["30%", "30%", "35%", "5%"],
-      "selectRoles": "ROLES",
-      "selectSites": "SITES"
-    },
-
     "context": {
       "name": "CONTEXT",
       "title": "CONTEXT CRUD",
@@ -599,6 +591,37 @@
       "findWorkerAlign": ["left", "left"]
     },
 
+    "user": {
+      "name": "USERS",
+      "title": {
+        "create": "Create a new user",
+        "update": "Update user",
+        "delete": "Delete user",
+        "findUser": "Find user",
+        "photos":"Associated photos list"
+      },
+      "label": {
+        "nid": "Identification (ID)",
+        "lastname": "Surnames",
+        "firstname": "Names",
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email",
+        "country": "Country",
+        "city": "City",
+        "status": "Status",
+        "active": "Active",
+        "birthDate": "Date of birth"
+      },
+      "placeholder":{
+        "phone": "054 11 5555 5555"
+      },
+      "columns": ["Image","ID","Surnames", "Names", "Birth date", "Address", "Phone", "Email", "Country", "City", "Status"],
+      "align": ["right","left", "left", "left", "left", "left", "left", "left", "left", "left"],
+      "findUserColumns": ["Origanization", "Since"],
+      "findUserAlign": ["left", "left"]
+    },
+
     "shift": {
       "name": "SHIFT",
       "title": {
@@ -702,5 +725,4 @@
     "saturday": "Saturday",
     "sunday": "Sunday"
   }
-
 }

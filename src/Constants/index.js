@@ -29,8 +29,8 @@ export const API = {
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/users",
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/users/",
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/users/",
-    allUsers: config.SERVER + ":" + config.PORT + config.API_BASE + "/users",
-    findUserByEmail: config.SERVER + ":" + config.PORT + config.API_BASE + "/users/",
+    getAllUsers: config.SERVER + ":" + config.PORT + config.API_BASE + "/users",
+    findByEmail: config.SERVER + ":" + config.PORT + config.API_BASE + "/users/",
     findAllUserByPage: config.SERVER + ":" + config.PORT + config.API_BASE + "/users/",
   },
 
