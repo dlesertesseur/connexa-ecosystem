@@ -4,8 +4,6 @@ async function createUser(parameters) {
 
   const obj = {...parameters.data, active:true, password:"11111111"}
 
-  console.log("requestOptions -> ", obj)
-
   try {
     const body = JSON.stringify(obj);
 
@@ -23,8 +21,6 @@ async function createUser(parameters) {
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
-    console.log("data <- ", data)
-
     return data;
   } catch (error) {
     return error;
@@ -33,10 +29,7 @@ async function createUser(parameters) {
 
 async function updateUser(parameters) {
   try {
-    const body = JSON.stringify({
-      id: parameters.data.id,
-      name: parameters.data.name,
-    });
+    const body = JSON.stringify(parameters.values);
 
     const requestOptions = {
       method: "PUT",
@@ -124,7 +117,7 @@ async function findAllUsers(parameters) {
       headers: { "Content-Type": "application/json", token: parameters.token },
     };
 
-    const url = API.user.findPage;
+    const url = API.user.getAllUsers;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
@@ -160,7 +153,10 @@ async function findUserByEmail(parameters) {
       headers: { "Content-Type": "application/json", token: parameters.token },
     };
 
-    const url = API.user.findByEmail + parameters.email;
+    const url = API.user.findByEmail +"?email="+ parameters.email;
+
+console.log("findUserByEmail url ->", url);
+
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 

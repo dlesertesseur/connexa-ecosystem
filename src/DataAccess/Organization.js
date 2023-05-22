@@ -44,8 +44,6 @@ async function updateOrganization(parameters) {
       body: body,
     };
 
-    console.log("updateOrganization requestOptions -> ", requestOptions);
-
     const res = await fetch(API.organization.update, requestOptions);
     const data = await res.json();
     return data;

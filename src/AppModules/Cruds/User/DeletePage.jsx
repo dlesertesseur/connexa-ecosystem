@@ -1,59 +1,65 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
-import { TextInput, Title, Container, Button, Group, LoadingOverlay, Select, ScrollArea } from "@mantine/core";
+import { TextInput, Title, Container, Button, Group, LoadingOverlay, ScrollArea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { DatePicker } from "@mantine/dates";
-import { clearError, findAllCountries, findWorkerById, remove } from "../../../Features/Worker";
-import { useViewportSize } from "@mantine/hooks";
+import { deleteUser, findUserById } from "../../../DataAccess/User";
+import { useWindowSize } from "../../../Hook";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
 
 export function DeletePage() {
-  const { t, i18n } = useTranslation();
-  const { user, organizationSelected } = useSelector((state) => state.auth.value);
-  const {
-    countries,
-    error,
-    errorCode,
-    errorMessage,
-    updating,
-    selectedRowId,
-    loadingCountries,
-    loadingWorker,
-    worker,
-  } = useSelector((state) => state.worker.value);
-  const { height } = useViewportSize();
+  const { t } = useTranslation();
+  const { user } = useSelector((state) => state.auth.value);
+  const { setReload, selectedRowId } = useContext(AbmStateContext);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [userFound, setUserFound] = useState(null);
 
-  const dispatch = useDispatch();
+  const wSize = useWindowSize();
   const navigate = useNavigate();
 
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const findUser = async (params) => {
+    setLoading(true);
+    try {
+      //Cambiar por findById
+      const found = await findUserById(params);
 
-  useEffect(() => {
-    const params = { token: user.token };
-    dispatch(findAllCountries(params));
-  }, [dispatch, user]);
+      if (found.error) {
+        setErrorMessage(found.error);
+        setErrorCode(found.status);
+        setUserFound(null);
+      } else {
+        setErrorMessage(null);
+        setErrorCode(null);
+        setUserFound(found);
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     const params = { token: user.token, id: selectedRowId };
-    dispatch(findWorkerById(params));
-  }, [dispatch, selectedRowId, user]);
+    findUser(params);
+  }, [selectedRowId, user]);
 
   const form = useForm({
     initialValues: {
-      nid: "",
+      // nid: "",
       lastname: "",
       firstname: "",
-      address: "",
-      phone: "",
+      // address: "",
+      // phone: "",
       email: "",
-      country: "",
-      city: "",
-      status: "",
-      active: "",
-      birthDate: "",
+      // country: "",
+      // city: "",
+      // status: "",
+      // active: "",
+      // birthDate: "",
     },
 
     validate: {},
@@ -61,17 +67,17 @@ export function DeletePage() {
 
   useEffect(() => {
     if (worker) {
-      form.setFieldValue("nid", worker.nid);
+      // form.setFieldValue("nid", worker.nid);
       form.setFieldValue("lastname", worker.lastname);
       form.setFieldValue("firstname", worker.firstname);
-      form.setFieldValue("address", worker.address);
-      form.setFieldValue("phone", worker.phone);
+      // form.setFieldValue("address", worker.address);
+      // form.setFieldValue("phone", worker.phone);
       form.setFieldValue("email", worker.email);
-      form.setFieldValue("country", worker.country);
-      form.setFieldValue("city", worker.city);
-      form.setFieldValue("status", worker.status);
-      form.setFieldValue("active", worker.active);
-      form.setFieldValue("birthDate", new Date(worker.birthDate));
+      // form.setFieldValue("country", worker.country);
+      // form.setFieldValue("city", worker.city);
+      // form.setFieldValue("status", worker.status);
+      // form.setFieldValue("active", worker.active);
+      // form.setFieldValue("birthDate", new Date(worker.birthDate));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [worker]);
@@ -91,73 +97,73 @@ export function DeletePage() {
     return ret;
   };
 
-  const createDateField = (field) => {
-    const ret = (
-      <DatePicker
-        disabled={true}
-        locale={i18n.language}
-        inputFormat="DD/MM/YYYY"
-        firstDayOfWeek="sunday"
-        label={t("crud.worker.label." + field)}
-        placeholder={
-          t("crud.worker.placeholder." + field).startsWith("crud.") ? "" : t("crud.worker.placeholder." + field)
-        }
-        {...form.getInputProps(field)}
-      />
-    );
+  // const createDateField = (field) => {
+  //   const ret = (
+  //     <DatePicker
+  //       disabled={true}
+  //       locale={i18n.language}
+  //       inputFormat="DD/MM/YYYY"
+  //       firstDayOfWeek="sunday"
+  //       label={t("crud.worker.label." + field)}
+  //       placeholder={
+  //         t("crud.worker.placeholder." + field).startsWith("crud.") ? "" : t("crud.worker.placeholder." + field)
+  //       }
+  //       {...form.getInputProps(field)}
+  //     />
+  //   );
 
-    return ret;
-  };
+  //   return ret;
+  // };
 
-  const createSelectCountries = () => {
-    const list = countries?.map((c) => {
-      return { value: c.name, label: c.name };
-    });
-    const ret = (
-      <Select
-        label={t("crud.worker.label.country")}
-        data={list ? list : []}
-        {...form.getInputProps("country")}
-        disabled={true}
-      />
-    );
+  // const createSelectCountries = () => {
+  //   const list = countries?.map((c) => {
+  //     return { value: c.name, label: c.name };
+  //   });
+  //   const ret = (
+  //     <Select
+  //       label={t("crud.worker.label.country")}
+  //       data={list ? list : []}
+  //       {...form.getInputProps("country")}
+  //       disabled={true}
+  //     />
+  //   );
 
-    return ret;
-  };
+  //   return ret;
+  // };
 
-  const createSelectCities = () => {
-    let ret = null;
-    if (form.values?.country) {
-      const c = countries.find((p) => p.name === form.values?.country);
-      if (c) {
-        const list = c.provinces.map((p) => {
-          return { value: p.name, label: p.name };
-        });
-        ret = (
-          <Select
-            label={t("crud.worker.label.city")}
-            data={list ? list : []}
-            {...form.getInputProps("city")}
-            disabled={true}
-          />
-        );
-      }
-    }
+  // const createSelectCities = () => {
+  //   let ret = null;
+  //   if (form.values?.country) {
+  //     const c = countries.find((p) => p.name === form.values?.country);
+  //     if (c) {
+  //       const list = c.provinces.map((p) => {
+  //         return { value: p.name, label: p.name };
+  //       });
+  //       ret = (
+  //         <Select
+  //           label={t("crud.worker.label.city")}
+  //           data={list ? list : []}
+  //           {...form.getInputProps("city")}
+  //           disabled={true}
+  //         />
+  //       );
+  //     }
+  //   }
 
-    return ret;
-  };
+  //   return ret;
+  // };
 
-  const onDelete = () => {
+  const onDelete = async () => {
     const params = {
       token: user.token,
-      id: worker.id,
-      organizationId:organizationSelected.id
+      id: userFound.id,
     };
-    dispatch(remove(params));
+    await deleteUser(params);
+    setReload(Date.now());
+    navigate("../");
   };
 
   const onClose = () => {
-    dispatch(clearError());
     navigate("../");
   };
 
@@ -198,8 +204,8 @@ export function DeletePage() {
             setConfirmModalOpen(true);
           })}
         >
-          <ScrollArea style={{ flex: 1, height: height - 300 }}>
-            <Group mb={"md"}>{createTextField("nid")}</Group>
+          <ScrollArea style={{ flex: 1, height: wSize.height - HEADER_HIGHT }}>
+            {/* <Group mb={"md"}>{createTextField("nid")}</Group> */}
 
             <Group grow mb={"md"}>
               {createTextField("lastname")}
@@ -209,21 +215,21 @@ export function DeletePage() {
               {createTextField("firstname")}
             </Group>
 
-            <Group mb={"md"}>{createDateField("birthDate")}</Group>
+            {/* <Group mb={"md"}>{createDateField("birthDate")}</Group>
 
             <Group grow mb={"md"}>
               {createTextField("address")}
             </Group>
 
-            <Group mb={"md"}>{createTextField("phone")}</Group>
+            <Group mb={"md"}>{createTextField("phone")}</Group> */}
 
             <Group grow mb={"md"}>
               {createTextField("email")}
             </Group>
 
-            <Group mb={"md"}>{createSelectCountries()}</Group>
+            {/* <Group mb={"md"}>{createSelectCountries()}</Group>
 
-            {form.values?.country ? <Group mb={"md"}>{createSelectCities()}</Group> : null}
+            {form.values?.country ? <Group mb={"md"}>{createSelectCities()}</Group> : null} */}
           </ScrollArea>
           <Group position="right" mt="xl" mb="xs">
             <Button
