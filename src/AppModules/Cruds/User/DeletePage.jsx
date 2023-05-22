@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { deleteUser, findUserById } from "../../../DataAccess/User";
-import { useWindowSize } from "../../../Hook";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
 
@@ -17,8 +16,11 @@ export function DeletePage() {
   const { setReload, selectedRowId } = useContext(AbmStateContext);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [userFound, setUserFound] = useState(null);
+  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorCode, setErrorCode] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const wSize = useWindowSize();
   const navigate = useNavigate();
 
   const findUser = async (params) => {
@@ -66,29 +68,30 @@ export function DeletePage() {
   });
 
   useEffect(() => {
-    if (worker) {
-      // form.setFieldValue("nid", worker.nid);
-      form.setFieldValue("lastname", worker.lastname);
-      form.setFieldValue("firstname", worker.firstname);
-      // form.setFieldValue("address", worker.address);
-      // form.setFieldValue("phone", worker.phone);
-      form.setFieldValue("email", worker.email);
-      // form.setFieldValue("country", worker.country);
-      // form.setFieldValue("city", worker.city);
-      // form.setFieldValue("status", worker.status);
-      // form.setFieldValue("active", worker.active);
-      // form.setFieldValue("birthDate", new Date(worker.birthDate));
+    if (userFound) {
+      // form.setFieldValue("nid", userFound.nid);
+      form.setFieldValue("lastname", userFound.lastname);
+      form.setFieldValue("firstname", userFound.firstname);
+      // form.setFieldValue("address", userFound.address);
+      // form.setFieldValue("phone", userFound.phone);
+      form.setFieldValue("email", userFound.email);
+      // form.setFieldValue("country", userFound.country);
+      // form.setFieldValue("city", userFound.city);
+      // form.setFieldValue("status", userFound.status);
+      //form.setFieldValue("active", userFound.active);
+      // form.setFieldValue("birthDate", new Date(userFound.birthDate));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [worker]);
+  }, [userFound]);
+
 
   const createTextField = (field) => {
     const ret = (
       <TextInput
         disabled={true}
-        label={t("crud.worker.label." + field)}
+        label={t("crud.user.label." + field)}
         placeholder={
-          t("crud.worker.placeholder." + field).startsWith("crud.") ? "" : t("crud.worker.placeholder." + field)
+          t("crud.user.placeholder." + field).startsWith("crud.") ? "" : t("crud.user.placeholder." + field)
         }
         {...form.getInputProps(field)}
       />
@@ -104,9 +107,9 @@ export function DeletePage() {
   //       locale={i18n.language}
   //       inputFormat="DD/MM/YYYY"
   //       firstDayOfWeek="sunday"
-  //       label={t("crud.worker.label." + field)}
+  //       label={t("crud.user.label." + field)}
   //       placeholder={
-  //         t("crud.worker.placeholder." + field).startsWith("crud.") ? "" : t("crud.worker.placeholder." + field)
+  //         t("crud.user.placeholder." + field).startsWith("crud.") ? "" : t("crud.user.placeholder." + field)
   //       }
   //       {...form.getInputProps(field)}
   //     />
@@ -121,7 +124,7 @@ export function DeletePage() {
   //   });
   //   const ret = (
   //     <Select
-  //       label={t("crud.worker.label.country")}
+  //       label={t("crud.user.label.country")}
   //       data={list ? list : []}
   //       {...form.getInputProps("country")}
   //       disabled={true}
@@ -141,7 +144,7 @@ export function DeletePage() {
   //       });
   //       ret = (
   //         <Select
-  //           label={t("crud.worker.label.city")}
+  //           label={t("crud.user.label.city")}
   //           data={list ? list : []}
   //           {...form.getInputProps("city")}
   //           disabled={true}
@@ -185,7 +188,7 @@ export function DeletePage() {
         text={t("notification.delete")}
       />
 
-      <LoadingOverlay overlayOpacity={0.5} visible={loadingCountries || updating || loadingWorker} />
+      <LoadingOverlay overlayOpacity={0.5} visible={loading} />
       <Container size={"sm"}>
         <Title
           mb={"lg"}
@@ -196,7 +199,7 @@ export function DeletePage() {
             fontWeight: 700,
           })}
         >
-          {t("crud.worker.title.delete")}
+          {t("crud.user.title.delete")}
         </Title>
 
         <form
@@ -204,7 +207,7 @@ export function DeletePage() {
             setConfirmModalOpen(true);
           })}
         >
-          <ScrollArea style={{ flex: 1, height: wSize.height - HEADER_HIGHT }}>
+          <ScrollArea style={{ flex: 1}}>
             {/* <Group mb={"md"}>{createTextField("nid")}</Group> */}
 
             <Group grow mb={"md"}>

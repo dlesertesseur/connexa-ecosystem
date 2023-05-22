@@ -4,12 +4,10 @@ import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useViewportSize } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { findUserById, updateUser } from "../../../DataAccess/User";
 import { useState, useContext} from "react";
 import { AbmStateContext } from "./Context";
-import { useWindowSize } from "../../../Hook";
 
 export function UpdatePage() {
   const { t } = useTranslation();
@@ -21,7 +19,6 @@ export function UpdatePage() {
   const [errorCode, setErrorCode] = useState(null);
 
   const { user } = useSelector((state) => state.auth.value);
-  const wSize = useWindowSize();
 
   const navigate = useNavigate();
 
@@ -195,7 +192,7 @@ export function UpdatePage() {
             onUpdate({ ...values, id: userFound.id });
           })}
         >
-          <ScrollArea style={{ flex: 1, height: wSize.height - HEADER_HIGHT }}>
+          <ScrollArea style={{ flex: 1 }}>
             <Group grow mb={"md"}>
               {createTextField("lastname")}
             </Group>
