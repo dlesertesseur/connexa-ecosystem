@@ -54,12 +54,13 @@
     "pixelMeterRelation": "Pixel/Meter",
     "deleteImage": "Delete image",
     "addLabel": "Add label",
-    "seek":"Seek",
-    "create":"Create",
-    "createAnyway":"Create anyway",
-    "createWorkerRelation":"Connect with this organization",
-    "photos":"Photos",
-    "roles":"Profiles"
+    "seek": "Seek",
+    "create": "Create",
+    "createAnyway": "Create anyway",
+    "createWorkerRelation": "Connect with this organization",
+    "photos": "Photos",
+    "roles": "Profiles",
+    "sites": "Sites"
   },
 
   "label": {
@@ -140,13 +141,13 @@
     "center": "Center",
     "right": "Right",
     "textColor": "Text color",
-    "openingTime":"Opening",
-    "closingTime":"Closing",
-    "url":"http://www.zeetrex.com",
-    "copyright":"© 2023 zeeTrex",
-    "settings":"Settings",
-    "selectLanguage":"Select your preferred language",
-    "basicUser":"User",
+    "openingTime": "Opening",
+    "closingTime": "Closing",
+    "url": "http://www.zeetrex.com",
+    "copyright": "© 2023 zeeTrex",
+    "settings": "Settings",
+    "selectLanguage": "Select your preferred language",
+    "basicUser": "User",
     "retailer": "Retailer",
     "retailerDesc": "Select a retailer to see the defined stores"
   },
@@ -168,8 +169,8 @@
     "required": "Required field",
     "numeric": "Numeric value",
     "emailFormat": "Wrong email format",
-    "idNumberFormat":"Wrong id number format",
-    "phoneNumberFormat":"Wrong phone number format",
+    "idNumberFormat": "Wrong id number format",
+    "phoneNumberFormat": "Wrong phone number format",
     "passwordFormat": "Password should include at least 6 characters",
     "terms": "You have to accept the terms and conditions"
   },
@@ -188,9 +189,9 @@
     "signUpOK": "User was created successfully",
     "delete": "Are you sure you want to delete the record?",
     "createWorker": "The collaborator is not registered in any organization configured in the platform.",
-    "createWorkerRelation":"The collaborator is already registered on the platform. Do you want to associate it with this organization?",
+    "createWorkerRelation": "The collaborator is already registered on the platform. Do you want to associate it with this organization?",
     "workerAlreadyExist": "The collaborator is already registered with this organization.",
-    "userAllreadyExist":"The user is already registered with this organization.",
+    "userAllreadyExist": "The user is already registered with this organization.",
     "createUser": "The user is not registered in organization."
   },
 
@@ -240,7 +241,7 @@
       "align": ["left", "left"],
       "width": ["30%", "70%"]
     },
-    "brands":{
+    "brands": {
       "name": "BRANDS",
       "title": "BRANDS CRUD",
       "columns": ["Name"],
@@ -310,14 +311,14 @@
         "address": "Address",
         "phones": "Phones",
         "contextId": "Context",
-        "description":"Description",
-        "city":"City",
-        "country":"Country",
-        "province":"Province",
-        "type":"Type",
-        "latitude":"Latitude",
-        "longitude":"Longitude",
-        "radius_in_meters":"Action ratio",
+        "description": "Description",
+        "city": "City",
+        "country": "Country",
+        "province": "Province",
+        "type": "Type",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "radius_in_meters": "Action ratio",
         "status": "Status"
       },
       "placeholder": {
@@ -325,14 +326,14 @@
         "address": "Site address",
         "phones": "Phones",
         "contextId": "Context",
-        "description":"Description",
-        "city":"City",
-        "country":"Country",
-        "province":"Province",
-        "type":"Type",
-        "latitude":"Latitude",
-        "longitude":"Longitude",
-        "radius_in_meters":"Action ratio",
+        "description": "Description",
+        "city": "City",
+        "country": "Country",
+        "province": "Province",
+        "type": "Type",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "radius_in_meters": "Action ratio",
         "status": "Status"
       },
       "title": {
@@ -374,14 +375,14 @@
         "address": "Address",
         "phones": "Phones",
         "contextId": "Context",
-        "description":"Description",
-        "city":"City",
-        "country":"Country",
-        "province":"Province",
-        "type":"Type",
-        "latitude":"Latitude",
-        "longitude":"Longitude",
-        "radius_in_meters":"Action ratio",
+        "description": "Description",
+        "city": "City",
+        "country": "Country",
+        "province": "Province",
+        "type": "Type",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "radius_in_meters": "Action ratio",
         "status": "Status"
       },
       "placeholder": {
@@ -389,14 +390,14 @@
         "address": "Site address",
         "phones": "Phones",
         "contextId": "Context",
-        "description":"Description",
-        "city":"City",
-        "country":"Country",
-        "province":"Province",
-        "type":"Type",
-        "latitude":"Latitude",
-        "longitude":"Longitude",
-        "radius_in_meters":"Action ratio",
+        "description": "Description",
+        "city": "City",
+        "country": "Country",
+        "province": "Province",
+        "type": "Type",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "radius_in_meters": "Action ratio",
         "status": "Status"
       },
       "title": {
@@ -407,18 +408,17 @@
       "message": {}
     },
 
-
     "brand": {
       "title": {
         "create": "Create a new brand",
         "update": "Update brand",
         "delete": "Delete brand"
       },
-      "label":{
-        "name":"Name"
+      "label": {
+        "name": "Name"
       },
-      "placeholder":{
-        "name":"Storage structure name"
+      "placeholder": {
+        "name": "Storage structure name"
       },
       "name": "BRANDS",
       "columns": ["Name"],
@@ -567,8 +567,8 @@
         "update": "Update worker",
         "delete": "Delete worker",
         "findWorker": "Find worker",
-        "organizationList":"Organizations to which the collaborator belongs.",
-        "photos":"Associated photos list"
+        "organizationList": "Organizations to which the collaborator belongs.",
+        "photos": "Associated photos list"
       },
       "label": {
         "nid": "Identification (ID)",
@@ -583,11 +583,23 @@
         "active": "Active",
         "birthDate": "Date of birth"
       },
-      "placeholder":{
+      "placeholder": {
         "phone": "054 11 5555 5555"
       },
-      "columns": ["Image","ID","Surnames", "Names", "Birth date", "Address", "Phone", "Email", "Country", "City", "Status"],
-      "align": ["right","left", "left", "left", "left", "left", "left", "left", "left", "left"],
+      "columns": [
+        "Image",
+        "ID",
+        "Surnames",
+        "Names",
+        "Birth date",
+        "Address",
+        "Phone",
+        "Email",
+        "Country",
+        "City",
+        "Status"
+      ],
+      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
       "findWorkerColumns": ["Origanization", "Since"],
       "findWorkerAlign": ["left", "left"]
     },
@@ -599,8 +611,9 @@
         "update": "Update user",
         "delete": "Delete user",
         "findUser": "Find user",
-        "photos":"Associated photos list",
-        "role":"Associated profiles"
+        "photos": "Associated photos list:",
+        "role": "Role definition:",
+        "site": "Sites"
       },
       "label": {
         "nid": "Identification (ID)",
@@ -613,13 +626,26 @@
         "city": "City",
         "status": "Status",
         "active": "Active",
-        "birthDate": "Date of birth"
+        "birthDate": "Date of birth",
+        "sites": "Sites"
       },
-      "placeholder":{
+      "placeholder": {
         "phone": "054 11 5555 5555"
       },
-      "columns": ["Image","ID","Surnames", "Names", "Birth date", "Address", "Phone", "Email", "Country", "City", "Status"],
-      "align": ["right","left", "left", "left", "left", "left", "left", "left", "left", "left"],
+      "columns": [
+        "Image",
+        "ID",
+        "Surnames",
+        "Names",
+        "Birth date",
+        "Address",
+        "Phone",
+        "Email",
+        "Country",
+        "City",
+        "Status"
+      ],
+      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
       "findUserColumns": ["Origanization", "Since"],
       "findUserAlign": ["left", "left"]
     },
@@ -632,30 +658,40 @@
         "delete": "Delete shift"
       },
       "label": {
-        "startTime":"Start time",
+        "startTime": "Start time",
         "durationsInHours": "Durations in hours",
         "pauseType": "Pause type",
         "pauseStartTime": "Pause start time",
         "pauseDurationsInMinutes": "Pause duration",
         "jobType": "Job type",
-        "retailer":"Retailer",
-        "store":"Store",
+        "retailer": "Retailer",
+        "store": "Store",
         "retailerDesc": "Select a retailer to see the stores",
         "storeDesc": "Select a store",
-        "date":"Date",
-        "pause":"Pause",
-        "worker":"Assigned to",
-        "timeline1":"Enter the store",
-        "timeline2":"Start of",
-        "timeline3":"End of",
-        "timeline4":"End of shift",
-        "radius":"Minimum distance for position detection",
-        "status":"Status"
+        "date": "Date",
+        "pause": "Pause",
+        "worker": "Assigned to",
+        "timeline1": "Enter the store",
+        "timeline2": "Start of",
+        "timeline3": "End of",
+        "timeline4": "End of shift",
+        "radius": "Minimum distance for position detection",
+        "status": "Status"
       },
-      "placeholder":{
+      "placeholder": {
         "date": "YYYY/MM/DD"
       },
-      "columns": ["Job","Start date and time","End date and time", "Pause type", "Pause start date and time", "Pause end date and time", "Start date", "End date", "Status"]
+      "columns": [
+        "Job",
+        "Start date and time",
+        "End date and time",
+        "Pause type",
+        "Pause start date and time",
+        "Pause end date and time",
+        "Start date",
+        "End date",
+        "Status"
+      ]
     }
   },
 

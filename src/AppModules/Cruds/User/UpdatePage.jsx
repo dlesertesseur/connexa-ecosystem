@@ -6,8 +6,9 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { findUserById, updateUser } from "../../../DataAccess/User";
-import { useState, useContext} from "react";
+import { useState, useContext } from "react";
 import { AbmStateContext } from "./Context";
+import { useWindowSize } from "../../../Hook";
 
 export function UpdatePage() {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ export function UpdatePage() {
   const [error, setError] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
-
+  const wSize = useWindowSize();
   const { user } = useSelector((state) => state.auth.value);
 
   const navigate = useNavigate();
@@ -206,6 +207,7 @@ export function UpdatePage() {
             </Group>
           </ScrollArea>
           <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.accept")}</Button>
             <Button
               onClick={(event) => {
                 navigate("../");
@@ -213,7 +215,6 @@ export function UpdatePage() {
             >
               {t("button.cancel")}
             </Button>
-            <Button type="submit">{t("button.accept")}</Button>
           </Group>
         </form>
       </Container>

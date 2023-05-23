@@ -1,8 +1,7 @@
 import { API } from "../Constants";
 
 async function createUser(parameters) {
-
-  const obj = {...parameters.data, active:true, password:"11111111"}
+  const obj = { ...parameters.data, active: true, password: "11111111" };
 
   try {
     const body = JSON.stringify(obj);
@@ -17,7 +16,7 @@ async function createUser(parameters) {
       body: body,
     };
 
-    const url = API.user.create;    
+    const url = API.user.create;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
@@ -95,11 +94,7 @@ async function findAllUsersByPage(parameters) {
       headers: { "Content-Type": "application/json", token: parameters.token },
     };
 
-    const url =
-      API.user.findAllUserByPage +
-      parameters.pageNbr +
-      "/" +
-      parameters.itemsByPage;
+    const url = API.user.findAllUserByPage + parameters.pageNbr + "/" + parameters.itemsByPage;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
@@ -153,10 +148,7 @@ async function findUserByEmail(parameters) {
       headers: { "Content-Type": "application/json", token: parameters.token },
     };
 
-    const url = API.user.findByEmail +"?email="+ parameters.email;
-
-console.log("findUserByEmail url ->", url);
-
+    const url = API.user.findByEmail + "?email=" + parameters.email;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
@@ -183,9 +175,93 @@ const findAllCountries = async (parameters, asyncThunk) => {
 
     return data;
   } catch (error) {
-    return asyncThunk.rejectWithValue(error);
+    return error;
   }
 };
+
+async function assignRol(parameters) {
+  try {
+    const body = JSON.stringify({
+      siteId: parameters.siteId,
+      userId: parameters.userId,
+      roleId: parameters.roleId,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+      body: body,
+    };
+
+    let url = API.auth.assignRole;
+
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log("assignRol -> error", error);
+    return error;
+  }
+}
+
+async function unassignRol(parameters) {
+  try {
+    const requestOptions = {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+    };
+
+    let url =
+      API.auth.unassignRole +
+      parameters.projectId +
+      "/" +
+      parameters.siteId +
+      "/" +
+      parameters.userId +
+      "/" +
+      parameters.roleId;
+
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function getRoleBySiteIdAndUserId(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+    };
+
+    let url = API.auth.findAllRoleSiteIdAndUserId + "/" + parameters.siteId + "/" + parameters.userId;
+
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+
+    console.log("getRoleBySiteIdAndUserId -> data", data);
+
+    return data;
+  } catch (error) {
+    console.log("assignRol -> error", error);
+    return error;
+  }
+}
 
 export {
   createUser,
@@ -197,4 +273,7 @@ export {
   findUserById,
   findUserByEmail,
   findAllCountries,
+  assignRol,
+  unassignRol,
+  getRoleBySiteIdAndUserId,
 };

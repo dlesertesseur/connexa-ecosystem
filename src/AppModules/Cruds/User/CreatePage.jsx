@@ -13,6 +13,7 @@ import "dayjs/locale/en";
 import { AbmStateContext } from "./Context";
 import { useContext } from "react";
 import { useWindowSize } from "../../../Hook";
+import { HEADER_HIGHT } from "../../../Constants";
 
 export function CreatePage() {
   const { t, i18n } = useTranslation();
@@ -174,7 +175,7 @@ export function CreatePage() {
             onCreate(values);
           })}
         >
-          <ScrollArea style={{ flex: 1, height: wSize.height - HEADER_HIGHT }}>
+          <ScrollArea style={{ flex: 1 }}>
             {/* <Group mb={"md"}>{createTextField("nid")}</Group> */}
 
             <Group grow mb={"md"}>

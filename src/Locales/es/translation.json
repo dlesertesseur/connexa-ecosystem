@@ -59,8 +59,8 @@
     "createAnyway": "Crear de todos modos",
     "createWorkerRelation": "Relacionar con esta organización",
     "photos": "Fotos",
-    "roles":"Perfiles"
-
+    "roles":"Perfiles",
+    "sites":"Sitios"
   },
 
   "label": {
@@ -631,8 +631,9 @@
         "update": "Modificar los datos de un usuario",
         "delete": "Eliminar los datos de un usuario",
         "findUser": "Buscar a un usuario",
-        "photos": "Lista de fotos asociadas",
-        "role":"Perfiles asociados"
+        "photos": "Lista de fotos asociadas:",
+        "role":"Definicion de perfiles:",
+        "site":"Sitios"
       },
       "label": {
         "nid": "DNI",

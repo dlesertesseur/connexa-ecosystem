@@ -7,6 +7,7 @@ import {
   Checkbox,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
+import { useWindowSize } from "../../Hook";
 
 export default function CheckTable({
   data,
@@ -15,10 +16,10 @@ export default function CheckTable({
   rowSelected,
   setRowSelected,
   onCheckRow,
-  height,
+  headerHeight
 }) {
   const { t } = useTranslation();
-
+  const wSize = useWindowSize();
   const [sortedData, setSortedData] = useState(null);
 
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function CheckTable({
 
   return (
     <ScrollArea
-      sx={{ height: height }}
+      sx={{ height: wSize.height - headerHeight }}
       //onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
     >
       <LoadingOverlay visible={loading} overlayBlur={2} />

@@ -23,6 +23,7 @@ export const API = {
     findAllRolesByUserId: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations/",
     unassignRole: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations/",
     assignRole: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations",
+    findAllRoleSiteIdAndUserId: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations",
   },
 
   user: {

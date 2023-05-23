@@ -132,7 +132,7 @@ export function ApplicationsPage() {
         rowSelected={rowSelected}
         setRowSelected={setRowSelected}
         onCheckRow={onCheckRow}
-        height={400}
+        headerHeight={300}
       />
 
       <Group position="right" mt="xs" mb="xs" width="100%">

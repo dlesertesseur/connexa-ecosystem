@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
 import NewUserStack from "./NewUserStack";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
+import { API } from "../../../Constants";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
-import { API } from "../../../Constants";
+import { RolePage } from "./RolePage";
 import { UserPhotosPage } from "./UserPhotosPage";
 import { findAllUsers } from "../../../DataAccess/User";
 import { AbmStateContext } from "./Context";
-import { RolesPage } from "./RolesPage";
 
 const DynamicApp = ({ app }) => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
+  const [selectedUserName, setSelectedUserName] = useState(null);
   const [reload, setReload] = useState(null);
 
   const getAllUsers = async () => {
     const parameters = {
-      token: user.token
+      token: user.token,
     };
 
     const users = await findAllUsers(parameters);
@@ -28,8 +29,17 @@ const DynamicApp = ({ app }) => {
   };
 
   useEffect(() => {
-      getAllUsers();
+    getAllUsers();
   }, [user, reload]);
+
+  useEffect(() => {
+    if(selectedRowId){
+      const ret = rows.find(u => u.id === selectedRowId);
+      if(ret){
+        setSelectedUserName(ret.firstname + ", " + ret.lastname);
+      }
+    }
+  }, [selectedRowId]);
 
   let col = 0;
   const cols = t("crud.worker.columns", { returnObjects: true });
@@ -55,7 +65,7 @@ const DynamicApp = ({ app }) => {
   ];
 
   const ret = rows ? (
-    <AbmStateContext.Provider value={{ reload, setReload, selectedRowId }}>
+    <AbmStateContext.Provider value={{ reload, setReload, selectedRowId, selectedUserName }}>
       <CrudFrame
         app={app}
         columns={columns}
@@ -64,8 +74,8 @@ const DynamicApp = ({ app }) => {
         setRowSelected={setSelectedRowId}
         enableCreateButton={true}
         createPage={<NewUserStack />}
-        updatePage={<UpdatePage/>}
-        deletePage={<DeletePage/>}
+        updatePage={<UpdatePage />}
+        deletePage={<DeletePage />}
         relationshipPages={[
           {
             path: "/images",
@@ -73,9 +83,9 @@ const DynamicApp = ({ app }) => {
             element: <UserPhotosPage user={user} back={"../"} />,
           },
           {
-            path: "/roles",
+            path: "/role",
             key: "button.roles",
-            element: <RolesPage user={user} back={"../"} />,
+            element: <RolePage back={"../"} />,
           },
         ]}
       />

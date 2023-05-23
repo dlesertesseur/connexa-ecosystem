@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteUser, findUserById } from "../../../DataAccess/User";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
+import { useWindowSize } from "../../../Hook";
 
 export function DeletePage() {
   const { t } = useTranslation();
@@ -84,15 +85,12 @@ export function DeletePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userFound]);
 
-
   const createTextField = (field) => {
     const ret = (
       <TextInput
         disabled={true}
         label={t("crud.user.label." + field)}
-        placeholder={
-          t("crud.user.placeholder." + field).startsWith("crud.") ? "" : t("crud.user.placeholder." + field)
-        }
+        placeholder={t("crud.user.placeholder." + field).startsWith("crud.") ? "" : t("crud.user.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -207,7 +205,7 @@ export function DeletePage() {
             setConfirmModalOpen(true);
           })}
         >
-          <ScrollArea style={{ flex: 1}}>
+          <ScrollArea style={{ flex: 1 }}>
             {/* <Group mb={"md"}>{createTextField("nid")}</Group> */}
 
             <Group grow mb={"md"}>
@@ -235,6 +233,7 @@ export function DeletePage() {
             {form.values?.country ? <Group mb={"md"}>{createSelectCities()}</Group> : null} */}
           </ScrollArea>
           <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.accept")}</Button>
             <Button
               onClick={(event) => {
                 navigate("../");
@@ -242,7 +241,6 @@ export function DeletePage() {
             >
               {t("button.cancel")}
             </Button>
-            <Button type="submit">{t("button.accept")}</Button>
           </Group>
         </form>
       </Container>
