@@ -58,7 +58,9 @@
     "create": "Crear",
     "createAnyway": "Crear de todos modos",
     "createWorkerRelation": "Relacionar con esta organización",
-    "photos": "Fotos"
+    "photos": "Fotos",
+    "roles":"Perfiles"
+
   },
 
   "label": {
@@ -629,7 +631,8 @@
         "update": "Modificar los datos de un usuario",
         "delete": "Eliminar los datos de un usuario",
         "findUser": "Buscar a un usuario",
-        "photos": "Lista de fotos asociadas"
+        "photos": "Lista de fotos asociadas",
+        "role":"Perfiles asociados"
       },
       "label": {
         "nid": "DNI",

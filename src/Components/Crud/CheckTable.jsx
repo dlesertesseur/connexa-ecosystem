@@ -53,7 +53,7 @@ export default function CheckTable({
         }}
         style={{ backgroundColor: row.id === rowSelected ? "#74C0FC" : "" }}
       >
-        <td key={"check"} align={"center"}>
+        <td key={"check"} align={"center"} width={36}>
           <Checkbox
             align={"center"}
             checked={row.checked}

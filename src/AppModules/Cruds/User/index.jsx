@@ -9,6 +9,7 @@ import { API } from "../../../Constants";
 import { UserPhotosPage } from "./UserPhotosPage";
 import { findAllUsers } from "../../../DataAccess/User";
 import { AbmStateContext } from "./Context";
+import { RolesPage } from "./RolesPage";
 
 const DynamicApp = ({ app }) => {
   const { t } = useTranslation();
@@ -70,6 +71,11 @@ const DynamicApp = ({ app }) => {
             path: "/images",
             key: "button.photos",
             element: <UserPhotosPage user={user} back={"../"} />,
+          },
+          {
+            path: "/roles",
+            key: "button.roles",
+            element: <RolesPage user={user} back={"../"} />,
           },
         ]}
       />

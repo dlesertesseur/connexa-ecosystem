@@ -58,7 +58,8 @@
     "create":"Create",
     "createAnyway":"Create anyway",
     "createWorkerRelation":"Connect with this organization",
-    "photos":"Photos"
+    "photos":"Photos",
+    "roles":"Profiles"
   },
 
   "label": {
@@ -598,7 +599,8 @@
         "update": "Update user",
         "delete": "Delete user",
         "findUser": "Find user",
-        "photos":"Associated photos list"
+        "photos":"Associated photos list",
+        "role":"Associated profiles"
       },
       "label": {
         "nid": "Identification (ID)",

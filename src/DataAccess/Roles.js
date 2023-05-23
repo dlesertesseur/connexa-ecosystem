@@ -51,7 +51,7 @@ const findAllRolesInContext = async (params) => {
   }
 };
 
-const findAllRoles = async ({ siteId, userId, token }) => {
+const findAllRoles = async ({ token }) => {
   try {
     const requestOptions = {
       method: "GET",
