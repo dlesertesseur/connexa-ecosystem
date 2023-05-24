@@ -253,12 +253,73 @@ async function getRoleBySiteIdAndUserId(parameters) {
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
-
-    console.log("getRoleBySiteIdAndUserId -> data", data);
-
     return data;
   } catch (error) {
     console.log("assignRol -> error", error);
+    return error;
+  }
+}
+
+export const uploadImage = async (parameters) => {
+  try {
+    const requestOptions = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        token: parameters.token,
+      },
+      body: parameters.data,
+    };
+
+    const url = API.user.uploadImage + parameters.userId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return(error);
+  }
+};
+
+const getAllImages = async (parameters) => {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+    };
+
+    let url = API.user.getAllImages + parameters.userId;
+
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.log("getAllImages -> error", error);
+    return error;
+  }
+};
+
+async function deleteUserImage(parameters) {
+  try {
+    const requestOptions = {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+    };
+
+    const url = API.user.deleteImage + parameters.id;
+    await fetch(url, requestOptions).then((response) => {
+      return response;
+    });
+  } catch (error) {
     return error;
   }
 }
@@ -276,4 +337,6 @@ export {
   assignRol,
   unassignRol,
   getRoleBySiteIdAndUserId,
+  getAllImages,
+  deleteUserImage,
 };

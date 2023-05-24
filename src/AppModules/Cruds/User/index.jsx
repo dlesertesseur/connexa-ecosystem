@@ -18,14 +18,17 @@ const DynamicApp = ({ app }) => {
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectedUserName, setSelectedUserName] = useState(null);
   const [reload, setReload] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getAllUsers = async () => {
     const parameters = {
       token: user.token,
     };
 
+    setLoading(true);
     const users = await findAllUsers(parameters);
     setRows(users);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -45,15 +48,16 @@ const DynamicApp = ({ app }) => {
   const cols = t("crud.worker.columns", { returnObjects: true });
   const columns = [
     {
-      headerName: cols[col++],
+      headerName: null,
       fieldName: "image",
       align: "center",
       type: "image",
-      urlBase: API.worker.urlPhotoBase,
+      urlBase: API.user.urlPhotoBase,
       extention: ".png",
+      width:80
     },
     // { headerName: cols[col++], fieldName: "nid", align: "right" },
-    { headerName: cols[col++], fieldName: "lastname", align: "left" },
+    { headerName: cols[col++], fieldName: "lastname", align: "left"},
     { headerName: cols[col++], fieldName: "firstname", align: "left" },
     // { headerName: cols[col++], fieldName: "birthDate", align: "center" },
     // { headerName: cols[col++], fieldName: "address", align: "left" },
@@ -72,6 +76,7 @@ const DynamicApp = ({ app }) => {
         data={rows}
         rowSelected={selectedRowId}
         setRowSelected={setSelectedRowId}
+        loading={loading}
         enableCreateButton={true}
         createPage={<NewUserStack />}
         updatePage={<UpdatePage />}

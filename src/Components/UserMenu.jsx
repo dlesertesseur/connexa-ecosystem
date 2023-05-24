@@ -1,4 +1,4 @@
-import { Avatar, Flex, Group, MediaQuery, Menu, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
+import { Avatar, Flex, Group, Menu, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconChevronDown, IconChevronUp, IconLogout, IconUser } from "@tabler/icons-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

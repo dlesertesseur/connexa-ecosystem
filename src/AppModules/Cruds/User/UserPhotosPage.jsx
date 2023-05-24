@@ -1,13 +1,16 @@
-import PhotoCard from "../../../Components/PhotoCard";
-import { Title, Container, Button, Group, LoadingOverlay, Paper } from "@mantine/core";
+import UserPhotoCard from "../../../Components/UserPhotoCard";
+import { Title, Container, Button, Group, LoadingOverlay, Paper, useMantineTheme, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Carousel } from "@mantine/carousel";
-import { API } from "../../../Constants";
-import { useDispatch, useSelector } from "react-redux";
 import { AbmStateContext } from "./Context";
 import { useContext } from "react";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { deleteUserImage, getAllImages, uploadImage } from "../../../DataAccess/User";
+import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
+import { useSelector } from "react-redux";
+import { config } from "../../../Constants/config";
 
 export function UserPhotosPage() {
   const navigate = useNavigate();
@@ -15,30 +18,22 @@ export function UserPhotosPage() {
   const { user } = useSelector((state) => state.auth.value);
   const { setReload, selectedRowId, selectedUserName } = useContext(AbmStateContext);
   const [loading, setLoading] = useState(false);
-  const [userFound, setUserFound] = useState(null);
-  const [error, setError] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [errorCode, setErrorCode] = useState(null);
 
   const [imageList, setImageList] = useState([]);
+  const [localReload, setLocalReload] = useState(null);
 
-  const dispatch = useDispatch();
+  const theme = useMantineTheme();
 
-  const findUser = async (params) => {
+  const getImages = async () => {
+    const params = {
+      token: user.token,
+      userId: selectedRowId,
+    };
     setLoading(true);
     try {
-      //Cambiar por findById
-      const found = await findUserById(params);
-
-      if (found.error) {
-        setErrorMessage(found.error);
-        setErrorCode(found.status);
-        setUserFound(null);
-      } else {
-        setErrorMessage(null);
-        setErrorCode(null);
-        setUserFound(found);
-      }
+      const images = await getAllImages(params);
+      setImageList(images);
     } catch (error) {
       setErrorMessage(error);
     }
@@ -46,8 +41,52 @@ export function UserPhotosPage() {
   };
 
   useEffect(() => {
-    findUser();
-  }, [user]);
+    getImages();
+  }, [localReload]);
+
+  const uploadFiles = async (files) => {
+    for (let index = 0; index < files.length; index++) {
+      const file = files[index];
+      await uploadFile(file);
+    }
+  };
+
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", file.type);
+
+    const params = {
+      token: user.token,
+      userId: selectedRowId,
+      data: formData,
+    };
+
+    try {
+      await uploadImage(params);
+      setLocalReload(Date.now());
+    } catch (error) {
+      setErrorMessage(error);
+    }
+  };
+
+  const onDelete = async (imageId) => {
+    const params = {
+      token: user.token,
+      id: imageId,
+    };
+
+    setLoading(true);
+
+    try {
+      await deleteUserImage(params);
+      setLocalReload(Date.now());
+
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    setLoading(false);
+  };
 
   return (
     <Container size={"xl"} sx={{ width: "100%" }}>
@@ -66,22 +105,62 @@ export function UserPhotosPage() {
           {t("crud.user.title.photos") + " " + selectedUserName}
         </Title>
 
-        {imageList ? (
-          <Paper p={"xl"} withBorder>
+        {imageList?.length > 0 ? (
+          <Paper p={"xl"} withBorder mb={"xs"}>
             <Carousel slideGap="md">
               {imageList.map((img) => (
                 <Carousel.Slide key={img}>
-                  <PhotoCard src={img} height={300} />
+                  <UserPhotoCard
+                    src={config.SERVER + ":" + config.PORT + img.path}
+                    height={250}
+                    name={img.name}
+                    onDelete={onDelete}
+                    imageId={img.id}
+                  />
                 </Carousel.Slide>
               ))}
             </Carousel>
           </Paper>
         ) : null}
 
+        <Group grow mb="lg">
+          <Dropzone
+            onDrop={(files) => uploadFiles(files)}
+            onReject={(files) => console.log("rejected files", files)}
+            maxSize={3 * 1024 ** 2}
+            accept={IMAGE_MIME_TYPE}
+          >
+            <Group position="center" spacing="xl" style={{ minHeight: 220, pointerEvents: "none" }}>
+              <Dropzone.Accept>
+                <IconUpload
+                  size={50}
+                  stroke={1.5}
+                  color={theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 4 : 6]}
+                />
+              </Dropzone.Accept>
+              <Dropzone.Reject>
+                <IconX size={50} stroke={1.5} color={theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]} />
+              </Dropzone.Reject>
+              <Dropzone.Idle>
+                <IconPhoto size={50} stroke={1.5} />
+              </Dropzone.Idle>
+
+              <div>
+                <Text size="xl" inline>
+                  {t("label.dropZone")}
+                </Text>
+                <Text size="sm" color="dimmed" inline mt={7}>
+                  {t("label.dropZoneSub")}
+                </Text>
+              </div>
+            </Group>
+          </Dropzone>
+        </Group>
         <Group position="right" mt="xl" mb="xs">
           <Button
             onClick={(event) => {
               navigate("../");
+              setReload(Date.now())
             }}
           >
             {t("button.close")}

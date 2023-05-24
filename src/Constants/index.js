@@ -34,6 +34,10 @@ export const API = {
     findByEmail: config.SERVER + ":" + config.PORT + config.API_BASE + "/users/",
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/users/",
     findAllUserByPage: config.SERVER + ":" + config.PORT + config.API_BASE + "/users/",
+    uploadImage: config.SERVER + ":" + config.PORT + config.API_BASE + "/user-images/",
+    getAllImages: config.SERVER + ":" + config.PORT + config.API_BASE + "/user-images/",
+    deleteImage: config.SERVER + ":" + config.PORT + config.API_BASE + "/user-images/",
+    urlPhotoBase: config.SERVER + ":" + config.PORT,
   },
 
   userRole: {

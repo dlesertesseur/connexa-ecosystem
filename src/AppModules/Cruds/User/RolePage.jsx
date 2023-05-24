@@ -40,6 +40,11 @@ export function RolePage() {
     navigate(-1);
   };
 
+  const getAssignedRoleId = (userAllRole) => {
+    const ret = userAllRole.map((r) => r.id);
+    return ret;
+  };
+
   const findSites = async () => {
     const params = { token: user.token };
     setLoading(true);
@@ -53,40 +58,31 @@ export function RolePage() {
       setSites(sites);
       setSite(rs[0].value);
 
-      const roles = await findAllRoles(params);
-      setRoles(roles);
-
-      const allRole = await getRoleBySiteIdAndUserId({
+      const userAllRole = await getRoleBySiteIdAndUserId({
         token: user.token,
         siteId: rs[0].value,
         userId: selectedRowId,
       });
 
-      console.log("##############", allRole)
+      setUserRole(userAllRole);
+      const assignedRoleId = getAssignedRoleId(userAllRole);
+      let roles = await findAllRoles(params);
 
-      setUserRole(allRole);
+      for (let index = 0; index < roles.length; index++) {
+        const r = roles[index];
+        const check = assignedRoleId.includes(r.id);
+        r["checked"] = check;
+      }
+
+      setRoles(roles);
     } catch (error) {
       setErrorMessage(error);
     }
     setLoading(false);
   };
 
-  // const getAllRole = async (siteId, userId) => {
-  //   const parameters = {
-  //     token: user.token,
-  //     siteId: siteId,
-  //     userId: userId,
-  //   };
-  //   const allRole = await getRoleBySiteIdAndUserId(parameters);
-  //   setUserRole(allRole);
-
-  //   console.log("getAllRole ->", allRole);
-  // };
-
   useEffect(() => {
-    setLoading(true);
     findSites();
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -96,7 +92,9 @@ export function RolePage() {
       });
 
       if (fs) {
-        const ret = roles.filter((r) => r.context.id === fs.context.id);
+        const ret = roles.filter((r) => {
+          return r.context.id === fs.context.id;
+        });
         setFilteredRole(ret);
       }
     }
@@ -110,7 +108,15 @@ export function RolePage() {
       roleId: roleId,
     };
     setLoading(true);
-    await assignRol(parameters);
+    try {
+      await assignRol(parameters);
+      const r = roles.find((r) => r.id === roleId);
+      if (r) {
+        r["checked"] = true;
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
     setLoading(false);
   };
 
@@ -124,7 +130,17 @@ export function RolePage() {
     };
 
     setLoading(true);
-    await unassignRol(parameters);
+
+    try {
+      await unassignRol(parameters);
+      const r = roles.find((r) => r.id === roleId);
+      if (r) {
+        r["checked"] = false;
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
+
     setLoading(false);
   };
 
@@ -153,7 +169,6 @@ export function RolePage() {
         title={t("status.error")}
         text={errorMessage}
       />
-      {loading ? <LoadingOverlay overlayOpacity={0.5} /> : null}
 
       <Title
         mb={"lg"}
@@ -168,7 +183,14 @@ export function RolePage() {
       </Title>
 
       <Group>
-        <Select label={t("crud.user.title.site")} placeholder="" data={formatedSites} value={site} onChange={setSite} />
+        <Select
+          label={t("crud.user.title.site")}
+          placeholder=""
+          data={formatedSites}
+          value={site}
+          onChange={setSite}
+          disabled={loading}
+        />
       </Group>
 
       <CheckTable
