@@ -45,24 +45,24 @@ const DynamicApp = ({ app }) => {
   }, [selectedRowId]);
 
   let col = 0;
-  const cols = t("crud.worker.columns", { returnObjects: true });
+  const cols = t("crud.user.columns", { returnObjects: true });
   const columns = [
     {
       headerName: null,
       fieldName: "image",
       align: "center",
-      type: "image",
+      type: "avatar",
       urlBase: API.user.urlPhotoBase,
       extention: ".png",
       width:80
     },
     // { headerName: cols[col++], fieldName: "nid", align: "right" },
-    { headerName: cols[col++], fieldName: "lastname", align: "left"},
-    { headerName: cols[col++], fieldName: "firstname", align: "left" },
+    { headerName: cols[2], fieldName: "lastname", align: "left"},
+    { headerName: cols[3], fieldName: "firstname", align: "left" },
     // { headerName: cols[col++], fieldName: "birthDate", align: "center" },
     // { headerName: cols[col++], fieldName: "address", align: "left" },
     // { headerName: cols[col++], fieldName: "phone", align: "left" },
-    { headerName: cols[col++], fieldName: "email", align: "left" },
+    { headerName: cols[7], fieldName: "email", align: "left" },
     // { headerName: cols[col++], fieldName: "country", align: "left" },
     // { headerName: cols[col++], fieldName: "city", align: "left" },
     // { headerName: cols[col++], fieldName: "status", align: "left" },

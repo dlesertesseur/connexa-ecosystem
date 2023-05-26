@@ -4,14 +4,15 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../Features/Auth";
+import { config } from "../Constants/config";
 
 const fontColor = "black";
 const UserMenu = ({ compact = true }) => {
   const { user } = useSelector((state) => state.auth.value);
   const { t } = useTranslation();
+  const [userMenuOpened, setUserMenuOpened] = useState(false);
   const theme = useMantineTheme();
   const dispatch = useDispatch();
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   const getInitials = (user) => {
     const name = user.firstName + " " + user.lastName;
@@ -47,7 +48,7 @@ const UserMenu = ({ compact = true }) => {
           >
             <Group spacing={"xs"}>
               {user.image ? (
-                <Avatar size={"md"} radius="xl" ml={3} mr={compact ? 3 : 0} src={user.image} />
+                <Avatar size={"md"} radius="xl" ml={3} mr={compact ? 3 : 0} src={config.SERVER + ":" + config.PORT + user.image} />
               ) : (
                 <Avatar size={"md"} radius="xl" ml={3} mr={3}>
                   {getInitials(user)}

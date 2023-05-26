@@ -13,6 +13,7 @@ import {
   useMantineTheme,
   Image,
   Text,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
@@ -46,80 +47,92 @@ export function SignIn() {
 
     // CANBIAR LA VALIDACION DE LA CLAVE a minimo 6 caracteres
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : t("validation.emailFormat")),
-      password: (val) => (val.length <= 2 ? t("validation.passwordFormat") : null),
+      email: (val) =>
+        /^\S+@\S+$/.test(val) ? null : t("validation.emailFormat"),
+      password: (val) =>
+        val.length <= 2 ? t("validation.passwordFormat") : null,
     },
   });
 
   return (
     <Center p={"xl"}>
-      <Stack m={"xl"} p={"xl"} align="center">
-        {/* <Title
-          align="center"
-          sx={(theme) => ({
-            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-            fontWeight: 900,
-          })}
-        >
-          {t("auth.title")}
-        </Title>
-        <Text color="dimmed" size="sm" align="center">
-          {t("auth.doNotHaveAccount") + " "}
-          <Anchor href="#" size="sm" onClick={(event) => navigate("/signUp")}>
-            {t("auth.createAccount")}
-          </Anchor>
-        </Text> */}
-
-        <Paper sx={{ width: 400 }} withBorder shadow="md" p={30} radius="md" bg={theme.colors.gray[0]}>
-          <Logo width={150}/>
-          <form
-            onSubmit={form.onSubmit((values) => {
-              dispatch(signIn({ email: values.email, password: values.password }));
-            })}
+      {user?.token ? (
+        <LoadingOverlay overlayOpacity={0.5} visible={true} />
+      ) : (
+        <Stack m={"xl"} p={"xl"} align="center">
+          <Paper
+            sx={{ width: 400 }}
+            withBorder
+            shadow="md"
+            p={30}
+            radius="md"
+            bg={theme.colors.gray[0]}
           >
-            <TextInput
-              label={t("label.email")}
-              placeholder={t("placeholder.email")}
-              onChange={(event) => form.setFieldValue("email", event.currentTarget.value)}
-              error={form.errors.email}
-            />
-            <PasswordInput
-              label={t("label.password")}
-              placeholder={t("placeholder.password")}
-              autoComplete="off"
-              mt="md"
-              onChange={(event) => form.setFieldValue("password", event.currentTarget.value)}
-              error={form.errors.password}
-            />
-
-            <Group position="apart" mt="md">
-              <Checkbox label={t("label.keepMeConnected")} />
-              <Anchor onClick={(event) => event.preventDefault()} href="#" size="sm">
-                {t("auth.forgotPassword")}
-              </Anchor>
-            </Group>
-            <Button type="submit" fullWidth mt="xl" loading={loading} loaderPosition={"left"}>
-              {t("button.signIn")}
-            </Button>
-          </form>
-          {error ? (
-            <Alert
-              mt={"sm"}
-              icon={<IconAlertCircle size={16} />}
-              title={t("errors.title")}
-              color="red"
-              variant="filled"
+            <Logo width={150} />
+            <form
+              onSubmit={form.onSubmit((values) => {
+                dispatch(
+                  signIn({ email: values.email, password: values.password })
+                );
+              })}
             >
-              {error.message}
-            </Alert>
-          ) : null}
+              <TextInput
+                label={t("label.email")}
+                placeholder={t("placeholder.email")}
+                onChange={(event) =>
+                  form.setFieldValue("email", event.currentTarget.value)
+                }
+                error={form.errors.email}
+              />
+              <PasswordInput
+                label={t("label.password")}
+                placeholder={t("placeholder.password")}
+                autoComplete="off"
+                mt="md"
+                onChange={(event) =>
+                  form.setFieldValue("password", event.currentTarget.value)
+                }
+                error={form.errors.password}
+              />
 
-          <Group grow mt={"xl"}>
-            <LanguageSelector />
-          </Group>
-        </Paper>
+              <Group position="apart" mt="md">
+                <Checkbox label={t("label.keepMeConnected")} />
+                <Anchor
+                  onClick={(event) => event.preventDefault()}
+                  href="#"
+                  size="sm"
+                >
+                  {t("auth.forgotPassword")}
+                </Anchor>
+              </Group>
+              <Button
+                type="submit"
+                fullWidth
+                mt="xl"
+                loading={loading}
+                loaderPosition={"left"}
+              >
+                {t("button.signIn")}
+              </Button>
+            </form>
+            {error ? (
+              <Alert
+                mt={"sm"}
+                icon={<IconAlertCircle size={16} />}
+                title={t("errors.title")}
+                color="red"
+                variant="filled"
+              >
+                {error.message}
+              </Alert>
+            ) : null}
 
-        <Group position="apart" mt={"xl"} >
+            <Group grow mt={"xl"}>
+              <LanguageSelector />
+            </Group>
+          </Paper>
+
+          <Group position="apart" mt={"xl"}>
             <Image
               src="/connexa/zeetrex.png"
               alt="logo"
@@ -132,7 +145,8 @@ export function SignIn() {
               {t("label.copyright")}
             </Text>
           </Group>
-      </Stack>
+        </Stack>
+      )}
     </Center>
   );
 }

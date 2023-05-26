@@ -60,7 +60,9 @@
     "createWorkerRelation": "Relacionar con esta organización",
     "photos": "Fotos",
     "roles":"Perfiles",
-    "sites":"Sitios"
+    "sites":"Sitios",
+    "backStep":"Anterior",
+    "nextStep":"Proximo"
   },
 
   "label": {
@@ -181,7 +183,9 @@
     "loadApp": "No fue posible ejecutar aplicación",
     "1001": "Error al intentar iniciar session",
     "1002": "Error al registrarse",
-    "404": "Usuario o clave invalida"
+    "404": "Usuario o clave invalida",
+    "listCheckValidation":"Debe marcar al menos una fila"
+
   },
 
   "notification": {
@@ -718,6 +722,34 @@
         "Dia de inicio",
         "Dia de fin",
         "Estado"
+      ]
+    }
+  },
+
+  "wizard":{
+    "registration": {
+      "name": "REGISRACION",
+      "title": {
+        "create": "Nuevo"
+      },
+      "label": {
+        "nid": "DNI",
+        "lastname": "Apellido",
+        "firstname": "Nombre",
+        "address": "Direccion",
+        "phone": "Telefono",
+        "email": "Email",
+        "country": "Pais",
+        "city": "Cuidad",
+        "status": "Estado",
+        "active": "Activo",
+        "birthDate": "Fecha de nacimiento"
+      },
+      "placeholder": {
+      },
+      "columns": [
+        "Nombre",
+        "Descripcion"
       ]
     }
   },

@@ -13,9 +13,15 @@ import {
   LoadingOverlay,
   Divider,
   Image,
+  Avatar,
 } from "@mantine/core";
 import { keys } from "@mantine/utils";
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from "@tabler/icons-react";
+import {
+  IconSelector,
+  IconChevronDown,
+  IconChevronUp,
+  IconSearch,
+} from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { API } from "../../Constants";
@@ -23,11 +29,17 @@ import { useWindowSize } from "../../Hook";
 
 const useStyles = createStyles((theme) => ({
   selectedRow: {
-    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.blue[3],
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[6]
+        : theme.colors.blue[3],
   },
   th: {
     padding: "0 !important",
-    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.blue[0],
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[6]
+        : theme.colors.blue[0],
   },
 
   control: {
@@ -35,7 +47,10 @@ const useStyles = createStyles((theme) => ({
     padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
 
     "&:hover": {
-      backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.blue[1],
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[6]
+          : theme.colors.blue[1],
     },
   },
 
@@ -48,7 +63,8 @@ const useStyles = createStyles((theme) => ({
   header: {
     position: "sticky",
     top: -1,
-    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
     transition: "box-shadow 150ms ease",
     zIndex: 1,
 
@@ -58,7 +74,11 @@ const useStyles = createStyles((theme) => ({
       left: 0,
       right: 0,
       bottom: 0,
-      borderBottom: `1px solid ${theme.colorScheme === "dark" ? theme.colors.dark[3] : theme.colors.gray[2]}`,
+      borderBottom: `1px solid ${
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[3]
+          : theme.colors.gray[2]
+      }`,
     },
   },
 
@@ -69,7 +89,11 @@ const useStyles = createStyles((theme) => ({
 
 function Th({ children, reversed, sorted, onSort }) {
   const { classes } = useStyles();
-  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+  const Icon = sorted
+    ? reversed
+      ? IconChevronUp
+      : IconChevronDown
+    : IconSelector;
   return (
     <th className={classes.th}>
       <UnstyledButton onClick={onSort} className={classes.control}>
@@ -90,7 +114,11 @@ function Th({ children, reversed, sorted, onSort }) {
 
 function filterData(data, search) {
   const query = search.toLowerCase().trim();
-  return data.filter((item) => keys(data[0]).some((key) => item[key].toString().toLowerCase().includes(query)));
+  return data.filter((item) =>
+    keys(data[0]).some((key) =>
+      item[key].toString().toLowerCase().includes(query)
+    )
+  );
 }
 
 function sortData(data, payload) {
@@ -132,6 +160,9 @@ export default function SortedTable({
   relationship,
   searchBox = false,
   headerHeight = 230,
+  createButton = true,
+  updateButton = true,
+  deleteButton = true,
 }) {
   const { classes, cx } = useStyles();
   const { t } = useTranslation();
@@ -165,7 +196,9 @@ export default function SortedTable({
     {
       setRowSelected ? setRowSelected(null) : null;
     }
-    setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
+    setSortedData(
+      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
+    );
   };
 
   const formatData = (data, format) => {
@@ -189,8 +222,45 @@ export default function SortedTable({
 
   const formatImage = (data) => {
     const ret = data ? (
-      <Image src={API.productImages.baseUrl + data} alt={"Not found"} height={24} fit="contain" />
+      <Image
+        src={API.productImages.baseUrl + data}
+        alt={"Not found"}
+        height={24}
+        fit="contain"
+      />
     ) : null;
+    return ret;
+  };
+
+  const avatarImage = (data) => {
+    const ret = data ? (
+      <Avatar
+        radius={36}
+        src={API.productImages.baseUrl + data}
+        alt={"Not found"}
+        height={24}
+        fit="contain"
+      />
+    ) : null;
+    return ret;
+  };
+
+  const createCellType = (cell, data) => {
+    let ret = null;
+
+    switch (cell.type) {
+      case "image":
+        ret = formatImage(data);
+        break;
+
+      case "avatar":
+        ret = avatarImage(data);
+        break;
+
+      default:
+        ret = formatData(data, cell.format);
+        break;
+    }
     return ret;
   };
 
@@ -207,8 +277,13 @@ export default function SortedTable({
       >
         {columns.map((f) => {
           return (
-            <td key={f.fieldName} align={f.align ? f.align : "center"} width={f.width ? f.width : ""}>
-              {f.type === "image" ? formatImage(row[f.fieldName]) : formatData(row[f.fieldName], f.format)}
+            <td
+              key={f.fieldName}
+              align={f.align ? f.align : "center"}
+              width={f.width ? f.width : ""}
+            >
+              {/* {f.type === "image" ? formatImage(row[f.fieldName]) : formatData(row[f.fieldName], f.format)} */}
+              {createCellType(f, row[f.fieldName])}
             </td>
           );
         })}
@@ -224,30 +299,38 @@ export default function SortedTable({
         <Group spacing="xs">
           {setRowSelected ? (
             <>
-              <Button
-                disabled={!enableCreateButton}
-                onClick={() => {
-                  navigate("./create");
-                }}
-              >
-                {t("label.crud.create")}
-              </Button>
-              <Button
-                onClick={() => {
-                  navigate("./update");
-                }}
-                disabled={!rowSelected ? true : false}
-              >
-                {t("label.crud.update")}
-              </Button>
-              <Button
-                onClick={() => {
-                  navigate("./delete");
-                }}
-                disabled={!rowSelected ? true : false}
-              >
-                {t("label.crud.delete")}
-              </Button>
+              {createButton ? (
+                <Button
+                  disabled={!enableCreateButton}
+                  onClick={() => {
+                    navigate("./create");
+                  }}
+                >
+                  {t("label.crud.create")}
+                </Button>
+              ) : null}
+
+              {updateButton ? (
+                <Button
+                  onClick={() => {
+                    navigate("./update");
+                  }}
+                  disabled={!rowSelected ? true : false}
+                >
+                  {t("label.crud.update")}
+                </Button>
+              ) : null}
+
+              {deleteButton ? (
+                <Button
+                  onClick={() => {
+                    navigate("./delete");
+                  }}
+                  disabled={!rowSelected ? true : false}
+                >
+                  {t("label.crud.delete")}
+                </Button>
+              ) : null}
               {relationship ? <Divider orientation="vertical" /> : null}
               {relationship?.map((r) => (
                 <Button
@@ -255,13 +338,21 @@ export default function SortedTable({
                   onClick={() => {
                     r.onPress ? r.onPress(r) : navigate("." + r.path);
                   }}
-                  disabled={r.customState ? r.customState() : !rowSelected ? true : false}
+                  disabled={
+                    r.customState
+                      ? r.customState()
+                      : !rowSelected
+                      ? true
+                      : false
+                  }
                 >
                   {t(r.key)}
                 </Button>
               ))}
 
-              {filterControl !== null ? <Divider orientation="vertical" /> : null}
+              {filterControl !== null ? (
+                <Divider orientation="vertical" />
+              ) : null}
             </>
           ) : null}
 
@@ -285,11 +376,23 @@ export default function SortedTable({
 
       {filterSelection ? filterSelection : null}
 
-      <ScrollArea sx={{ height: wSize.height - headerHeight }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+      <ScrollArea
+        sx={{ height: wSize.height - headerHeight }}
+        onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
+      >
         <LoadingOverlay visible={loading} overlayBlur={2} />
 
-        <Table horizontalSpacing="xs" verticalSpacing="xs" striped highlightOnHover withBorder withColumnBorders>
-          <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
+        <Table
+          horizontalSpacing="xs"
+          verticalSpacing="xs"
+          striped
+          highlightOnHover
+          withBorder
+          withColumnBorders
+        >
+          <thead
+            className={cx(classes.header, { [classes.scrolled]: scrolled })}
+          >
             <tr>
               {columns.map((h, index) => (
                 <Th

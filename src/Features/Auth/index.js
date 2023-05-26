@@ -285,6 +285,7 @@ export const authSlice = createSlice({
         state.value.user.firstName = payload.user.firstname;
         state.value.user.lastName = payload.user.lastname;
         state.value.user.id = payload.user.id;
+        state.value.user.image = payload.user.image;
         state.value.error = null;
 
         setUserLS(state.value.user);

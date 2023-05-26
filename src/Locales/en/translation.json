@@ -60,7 +60,9 @@
     "createWorkerRelation": "Connect with this organization",
     "photos": "Photos",
     "roles": "Profiles",
-    "sites": "Sites"
+    "sites": "Sites",
+    "backStep": "Back",
+    "nextStep": "Next step"
   },
 
   "label": {
@@ -181,7 +183,8 @@
     "loadApp": "Could not run application",
     "1001": "Error trying to login",
     "1002": "Registration error",
-    "404": "Invalid username or password"
+    "404": "Invalid username or password",
+    "listCheckValidation":"You must check at least one row"
   },
 
   "notification": {
@@ -248,6 +251,7 @@
       "align": ["left"],
       "width": ["100%"]
     },
+
     "organization": {
       "name": "ORGANIZATION",
       "title": {
@@ -462,7 +466,15 @@
         "status": "Status",
         "countryOfOrigin": "Country of origin"
       },
-      "columns": ["Image", "SKU", "EAN", "Description", "Brand", "Country of origin", "Status"],
+      "columns": [
+        "Image",
+        "SKU",
+        "EAN",
+        "Description",
+        "Brand",
+        "Country of origin",
+        "Status"
+      ],
       "align": ["center", "right", "right", "left", "left", "left"],
       "width": ["5%", "5%", "10%", "50%", "10%", "10%", "10%"],
       "tab1": "General information",
@@ -523,6 +535,7 @@
         "spaceHeight": "Space height",
         "visible": "Visible"
       },
+
       "placeholder": {
         "name": "Storage structure name",
         "numberOfModules": "Mumber of modules",
@@ -599,7 +612,18 @@
         "City",
         "Status"
       ],
-      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
+      "align": [
+        "right",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left"
+      ],
       "findWorkerColumns": ["Origanization", "Since"],
       "findWorkerAlign": ["left", "left"]
     },
@@ -645,7 +669,18 @@
         "City",
         "Status"
       ],
-      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
+      "align": [
+        "right",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left"
+      ],
       "findUserColumns": ["Origanization", "Since"],
       "findUserAlign": ["left", "left"]
     },
@@ -691,6 +726,39 @@
         "Start date",
         "End date",
         "Status"
+      ]
+    }
+  },
+
+  "wizard": {
+    "registration": {
+      "name": "REGISTRATION",
+      "title": {
+        "create": "New registration",
+        "site": "Sites"
+      },
+      "label": {
+        "nid": "Identification (ID)",
+        "lastname": "Surnames",
+        "firstname": "Names",
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email",
+        "country": "Country",
+        "city": "City",
+        "status": "Status",
+        "active": "Active",
+        "birthDate": "Date of birth",
+        "sites": "Sites"
+      },
+      "placeholder": {},
+      "columns": ["Name", "Description"],
+      "steps": [
+        { "name": "Organization", "description": "General informaction" },
+        { "name": "Administrator", "description": "Admin User Information" },
+        { "name": "Responsibilities", "description": "Selection of responsibilities" },
+        { "name": "Admin role", "description": "Admin responsibilities" },
+        { "name": "Resume", "description": "Check all data" }
       ]
     }
   },
