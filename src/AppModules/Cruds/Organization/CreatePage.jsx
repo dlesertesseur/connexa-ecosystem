@@ -5,10 +5,17 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createOrganization } from "../../../DataAccess/Organization";
+import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
 
-export function CreatePage({ user, back, onLoadGrid }) {
-  const { t } = useTranslation();
+export function CreatePage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { user } = useSelector((state) => state.auth.value);
+  const { setReload } = useContext(AbmStateContext);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [working, setWorking] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -21,10 +28,6 @@ export function CreatePage({ user, back, onLoadGrid }) {
       description: (val) => (val ? null : t("validation.required")),
     },
   });
-
-  const [working, setWorking] = useState(false);
-  const [responseModalOpen, setResponseModalOpen] = useState(false);
-  const [response, setResponse] = useState(null);
 
   const createTextField = (field) => {
     const ret = (
@@ -42,58 +45,43 @@ export function CreatePage({ user, back, onLoadGrid }) {
     return ret;
   };
 
-  const onCreate = (values) => {
+  const onCreate = async (values) => {
     setWorking(true);
 
     const params = {
       token: user.token,
       data: values,
     };
-    createOrganization(params)
-      .then((ret) => {
+    try {
+      const ret = await createOrganization(params);
+      if (ret.error) {
+        setWorking(false);
+        setErrorMessage(ret.message);
+      } else {
+        setErrorMessage(null);
         setWorking(false);
 
-        if (ret.error) {
-          setResponse({
-            code: ret.status,
-            title: ret.error,
-            text: ret.status ? ret.message : t("message.create"),
-          });
-          setResponseModalOpen(true);
-        } else {
-          if (ret.status) {
-            setResponse({
-              code: ret.status,
-              title: ret.status ? t("status.error") : t("status.ok"),
-              text: ret.status ? ret.message : t("message.create"),
-            });
-            setResponseModalOpen(true);
-          } else {
-            onLoadGrid();
-            navigate(back);
-          }
-        }
-      })
-      .catch((error) => {
-        setResponse({ code: error.status, title: t("status.error"), text: error.message });
-        setResponseModalOpen(true);
-      });
-  };
-
-  const onClose = () => {
-    setResponseModalOpen(false);
-    onLoadGrid();
-    navigate(back);
+        setReload(Date.now());
+        navigate("../");
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    setWorking(false);
+    setReload(Date.now());
+    navigate("../");
   };
 
   return (
     <Container size={"xl"} sx={{ width: "100%" }}>
       <ResponceNotification
-        opened={responseModalOpen}
-        onClose={onClose}
-        code={response?.code}
-        title={response?.title}
-        text={response?.text}
+        opened={errorMessage ? true : false}
+        onClose={() => {
+          setErrorMessage(null);
+        }}
+        code={errorMessage}
+        title={t("status.error")}
+        text={errorMessage}
       />
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
       <Container size={"sm"}>
@@ -122,14 +110,14 @@ export function CreatePage({ user, back, onLoadGrid }) {
           </Group>
 
           <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.accept")}</Button>
             <Button
               onClick={(event) => {
-                navigate(back);
+                navigate("../");
               }}
             >
               {t("button.cancel")}
             </Button>
-            <Button type="submit">{t("button.accept")}</Button>
           </Group>
         </form>
       </Container>

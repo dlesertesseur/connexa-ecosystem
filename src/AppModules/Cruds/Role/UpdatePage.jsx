@@ -1,73 +1,80 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
-import {
-  TextInput,
-  Title,
-  Container,
-  Button,
-  Group,
-  LoadingOverlay,
-  Select,
-} from "@mantine/core";
+import { TextInput, Title, Container, Button, Group, LoadingOverlay, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { updateRole } from "../../../Features/Role";
-import { actions } from "../../../Constants";
+import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
+import { findRoleById, updateRole } from "../../../DataAccess/Roles";
+import { findAllContext } from "../../../DataAccess/Context";
 
 export function UpdatePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   const { user } = useSelector((state) => state.auth.value);
-  const { contexts, action, selectedRole, error, errorMessage } = useSelector(
-    (state) => state.role.value
-  );
+  const { setReload, selectedRowId } = useContext(AbmStateContext);
+  const [contexts, setContexts] = useState([]);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [working, setWorking] = useState(false);
+  const [role, setRole] = useState(null);
 
   const form = useForm({
     initialValues: {
       name: "",
+      groupName: "",
       context: "",
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
+      groupName: (val) => (val ? null : t("validation.required")),
       context: (val) => (val ? null : t("validation.required")),
     },
   });
 
-  const [working, setWorking] = useState(false);
+  const getData = async () => {
+    if (selectedRowId) {
+      const params = {
+        token: user.token,
+        id: selectedRowId,
+      };
+
+      try {
+        const contexts = await findAllContext(params);
+        setContexts(contexts);
+
+        const role = await findRoleById(params);
+        setRole(role);
+
+        setError(false);
+        setErrorMessage(null);
+      } catch (error) {
+        setError(true);
+        setErrorMessage(error.message);
+      }
+    }
+  };
 
   useEffect(() => {
-    if(action === actions.updated){
-      setWorking(false);
-      navigate(-1);
-    }
-  },[action, navigate])
+    getData();
+  }, [selectedRowId]);
 
   useEffect(() => {
-    if (selectedRole) {
-      setWorking(false);
-      form.setFieldValue("name", selectedRole.name);
-      form.setFieldValue("context", selectedRole.context.id);
-    }else{
-      navigate("/");
+    if (role) {
+      form.setFieldValue("name", role.name);
+      form.setFieldValue("groupName", role.groupName);
+      form.setFieldValue("context", role.context.id);
     }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRole]);
+  }, [role]);
 
   const createTextField = (field) => {
     const ret = (
       <TextInput
         label={t("crud.role.label." + field)}
-        placeholder={
-          t("crud.role.placeholder." + field).startsWith("crud.")
-            ? ""
-            : t("crud.role.placeholder." + field)
-        }
+        placeholder={t("crud.role.placeholder." + field).startsWith("crud.") ? "" : t("crud.role.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -89,14 +96,33 @@ export function UpdatePage() {
     return ret;
   };
 
-  const onUpdate = (values) => {
-    setWorking(true);
-
+  const onUpdate = async (values) => {
     const params = {
       token: user.token,
-      data: values,
+      data: {...values, id:selectedRowId},
     };
-    dispatch(updateRole(params));
+
+    try {
+      setWorking(true);
+      const ret = await updateRole(params);
+
+      if (ret.error) {
+        setWorking(false);
+        setError(true);
+        setErrorMessage(ret.message);
+      } else {
+        setError(false);
+        setErrorMessage(null);
+        setWorking(false);
+
+        setReload(Date.now());
+        navigate("../");
+      }
+    } catch (error) {
+      setWorking(false);
+      setError(true);
+      setErrorMessage(error.message);
+    }
   };
 
   const onClose = () => {
@@ -108,11 +134,13 @@ export function UpdatePage() {
       <ResponceNotification
         opened={error}
         onClose={onClose}
-        code={""}
+        code={errorMessage}
         title={t("status.error")}
         text={errorMessage}
       />
+
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
+
       <Container size={"sm"}>
         <Title
           mb={"lg"}
@@ -128,18 +156,17 @@ export function UpdatePage() {
 
         <form
           onSubmit={form.onSubmit((values) => {
-            const toSend = { ...selectedRole };
-            toSend.name = values.name;
-            toSend.context = values.context;
-            onUpdate(toSend);
+            onUpdate(values);
           })}
         >
           <Group grow mb={"md"}>
             {createTextField("name")}
           </Group>
+          <Group mb={"md"}>{createTextField("groupName")}</Group>
           <Group mb={"xs"}>{createSelectField("context")}</Group>
 
           <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.accept")}</Button>
             <Button
               onClick={(event) => {
                 navigate(-1);
@@ -147,7 +174,6 @@ export function UpdatePage() {
             >
               {t("button.cancel")}
             </Button>
-            <Button type="submit">{t("button.accept")}</Button>
           </Group>
         </form>
       </Container>

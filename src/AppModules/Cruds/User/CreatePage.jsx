@@ -5,18 +5,15 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useViewportSize } from "@mantine/hooks";
 import { createUser, findAllCountries } from "../../../DataAccess/User";
 import { useState } from "react";
-import "dayjs/locale/es";
-import "dayjs/locale/en";
 import { AbmStateContext } from "./Context";
 import { useContext } from "react";
-import { useWindowSize } from "../../../Hook";
-import { HEADER_HIGHT } from "../../../Constants";
+import "dayjs/locale/es";
+import "dayjs/locale/en";
 
 export function CreatePage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { setReload } = useContext(AbmStateContext);
   const { user } = useSelector((state) => state.auth.value);
   const [error, setError] = useState(null);
@@ -24,7 +21,6 @@ export function CreatePage() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [creating, setCreating] = useState(false);
   const [countries, setCountries] = useState([]);
-  const wSize = useWindowSize();
 
   const navigate = useNavigate();
 

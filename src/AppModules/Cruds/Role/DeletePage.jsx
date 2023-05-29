@@ -1,60 +1,80 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
-import {
-  TextInput,
-  Title,
-  Container,
-  Button,
-  Group,
-  LoadingOverlay,
-  Select,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { TextInput, Title, Container, Button, Group, LoadingOverlay, Select } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteRole } from "../../../Features/Role";
-import { actions } from "../../../Constants";
+import { useSelector } from "react-redux";
+import { deleteRole, findRoleById } from "../../../DataAccess/Roles";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
+import { useForm } from "@mantine/form";
+import { findAllContext } from "../../../DataAccess/Context";
 
 export function DeletePage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
-  const { t } = useTranslation();
-  const [working, setWorking] = useState(false);
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const { user } = useSelector((state) => state.auth.value);
-  const { contexts, action, selectedRole, error, errorMessage } = useSelector(
-    (state) => state.role.value
-  );
+  
+  const { t } = useTranslation();
+  const { setReload, selectedRowId } = useContext(AbmStateContext);
+  const [working, setWorking] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [contexts, setContexts] = useState([]);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [role, setRole] = useState(null);
 
   const form = useForm({
     initialValues: {
       name: "",
+      groupName: "",
       context: "",
+    },
+
+    validate: {
+      name: (val) => (val ? null : t("validation.required")),
+      groupName: (val) => (val ? null : t("validation.required")),
+      context: (val) => (val ? null : t("validation.required")),
     },
   });
 
-  useEffect(() => {
-    if(action === actions.deleted){
-      setWorking(false);
-      navigate(-1);
+
+  const getData = async () => {
+    if (selectedRowId) {
+      const params = {
+        token: user.token,
+        id: selectedRowId,
+      };
+
+      try {
+        const contexts = await findAllContext(params);
+        setContexts(contexts);
+
+        const role = await findRoleById(params);
+        setRole(role);
+
+        setError(false);
+        setErrorMessage(null);
+      } catch (error) {
+        setError(true);
+        setErrorMessage(error.message);
+      }
     }
-  },[action, navigate])
+  };
 
   useEffect(() => {
-    if (selectedRole) {
-      setWorking(false);
-      form.setFieldValue("name", selectedRole.name);
-      form.setFieldValue("context", selectedRole.context.id);
-    }else{
-      navigate("/");
+    getData();
+  }, [selectedRowId]);
+
+  useEffect(() => {
+    if (role) {
+      form.setFieldValue("name", role.name);
+      form.setFieldValue("groupName", role.groupName);
+      form.setFieldValue("context", role.context.id);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRole]);
-  
+  }, [role]);
+
   const createTextField = (field) => {
     const ret = (
       <TextInput
@@ -83,14 +103,33 @@ export function DeletePage() {
     return ret;
   };
 
-  const onDelete = () => {
-    setWorking(true);
-
+  const onDelete = async (values) => {
     const params = {
       token: user.token,
-      id: selectedRole.id,
+      data: { id: selectedRowId },
     };
-    dispatch(deleteRole(params));
+
+    try {
+      setWorking(true);
+      const ret = await deleteRole(params);
+
+      if (ret.error) {
+        setWorking(false);
+        setError(true);
+        setErrorMessage(ret.message);
+      } else {
+        setError(false);
+        setErrorMessage(null);
+        setWorking(false);
+
+        setReload(Date.now());
+        navigate("../");
+      }
+    } catch (error) {
+      setWorking(false);
+      setError(true);
+      setErrorMessage(error.message);
+    }
   };
 
   const onClose = () => {
@@ -106,7 +145,7 @@ export function DeletePage() {
       <ResponceNotification
         opened={error}
         onClose={onClose}
-        code={""}
+        code={errorMessage}
         title={t("status.error")}
         text={errorMessage}
       />
@@ -141,9 +180,19 @@ export function DeletePage() {
           <Group grow mb={"md"}>
             {createTextField("name")}
           </Group>
+          <Group grow mb={"md"}>
+            {createTextField("groupName")}
+          </Group>
           <Group mb={"xs"}>{createSelectField("context")}</Group>
 
           <Group position="right" mt="xl" mb="xs">
+            <Button
+              onClick={() => {
+                setConfirmModalOpen(true);
+              }}
+            >
+              {t("button.accept")}
+            </Button>
             <Button
               onClick={(event) => {
                 navigate(-1);
@@ -151,7 +200,6 @@ export function DeletePage() {
             >
               {t("button.cancel")}
             </Button>
-            <Button onClick={() => {onDelete()}}>{t("button.accept")}</Button>
           </Group>
         </form>
       </Container>

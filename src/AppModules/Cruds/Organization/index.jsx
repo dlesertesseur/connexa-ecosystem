@@ -6,26 +6,36 @@ import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { findAllOrganizations } from "../../../DataAccess/Organization";
+import { AbmStateContext } from "./Context";
+import ResponceNotification from "../../../Modal/ResponceNotification";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
   const { t } = useTranslation();
   const [rows, setRows] = useState([]);
-  const [rowId, setRowId] = useState(null);
-  const [loadGrid, setLoadGrid] = useState(null);
+  const [selectedRowId, setSelectedRowId] = useState(null);
+  const [reload, setReload] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  useEffect(() => {
+  const getData = async () => {
     const params = {
       token: user.token,
     };
-    findAllOrganizations(params).then((ret) => {
-      setRows(ret);
-    });
-  }, [user, loadGrid]);
 
-  const onLoadGrid = () => {
-    setLoadGrid(Date.now())
-  }
+    try {
+      const roles = await findAllOrganizations(params);
+      setRows(roles);
+      setErrorMessage(null);
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [user, reload]);
 
   const cols = t("crud.organization.columns", { returnObjects: true });
   const columns = [
@@ -33,24 +43,30 @@ const DynamicApp = ({ app }) => {
     { headerName: cols[1], fieldName: "description", align: "left" },
   ];
 
-  const ret =
-    rows.length > 0 ? (
+  const ret = (
+    <AbmStateContext.Provider value={{ reload, setReload, selectedRowId }}>
+      <ResponceNotification
+        opened={errorMessage ? true : false}
+        onClose={() => {setErrorMessage(null)}}
+        code={errorMessage}
+        title={t("status.error")}
+        text={errorMessage}
+      />
+
       <CrudFrame
         app={app}
         columns={columns}
         data={rows}
-        rowSelected={rowId}
-        setRowSelected={setRowId}
+        rowSelected={selectedRowId}
+        setRowSelected={setSelectedRowId}
+        loading={loading}
         enableCreateButton={true}
-        createPage={<CreatePage user={user} back={"../"} onLoadGrid={onLoadGrid}/>}
-        updatePage={
-          <UpdatePage user={user} back={"../"} rowId={rowId} onLoadGrid={onLoadGrid}/>
-        }
-        deletePage={
-          <DeletePage user={user} back={"../"} rowId={rowId} onLoadGrid={onLoadGrid}/>
-        }
+        createPage={<CreatePage />}
+        updatePage={<UpdatePage />}
+        deletePage={<DeletePage />}
       />
-    ) : null;
+    </AbmStateContext.Provider>
+  );
 
   return ret;
 };

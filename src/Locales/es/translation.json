@@ -278,9 +278,10 @@
       "label": {
         "name": "Nombre",
         "context": "Contexto",
+        "groupName": "Agropamiento",
         "applications": "Aplicaciones"
       },
-      "columns": ["Nombre", "Contexto"],
+      "columns": ["Nombre", "Agrupamiento", "Contexto"],
       "align": ["left", "left"],
       "width": ["30%", "65%"],
       "selectApplications": "Seleccionar aplicaciones",
@@ -650,7 +651,8 @@
         "city": "Cuidad",
         "status": "Estado",
         "active": "Activo",
-        "birthDate": "Fecha de nacimiento"
+        "birthDate": "Fecha de nacimiento",
+        "password":"Contraseña"
       },
       "placeholder": {
         "phone": "054 11 5555 5555"

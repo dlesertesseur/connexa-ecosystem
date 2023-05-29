@@ -1,73 +1,61 @@
 import React, { useEffect, useState } from "react";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
-import {
-  findAllContexts,
-  findAllRoles,
-  findRoleById,
-} from "../../../Features/Role";
 import { ApplicationsPage } from "./ApplicationsPage";
+import { findAllRoles } from "../../../DataAccess/Roles";
+import { AbmStateContext } from "./Context";
 
 const DynamicApp = (param) => {
   const { app } = param;
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { action, roles, selectedRole } = useSelector(
-    (state) => state.role.value
-  );
-
   const [rows, setRows] = useState([]);
+  const [selectedRowId, setSelectedRowId] = useState(null);
+  const [reload, setReload] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
+  const getData = async () => {
     const params = {
       token: user.token,
     };
 
-    dispatch(findAllRoles(params));
-  }, [user, action, dispatch]);
+    try {
+      const roles = await findAllRoles(params);
+      const list = roles?.map((m) => {
+        const row = { id: m.id, name: m.name, group: m.groupName, context: m.context.name };
+        return row;
+      });
+      setRows(list);
+    } catch (error) {
+
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const params = {
-      token: user.token,
-    };
-    dispatch(findAllContexts(params));
-  }, [dispatch, user]);
-
-  useEffect(() => {
-    const r = roles?.map((m) => {
-      const row = { id: m.id, name: m.name, context: m.context.name };
-      return row;
-    });
-    setRows(r);
-  }, [roles]);
+    getData();
+  }, [user, reload]);
 
   const cols = t("crud.role.columns", { returnObjects: true });
   const columns = [
     { headerName: cols[0], fieldName: "name", align: "left" },
-    { headerName: cols[1], fieldName: "context", align: "left" },
+    { headerName: cols[1], fieldName: "group", align: "left" },
+    { headerName: cols[2], fieldName: "context", align: "left" },
   ];
 
-  const ret =
-    rows.length > 0 ? (
+  const ret = (
+    <AbmStateContext.Provider value={{ reload, setReload, selectedRowId }}>
       <CrudFrame
         app={app}
         columns={columns}
         data={rows}
-        rowSelected={selectedRole?.id}
-        setRowSelected={(id) => {
-          const params = {
-            token: user.token,
-            id:id,
-          };
-      
-          dispatch(findRoleById(params));
-        }}
+        loading={loading}
+        rowSelected={selectedRowId}
+        setRowSelected={setSelectedRowId}
         enableCreateButton={true}
         createPage={<CreatePage />}
         updatePage={<UpdatePage />}
@@ -76,11 +64,12 @@ const DynamicApp = (param) => {
           {
             path: "/applications",
             key: "crud.role.label.applications",
-            element: <ApplicationsPage/>,
+            element: <ApplicationsPage />,
           },
         ]}
       />
-    ) : null;
+    </AbmStateContext.Provider>
+  );
 
   return ret;
 };

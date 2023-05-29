@@ -1,4 +1,4 @@
-import { TextInput, Title, Container, Group, Stack } from "@mantine/core";
+import { TextInput, Title, Container, Group, Stack, PasswordInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../Hook";
@@ -12,7 +12,7 @@ export function Step2({ title, active, setActive, onCancel }) {
   const { t } = useTranslation();
   const { wizardData, setWizardData } = useContext(AbmStateContext);
   const wSize = useWindowSize();
-  
+
   const form = useForm({
     initialValues: {
       nid: "",
@@ -20,22 +20,21 @@ export function Step2({ title, active, setActive, onCancel }) {
       firstname: "",
       // phone: "",
       email: "",
+      password: "",
     },
 
     validate: {
-      nid: (val) =>
-        /^\d{8,10}$/.test(val) ? null : t("validation.idNumberFormat"),
+      nid: (val) => (/^\d{8,10}$/.test(val) ? null : t("validation.idNumberFormat")),
       lastname: (val) => (val ? null : t("validation.required")),
       firstname: (val) => (val ? null : t("validation.required")),
       // phone: (val) =>
       //   /^[a-zA-Z0-9\-().\s]{10,16}$/.test(val)
       //     ? null
       //     : t("validation.phoneNumberFormat"),
-      email: (val) =>
-        /^\S+@\S+$/.test(val) ? null : t("validation.emailFormat"),
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : t("validation.emailFormat")),
+      password: (val) => (val.length <= 6 ? t("validation.passwordFormat") : null),
     },
   });
-
 
   useEffect(() => {
     if (wizardData && wizardData.step2) {
@@ -43,6 +42,7 @@ export function Step2({ title, active, setActive, onCancel }) {
       form.setFieldValue("lastname", wizardData.step2.lastname);
       form.setFieldValue("firstname", wizardData.step2.firstname);
       form.setFieldValue("email", wizardData.step2.email);
+      form.setFieldValue("password", wizardData.step2.password);
     }
   }, [wizardData]);
 
@@ -50,11 +50,21 @@ export function Step2({ title, active, setActive, onCancel }) {
     const ret = (
       <TextInput
         label={t("crud.user.label." + field)}
-        placeholder={
-          t("crud.user.placeholder." + field).startsWith("crud.")
-            ? ""
-            : t("crud.user.placeholder." + field)
-        }
+        placeholder={t("crud.user.placeholder." + field).startsWith("crud.") ? "" : t("crud.user.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
+  const createPasswordField = (field) => {
+    const ret = (
+      <PasswordInput
+        w={200}
+        label={t("crud.user.label." + field)}
+        autoComplete="off"
+        placeholder={t("crud.user.placeholder." + field).startsWith("crud.") ? "" : t("crud.user.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -65,14 +75,14 @@ export function Step2({ title, active, setActive, onCancel }) {
   const validate = () => {
     form.validate();
     if (form.isValid()) {
-
-      const data = {...wizardData};
+      const data = { ...wizardData };
 
       const step2 = {};
       step2.nid = form.getInputProps("nid").value;
       step2.lastname = form.getInputProps("lastname").value;
       step2.firstname = form.getInputProps("firstname").value;
       step2.email = form.getInputProps("email").value;
+      step2.password = form.getInputProps("password").value;
 
       data.step2 = step2;
 
@@ -95,10 +105,7 @@ export function Step2({ title, active, setActive, onCancel }) {
       spacing="xs"
       h={wSize.height - HEADER_HIGHT}
       sx={(theme) => ({
-        backgroundColor:
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[8]
-            : theme.colors.gray[0],
+        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
       })}
     >
       <Container size={"sm"} w={"100%"}>
@@ -135,16 +142,14 @@ export function Step2({ title, active, setActive, onCancel }) {
           <Group grow mb={"md"}>
             {createTextField("email")}
           </Group>
+
+          <Group mb={"md"}>
+            {createPasswordField("password")}
+          </Group>
         </form>
       </Container>
 
-      {wSize?.height ? (
-        <ButtonsPanel
-          onCancel={onCancel}
-          nextStep={nextStep}
-          prevStep={prevStep}
-        />
-      ) : null}
+      {wSize?.height ? <ButtonsPanel onCancel={onCancel} nextStep={nextStep} prevStep={prevStep} /> : null}
     </Stack>
   );
 }

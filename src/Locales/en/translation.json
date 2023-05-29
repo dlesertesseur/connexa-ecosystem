@@ -287,9 +287,10 @@
       "label": {
         "name": "Name",
         "context": "Context",
+        "groupName": "Group",
         "applications": "Applications"
       },
-      "columns": ["Name", "Context"],
+      "columns": ["Name", "Group", "Context"],
       "align": ["left", "left"],
       "width": ["30%", "65%"],
       "selectApplications": "Select applications",
@@ -651,7 +652,8 @@
         "status": "Status",
         "active": "Active",
         "birthDate": "Date of birth",
-        "sites": "Sites"
+        "sites": "Sites",
+        "password":"Password"
       },
       "placeholder": {
         "phone": "054 11 5555 5555"

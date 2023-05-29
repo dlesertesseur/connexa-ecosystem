@@ -81,6 +81,7 @@ async function createRole(parameters) {
   try {
     const body = JSON.stringify({
       name: parameters.data.name,
+      groupName: parameters.data.groupName,
       contextId: parameters.data.context,
     });
 
@@ -93,8 +94,6 @@ async function createRole(parameters) {
       },
       body: body,
     };
-
-    console.log("createRole", requestOptions);
 
     const url = API.role.create;
     const res = await fetch(url, requestOptions);
@@ -146,37 +145,33 @@ async function unassignApp(parameters) {
 }
 
 async function updateRole(parameters) {
-  try {
-    const body = JSON.stringify({
-      id: parameters.data.id,
-      name: parameters.data.name,
-      contextId: parameters.data.context,
-    });
+  const body = JSON.stringify({
+    id: parameters.data.id,
+    name: parameters.data.name,
+    groupName: parameters.data.groupName,
+    contextId: parameters.data.context,
+  });
 
-    const requestOptions = {
-      method: "PUT",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: parameters.token,
-      },
-      body: body,
-    };
 
-    const res = await fetch(API.role.update, requestOptions);
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    return error;
-  }
+  console.log("updateRole -> ", parameters);
+
+  const requestOptions = {
+    method: "PUT",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token: parameters.token,
+    },
+    body: body,
+  };
+
+  const res = await fetch(API.role.update, requestOptions);
+  const data = await res.json();
+  return data;
 }
 
 async function deleteRole(parameters) {
   try {
-    const body = JSON.stringify({
-      id: parameters.id,
-    });
-
     const requestOptions = {
       method: "DELETE",
       mode: "cors",
@@ -184,14 +179,13 @@ async function deleteRole(parameters) {
         "Content-Type": "application/json",
         token: parameters.token,
       },
-      body: body,
     };
 
-    await fetch(API.role.delete + parameters.id, requestOptions).then(
-      (response) => {
-        return response;
-      }
-    );
+    const url = API.role.delete + parameters.data.id;
+    await fetch(url, requestOptions);
+    const data = await res.json();
+    return data;
+
   } catch (error) {
     return error;
   }
@@ -223,5 +217,5 @@ export {
   findAllRoles,
   findRoleById,
   assignApp,
-  unassignApp
+  unassignApp,
 };

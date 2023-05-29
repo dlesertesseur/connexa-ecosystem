@@ -278,6 +278,10 @@ export const API = {
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/retailers/stores/",
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/retailers/stores/",
   },
+
+  registation: {
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/registrations",
+  },
 };
 
 export const ERRORS = {

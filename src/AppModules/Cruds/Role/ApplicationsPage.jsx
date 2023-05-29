@@ -4,28 +4,21 @@ import { Title, LoadingOverlay, Button, Stack, Group } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  findAllApplications,
-  findAllApplicationsByRoleId,
-} from "../../../Features/Role";
-import { assignApp, unassignApp } from "../../../DataAccess/Roles";
+import { useSelector } from "react-redux";
+import { assignApp, findRoleById, unassignApp } from "../../../DataAccess/Roles";
+import { findAllApplications, findAllApplicationsByRoleId } from "../../../DataAccess/Applications";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
 
 export function ApplicationsPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   const { user } = useSelector((state) => state.auth.value);
-  const {
-    applications,
-    applicationsByRole,
-    selectedRole,
-    error,
-    errorMessage,
-  } = useSelector((state) => state.role.value);
-
+  const { setReload, selectedRowId } = useContext(AbmStateContext);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [rowSelected, setRowSelected] = useState(null);
+  const [role, setRole] = useState(null);
+
+  const navigate = useNavigate();
 
   const cols = t("crud.application.columns", { returnObjects: true });
   const columns = [
@@ -34,23 +27,36 @@ export function ApplicationsPage() {
   ];
 
   const [processData, setProcessData] = useState(null);
+  const [applications, setApplications] = useState([]);
+  const [applicationsByRole, setApplicationsByRole] = useState([]);
 
   const onClose = () => {
     navigate(-1);
   };
 
-  useEffect(() => {
-    if (selectedRole) {
+  const getData = async () => {
+    if (selectedRowId) {
       const params = {
         token: user.token,
-        id: selectedRole.id,
+        roleId: selectedRowId,
+        id: selectedRowId,
       };
-      dispatch(findAllApplicationsByRoleId(params));
-      dispatch(findAllApplications(params));
+      const appByRol = await findAllApplicationsByRoleId(params);
+      setApplicationsByRole(appByRol);
+
+      const appls = await findAllApplications(params);
+      setApplications(appls);
+
+      const role = await findRoleById(params);
+      setRole(role);
     }else{
       navigate("/");
     }
-  }, [dispatch, navigate, selectedRole, user]);
+  }
+
+  useEffect(() => {
+    getData();
+  }, [selectedRowId]);
 
   useEffect(() => {
     const ids = applicationsByRole?.map((app) => app.id);
@@ -78,7 +84,7 @@ export function ApplicationsPage() {
 
     const params = {
       token: user.token,
-      roleId: selectedRole.id,
+      roleId: selectedRowId,
       appId: rowId,
     };
     if (check) {
@@ -102,7 +108,7 @@ export function ApplicationsPage() {
       })}
     >
       <ResponceNotification
-        opened={error}
+        opened={errorMessage ? true : false}
         onClose={onClose}
         code={errorMessage}
         title={t("status.error")}
@@ -110,7 +116,7 @@ export function ApplicationsPage() {
       />
       <LoadingOverlay
         overlayOpacity={0.5}
-        visible={!(processData) && !error}
+        visible={!(processData) && !errorMessage}
       />
 
       <Title
@@ -122,7 +128,7 @@ export function ApplicationsPage() {
           fontWeight: 700,
         })}
       >
-        {t("crud.role.title.assignApps") + " : " + selectedRole?.name}
+        {t("crud.role.title.assignApps") + " : " + role?.name + " - " + role?.groupName}
       </Title>
 
       <CheckTable
