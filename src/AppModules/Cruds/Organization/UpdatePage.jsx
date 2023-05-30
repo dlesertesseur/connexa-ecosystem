@@ -5,18 +5,22 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { findOrganizationById, updateOrganization } from "../../../DataAccess/Organization";
+import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
 
-export function UpdatePage({ user, back, rowId, onLoadGrid }) {
+export function UpdatePage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [data, setData] = useState(null);
+  const { user } = useSelector((state) => state.auth.value);
+  const { setReload, selectedRowId } = useContext(AbmStateContext);
 
+  const navigate = useNavigate();
+  const [working, setWorking] = useState(false);
+  
   const form = useForm({
     initialValues: {
       name: "",
       description: "",
-      path: "",
-      icon: "",
     },
 
     validate: {
@@ -25,28 +29,24 @@ export function UpdatePage({ user, back, rowId, onLoadGrid }) {
     },
   });
 
-  const [working, setWorking] = useState(false);
-  const [responseModalOpen, setResponseModalOpen] = useState(false);
-  const [response, setResponse] = useState(null);
-
-  useEffect(() => {
-    setWorking(true);
-
+  const getData = async () => {
     const params = {
       token: user.token,
-      id: rowId,
+      id: selectedRowId,
     };
 
-    findOrganizationById(params).then((ret) => {
-      setWorking(false);
-      setData(ret);
+    setWorking(true);
 
-      form.setFieldValue("name", ret.name);
-      form.setFieldValue("description", ret.description);
-    });
+    const ret = await findOrganizationById(params)
+    form.setFieldValue("name", ret.name);
+    form.setFieldValue("description", ret.description);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowId, user]);
+    setWorking(false);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [user]);
 
   const createTextField = (field) => {
     const ret = (
