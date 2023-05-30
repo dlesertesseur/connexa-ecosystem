@@ -7,17 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { findAllRoles } from "../../../DataAccess/Roles";
 import { getRoleBySiteIdAndUserId, assignRol, unassignRol } from "../../../DataAccess/User";
+import { findAllSites } from "../../../DataAccess/Sites";
+import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 import { AbmStateContext } from "./Context";
 import { useContext } from "react";
-import { findAllSites } from "../../../DataAccess/Sites";
 
 export function RolePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { setReload, selectedRowId, selectedUserName } = useContext(AbmStateContext);
+  const { selectedRowId, selectedUserName } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [errorCode, setErrorCode] = useState(null);
-  const [selectedRole, setSelectedRole] = useState([]);
   const [roles, setRoles] = useState([]);
   const [sites, setSites] = useState([]);
   const [formatedSites, setFormatedSites] = useState([]);
@@ -26,7 +25,7 @@ export function RolePage() {
   const [filteredRole, setFilteredRole] = useState([]);
   const [userRole, setUserRole] = useState([]);
 
-  const { user, projectSelected } = useSelector((state) => state.auth.value);
+  const { user, projectSelected, organizationSelected } = useSelector((state) => state.auth.value);
 
   const [rowSelected, setRowSelected] = useState(null);
 
@@ -46,7 +45,7 @@ export function RolePage() {
   };
 
   const findSites = async () => {
-    const params = { token: user.token };
+    const params = { token: user.token, id: organizationSelected.id };
     setLoading(true);
 
     try {
@@ -66,7 +65,17 @@ export function RolePage() {
 
       setUserRole(userAllRole);
       const assignedRoleId = getAssignedRoleId(userAllRole);
+
+      let filtredIdRoles = null;
+      const filtredRoles = await findAllByOrganizationId(params);
+      if(filtredRoles){
+        filtredIdRoles = filtredRoles.map(r => r.role.id);
+      }
+      
       let roles = await findAllRoles(params);
+      if(filtredIdRoles){
+        roles = roles.filter(r => filtredIdRoles.includes(r.id))
+      }
 
       for (let index = 0; index < roles.length; index++) {
         const r = roles[index];

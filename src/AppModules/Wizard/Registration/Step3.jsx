@@ -52,8 +52,8 @@ export function Step3({ title, active, setActive, onCancel }) {
 
       //Order by name and groupName
       role.sort((a, b) => {
-        const vA = a.name.toUpperCase() + "-" + a.groupName.toUpperCase();
-        const vB = b.name.toUpperCase() + "-" + b.groupName.toUpperCase();
+        const vA = a.groupName.toUpperCase() + "-" + a.name.toUpperCase();
+        const vB = b.groupName.toUpperCase() + "-" + b.name.toUpperCase();
         if (vA < vB) {
           return -1;
         }

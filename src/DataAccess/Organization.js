@@ -29,7 +29,7 @@ async function createOrganization(parameters) {
 async function updateOrganization(parameters) {
   try {
     const body = JSON.stringify({
-      id: parameters.data.id,
+      id: parameters.id,
       name: parameters.data.name,
       description: parameters.data.description,
     });
@@ -68,9 +68,10 @@ async function deleteOrganization(parameters) {
       body: body,
     };
 
-    await fetch(API.organization.delete + parameters.id, requestOptions).then((response) => {
-      return response;
-    });
+    const res = await fetch(API.organization.delete + parameters.id, requestOptions);
+    const data = await res.json();
+    return data;
+    
   } catch (error) {
     return error;
   }

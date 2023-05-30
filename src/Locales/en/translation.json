@@ -59,7 +59,7 @@
     "createAnyway": "Create anyway",
     "createWorkerRelation": "Connect with this organization",
     "photos": "Photos",
-    "roles": "Profiles",
+    "roles": "Roles",
     "sites": "Sites",
     "backStep": "Back",
     "nextStep": "Next step"
@@ -257,11 +257,16 @@
       "title": {
         "create": "Create a new organization",
         "update": "Update organization",
-        "delete": "Delete organization"
+        "delete": "Delete organization",
+        "assignRoles": "Assign roles"
       },
       "label": {
         "name": "Name",
-        "description": "Description"
+        "description": "Description",
+        "roles": "Roles"
+      },
+      "applications":{
+        "columns": ["Name", "Description"]
       },
       "columns": ["Name", "Description", "Creation date"],
       "align": ["left", "left", "center"],

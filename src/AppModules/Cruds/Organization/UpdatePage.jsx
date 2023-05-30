@@ -1,22 +1,32 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
-import { TextInput, Title, Container, Button, Group, LoadingOverlay } from "@mantine/core";
+import {
+  TextInput,
+  Title,
+  Container,
+  Button,
+  Group,
+  LoadingOverlay,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { findOrganizationById, updateOrganization } from "../../../DataAccess/Organization";
+import {
+  findOrganizationById,
+  updateOrganization,
+} from "../../../DataAccess/Organization";
 import { useSelector } from "react-redux";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
 
 export function UpdatePage() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { setReload, selectedRowId } = useContext(AbmStateContext);
-
-  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
-  
+
   const form = useForm({
     initialValues: {
       name: "",
@@ -37,7 +47,7 @@ export function UpdatePage() {
 
     setWorking(true);
 
-    const ret = await findOrganizationById(params)
+    const ret = await findOrganizationById(params);
     form.setFieldValue("name", ret.name);
     form.setFieldValue("description", ret.description);
 
@@ -52,11 +62,6 @@ export function UpdatePage() {
     const ret = (
       <TextInput
         label={t("crud.organization.label." + field)}
-        placeholder={
-          t("crud.organization.placeholder." + field).startsWith("crud.")
-            ? ""
-            : t("crud.organization.placeholder." + field)
-        }
         {...form.getInputProps(field)}
       />
     );
@@ -64,49 +69,43 @@ export function UpdatePage() {
     return ret;
   };
 
-  const onUpdate = (values) => {
-    setWorking(true);
-
+  const onUpdate = async (values) => {
+    
     const params = {
       token: user.token,
       data: values,
+      id: selectedRowId
     };
-    updateOrganization(params)
-      .then((ret) => {
+    
+    setWorking(true);
+    try {
+      const ret = await updateOrganization(params);
+      if (ret.error) {
+        setWorking(false);
+        setErrorMessage(ret.message);
+      } else {
+        setErrorMessage(null);
         setWorking(false);
 
-        if (ret.status) {
-          setResponse({
-            code: ret.status,
-            title: ret.status ? t("status.error") : t("status.ok"),
-            text: ret.status ? ret.message : t("message.update"),
-          });
-          setResponseModalOpen(true);
-        } else {
-          onLoadGrid();
-          navigate(back);
-        }
-      })
-      .catch((error) => {
-        setResponse({ code: error.status, title: t("status.error"), text: error.message });
-        setResponseModalOpen(true);
-      });
-  };
-
-  const onClose = () => {
-    setResponseModalOpen(false);
-    onLoadGrid();
-    navigate(back);
+        setReload(Date.now());
+        navigate("../");
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    setWorking(false);
   };
 
   return (
     <Container size={"xl"} sx={{ width: "100%" }}>
       <ResponceNotification
-        opened={responseModalOpen}
-        onClose={onClose}
-        code={response?.code}
-        title={response?.title}
-        text={response?.text}
+        opened={errorMessage ? true : false}
+        onClose={() => {
+          setErrorMessage(null);
+        }}
+        code={errorMessage}
+        title={t("status.error")}
+        text={errorMessage}
       />
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
       <Container size={"sm"}>
@@ -124,10 +123,7 @@ export function UpdatePage() {
 
         <form
           onSubmit={form.onSubmit((values) => {
-            const toSend = { ...data };
-            toSend.name = values.name;
-            toSend.description = values.description;
-            onUpdate(toSend);
+            onUpdate(values);
           })}
         >
           <Group grow mb={"md"}>
@@ -138,14 +134,14 @@ export function UpdatePage() {
           </Group>
 
           <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.accept")}</Button>
             <Button
               onClick={(event) => {
-                navigate(back);
+                navigate("../");
               }}
             >
               {t("button.cancel")}
             </Button>
-            <Button type="submit">{t("button.accept")}</Button>
           </Group>
         </form>
       </Container>

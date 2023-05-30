@@ -68,8 +68,6 @@ export function CreatePage() {
       setErrorMessage(error);
     }
     setWorking(false);
-    setReload(Date.now());
-    navigate("../");
   };
 
   return (

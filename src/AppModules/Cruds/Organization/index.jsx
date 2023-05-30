@@ -8,6 +8,7 @@ import { DeletePage } from "./DeletePage";
 import { findAllOrganizations } from "../../../DataAccess/Organization";
 import { AbmStateContext } from "./Context";
 import ResponceNotification from "../../../Modal/ResponceNotification";
+import { RolePage } from "./RolePage";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -47,7 +48,9 @@ const DynamicApp = ({ app }) => {
     <AbmStateContext.Provider value={{ reload, setReload, selectedRowId }}>
       <ResponceNotification
         opened={errorMessage ? true : false}
-        onClose={() => {setErrorMessage(null)}}
+        onClose={() => {
+          setErrorMessage(null);
+        }}
         code={errorMessage}
         title={t("status.error")}
         text={errorMessage}
@@ -64,6 +67,13 @@ const DynamicApp = ({ app }) => {
         createPage={<CreatePage />}
         updatePage={<UpdatePage />}
         deletePage={<DeletePage />}
+        relationshipPages={[
+          {
+            path: "/roles",
+            key: "crud.organization.label.roles",
+            element: <RolePage />,
+          },
+        ]}
       />
     </AbmStateContext.Provider>
   );

@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API } from "../../Constants";
-import { config } from "../../Constants/config";
 
 const getUserLS = () => {
   const value = localStorage.getItem("user");

@@ -78,6 +78,12 @@ export const API = {
     findRolesByEmailAndOrganization: config.SERVER + ":" + config.PORT + config.API_BASE + "/organizations/{email}/organizations/{organizationId}/roles",
   },
 
+  organizationRole: {
+    asignRol: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-role-relations/organizations/",
+    unasignRol: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-role-relations/roles/",
+    findAllByOrganizationId: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-role-relations/organizations/",
+  },
+
   project: {
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/projects/{0}/",
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/projects/",

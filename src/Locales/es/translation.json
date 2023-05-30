@@ -248,11 +248,16 @@
       "title": {
         "create": "Crear una nueva organizacion",
         "update": "Modificar la organizacion",
-        "delete": "Eliminar la organizacion"
+        "delete": "Eliminar la organizacion",
+        "assignRoles": "Asignar perfiles"
       },
       "label": {
         "name": "Nombre",
-        "description": "Descripcion"
+        "description": "Descripcion",
+        "roles": "Perfiles"
+      },
+      "applications":{
+        "columns": ["Nombre", "Descripcion"]
       },
       "columns": ["Nombre", "Descripcion", "Fecha de creacion"],
       "align": ["left", "left", "center"],

@@ -1,42 +1,36 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CheckTable from "../../../Components/Crud/CheckTable";
-import { Title, LoadingOverlay, Button, Stack, Group, Loader } from "@mantine/core";
+import { Title, LoadingOverlay, Button, Stack, Group } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import {
-  assignApp,
-  findRoleById,
-  unassignApp,
-} from "../../../DataAccess/Roles";
-import {
-  findAllApplications,
-  findAllApplicationsByRoleId,
-} from "../../../DataAccess/Applications";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
+import { findOrganizationById } from "../../../DataAccess/Organization";
+import { assignRoleToOrg, findAllByOrganizationId, unassignRoleToOrg } from "../../../DataAccess/OrganizationRole";
+import { findAllRoles } from "../../../DataAccess/Roles";
 
-export function ApplicationsPage() {
+export function RolePage() {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { selectedRowId } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [rowSelected, setRowSelected] = useState(null);
-  const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
-  const cols = t("crud.application.columns", { returnObjects: true });
+  const cols = t("crud.organizations.appplications.columns", { returnObjects: true });
   const columns = [
     { headerName: cols[1], fieldName: "name", align: "left" },
-    { headerName: cols[2], fieldName: "description", align: "left" },
+    { headerName: cols[2], fieldName: "groupName", align: "left" },
   ];
 
   const [processData, setProcessData] = useState(null);
-  const [applications, setApplications] = useState([]);
-  const [applicationsByRole, setApplicationsByRole] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [organization, setOrganization] = useState(null);
+  const [rolesByOrg, setRolesByOrg] = useState([]);
 
   const onClose = () => {
     navigate(-1);
@@ -46,17 +40,32 @@ export function ApplicationsPage() {
     if (selectedRowId) {
       const params = {
         token: user.token,
-        roleId: selectedRowId,
         id: selectedRowId,
       };
-      const appByRol = await findAllApplicationsByRoleId(params);
-      setApplicationsByRole(appByRol);
 
-      const appls = await findAllApplications(params);
-      setApplications(appls);
+      const rolesByOrg = await findAllByOrganizationId(params);
+      if(rolesByOrg){
+        setRolesByOrg(rolesByOrg);
+      }else{
+        setRolesByOrg([]);
+      }
 
-      const role = await findRoleById(params);
-      setRole(role);
+      const roles = await findAllRoles(params);
+      roles.sort((a, b) => {
+        const vA = a.groupName.toUpperCase() + "-" + a.name.toUpperCase();
+        const vB = b.groupName.toUpperCase() + "-" + b.name.toUpperCase();
+        if (vA < vB) {
+          return -1;
+        }
+        if (vA > vB) {
+          return 1;
+        }
+        return 0;
+      });
+      setRoles(roles);
+
+      const org = await findOrganizationById(params);
+      setOrganization(org);
     } else {
       navigate("/");
     }
@@ -69,9 +78,9 @@ export function ApplicationsPage() {
   }, [selectedRowId]);
 
   useEffect(() => {
-    const ids = applicationsByRole?.map((app) => app.id);
+    const ids = rolesByOrg?.map((app) => app.role.id);
     if (ids) {
-      const list = applications?.map((app) => {
+      const list = roles?.map((app) => {
         const ret = { ...app };
         ret.checked = ids.includes(app.id);
 
@@ -81,7 +90,7 @@ export function ApplicationsPage() {
     } else {
       setProcessData(null);
     }
-  }, [applications, applicationsByRole]);
+  }, [roles, rolesByOrg]);
 
   const onCheckRow = (rowId, check) => {
     const ret = processData.map((p) => {
@@ -94,13 +103,13 @@ export function ApplicationsPage() {
 
     const params = {
       token: user.token,
-      roleId: selectedRowId,
-      appId: rowId,
+      id: selectedRowId,
+      roleId: rowId,
     };
     if (check) {
-      assignApp(params);
+      assignRoleToOrg(params);
     } else {
-      unassignApp(params);
+      unassignRoleToOrg(params);
     }
   };
 
@@ -109,10 +118,7 @@ export function ApplicationsPage() {
       justify="stretch"
       spacing="xs"
       sx={(theme) => ({
-        backgroundColor:
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[8]
-            : theme.colors.gray[0],
+        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
         height: "100%",
         width: "100%",
       })}
@@ -124,10 +130,7 @@ export function ApplicationsPage() {
         title={t("status.error")}
         text={errorMessage}
       />
-      <LoadingOverlay
-        overlayOpacity={0.5}
-        visible={!processData && !errorMessage}
-      />
+      <LoadingOverlay overlayOpacity={0.5} visible={!processData && !errorMessage} />
 
       <Group position="center" spacing={0}>
         <Title
@@ -138,12 +141,11 @@ export function ApplicationsPage() {
             fontWeight: 700,
           })}
         >
-          {t("crud.role.title.assignApps")}
+          {t("crud.organization.title.assignRoles")}
         </Title>
 
-        {role ? (
+        {organization ? (
           <Title
-            ml={"xs"}
             order={2}
             align="center"
             sx={(theme) => ({
@@ -151,7 +153,7 @@ export function ApplicationsPage() {
               fontWeight: 700,
             })}
           >
-            {": " + role?.name + " - " + role?.groupName}
+            {" : " + organization?.name}
           </Title>
         ) : null}
       </Group>
