@@ -559,6 +559,68 @@
       }
     },
 
+    "modelStructure": {
+      "columns": [
+        "Nombre",
+        "Descripcion",
+        "Ancho (m)",
+        "Alto (m)",
+        "Profundidad (m)",
+        "Posición X",
+        "Posición Y",
+        "Posición Z",
+        "Rotacion (°)",
+        "Visible"
+      ],
+
+      "label": {
+        "name": "Nombre",
+        "desctipcion":"Descripcion",
+        "numberOfModules": "Numero de módulos",
+        "moduleWidth": "Ancho de modulo",
+        "moduleHeight": "Alto del modulo",
+        "moduleDepth": "Profundidad del modulo",
+        "baseHeight": "Alto de la base",
+        "shelfHeight": "Alto del estante",
+        "verticalPanelWidth": "Ancho panel vertical",
+        "initialXPosition": "Initial X position",
+        "numberOfShelvesByModule": "Estantes por modulo",
+        "panelWidth": "Ancho del panel trasero",
+        "spaceHeight": "Alto del espacio",
+        "visible": "Visible"
+      },
+      "placeholder": {
+        "name": "Nombre de la estructura",
+        "desctipcion":"Descripcion",
+        "numberOfModules": "Numero de módulos",
+        "moduleWidth": "Ancho de modulo",
+        "moduleHeight": "Alto del modulo",
+        "moduleDepth": "Profundidad del modulo",
+        "baseHeight": "Alto de la base",
+        "shelfHeight": "Alto del estante",
+        "verticalPanelWidth": "Ancho panel vertical",
+        "initialXPosition": "Initial X position",
+        "numberOfShelvesByModule": "Estantes poe modulo",
+        "panelWidth": "Ancho del panel trasero",
+        "spaceHeight": "Alto del espacio",
+        "visible": "Visible",
+        "editor":"Editar"
+
+      },
+      "title": {
+        "create": "Crear una nueva estructura modelo",
+        "update": "Modificar una estructura modelo",
+        "delete": "Eliminar una estructura modelo",
+        "edit":"Editar estructure modelo"
+
+      },
+      "message": {
+        "create": "Todas las medidas están expresadas en metros.",
+        "update": "Todas las medidas están expresadas en metros.",
+        "delete": "Todas las medidas están expresadas en metros."
+      }
+    },
+
     "floor": {
       "columns": ["Nombre", "Descripcion"],
       "label": {

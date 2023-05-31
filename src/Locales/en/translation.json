@@ -559,6 +559,66 @@
       }
     },
 
+    "modelStructure": {
+      "columns": [
+        "Name",
+        "Description",
+        "Width (m)",
+        "Height (m)",
+        "Depth (m)",
+        "X Position",
+        "Y Position",
+        "Z Position",
+        "Rotation (°)",
+        "Visible"
+      ],
+      "label": {
+        "name": "Name",
+        "description":"Description",
+        "numberOfModules": "Mumber of modules",
+        "moduleWidth": "Module width",
+        "moduleHeight": "Module height",
+        "moduleDepth": "Module depth",
+        "baseHeight": "Base height",
+        "shelfHeight": "Shelf height",
+        "verticalPanelWidth": "Vertical panel width",
+        "initialXPosition": "Initial X position",
+        "numberOfShelvesByModule": "Mumber of shelves by module",
+        "panelWidth": "Panel width",
+        "spaceHeight": "Space height",
+        "visible": "Visible",
+        "editor":"Edit"
+      },
+
+      "placeholder": {
+        "name": "Storage structure name",
+        "description": "Description",
+        "numberOfModules": "Mumber of modules",
+        "moduleWidth": "Module width",
+        "moduleHeight": "Module height",
+        "moduleDepth": "Module depth",
+        "baseHeight": "Base height",
+        "shelfHeight": "Shelf height",
+        "verticalPanelWidth": "Vertical panel width",
+        "initialXPosition": "Initial X position",
+        "numberOfShelvesByModule": "Mumber of shelves by module",
+        "panelWidth": "Panel width",
+        "spaceHeight": "Space height",
+        "visible": "Visible"
+      },
+      "title": {
+        "create": "Create a new model structure",
+        "update": "Update model structure",
+        "delete": "Delete model structure",
+        "edit":"Edit model structure"
+      },
+      "message": {
+        "create": "All measurements are expressed in meters.",
+        "update": "All measurements are expressed in meters.",
+        "delete": "All measurements are expressed in meters."
+      }
+    },
+
     "floor": {
       "columns": ["Name", "Description"],
       "label": {
