@@ -43,7 +43,7 @@ const DynamicApp = ({ app }) => {
   };
 
   useEffect(() => {
-    if(site && floor){
+    if (site && floor) {
       getData();
     }
   }, [user, reload]);
@@ -62,9 +62,20 @@ const DynamicApp = ({ app }) => {
     // { headerName: cols[8], fieldName: "visible", format: "bool" },
   ];
 
-  const refresh = () => {setReload(Date.now())}
+  const refresh = () => {
+    setReload(Date.now());
+  };
   const ret = (
-    <AbmStateContext.Provider value={{ refresh, selectedRowId, site, setSite, floor, setFloor }}>
+    <AbmStateContext.Provider
+      value={{
+        refresh,
+        selectedRowId,
+        site,
+        setSite,
+        floor,
+        setFloor,
+      }}
+    >
       <ResponceNotification
         opened={errorMessage ? true : false}
         onClose={() => {
@@ -93,9 +104,7 @@ const DynamicApp = ({ app }) => {
             element: <EditorPanel />,
           },
         ]}
-        filterControl={
-          <FilterControl />
-        }
+        filterControl={<FilterControl />}
       />
     </AbmStateContext.Provider>
   );

@@ -214,7 +214,6 @@ export const authSlice = createSlice({
     },
 
     selectSite: (state, { payload }) => {
-      console.log("selectSite -> ", payload);
       state.value.siteSelected = payload;
     },
 

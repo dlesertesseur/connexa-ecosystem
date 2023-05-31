@@ -1,5 +1,7 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
-import { Title, LoadingOverlay, Button, Stack, Group, Text } from "@mantine/core";
+import Editor from "./Editor";
+import EditorToolbar from "./EditorToolbar";
+import { LoadingOverlay, Button, Stack, Group } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,19 +9,19 @@ import { useSelector } from "react-redux";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
 import { findRackById } from "../../../DataAccess/Racks";
-import Editor from "./Editor";
 import { useWindowSize } from "../../../Hook";
 import { HEADER_HIGHT } from "../../../Constants";
 
 export function EditorPanel() {
+  const wSize = useWindowSize();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { site, floor, selectedRowId } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
   const [modelStructure, setModelStructure] = useState(null);
-  const wSize = useWindowSize();
-  const navigate = useNavigate();
+  const [transforOption, setTransforOption] = useState(null);
 
   const getData = async () => {
     const params = {
@@ -59,22 +61,9 @@ export function EditorPanel() {
 
       <LoadingOverlay overlayOpacity={0.5} visible={errorMessage} />
 
-      <Group spacing={0} >
-        {modelStructure ? (
-          <Text
-            align="center"
-            sx={(theme) => ({
-              fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-              fontWeight: 600,
-            })}
-          >
-            {modelStructure.name}
-          </Text>
-        ) : null}
-      </Group>
-      
+      <EditorToolbar structure={modelStructure} transforOption={transforOption} setTransforOption={setTransforOption} />
       <Group position="center" spacing={0} h={wSize.height - (HEADER_HIGHT + 54)}>
-        <Editor structure={modelStructure}/>
+        <Editor structure={modelStructure} transforOption={transforOption} />
       </Group>
 
       <Group position="right" mt="xs" mb="xs" width="100%">
