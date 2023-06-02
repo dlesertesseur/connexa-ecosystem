@@ -14,7 +14,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AbmStateContext } from "./Context";
-import { findRackById } from "../../../DataAccess/Racks";
+import { deleteRack, findRackById } from "../../../DataAccess/Racks";
 
 export function DeletePage() {
   const navigate = useNavigate();
@@ -68,28 +68,30 @@ export function DeletePage() {
   };
 
   const onDelete = async () => {
-    // const params = {
-    //   token: user.token,
-    //   id: selectedRowId,
-    // };
+    const params = {
+      token: user.token,
+      siteId: site,
+      floorId: floor,
+      rackId: selectedRowId
+    };
 
-    // setWorking(true);
-    // try {
-    //   const ret = await deleteOrganization(params);
-    //   if (ret.error) {
-    //     setWorking(false);
-    //     setErrorMessage(ret.message);
-    //   } else {
-    //     setErrorMessage(null);
-    //     setWorking(false);
+    setWorking(true);
 
-    //     refechs();
-    //     navigate("../");
-    //   }
-    // } catch (error) {
-    //   setErrorMessage(error);
-    // }
-    // setWorking(false);
+    try {
+      const ret = await deleteRack(params);
+      if (ret.error) {
+        setWorking(false);
+        setErrorMessage(ret.message);
+      } else {
+        setErrorMessage(null);
+        setWorking(false);
+        refresh();
+        navigate("../");
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    setWorking(false);
   };
 
   const onConfirm = () => {

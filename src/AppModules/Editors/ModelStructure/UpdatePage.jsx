@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
-import { findRackById } from "../../../DataAccess/Racks";
+import { findRackById, updateRack } from "../../../DataAccess/Racks";
 import { useWindowSize } from "../../../Hook";
 import { HEADER_HIGHT } from "../../../Constants";
 import Editor from "./Editor";
@@ -16,7 +16,7 @@ export function UpdatePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { site, floor, refresh, selectedRowId } = useContext(AbmStateContext);
+  const { site, floor, refresh, structureName, selectedRowId } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
   const [modelStructure, setModelStructure] = useState(null);
@@ -41,27 +41,32 @@ export function UpdatePage() {
   }, [selectedRowId]);
 
   const onUpdate = async (values) => {
-    // const params = {
-    //   token: user.token,
-    //   data: values,
-    //   id: selectedRowId
-    // };
-    // setWorking(true);
-    // try {
-    //   const ret = await updateOrganization(params);
-    //   if (ret.error) {
-    //     setWorking(false);
-    //     setErrorMessage(ret.message);
-    //   } else {
-    //     setErrorMessage(null);
-    //     setWorking(false);
-    //     refresh();
-    //     navigate("../");
-    //   }
-    // } catch (error) {
-    //   setErrorMessage(error);
-    // }
-    // setWorking(false);
+    modelStructure.name = structureName;
+
+    const params = {
+      token: user.token,
+      data: modelStructure,
+      siteId: site,
+      floorId: floor,
+    };
+
+    setWorking(true);
+
+    try {
+      const ret = await updateRack(params);
+      if (ret.error) {
+        setWorking(false);
+        setErrorMessage(ret.message);
+      } else {
+        setErrorMessage(null);
+        setWorking(false);
+        refresh();
+        navigate("../");
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    setWorking(false);
   };
 
   return (
@@ -82,14 +87,20 @@ export function UpdatePage() {
         text={errorMessage}
       />
 
-      <LoadingOverlay overlayOpacity={0.5} visible={errorMessage} />
+      <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
       <Group position="center" spacing={0} h={wSize.height - HEADER_HIGHT}>
         <Editor structure={modelStructure} />
       </Group>
 
       <Group position="right" mt="xs" mb="xs" width="100%">
-        <Button>{t("button.accept")}</Button>
+        <Button
+          onClick={(event) => {
+            onUpdate();
+          }}
+        >
+          {t("button.accept")}
+        </Button>
         <Button
           onClick={(event) => {
             navigate(-1);

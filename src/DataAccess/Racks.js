@@ -89,4 +89,24 @@ const updateRack = async (parameters) => {
   }
 };
 
-export { createRack, findAllRacksHeaders, findRackById, updateRack };
+const deleteRack = async (parameters) => {
+  try {
+    const requestOptions = {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+    };
+    const url = API.rack.findById + "/" + parameters.siteId + "/floors/" + parameters.floorId +"/racks/" + parameters.rackId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export { createRack, findAllRacksHeaders, findRackById, updateRack, deleteRack };

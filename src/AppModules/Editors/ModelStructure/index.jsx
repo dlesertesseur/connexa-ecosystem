@@ -21,6 +21,7 @@ const DynamicApp = ({ app }) => {
   const [floor, setFloor] = useState(null);
   const [enableCreateButton, setEnableCreateButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [structureName, setStructureName] = useState(null);
 
   const getData = async () => {
     const params = {
@@ -42,6 +43,8 @@ const DynamicApp = ({ app }) => {
   };
 
   useEffect(() => {
+    setStructureName(null);
+    setSelectedRowId(null);
     if (site && floor) {
       getData();
     }
@@ -65,6 +68,8 @@ const DynamicApp = ({ app }) => {
         setSite,
         floor,
         setFloor,
+        structureName,
+        setStructureName
       }}
     >
       <ResponceNotification

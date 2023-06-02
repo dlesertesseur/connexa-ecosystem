@@ -231,7 +231,7 @@ function Box({
   name,
   position,
   dimension,
-  rotation,
+  rotations,
   color = 0xd5d5d5,
   opacity = 1,
   transparent = false,
@@ -246,9 +246,13 @@ function Box({
       name={name}
       position={position}
       ref={ref}
-      rotateX={rotation[0]}
-      rotateY={rotation[1]}
-      rotateZ={rotation[2]}
+      rotation={
+        new THREE.Euler(
+          THREE.MathUtils.degToRad(rotations[0]),
+          THREE.MathUtils.degToRad(rotations[1]),
+          THREE.MathUtils.degToRad(rotations[2])
+        )
+      }
       onClick={onClick}
       userData={userData}
       // onPointerOver={(event) => hover(true)}
@@ -281,7 +285,7 @@ function buildModelStructure(structure, setSelectedPart) {
             key={frame.id ? frame.id : frame.key}
             position={[frame.positionx, frame.positiony, frame.positionz]}
             dimension={[frame.dimensionx, frame.dimensiony, frame.dimensionz]}
-            rotation={[frame.rotationx, frame.rotationy, frame.rotationz]}
+            rotations={[frame.rotationx, frame.rotationy, frame.rotationz]}
             color={matColor}
             userData={frame}
           />
@@ -295,9 +299,13 @@ function buildModelStructure(structure, setSelectedPart) {
             key={module.id ? module.id : module.key}
             name={module.name}
             position={[module.positionx, module.positiony, module.positionz]}
-            rotateX={(module.rotationx * 3.14) / 180}
-            rotateY={(module.rotationy * 3.14) / 180}
-            rotateZ={(module.rotationz * 3.14) / 180}
+            rotation={
+              new THREE.Euler(
+                THREE.MathUtils.degToRad(module.rotationx),
+                THREE.MathUtils.degToRad(module.rotationy),
+                THREE.MathUtils.degToRad(module.rotationz)
+              )
+            }
           >
             {module?.parts.map((part) => {
               const matPart = materialsMap.get(part.type);
@@ -305,9 +313,9 @@ function buildModelStructure(structure, setSelectedPart) {
                 <Box
                   key={part.id ? part.id : part.key}
                   name={part.name}
-                  position={[part.positionx, -part.positiony, part.positionz]}
                   dimension={[part.dimensionx, part.dimensiony, part.dimensionz]}
-                  rotation={[part.rotationx, part.rotationy, part.rotationz]}
+                  position={[part.positionx, -part.positiony, part.positionz]}
+                  rotations={[part.rotationx, part.rotationy, part.rotationz]}
                   color={matPart}
                   opacity={part.type === 5 ? 0.5 : 1}
                   transparent={part.type === 5 ? true : false}

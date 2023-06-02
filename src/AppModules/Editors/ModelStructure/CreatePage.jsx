@@ -1,7 +1,6 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import Editor from "./Editor";
 import { Button, Group, LoadingOverlay, Stack } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,23 +16,11 @@ export function CreatePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { setReload, site, floor } = useContext(AbmStateContext);
+  const { refresh, site, floor, setStructureName } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
   const [modelStructure, setModelStructure] = useState(null);
   const wSize = useWindowSize();
-
-  const form = useForm({
-    initialValues: {
-      name: "",
-      description: "",
-    },
-
-    validate: {
-      name: (val) => (val ? null : t("validation.required")),
-      description: (val) => (val ? null : t("validation.required")),
-    },
-  });
 
   const onCreate = async (values) => {
     const model = StructureBuilder.createShelving(values);
@@ -85,7 +72,7 @@ export function CreatePage() {
         text={errorMessage}
       />
 
-      <LoadingOverlay overlayOpacity={0.5} visible={errorMessage} />
+      <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
       <Group position="center" spacing={0} h={wSize.height - HEADER_HIGHT}>
         <Editor structure={modelStructure} onCreate={onCreate} />
@@ -99,6 +86,7 @@ export function CreatePage() {
         </Button>
         <Button
           onClick={(event) => {
+            setStructureName(null);
             navigate(-1);
           }}
         >

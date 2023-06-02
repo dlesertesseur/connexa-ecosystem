@@ -26,11 +26,32 @@ const Editor = ({ structure, onCreate }) => {
     }
   }, [structure]);
 
-  useEffect(() => {
-    if (selectedPart) {
-      console.log("selectedPart.uuid ->", selectedPart.userData);
-    }
-  }, [selectedPart]);
+  const onUpdateData = (event) => {
+    const userData = selectedPart.userData;
+    const positions = selectedPart.position;
+    const rotations = [
+      THREE.MathUtils.radToDeg(selectedPart.rotation.x),
+      THREE.MathUtils.radToDeg(selectedPart.rotation.y),
+      THREE.MathUtils.radToDeg(selectedPart.rotation.z),
+    ];
+    const dimensions = [
+      selectedPart.geometry.parameters.width * selectedPart.scale.x,
+      selectedPart.geometry.parameters.height * selectedPart.scale.y,
+      selectedPart.geometry.parameters.depth * selectedPart.scale.z,
+    ];
+
+    userData.positionx = positions.x;
+    userData.positiony = -positions.y;
+    userData.positionz = positions.z;
+
+    userData.rotationx = rotations[0];
+    userData.rotationy = rotations[1];
+    userData.rotationz = rotations[2];
+
+    userData.dimensionx = dimensions[0];
+    userData.dimensiony = dimensions[1];
+    userData.dimensionz = dimensions[2];
+  };
 
   return (
     <Stack w={"100%"} h={"100%"} spacing={0}>
@@ -56,22 +77,7 @@ const Editor = ({ structure, onCreate }) => {
           <TransformControls
             object={selectedPart}
             onObjectChange={(event) => {
-              const userData = selectedPart.userData;
-              const positions = selectedPart.position;
-              const rotations = [
-                THREE.MathUtils.radToDeg(selectedPart.rotation.x),
-                THREE.MathUtils.radToDeg(selectedPart.rotation.y),
-                THREE.MathUtils.radToDeg(selectedPart.rotation.z),
-              ];
-              const dimensions = [
-                selectedPart.geometry.parameters.width * selectedPart.scale.x,
-                selectedPart.geometry.parameters.height * selectedPart.scale.y,
-                selectedPart.geometry.parameters.depth * selectedPart.scale.z,
-              ];
-
-              console.log("TransformControls positions ->", positions);
-              console.log("TransformControls rotations ->", rotations);
-              console.log("TransformControls dimensions ->", dimensions);
+              onUpdateData(event);
             }}
             mode={transformOption}
           />
