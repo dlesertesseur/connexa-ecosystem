@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { useRef, useState } from "react";
-import { TransformControls } from "@react-three/drei";
 const SCALE_CD = 1;
 const positionRegex = /^[A-Z]\d{2}_\d{2}[A-Z]_\d{2}$/;
 const columnsRegex = /^(FRONT|BACK) COLUMN - \d+$/;
@@ -228,7 +227,17 @@ function buildModelStructure_(scene, structure) {
   scene.add(grStructure);
 }
 
-function Box({ name, position, dimension, rotation, color = 0xd5d5d5, opacity = 1, transparent = false, onClick, userData }) {
+function Box({
+  name,
+  position,
+  dimension,
+  rotation,
+  color = 0xd5d5d5,
+  opacity = 1,
+  transparent = false,
+  onClick,
+  userData,
+}) {
   const ref = useRef();
   const [hovered, hover] = useState(false);
   const [clicked, click] = useState(false);
@@ -259,30 +268,31 @@ function buildModelStructure(structure, setSelectedPart) {
 
   return (
     <group
-      key={structure.id}
+      key={structure.id ? structure.id : structure.key}
       name={structure.name}
       //position={[structure.positionx, structure.positiony, structure.positionz]}
       position={[0, structure.positiony, 0]}
       rotateY={(structure.rotationy * 3.14) / 180}
     >
-      {frames.map((frame) => {
+      {frames?.map((frame) => {
         const matColor = materialsMap.get(frame.type);
         const box = (
           <Box
-            key={frame.id}
+            key={frame.id ? frame.id : frame.key}
             position={[frame.positionx, frame.positiony, frame.positionz]}
             dimension={[frame.dimensionx, frame.dimensiony, frame.dimensionz]}
             rotation={[frame.rotationx, frame.rotationy, frame.rotationz]}
             color={matColor}
+            userData={frame}
           />
         );
         return box;
       })}
 
-      {modules.map((module) => {
+      {modules?.map((module) => {
         return (
           <group
-            key={module.id}
+            key={module.id ? module.id : module.key}
             name={module.name}
             position={[module.positionx, module.positiony, module.positionz]}
             rotateX={(module.rotationx * 3.14) / 180}
@@ -293,7 +303,7 @@ function buildModelStructure(structure, setSelectedPart) {
               const matPart = materialsMap.get(part.type);
               const bPart = (
                 <Box
-                  key={part.id}
+                  key={part.id ? part.id : part.key}
                   name={part.name}
                   position={[part.positionx, -part.positiony, part.positionz]}
                   dimension={[part.dimensionx, part.dimensiony, part.dimensionz]}
@@ -302,6 +312,7 @@ function buildModelStructure(structure, setSelectedPart) {
                   opacity={part.type === 5 ? 0.5 : 1}
                   transparent={part.type === 5 ? true : false}
                   onClick={setSelectedPart}
+                  userData={part}
                 />
               );
               return bPart;

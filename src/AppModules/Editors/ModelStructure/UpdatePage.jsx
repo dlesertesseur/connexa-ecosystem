@@ -1,12 +1,5 @@
 import ResponceNotification from "../../../Modal/ResponceNotification";
-import {
-  TextInput,
-  Title,
-  Container,
-  Button,
-  Group,
-  LoadingOverlay,
-} from "@mantine/core";
+import { Button, Group, LoadingOverlay, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
@@ -15,6 +8,9 @@ import { useSelector } from "react-redux";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
 import { findRackById } from "../../../DataAccess/Racks";
+import { useWindowSize } from "../../../Hook";
+import { HEADER_HIGHT } from "../../../Constants";
+import Editor from "./Editor";
 
 export function UpdatePage() {
   const navigate = useNavigate();
@@ -23,18 +19,8 @@ export function UpdatePage() {
   const { site, floor, refresh, selectedRowId } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
-
-  const form = useForm({
-    initialValues: {
-      name: "",
-      description: "",
-    },
-
-    validate: {
-      name: (val) => (val ? null : t("validation.required")),
-      description: (val) => (val ? null : t("validation.required")),
-    },
-  });
+  const [modelStructure, setModelStructure] = useState(null);
+  const wSize = useWindowSize();
 
   const getData = async () => {
     const params = {
@@ -45,37 +31,21 @@ export function UpdatePage() {
     };
 
     setWorking(true);
-
     const ret = await findRackById(params);
-    form.setFieldValue("name", ret.name);
-    //form.setFieldValue("description", ret.description);
-
+    setModelStructure(ret);
     setWorking(false);
   };
 
   useEffect(() => {
     getData();
-  }, [user]);
-
-  const createTextField = (field) => {
-    const ret = (
-      <TextInput
-        label={t("crud.modelStructure.label." + field)}
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
+  }, [selectedRowId]);
 
   const onUpdate = async (values) => {
-    
     // const params = {
     //   token: user.token,
     //   data: values,
     //   id: selectedRowId
     // };
-    
     // setWorking(true);
     // try {
     //   const ret = await updateOrganization(params);
@@ -85,7 +55,6 @@ export function UpdatePage() {
     //   } else {
     //     setErrorMessage(null);
     //     setWorking(false);
-
     //     refresh();
     //     navigate("../");
     //   }
@@ -96,54 +65,39 @@ export function UpdatePage() {
   };
 
   return (
-    <Container size={"xl"} sx={{ width: "100%" }}>
+    <Stack
+      justify="stretch"
+      spacing={0}
+      sx={(theme) => ({
+        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
+        height: "100%",
+        width: "100%",
+      })}
+    >
       <ResponceNotification
         opened={errorMessage ? true : false}
-        onClose={() => {
-          setErrorMessage(null);
-        }}
+        onClose={() => setErrorMessage(null)}
         code={errorMessage}
         title={t("status.error")}
         text={errorMessage}
       />
-      <LoadingOverlay overlayOpacity={0.5} visible={working} />
-      <Container size={"sm"}>
-        <Title
-          mb={"lg"}
-          order={2}
-          align="center"
-          sx={(theme) => ({
-            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-            fontWeight: 700,
-          })}
-        >
-          {t("crud.modelStructure.title.update")}
-        </Title>
 
-        <form
-          onSubmit={form.onSubmit((values) => {
-            onUpdate(values);
-          })}
-        >
-          <Group grow mb={"md"}>
-            {createTextField("name")}
-          </Group>
-          <Group grow mb={"md"}>
-            {createTextField("description")}
-          </Group>
+      <LoadingOverlay overlayOpacity={0.5} visible={errorMessage} />
 
-          <Group position="right" mt="xl" mb="xs">
-            <Button type="submit">{t("button.accept")}</Button>
-            <Button
-              onClick={(event) => {
-                navigate("../");
-              }}
-            >
-              {t("button.cancel")}
-            </Button>
-          </Group>
-        </form>
-      </Container>
-    </Container>
+      <Group position="center" spacing={0} h={wSize.height - HEADER_HIGHT}>
+        <Editor structure={modelStructure} />
+      </Group>
+
+      <Group position="right" mt="xs" mb="xs" width="100%">
+        <Button>{t("button.accept")}</Button>
+        <Button
+          onClick={(event) => {
+            navigate(-1);
+          }}
+        >
+          {t("button.cancel")}
+        </Button>
+      </Group>
+    </Stack>
   );
 }

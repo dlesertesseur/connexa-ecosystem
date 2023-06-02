@@ -151,7 +151,10 @@
     "selectLanguage": "Seleccione su idioma de preferencia",
     "basicUser": "Usuario",
     "retailer": "Retailers (cadennas)",
-    "retailerDesc": "Seleccione un retailer (cadeena) para ver los destinos definidos"
+    "retailerDesc": "Seleccione un retailer (cadeena) para ver los destinos definidos",
+    "translate": "Trasladar",
+    "rotate": "Rotar",
+    "scale": "Escalar"
   },
 
   "placeholder": {
@@ -863,6 +866,35 @@
           "totalReturnedProducts": "Total productos retornados",
           "usersConnected": "Usuarios Connectados"
         }
+      }
+    }
+  },
+
+  "editor": {
+    "modelStructure": {
+      "title":{
+        "create":"Nueva estanteria"
+      },
+      "label":{
+        "name": "Nombre",
+        "numberOfModules": "Módulos",
+        "moduleWidth": "Ancho de modulo",
+        "moduleHeight": "Alto del modulo",
+        "moduleDepth": "Prof. del modulo",
+        "baseHeight": "Alto de la base",
+        "shelfHeight": "Alto del estante",
+        "verticalPanelWidth": "Ancho panel vertical",
+        "initialXPosition": "Initial X position",
+        "numberOfShelvesByModule": "Estantes por modulo",
+        "panelThickness": "Espesor panel trasero",
+        "spaceHeight": "Alto del espacio",
+        "visible": "Visible"
+      },
+      "placeholder":{
+        "name": "Un nombre"
+      },
+      "dialog": {
+        "createShelving": "Create shelving"
       }
     }
   },

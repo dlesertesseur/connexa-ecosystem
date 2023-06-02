@@ -151,7 +151,10 @@
     "selectLanguage": "Select your preferred language",
     "basicUser": "User",
     "retailer": "Retailer",
-    "retailerDesc": "Select a retailer to see the defined stores"
+    "retailerDesc": "Select a retailer to see the defined stores",
+    "translate": "Translate",
+    "rotate": "Rotate",
+    "scale": "Scale"
   },
 
   "placeholder": {
@@ -184,7 +187,7 @@
     "1001": "Error trying to login",
     "1002": "Registration error",
     "404": "Invalid username or password",
-    "listCheckValidation":"You must check at least one row"
+    "listCheckValidation": "You must check at least one row"
   },
 
   "notification": {
@@ -265,7 +268,7 @@
         "description": "Description",
         "roles": "Roles"
       },
-      "applications":{
+      "applications": {
         "columns": ["Name", "Description"]
       },
       "columns": ["Name", "Description", "Creation date"],
@@ -472,15 +475,7 @@
         "status": "Status",
         "countryOfOrigin": "Country of origin"
       },
-      "columns": [
-        "Image",
-        "SKU",
-        "EAN",
-        "Description",
-        "Brand",
-        "Country of origin",
-        "Status"
-      ],
+      "columns": ["Image", "SKU", "EAN", "Description", "Brand", "Country of origin", "Status"],
       "align": ["center", "right", "right", "left", "left", "left"],
       "width": ["5%", "5%", "10%", "50%", "10%", "10%", "10%"],
       "tab1": "General information",
@@ -574,7 +569,7 @@
       ],
       "label": {
         "name": "Name",
-        "description":"Description",
+        "description": "Description",
         "numberOfModules": "Mumber of modules",
         "moduleWidth": "Module width",
         "moduleHeight": "Module height",
@@ -587,7 +582,7 @@
         "panelWidth": "Panel width",
         "spaceHeight": "Space height",
         "visible": "Visible",
-        "editor":"Edit"
+        "editor": "Edit"
       },
 
       "placeholder": {
@@ -610,7 +605,7 @@
         "create": "Create a new model structure",
         "update": "Update model structure",
         "delete": "Delete model structure",
-        "edit":"Edit model structure"
+        "edit": "Edit model structure"
       },
       "message": {
         "create": "All measurements are expressed in meters.",
@@ -678,18 +673,7 @@
         "City",
         "Status"
       ],
-      "align": [
-        "right",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left"
-      ],
+      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
       "findWorkerColumns": ["Origanization", "Since"],
       "findWorkerAlign": ["left", "left"]
     },
@@ -718,7 +702,7 @@
         "active": "Active",
         "birthDate": "Date of birth",
         "sites": "Sites",
-        "password":"Password"
+        "password": "Password"
       },
       "placeholder": {
         "phone": "054 11 5555 5555"
@@ -736,18 +720,7 @@
         "City",
         "Status"
       ],
-      "align": [
-        "right",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left"
-      ],
+      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
       "findUserColumns": ["Origanization", "Since"],
       "findUserAlign": ["left", "left"]
     },
@@ -874,6 +847,34 @@
     }
   },
 
+  "editor": {
+    "modelStructure": {
+      "title":{
+        "create":"New shelving"
+      },
+      "label":{
+        "name": "Name",
+        "numberOfModules": "Modules",
+        "moduleWidth": "Module width",
+        "moduleHeight": "Module height",
+        "moduleDepth": "Module depth",
+        "baseHeight": "Base height",
+        "shelfHeight": "Shelf height",
+        "verticalPanelWidth": "Vertical panel (w)",
+        "initialXPosition": "Initial X position",
+        "numberOfShelvesByModule": "Shelves by module",
+        "panelThickness": "Back thickness",
+        "spaceHeight": "Space height",
+        "visible": "Visible"
+      },
+      "placeholder":{
+        "name": "a name"
+      },
+      "dialog": {
+        "createShelving": "Create shelving"
+      }
+    }
+  },
   "tooltip": {
     "operatorsStatus": "Shows the position and activity that operators are performing in real time",
     "lockMove": "Blocks movement and rotation of storage structures"

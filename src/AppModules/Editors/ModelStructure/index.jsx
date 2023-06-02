@@ -52,14 +52,6 @@ const DynamicApp = ({ app }) => {
   const columns = [
     { headerName: cols[0], fieldName: "name", align: "left" },
     { headerName: cols[1], fieldName: "description", align: "left" },
-    // { headerName: cols[1], fieldName: "dimensionx", align: "right", format: "round" },
-    // { headerName: cols[2], fieldName: "dimensiony", align: "right", format: "round" },
-    // { headerName: cols[3], fieldName: "dimensionz", align: "right", format: "round" },
-    // { headerName: cols[4], fieldName: "positionx", align: "right", format: "round" },
-    // { headerName: cols[5], fieldName: "positiony", align: "right", format: "round" },
-    // { headerName: cols[6], fieldName: "positionz", align: "right", format: "round" },
-    // { headerName: cols[7], fieldName: "rotationy", align: "right", format: "round" },
-    // { headerName: cols[8], fieldName: "visible", format: "bool" },
   ];
 
   const refresh = () => {
@@ -97,13 +89,6 @@ const DynamicApp = ({ app }) => {
         createPage={<CreatePage />}
         updatePage={<UpdatePage />}
         deletePage={<DeletePage />}
-        relationshipPages={[
-          {
-            path: "/editor",
-            key: "crud.modelStructure.label.editor",
-            element: <EditorPanel />,
-          },
-        ]}
         filterControl={<FilterControl />}
       />
     </AbmStateContext.Provider>

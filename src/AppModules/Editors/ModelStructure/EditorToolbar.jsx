@@ -1,32 +1,50 @@
-import { Group, SegmentedControl, Text } from "@mantine/core";
-import React from "react";
+import { Button, Group, Modal, SegmentedControl, TextInput } from "@mantine/core";
 
-const EditorToolbar = ({ structure, setTransforOption, transforOption }) => {
+import React, { useEffect, useState } from "react";
+import { CreateRackPage } from "./CreateRackPage";
+import { useDisclosure } from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
+
+const EditorToolbar = ({ structure, setTransformOption, transformOption, onCreate }) => {
+  const [structureName, setStructureName] = useState(null);
+  const [opened, { open, close }] = useDisclosure(false);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (structure) {
+      setStructureName(structure.name);
+    }
+  }, [structure]);
+
   return (
-    <Group spacing={0}>
-      {structure ? (
-        <Text
-          align="center"
-          sx={(theme) => ({
-            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-            fontWeight: 600,
-          })}
-        >
-          {structure.name}
-        </Text>
+    <Group>
+      {structureName ? <TextInput size="xs" value={structureName} onChange={setStructureName}></TextInput> : null}
+      
+      {onCreate ? (
+        <Button size="xs" onClick={open}>
+          {t("editor.modelStructure.title.create")}
+        </Button>
       ) : null}
 
       <SegmentedControl
         size="xs"
-        ml={"xs"}
-        value={transforOption}
-        onChange={setTransforOption}
+        value={transformOption}
+        onChange={setTransformOption}
         data={[
-          { label: "Scale", value: "scale" },
+          { label: "Translate", value: "translate" },
           { label: "Rotate", value: "rotate" },
-          { label: "Vue", value: "translate" },
+          { label: "Scale", value: "scale" },
         ]}
       />
+
+      <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.create")}>
+        <CreateRackPage
+          onCreate={(values) => {
+            close();
+            onCreate(values);
+          }}
+        />
+      </Modal>
     </Group>
   );
 };
