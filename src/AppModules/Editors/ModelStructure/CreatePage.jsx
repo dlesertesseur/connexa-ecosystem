@@ -10,13 +10,14 @@ import { useContext } from "react";
 import { AbmStateContext } from "./Context";
 import { useWindowSize } from "../../../Hook";
 import { HEADER_HIGHT } from "../../../Constants";
+import { createRack } from "../../../DataAccess/Racks";
 import StructureBuilder from "../../../Components/Builder3d/StructureBuilder";
 
 export function CreatePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { setReload } = useContext(AbmStateContext);
+  const { setReload, site, floor } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
   const [modelStructure, setModelStructure] = useState(null);
@@ -35,10 +36,35 @@ export function CreatePage() {
   });
 
   const onCreate = async (values) => {
-    const model = StructureBuilder.createShelving(values); 
+    const model = StructureBuilder.createShelving(values);
     setModelStructure(model);
-    
-    // setWorking(false);
+  };
+
+  const onSave = async () => {
+    const params = {
+      token: user.token,
+      data: modelStructure,
+      siteId: site,
+      floorId: floor
+    };
+
+    setWorking(true);
+
+    try {
+      const ret = await createRack(params);
+      if (ret.error) {
+        setWorking(false);
+        setErrorMessage(ret.message);
+      } else {
+        setErrorMessage(null);
+        setWorking(false);
+        refresh();
+        navigate("../");
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    setWorking(false);
   };
 
   return (
@@ -66,7 +92,11 @@ export function CreatePage() {
       </Group>
 
       <Group position="right" mt="xs" mb="xs" width="100%">
-        <Button>{t("button.accept")}</Button>
+        <Button
+          onClick={() => {onSave()}}
+        >
+          {t("button.accept")}
+        </Button>
         <Button
           onClick={(event) => {
             navigate(-1);

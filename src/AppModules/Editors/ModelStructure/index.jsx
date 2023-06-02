@@ -9,7 +9,6 @@ import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { FilterControl } from "./FilterControl";
 import { findAllRacksHeaders } from "../../../DataAccess/Racks";
-import { EditorPanel } from "./EditorPanel";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
