@@ -54,7 +54,6 @@ export default function CustomAppShell() {
         open={isOpen}
         onClose={toggleDrawer}
         direction="left"
-        className="bla bla bla"
       >
         <CustomMenu />
       </Drawer>

@@ -20,7 +20,7 @@ export function DeletePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { site, floor, refresh, selectedRowId } = useContext(AbmStateContext);
+  const { site, floor, refresh, selectedRowId,initilizeContext } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
@@ -148,6 +148,7 @@ export function DeletePage() {
             <Button type="submit">{t("button.accept")}</Button>
             <Button
               onClick={(event) => {
+                initilizeContext();
                 navigate("../");
               }}
             >

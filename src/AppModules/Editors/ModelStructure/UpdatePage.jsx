@@ -16,7 +16,7 @@ export function UpdatePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { site, floor, refresh, structureName, selectedRowId } = useContext(AbmStateContext);
+  const { site, floor, refresh, structureName, selectedRowId, initilizeContext } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
   const [modelStructure, setModelStructure] = useState(null);
@@ -90,7 +90,7 @@ export function UpdatePage() {
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
       <Group position="center" spacing={0} h={wSize.height - HEADER_HIGHT}>
-        <Editor structure={modelStructure} />
+        <Editor structure={modelStructure} editing={true} />
       </Group>
 
       <Group position="right" mt="xs" mb="xs" width="100%">
@@ -103,6 +103,7 @@ export function UpdatePage() {
         </Button>
         <Button
           onClick={(event) => {
+            initilizeContext();
             navigate(-1);
           }}
         >

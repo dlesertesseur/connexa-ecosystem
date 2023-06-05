@@ -1,16 +1,17 @@
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Grid, TransformControls } from "@react-three/drei";
-import { useEffect, useState } from "react";
-import { buildModelStructure } from "../../../Components/Builder3d";
+import { TransformControls, MapControls } from "@react-three/drei";
+import { useEffect } from "react";
+import { buildEnvironmentLOD } from "../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
+import { useContext } from "react";
+import { EditorStateContext } from "./Context";
+import { useState } from "react";
 import EditorToolbar from "./EditorToolbar";
 
-const Editor = ({ structure, editing }) => {
+const Editor = () => {
   const [model, setModel] = useState(null);
-  const [selectedPart, setSelectedPart] = useState(null);
-  const [transformOption, setTransformOption] = useState("translate");
-
+  const {racks, markers, selectedPart, setSelectedPart} = useContext(EditorStateContext);
   const onSelect = (event) => {
     if (event.intersections && event.intersections.length > 0) {
       const obj = event.intersections[0].object;
@@ -19,12 +20,12 @@ const Editor = ({ structure, editing }) => {
   };
 
   useEffect(() => {
-    if (structure) {
-      const ret = buildModelStructure(structure, onSelect);
+    if (racks) {
+      const ret = buildEnvironmentLOD(racks, onSelect);
       setSelectedPart(null);
       setModel(ret);
     }
-  }, [structure]);
+  }, [racks]);
 
   const onUpdateData = (event) => {
     const userData = selectedPart.userData;
@@ -56,22 +57,18 @@ const Editor = ({ structure, editing }) => {
   return (
     <Stack w={"100%"} h={"100%"} spacing={0}>
       <Group mb={"xs"}>
-        <EditorToolbar
-          editing={editing}
-          structure={structure}
-          transforOption={transformOption}
-          setTransformOption={setTransformOption}
-        />
+        <EditorToolbar/>
       </Group>
       <Canvas camera={{ position: [5, 5, 5], fov: 25 }}>
-        <scene>
+        <scene background={new THREE.Color( 0xff0000 )}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} />
-          <Grid infiniteGrid position={[0, 0, 0]} />
-          <axesHelper args={[10]} />
+          {/* <Grid infiniteGrid position={[0, 0, 0]} /> */}
+          <axesHelper args={[10]} /> 
           {model}
         </scene>
-        <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault />
+        {/* <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault /> */}
+        <MapControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault/>
 
         {selectedPart ? (
           <TransformControls
@@ -79,7 +76,7 @@ const Editor = ({ structure, editing }) => {
             onObjectChange={(event) => {
               onUpdateData(event);
             }}
-            mode={transformOption}
+            mode={"rotation"}
           />
         ) : null}
       </Canvas>

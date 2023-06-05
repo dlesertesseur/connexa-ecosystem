@@ -1,15 +1,13 @@
-import { Button, Center, Group, Modal, SegmentedControl, Tabs, Text, TextInput } from "@mantine/core";
-
 import React, { useEffect } from "react";
-import { CreateRackPage } from "./CreateRackPage";
+import { Button, Group, SegmentedControl, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
-import { IconMessageCircle, IconPhoto } from "@tabler/icons-react";
+import StructureBuilderModal from "./StructureBuilderModal";
 
-const EditorToolbar = ({ structure, setTransformOption, transformOption, onCreate }) => {
-  const { structureName, setStructureName } = useContext(AbmStateContext);
+const EditorToolbar = ({ structure, setTransformOption, transformOption, editing }) => {
+  const { structureName, setStructureName, modelStructure } = useContext(AbmStateContext);
   const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
 
@@ -21,7 +19,7 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, onCreat
 
   return (
     <Group>
-      {structureName ? (
+      {structureName !== null ? (
         <TextInput
           size="xs"
           value={structureName}
@@ -29,7 +27,7 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, onCreat
         ></TextInput>
       ) : null}
 
-      {onCreate ? (
+      {!editing ? (
         <Button size="xs" onClick={open}>
           {t("editor.modelStructure.title.create")}
         </Button>
@@ -45,34 +43,7 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, onCreat
           { label: t("label.scale"), value: "scale" },
         ]}
       />
-
-      <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.create")}>
-        <Tabs variant="default" defaultValue="shelves">
-          <Tabs.List>
-            <Tabs.Tab value="shelves" icon={<IconPhoto size="0.8rem" />}>
-              {t("editor.modelStructure.items.1")}
-            </Tabs.Tab>
-            <Tabs.Tab value="racks" icon={<IconMessageCircle size="0.8rem" />}>
-              {t("editor.modelStructure.items.2")}
-            </Tabs.Tab>
-          </Tabs.List>
-
-          <Tabs.Panel value="shelves" pt="xs">
-            <CreateRackPage
-              onCreate={(values) => {
-                close();
-                onCreate(values);
-              }}
-            />
-          </Tabs.Panel>
-
-          <Tabs.Panel value="racks" pt="xs">
-            <Center>
-              <Text>RACKS</Text>
-            </Center>
-          </Tabs.Panel>
-        </Tabs>
-      </Modal>
+      <StructureBuilderModal opened={opened} close={close} />
     </Group>
   );
 };

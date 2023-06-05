@@ -2,7 +2,7 @@ import { TextInput, Button, NumberInput, Stack, Group, Grid } from "@mantine/cor
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 
-export function CreateRackPage({ onCreate }) {
+export function ShelvesBuilder({ onCreate }) {
   const { t } = useTranslation();
 
   const form = useForm({

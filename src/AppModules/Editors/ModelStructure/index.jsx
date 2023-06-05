@@ -9,6 +9,8 @@ import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { FilterControl } from "./FilterControl";
 import { findAllRacksHeaders } from "../../../DataAccess/Racks";
+import StructureMetaDataBuilder from "../../../Components/Builder3d/StructureMetaDataBuilder";
+import { STRUCTURE_TYPE_RACK, STRUCTURE_TYPE_SHELVING } from "../../../Constants/structures";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -22,6 +24,13 @@ const DynamicApp = ({ app }) => {
   const [enableCreateButton, setEnableCreateButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [structureName, setStructureName] = useState(null);
+  const [modelStructure, setModelStructure] = useState(null);
+
+  const initilizeContext = () => {
+    setModelStructure(null);
+    setStructureName(null);
+    console.log("initilizeContext -> ");
+  };
 
   const getData = async () => {
     const params = {
@@ -30,6 +39,7 @@ const DynamicApp = ({ app }) => {
       floorId: floor,
     };
 
+    initilizeContext();
     setLoading(true);
     try {
       const racks = await findAllRacksHeaders(params);
@@ -59,6 +69,26 @@ const DynamicApp = ({ app }) => {
   const refresh = () => {
     setReload(Date.now());
   };
+
+  const onCreate = async (values, type) => {
+    let model = null;
+    switch (type) {
+      case STRUCTURE_TYPE_SHELVING:
+        model = StructureMetaDataBuilder.createShelving(values);
+        break;
+
+      case STRUCTURE_TYPE_RACK:
+        model = StructureMetaDataBuilder.createRack(values);
+        break;
+      default:
+        break;
+    }
+
+    // console.log(JSON.stringify(model));
+
+    setModelStructure(model);
+  };
+
   const ret = (
     <AbmStateContext.Provider
       value={{
@@ -69,7 +99,11 @@ const DynamicApp = ({ app }) => {
         floor,
         setFloor,
         structureName,
-        setStructureName
+        setStructureName,
+        onCreate,
+        modelStructure,
+        setModelStructure,
+        initilizeContext,
       }}
     >
       <ResponceNotification

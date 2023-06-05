@@ -850,7 +850,7 @@
   "editor": {
     "modelStructure": {
       "title":{
-        "create":"New shelving"
+        "create":"New structure"
       },
       "label":{
         "name": "Name",
@@ -865,13 +865,23 @@
         "numberOfShelvesByModule": "Shelves by module",
         "panelThickness": "Back thickness",
         "spaceHeight": "Space height",
-        "visible": "Visible"
+        "visible": "Visible",
+        "palletWidth":"Pallet width",
+        "palletHeight":"Pallet Height",
+        "palletDepth":"Pallet depth",
+        "maxLoadHeight":"Max. load height",
+        "levels":"Levels",
+        "uprightDepth":"Upright depth",
+        "beamLength":"Beam length",
+        "columnSide":"Column side",
+        "beamHeight":"Beam heigh",
+        "beamDepth":"Beam depth"
       },
       "placeholder":{
         "name": "a name"
       },
       "dialog": {
-        "createShelving": "Create shelving"
+        "structureBuilder": "Structure builder"
       },
       "items": {
         "1": "Shelving",

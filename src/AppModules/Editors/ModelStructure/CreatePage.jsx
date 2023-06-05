@@ -10,22 +10,15 @@ import { AbmStateContext } from "./Context";
 import { useWindowSize } from "../../../Hook";
 import { HEADER_HIGHT } from "../../../Constants";
 import { createRack } from "../../../DataAccess/Racks";
-import StructureBuilder from "../../../Components/Builder3d/StructureBuilder";
 
 export function CreatePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { refresh, site, floor, setStructureName } = useContext(AbmStateContext);
+  const { refresh, site, floor, initilizeContext, modelStructure } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
-  const [modelStructure, setModelStructure] = useState(null);
   const wSize = useWindowSize();
-
-  const onCreate = async (values) => {
-    const model = StructureBuilder.createShelving(values);
-    setModelStructure(model);
-  };
 
   const onSave = async () => {
     const params = {
@@ -75,7 +68,7 @@ export function CreatePage() {
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
       <Group position="center" spacing={0} h={wSize.height - HEADER_HIGHT}>
-        <Editor structure={modelStructure} onCreate={onCreate} />
+        <Editor structure={modelStructure} />
       </Group>
 
       <Group position="right" mt="xs" mb="xs" width="100%">
@@ -86,7 +79,7 @@ export function CreatePage() {
         </Button>
         <Button
           onClick={(event) => {
-            setStructureName(null);
+            initilizeContext();
             navigate(-1);
           }}
         >

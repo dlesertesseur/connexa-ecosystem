@@ -197,7 +197,7 @@ function buildActorFrames(grActor, frames) {
   }
 }
 
-function buildActorBase(grActor, actor) {
+function buildActorBase(grActor, actor, fill = null) {
   const grBase = new Konva.Rect({
     id: actor.id,
     name: actor.name,
@@ -206,6 +206,7 @@ function buildActorBase(grActor, actor) {
     width: actor.dimensionx * PIXEL_METER_RELATION,
     height: actor.dimensionz * PIXEL_METER_RELATION,
     perfectDrawEnabled: true,
+    fill: fill,
   });
 
   grActor.add(grBase);
@@ -365,9 +366,9 @@ function buildRelocatableActor(stageRef, pixelMeterRelation, actor, onSelect) {
     rotation: -actor.rotationy,
   });
 
-  buildActorModules(grActor, actor.modules);
+  // buildActorModules(grActor, actor.modules);
+  buildActorBase(grActor, actor, "#c5c5c5");
   buildActorFrames(grActor, actor.frames);
-  buildActorBase(grActor, actor);
 
   grActor.cache({ pixelRatio: 3 });
 

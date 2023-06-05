@@ -873,7 +873,7 @@
   "editor": {
     "modelStructure": {
       "title":{
-        "create":"Nueva estanteria"
+        "create":"Nueva estrctura"
       },
       "label":{
         "name": "Nombre",
@@ -888,13 +888,23 @@
         "numberOfShelvesByModule": "Estantes por modulo",
         "panelThickness": "Espesor panel trasero",
         "spaceHeight": "Alto del espacio",
-        "visible": "Visible"
+        "visible": "Visible",
+        "palletWidth":"Ancho del Pallet",
+        "palletHeight":"Alto del Pallet",
+        "palletDepth":"Prof. del Pallet",
+        "maxLoadHeight":"Altuda max. carga",
+        "levels":"Niveles",
+        "uprightDepth":"Profundidad",
+        "beamLength":"Largo (viga)",
+        "columnSide":"Ancho/alto columna",
+        "beamHeight":"Alto viga",
+        "beamDepth":"Prof. viga"
       },
       "placeholder":{
         "name": "Un nombre"
       },
       "dialog": {
-        "createShelving": "Create shelving"
+        "structureBuilder": "Constructor de estructuras"
       },
       "items": {
         "1": "Gondolas",

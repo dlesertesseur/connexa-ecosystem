@@ -6,7 +6,7 @@ import View2dEditActors from "../../../../Components/View2dEditActors";
 import uuid from "react-uuid";
 import { useSelector } from "react-redux";
 import { Menu, Stack } from "@mantine/core";
-import { DIVIDER_HIGHT, PIXEL_METER_RELATION, TOOLBAR_HIGHT, VIEW_HEADER_HIGHT } from "../../../../Constants";
+import { HEADER_HIGHT, PIXEL_METER_RELATION } from "../../../../Constants";
 import { savePosAndRots } from "../../../../DataAccess/Surfaces";
 import { FilterControl } from "../Controls/FilterControl";
 import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/Surfaces";
@@ -15,10 +15,11 @@ import { hideNotification, showNotification } from "@mantine/notifications";
 import { findAllLayoutMarkersById, saveLayoutMarkers } from "../../../../DataAccess/LayoutsMarkers";
 import { IconTag } from "@tabler/icons-react";
 import TextEditor from "../../../../Components/TextEditor";
+import { useWindowSize } from "../../../../Hook";
+import { useMediaQuery } from "@mantine/hooks";
 
 const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
   const { user } = useSelector((state) => state.auth.value);
-  const { bodyContainerWidth, bodyContainerHeight } = useSelector((state) => state.app.value);
   const [selectedRack, setSelectedRack] = useState(null);
   const [savingData, setSavingData] = useState(false);
   const [unlockEditStorageStructures, setUnlockEditStorageStructures] = useState(false);
@@ -33,6 +34,8 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
   const [markers, setMarkers] = useState([]);
   const [opened, setOpened] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const wSize = useWindowSize();
+  const matches = useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
     if (selectedRack && selectedRack?.id === attrs.id) {
@@ -247,8 +250,8 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
         <TextEditor opened={opened} setOpened={setOpened} data={selectedMarker} updateMarker={updateMarker} />
 
         <View2dEditActors
-          width={bodyContainerWidth}
-          height={bodyContainerHeight - (TOOLBAR_HIGHT * 2 + 4 + VIEW_HEADER_HIGHT + DIVIDER_HIGHT)}
+          width={wSize.width - (matches ? 316 : 32)}
+          height={wSize.height - (HEADER_HIGHT + 24)}
           layouts={layouts}
           racks={racks}
           markers={markers}

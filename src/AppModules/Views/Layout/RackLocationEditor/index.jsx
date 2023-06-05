@@ -10,7 +10,7 @@ const DynamicApp = ({app}) => {
   };
 
   return (
-    <Group display={"flex"}>
+    <Group w={"100%"}>
       <Editor
         inspectRack={inspectRack}
         drawCenter={false}

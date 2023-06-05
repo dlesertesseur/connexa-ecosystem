@@ -88,6 +88,9 @@ function getModulePartColor(type) {
     case 5:
       color = "#F8F9D7";
       break;
+    case 12:
+      color = "#0000FF";
+      break;
 
     default:
       color = "#ff00ff";
@@ -156,7 +159,6 @@ function getPartSelectedColor() {
 }
 
 const createPartTemplate = (id, x = 0, y = 0, partType) => {
-
   console.log("createPartTemplate -> " + partType);
   const part = {
     id: id,
@@ -228,7 +230,7 @@ function getPartStrokeColor(type) {
   return color;
 }
 
-function colorList(){
+function colorList() {
   const ret = [
     "#25262b",
     "#868e96",
@@ -244,8 +246,8 @@ function colorList(){
     "#82c91e",
     "#fab005",
     "#fd7e14",
-  ]
-  return(ret);
+  ];
+  return ret;
 }
 
 function formatDateToDDMMYYYY(inputDate) {
@@ -255,13 +257,9 @@ function formatDateToDDMMYYYY(inputDate) {
   month = inputDate.getMonth() + 1;
   year = inputDate.getFullYear();
 
-    date = date
-        .toString()
-        .padStart(2, '0');
+  date = date.toString().padStart(2, "0");
 
-    month = month
-        .toString()
-        .padStart(2, '0');
+  month = month.toString().padStart(2, "0");
 
   return `${date}/${month}/${year}`;
 }
@@ -279,5 +277,5 @@ export {
   getPartFillColor,
   getPartStrokeColor,
   colorList,
-  formatDateToDDMMYYYY
+  formatDateToDDMMYYYY,
 };
