@@ -59,10 +59,10 @@
     "createAnyway": "Crear de todos modos",
     "createWorkerRelation": "Relacionar con esta organización",
     "photos": "Fotos",
-    "roles":"Perfiles",
-    "sites":"Sitios",
-    "backStep":"Anterior",
-    "nextStep":"Proximo"
+    "roles": "Perfiles",
+    "sites": "Sitios",
+    "backStep": "Anterior",
+    "nextStep": "Proximo"
   },
 
   "label": {
@@ -187,8 +187,7 @@
     "1001": "Error al intentar iniciar session",
     "1002": "Error al registrarse",
     "404": "Usuario o clave invalida",
-    "listCheckValidation":"Debe marcar al menos una fila"
-
+    "listCheckValidation": "Debe marcar al menos una fila"
   },
 
   "notification": {
@@ -198,7 +197,7 @@
     "createWorker": "El colaborador no está registrado en ninguna organización configurada en la platarforma.",
     "createWorkerRelation": "El colaborador ya está registrado en la plataforma. ¿Desa relacionarlo con esta organización?",
     "workerAlreadyExist": "El colaborador ya está registrado en esta organización.",
-    "userAllreadyExist":"El usuario ya está registrado en esta organización.",
+    "userAllreadyExist": "El usuario ya está registrado en esta organización.",
     "createUser": "El usuario no está registrado en la organización."
   },
 
@@ -259,7 +258,7 @@
         "description": "Descripcion",
         "roles": "Perfiles"
       },
-      "applications":{
+      "applications": {
         "columns": ["Nombre", "Descripcion"]
       },
       "columns": ["Nombre", "Descripcion", "Fecha de creacion"],
@@ -464,15 +463,7 @@
         "status": "Estado",
         "countryOfOrigin": "Pais de origen"
       },
-      "columns": [
-        "Imagen",
-        "SKU",
-        "EAN",
-        "Descripcion",
-        "Marca",
-        "País de origen",
-        "Estado"
-      ],
+      "columns": ["Imagen", "SKU", "EAN", "Descripcion", "Marca", "País de origen", "Estado"],
       "align": ["center", "right", "right", "left", "left", "left"],
       "width": ["5%", "5%", "10%", "50%", "10%", "10%", "10%"],
       "tab1": "Informacion general",
@@ -578,7 +569,7 @@
 
       "label": {
         "name": "Nombre",
-        "desctipcion":"Descripcion",
+        "desctipcion": "Descripcion",
         "numberOfModules": "Numero de módulos",
         "moduleWidth": "Ancho de modulo",
         "moduleHeight": "Alto del modulo",
@@ -594,7 +585,7 @@
       },
       "placeholder": {
         "name": "Nombre de la estructura",
-        "desctipcion":"Descripcion",
+        "desctipcion": "Descripcion",
         "numberOfModules": "Numero de módulos",
         "moduleWidth": "Ancho de modulo",
         "moduleHeight": "Alto del modulo",
@@ -607,15 +598,13 @@
         "panelWidth": "Ancho del panel trasero",
         "spaceHeight": "Alto del espacio",
         "visible": "Visible",
-        "editor":"Editar"
-
+        "editor": "Editar"
       },
       "title": {
         "create": "Crear una nueva estructura modelo",
         "update": "Modificar una estructura modelo",
         "delete": "Eliminar una estructura modelo",
-        "edit":"Editar estructure modelo"
-
+        "edit": "Editar estructure modelo"
       },
       "message": {
         "create": "Todas las medidas están expresadas en metros.",
@@ -683,18 +672,7 @@
         "Ciudad",
         "Estado"
       ],
-      "align": [
-        "right",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left"
-      ],
+      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
       "findWorkerColumns": ["Organización", "Desde"],
       "findWorkerAlign": ["left", "left"]
     },
@@ -707,8 +685,8 @@
         "delete": "Eliminar los datos de un usuario",
         "findUser": "Buscar a un usuario",
         "photos": "Lista de fotos asociadas:",
-        "role":"Definicion de perfiles:",
-        "site":"Sitios"
+        "role": "Definicion de perfiles:",
+        "site": "Sitios"
       },
       "label": {
         "nid": "DNI",
@@ -722,7 +700,7 @@
         "status": "Estado",
         "active": "Activo",
         "birthDate": "Fecha de nacimiento",
-        "password":"Contraseña"
+        "password": "Contraseña"
       },
       "placeholder": {
         "phone": "054 11 5555 5555"
@@ -740,18 +718,7 @@
         "Ciudad",
         "Estado"
       ],
-      "align": [
-        "right",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left",
-        "left"
-      ],
+      "align": ["right", "left", "left", "left", "left", "left", "left", "left", "left", "left"],
       "findUserColumns": ["Organización", "Desde"],
       "findUserAlign": ["left", "left"]
     },
@@ -798,7 +765,7 @@
     }
   },
 
-  "wizard":{
+  "wizard": {
     "registration": {
       "name": "REGISRACION",
       "title": {
@@ -817,12 +784,8 @@
         "active": "Activo",
         "birthDate": "Fecha de nacimiento"
       },
-      "placeholder": {
-      },
-      "columns": [
-        "Nombre",
-        "Descripcion"
-      ]
+      "placeholder": {},
+      "columns": ["Nombre", "Descripcion"]
     }
   },
 
@@ -872,10 +835,10 @@
 
   "editor": {
     "modelStructure": {
-      "title":{
-        "create":"Nueva estrctura"
+      "title": {
+        "create": "Nueva estrctura"
       },
-      "label":{
+      "label": {
         "name": "Nombre",
         "numberOfModules": "Módulos",
         "moduleWidth": "Ancho de modulo",
@@ -889,26 +852,36 @@
         "panelThickness": "Espesor panel trasero",
         "spaceHeight": "Alto del espacio",
         "visible": "Visible",
-        "palletWidth":"Ancho del Pallet",
-        "palletHeight":"Alto del Pallet",
-        "palletDepth":"Prof. del Pallet",
-        "maxLoadHeight":"Altuda max. carga",
-        "levels":"Niveles",
-        "uprightDepth":"Profundidad",
-        "beamLength":"Largo (viga)",
-        "columnSide":"Ancho/alto columna",
-        "beamHeight":"Alto viga",
-        "beamDepth":"Prof. viga"
+        "palletWidth": "Ancho del Pallet",
+        "palletHeight": "Alto del Pallet",
+        "palletDepth": "Prof. del Pallet",
+        "maxLoadHeight": "Altuda max. carga",
+        "levels": "Niveles",
+        "uprightDepth": "Profundidad",
+        "beamLength": "Largo (viga)",
+        "columnSide": "Ancho/Espe. columna",
+        "beamHeight": "Alto viga",
+        "beamDepth": "Prof. viga",
+        "numberOfModulesX": "Modulos en (X)",
+        "numberOfModulesZ": "Modulos en (Z)",
+        "columnHeight":"Alto de columna"
       },
-      "placeholder":{
+      "placeholder": {
         "name": "Un nombre"
       },
       "dialog": {
         "structureBuilder": "Constructor de estructuras"
       },
       "items": {
-        "1": "Gondolas",
-        "2": "Racks"
+        "shelving": {
+          "retailStore": "Retail store"
+        },
+        "racking": {
+          "basic": "Basico",
+          "selective": "Selectivo",
+          "pushBack": "Push Back",
+          "palletFlow": "Pallet Flow"
+        }
       }
     }
   },

@@ -27,7 +27,7 @@ function FilterControl({onFilter, site, setSite}) {
   return (
     <Popover width={300} position="bottom-start" withArrow shadow="md" opened={opened}>
       <Popover.Target>
-        <Button ml={"xl"} onClick={() => setOpened((o) => !o)}>{t("label.crud.filter")}</Button>
+        <Button onClick={() => setOpened((o) => !o)}>{t("label.crud.filter")}</Button>
       </Popover.Target>
       <Popover.Dropdown
         sx={(theme) => ({ background: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white })}

@@ -10,7 +10,7 @@ import { AbmStateContext } from "./Context";
 import { FilterControl } from "./FilterControl";
 import { findAllRacksHeaders } from "../../../DataAccess/Racks";
 import StructureMetaDataBuilder from "../../../Components/Builder3d/StructureMetaDataBuilder";
-import { STRUCTURE_TYPE_RACK, STRUCTURE_TYPE_SHELVING } from "../../../Constants/structures";
+import { STRUCTURE_TYPE_RACK, STRUCTURE_TYPE_SHELVING, STRUCTURE_TYPE_RACK_BASIC } from "../../../Constants/structures";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -80,11 +80,13 @@ const DynamicApp = ({ app }) => {
       case STRUCTURE_TYPE_RACK:
         model = StructureMetaDataBuilder.createRack(values);
         break;
+
+      case STRUCTURE_TYPE_RACK_BASIC:
+        model = StructureMetaDataBuilder.createRackBasic(values);
+        break;
       default:
         break;
     }
-
-    // console.log(JSON.stringify(model));
 
     setModelStructure(model);
   };

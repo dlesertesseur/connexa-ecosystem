@@ -523,7 +523,7 @@
       ],
       "label": {
         "name": "Name",
-        "numberOfModules": "Mumber of modules",
+        "numberOfModules": "Number of modules",
         "moduleWidth": "Module width",
         "moduleHeight": "Module height",
         "moduleDepth": "Module depth",
@@ -850,7 +850,9 @@
   "editor": {
     "modelStructure": {
       "title":{
-        "create":"New structure"
+        "create":"New structure",
+        "racking":"New rack",
+        "shelving":"New shelves"
       },
       "label":{
         "name": "Name",
@@ -875,7 +877,11 @@
         "beamLength":"Beam length",
         "columnSide":"Column side",
         "beamHeight":"Beam heigh",
-        "beamDepth":"Beam depth"
+        "beamDepth":"Beam depth",
+        "numberOfModulesX": "Modules (X)",
+        "numberOfModulesZ": "Modules (Z)",
+        "columnHeight":"Column height"
+
       },
       "placeholder":{
         "name": "a name"
@@ -884,8 +890,15 @@
         "structureBuilder": "Structure builder"
       },
       "items": {
-        "1": "Shelving",
-        "2": "Racks"
+        "shelving": {
+          "retailStore":"Retail store"
+        },
+        "racking": {
+          "basic":"Basic",
+          "selective":"Selective",
+          "pushBack":"Push Back",
+          "palletFlow":"Pallet Flow"
+        }
       }
     }
   },

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { TransformControls, MapControls } from "@react-three/drei";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { buildEnvironmentLOD } from "../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
 import { useContext } from "react";
@@ -11,13 +11,18 @@ import EditorToolbar from "./EditorToolbar";
 
 const Editor = () => {
   const [model, setModel] = useState(null);
-  const {racks, markers, selectedPart, setSelectedPart} = useContext(EditorStateContext);
+  const { racks, markers, selectedPart, setSelectedPart } = useContext(EditorStateContext);
+  const controlRef = useRef(null);
   const onSelect = (event) => {
     if (event.intersections && event.intersections.length > 0) {
       const obj = event.intersections[0].object;
       setSelectedPart(obj);
     }
   };
+
+  // useEffect(() => {
+  //   console.log("camDistance ->", controlRef.current.getDistance());
+  // }, [controlRef.current.getDistance()]);
 
   useEffect(() => {
     if (racks) {
@@ -57,18 +62,24 @@ const Editor = () => {
   return (
     <Stack w={"100%"} h={"100%"} spacing={0}>
       <Group mb={"xs"}>
-        <EditorToolbar/>
+        <EditorToolbar />
       </Group>
       <Canvas camera={{ position: [5, 5, 5], fov: 25 }}>
-        <scene background={new THREE.Color( 0xff0000 )}>
+        <scene background={new THREE.Color(0xff0000)}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} />
           {/* <Grid infiniteGrid position={[0, 0, 0]} /> */}
-          <axesHelper args={[10]} /> 
+          <axesHelper args={[10]} />
           {model}
         </scene>
         {/* <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault /> */}
-        <MapControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault/>
+        <MapControls
+          ref={controlRef}
+          enableDamping={false}
+          minPolarAngle={0}
+          maxPolarAngle={Math.PI / 2.1}
+          makeDefault
+        />
 
         {selectedPart ? (
           <TransformControls

@@ -1,8 +1,12 @@
-import { TextInput, Button, NumberInput, Stack, Group, Grid } from "@mantine/core";
+import { TextInput, Button, NumberInput, Stack, Group, Grid, Modal } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import { AbmStateContext } from "../Context";
+import { STRUCTURE_TYPE_SHELVING } from "../../../../Constants/structures";
 
-export function ShelvesBuilder({ onCreate }) {
+export function ShelvesBuilder({ opened, close }) {
+  const { onCreate } = useContext(AbmStateContext);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -76,46 +80,49 @@ export function ShelvesBuilder({ onCreate }) {
   };
 
   return (
-    <Stack>
-      <form
-        onSubmit={form.onSubmit((values) => {
-          onCreate(values);
-        })}
-      >
-        <Group grow mb="lg">
-          {createTextField("name")}
-        </Group>
+    <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.shelving")}>
+      <Stack>
+        <form
+          onSubmit={form.onSubmit((values) => {
+            onCreate(values, STRUCTURE_TYPE_SHELVING);
+            close();
+          })}
+        >
+          <Group grow mb="lg">
+            {createTextField("name")}
+          </Group>
 
-        <Grid>
-          <Grid.Col span={4}>
-            <Stack align="center" justify="flex-start">
-              {createNumberControlField("numberOfModules")}
-              {createNumberField("moduleWidth")}
-              {createNumberField("moduleHeight")}
-              {createNumberField("moduleDepth")}
-            </Stack>
-          </Grid.Col>
+          <Grid>
+            <Grid.Col span={4}>
+              <Stack align="center" justify="flex-start">
+                {createNumberControlField("numberOfModules")}
+                {createNumberField("moduleWidth")}
+                {createNumberField("moduleHeight")}
+                {createNumberField("moduleDepth")}
+              </Stack>
+            </Grid.Col>
 
-          <Grid.Col span={4}>
-            <Stack align="center" justify="flex-start">
-              {createNumberField("baseHeight")}
-              {createNumberField("shelfHeight")}
-              {createNumberField("verticalPanelWidth")}
-            </Stack>
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <Stack justify="flex-start">
-              {createNumberControlField("numberOfShelvesByModule")}
-              {createNumberField("panelThickness")}
-              {createNumberField("spaceHeight")}
-            </Stack>
-          </Grid.Col>
-        </Grid>
+            <Grid.Col span={4}>
+              <Stack align="center" justify="flex-start">
+                {createNumberField("baseHeight")}
+                {createNumberField("shelfHeight")}
+                {createNumberField("verticalPanelWidth")}
+              </Stack>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Stack justify="flex-start">
+                {createNumberControlField("numberOfShelvesByModule")}
+                {createNumberField("panelThickness")}
+                {createNumberField("spaceHeight")}
+              </Stack>
+            </Grid.Col>
+          </Grid>
 
-        <Group position="right" mt="xl" mb="xs">
-          <Button type="submit">{t("button.create")}</Button>
-        </Group>
-      </form>
-    </Stack>
+          <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.create")}</Button>
+          </Group>
+        </form>
+      </Stack>
+    </Modal>
   );
 }

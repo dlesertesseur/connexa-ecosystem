@@ -218,16 +218,13 @@ function buildStructure(structure, setSelectedPart) {
 function buildStructureLOD(structure, setSelectedPart) {
   const grHigh = buildHighLevel(structure, setSelectedPart);
   const grLow = buildLowLevel(structure, setSelectedPart);
-  //const grBase = buildBaseLevel(structure, setSelectedPart);
+  const grBase = buildBaseLevel(structure, setSelectedPart);
 
   return (
-    <Detailed distances={[0, 30, 60]}>
+    <Detailed distances={[0, 50, 300]}>
       {grHigh}
       {grLow}
-      <mesh>
-        <icosahedronBufferGeometry attach="geometry" args={[1, 1]} />
-        <meshBasicMaterial attach="material" color="lightblue" wireframe />
-      </mesh>
+      {grBase}
     </Detailed>
   );
 }
@@ -335,27 +332,26 @@ const buildLowLevel = (structure, setSelectedPart) => {
   );
 };
 
-// const buildBaseLevel = (structure, setSelectedPart) => {
-//   const matColor = materialsMap.get(100);
-//   console.log("buildBaseLevel dimension ->" , structure.dimensionx, structure.dimensiony, structure.dimensionz);
-//   return (
-//     <Box
-//       // key={structure.id ? structure.id : structure.key}
-//       name={structure.name}
-//       position={[structure.positionx, structure.positiony, structure.positionz]}
-//       dimension={[structure.dimensionx, structure.dimensiony, structure.dimensionz]}
-//       rotations={
-//         new THREE.Euler(
-//           THREE.MathUtils.degToRad(structure.rotationx),
-//           THREE.MathUtils.degToRad(structure.rotationy),
-//           THREE.MathUtils.degToRad(structure.rotationz)
-//         )
-//       }
-//       color={matColor}
-//       userData={structure}
-//     />
-//   );
-// };
+const buildBaseLevel = (structure, setSelectedPart) => {
+  const matColor = materialsMap.get(100);
+  return (
+    <Box
+      // key={structure.id ? structure.id : structure.key}
+      name={structure.name}
+      position={[structure.positionx, structure.positiony, structure.positionz]}
+      dimension={[structure.dimensionx, structure.dimensiony, structure.dimensionz]}
+      rotations={
+        new THREE.Euler(
+          THREE.MathUtils.degToRad(structure.rotationx),
+          THREE.MathUtils.degToRad(structure.rotationy),
+          THREE.MathUtils.degToRad(structure.rotationz)
+        )
+      }
+      color={matColor}
+      userData={structure}
+    />
+  );
+};
 
 const buildEnvironmentLOD = (racks, setSelectedPart) => {
   const env = [];

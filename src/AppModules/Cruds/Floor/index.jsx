@@ -7,7 +7,7 @@ import { findAllFloorsBySiteId } from "../../../DataAccess/Floors";
 import { CreateFloorPage } from "./CreateFloorPage";
 import { UpdateFloorPage } from "./UpdateFloorPage";
 import { DeleteFloorPage } from "./DeleteFloorPage";
-import { CONTEXTS } from "../../../Constants";
+// import { CONTEXTS } from "../../../Constants";
 import { ImagesByFloorPage } from "./ImagesByFloorPage";
 
 const DynamicApp = ({ app }) => {
@@ -17,17 +17,17 @@ const DynamicApp = ({ app }) => {
   const [floors, setFloors] = useState([]);
   const [enableCreateButton, setEnableCreateButton] = useState(false);
   const [floorId, setFloorId] = useState(null);
-  const [showFilterControl, setShowFilterControl] = useState(false);
+  const [showFilterControl, setShowFilterControl] = useState(true);
 
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (siteSelected.context.id !== CONTEXTS.organizatrionId) {
-      setSite(siteSelected.id);
-    } else {
-      setShowFilterControl(true);
-    }
-  }, [siteSelected]);
+  // useEffect(() => {
+  //   if (siteSelected.context.id !== CONTEXTS.organizatrionId) {
+  //     setSite(siteSelected.id);
+  //   } else {
+  //     setShowFilterControl(true);
+  //   }
+  // }, [siteSelected]);
 
   const loadGrid = useCallback(() => {
     const params = {

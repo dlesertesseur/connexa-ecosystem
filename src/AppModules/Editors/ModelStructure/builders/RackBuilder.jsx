@@ -1,8 +1,12 @@
-import { TextInput, Button, NumberInput, Stack, Group, Grid } from "@mantine/core";
+import { TextInput, Button, NumberInput, Stack, Group, Grid, Modal } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
+import { STRUCTURE_TYPE_RACK } from "../../../../Constants/structures";
+import { useContext } from "react";
+import { AbmStateContext } from "../Context";
 
-export function RackBuilder({ onCreate }) {
+export function RackBuilder({ opened, close }) {
+  const { onCreate } = useContext(AbmStateContext);
   const { t } = useTranslation();
 
   const form = useForm({
@@ -74,46 +78,49 @@ export function RackBuilder({ onCreate }) {
   };
 
   return (
-    <Stack>
-      <form
-        onSubmit={form.onSubmit((values) => {
-          onCreate(values);
-        })}
-      >
-        <Group grow mb="lg">
-          {createTextField("name")}
-        </Group>
+    <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.racking")}>
+      <Stack>
+        <form
+          onSubmit={form.onSubmit((values) => {
+            onCreate(values, STRUCTURE_TYPE_RACK);
+            close();
+          })}
+        >
+          <Group grow mb="lg">
+            {createTextField("name")}
+          </Group>
 
-        <Grid>
-          <Grid.Col span={4}>
-            <Stack align="center" justify="flex-start">
-              {createNumberControlField("numberOfModules")}
-              {createNumberField("beamLength")}
-              {createNumberField("columnSide")}
-            </Stack>
-          </Grid.Col>
+          <Grid>
+            <Grid.Col span={4}>
+              <Stack align="center" justify="flex-start">
+                {createNumberControlField("numberOfModules")}
+                {createNumberField("beamLength")}
+                {createNumberField("columnSide")}
+              </Stack>
+            </Grid.Col>
 
-          <Grid.Col span={4}>
-            <Stack align="center" justify="flex-start">
-              {createNumberField("maxLoadHeight")}
-              {createNumberField("beamHeight")}
-              {createNumberField("baseHeight")}
-            </Stack>
-          </Grid.Col>
+            <Grid.Col span={4}>
+              <Stack align="center" justify="flex-start">
+                {createNumberField("maxLoadHeight")}
+                {createNumberField("beamHeight")}
+                {createNumberField("baseHeight")}
+              </Stack>
+            </Grid.Col>
 
-          <Grid.Col span={4}>
-            <Stack align="center" justify="flex-start">
-              {createNumberField("uprightDepth")}
-              {createNumberField("beamDepth")}
-              {createNumberControlField("levels")}
-            </Stack>
-          </Grid.Col>
-        </Grid>
+            <Grid.Col span={4}>
+              <Stack align="center" justify="flex-start">
+                {createNumberField("uprightDepth")}
+                {createNumberField("beamDepth")}
+                {createNumberControlField("levels")}
+              </Stack>
+            </Grid.Col>
+          </Grid>
 
-        <Group position="right" mt="xl" mb="xs">
-          <Button type="submit">{t("button.create")}</Button>
-        </Group>
-      </form>
-    </Stack>
+          <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.create")}</Button>
+          </Group>
+        </form>
+      </Stack>
+    </Modal>
   );
 }
