@@ -11,6 +11,7 @@ import { FilterControl } from "./FilterControl";
 import { findAllRacksHeaders } from "../../../DataAccess/Racks";
 import StructureMetaDataBuilder from "../../../Components/Builder3d/StructureMetaDataBuilder";
 import { STRUCTURE_TYPE_RACK, STRUCTURE_TYPE_SHELVING, STRUCTURE_TYPE_RACK_BASIC } from "../../../Constants/structures";
+import RackBasicMetaDataBuilder from "../../../Components/Builder3d/RackBasicMetaDataBuilder";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -82,7 +83,8 @@ const DynamicApp = ({ app }) => {
         break;
 
       case STRUCTURE_TYPE_RACK_BASIC:
-        model = StructureMetaDataBuilder.createRackBasic(values);
+        model = RackBasicMetaDataBuilder.createRack(values);
+        console.log("STRUCTURE_TYPE_RACK_BASIC -> ", model);
         break;
       default:
         break;

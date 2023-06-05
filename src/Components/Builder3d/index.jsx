@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Detailed } from "@react-three/drei";
 
 const materialsMap = new Map();

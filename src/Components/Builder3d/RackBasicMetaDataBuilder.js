@@ -2,12 +2,13 @@ import uuid from "react-uuid";
 class RackBasicMetaDataBuilder {
 
   static createRack(values) {
-    const totalX = values.numberOfModules * values.beamLength + (values.numberOfModules + 1) * values.columnSide;
-    const totalY = values.maxLoadHeight * values.levels;
-    const totalZ = values.uprightDepth;
-    const posZ = values.uprightDepth / 2;
+    const totalX = values.numberOfModulesX * values.beamLength + (values.numberOfModulesX + 1) * values.columnSide;
+    const totalY = values.columnHeight;
+    const totalZ = values.uprightDepth * values.numberOfModulesZ;
+    const posZ = totalZ / 2;
 
     const framesList = RackBasicMetaDataBuilder.createSeparatorColumns(values);
+    
     framesList.push(RackBasicMetaDataBuilder.createLeftColumns(values, posZ));
     framesList.push(RackBasicMetaDataBuilder.createLeftColumns(values, -posZ));
     framesList.push(RackBasicMetaDataBuilder.createRightColumns(values, posZ));
@@ -36,7 +37,7 @@ class RackBasicMetaDataBuilder {
 
   static createLeftColumns(values, posZ) {
     const totalX = values.numberOfModulesX * values.beamLength + (values.numberOfModulesX - 1) * values.columnSide;
-    const totalY = values.be;
+    const totalY = values.columnHeight;
     const panel = {
       key: uuid(),
       number: 0,
@@ -57,8 +58,8 @@ class RackBasicMetaDataBuilder {
   }
 
   static createRightColumns(values, posZ) {
-    const totalX = values.numberOfModules * values.beamLength + (values.numberOfModules - 1) * values.columnSide;
-    const totalY = values.maxLoadHeight * values.levels;
+    const totalX = values.numberOfModulesX * values.beamLength + (values.numberOfModulesX - 1) * values.columnSide;
+    const totalY = values.columnHeight;
     const panel = {
       key: uuid(),
       number: 0,
@@ -83,7 +84,7 @@ class RackBasicMetaDataBuilder {
     const mw = values.beamLength;
     const mvp = values.columnSide / 2;
     const tm = values.numberOfModulesX;
-    const posZ = values.uprightDepth / 2;
+    const posZ = (values.uprightDepth * values.numberOfModulesZ) / 2;
     let posX = -((values.numberOfModulesX * values.beamLength + (values.numberOfModulesX - 1) * values.columnSide) / 2);
     posX += values.beamLength + mvp;
 
@@ -96,7 +97,7 @@ class RackBasicMetaDataBuilder {
   }
 
   static createSeparatorColumn(values, number, posX, posZ) {
-    const totalY = values.maxLoadHeight * values.levels;
+    const totalY = values.columnHeight;
     const panel = {
       key: uuid(),
       number: number,
@@ -120,25 +121,28 @@ class RackBasicMetaDataBuilder {
     const modules = [];
     const mw = values.beamLength / 2;
     const mvp = values.columnSide / 2;
-    const tm = values.numberOfModules - 1;
+    const tm = values.numberOfModulesX - 1;
+    const totZ = (values.uprightDepth * values.numberOfModulesZ);
+    const deltaZ = (values.uprightDepth / 2);
+    
     let posX = -((tm * mw + tm * mvp) / 2);
+    let posZ = -(totZ / 2) + deltaZ;
 
-    for (let index = 0; index < values.numberOfModules; index++, posX += mw + mvp) {
-      modules.push(RackBasicMetaDataBuilder.createRackModule(values, index + 1, posX));
+    for (let z = 0; z < values.numberOfModulesZ; z++, posZ += values.uprightDepth) {
+      for (let index = 0; index < values.numberOfModulesX; index++, posX += mw + mvp) {
+        modules.push(RackBasicMetaDataBuilder.createRackModule(values, index + 1, posX, posZ));
+      }
+      posX = -((tm * mw + tm * mvp) / 2);
     }
 
     return modules;
   }
 
-  static createRackModule(values, number, posX) {
+  static createRackModule(values, number, posX, posZ) {
     const parts = [];
     const mbh = values.baseHeight / 2;
-    const msh = values.maxLoadHeight / 2;
-    const mslh = values.beamHeight / 2;
-    const deltaX = values.beamLength / 4;
+    const deltaZ = values.beamLength / 4;
 
-    let posY = -(mbh + msh);
-    const posZ = values.uprightDepth / 2;
     const module = {
       key: uuid(),
       number: number,
@@ -148,80 +152,30 @@ class RackBasicMetaDataBuilder {
       rotationx: 0,
       rotationy: 0,
       rotationz: 0,
-      dimensionx: values.maxLoadHeight,
+      dimensionx: values.beamLength,
       dimensiony: values.baseHeight,
       dimensionz: values.uprightDepth,
       parts: parts,
     };
 
-    parts.push(RackBasicMetaDataBuilder.createRackBase(values, number, posX));
-
-    for (let index = 0; index < values.levels; index++, posY -= values.maxLoadHeight + values.beamHeight) {
-      parts.push(RackBasicMetaDataBuilder.createRackSpace(values, number, posX + deltaX, posY));
-      parts.push(RackBasicMetaDataBuilder.createRackSpace(values, number, posX - deltaX, posY));
-      if (index < values.levels - 1) {
-        parts.push(RackBasicMetaDataBuilder.createRackBean(values, number, posX, posY - (msh + mslh), posZ));
-        parts.push(RackBasicMetaDataBuilder.createRackBean(values, number, posX, posY - (msh + mslh), -posZ));
-      }
-    }
+    parts.push(RackBasicMetaDataBuilder.createRackBase(values, number, posX - deltaZ, posZ));
+    parts.push(RackBasicMetaDataBuilder.createRackBase(values, number, posX + deltaZ, posZ));
     return module;
   }
 
-  static createRackSpace(values, number, posX, posY) {
-    const separation = 0.05;
-    const space = {
-      key: uuid(),
-      number: number,
-      name: "SPACE",
-      positionx: posX,
-      positiony: posY,
-      positionz: 0,
-      rotationx: 0,
-      rotationy: 0,
-      rotationz: 0,
-      dimensionx: values.beamLength / 2 - separation,
-      dimensiony: values.maxLoadHeight,
-      dimensionz: values.uprightDepth,
-      type: 5,
-      subspaces: [],
-    };
 
-    return space;
-  }
-
-  static createRackBean(values, number, posX, posY, posZ) {
-    const shelf = {
-      key: uuid(),
-      number: number,
-      name: "BEAN",
-      positionx: posX,
-      positiony: posY,
-      positionz: posZ,
-      rotationx: 0,
-      rotationy: 0,
-      rotationz: 0,
-      dimensionx: values.beamLength,
-      dimensiony: values.beamHeight,
-      dimensionz: values.beamDepth,
-      type: 11,
-      subspaces: [],
-    };
-
-    return shelf;
-  }
-
-  static createRackBase(values, number, posX) {
+  static createRackBase(values, number, posX, posZ) {
     const base = {
       key: uuid(),
       number: number,
       name: "BASE",
       positionx: posX,
       positiony: 0,
-      positionz: 0,
+      positionz: posZ,
       rotationx: 0,
       rotationy: 0,
       rotationz: 0,
-      dimensionx: values.beamLength,
+      dimensionx: values.beamLength / 2,
       dimensiony: values.baseHeight,
       dimensionz: values.uprightDepth,
       type: 10,
@@ -230,40 +184,6 @@ class RackBasicMetaDataBuilder {
 
     return base;
   }
-
-  static createBasicRack(values) {
-    const totalX = values.numberOfModulesX * values.beamLength + (values.numberOfModulesX + 1) * values.columnSide;
-    const totalY = values.beamHeight;
-    const totalZ = values.uprightDepth;
-    const posZ = values.uprightDepth / 2;
-
-    const framesList = RackBasicMetaDataBuilder.createSeparatorColumns(values);
-    framesList.push(RackBasicMetaDataBuilder.createLeftColumns(values, posZ));
-    framesList.push(RackBasicMetaDataBuilder.createLeftColumns(values, -posZ));
-    framesList.push(RackBasicMetaDataBuilder.createRightColumns(values, posZ));
-    framesList.push(RackBasicMetaDataBuilder.createRightColumns(values, -posZ));
-
-    const modulesList = RackBasicMetaDataBuilder.createRackModules(values);
-
-    const structure = {
-      key: uuid(),
-      name: values.name,
-      positionx: 0,
-      positiony: 0,
-      positionz: 0,
-      rotationx: 0,
-      rotationy: 0,
-      rotationz: 0,
-      dimensionx: totalX,
-      dimensiony: totalY,
-      dimensionz: totalZ,
-      frames: framesList,
-      modules: modulesList,
-    };
-
-    return structure;
-  }
-
 }
 
 export default RackBasicMetaDataBuilder;
