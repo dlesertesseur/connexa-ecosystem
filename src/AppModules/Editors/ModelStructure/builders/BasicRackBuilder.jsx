@@ -15,27 +15,23 @@ export function BasicRackBuilder({ opened, close }) {
       numberOfModulesX: 1,
       numberOfModulesZ: 1,
 
-      beamLength: 2.44,
-      beamHeight: 0.1,
-      beamDepth: 0.065,
+      moduleWidth: 2.44,
+      moduleDepth: 1.3,
 
       baseHeight: 0.01,
       columnHeight: 3,
       columnSide: 0.1,
-      uprightDepth: 1.3,
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
       numberOfModulesX: (val) => (val ? null : t("validation.required")),
       numberOfModulesZ: (val) => (val ? null : t("validation.required")),
-      beamLength: (val) => (val ? null : t("validation.required")),
-      beamDepth: (val) => (val ? null : t("validation.required")),
-      beamHeight: (val) => (val ? null : t("validation.required")),
+      moduleWidth: (val) => (val ? null : t("validation.required")),
+      moduleDepth: (val) => (val ? null : t("validation.required")),
       baseHeight: (val) => (val ? null : t("validation.required")),
       columnHeight: (val) => (val ? null : t("validation.required")),
       columnSide: (val) => (val ? null : t("validation.required")),
-      uprightDepth: (val) => (val ? null : t("validation.required")),
     },
   });
 
@@ -96,7 +92,7 @@ export function BasicRackBuilder({ opened, close }) {
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
                 {createNumberControlField("numberOfModulesX")}
-                {createNumberField("beamLength")}
+                {createNumberField("moduleWidth")}
                 {createNumberField("columnSide")}
               </Stack>
             </Grid.Col>
@@ -104,7 +100,7 @@ export function BasicRackBuilder({ opened, close }) {
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
                 {createNumberControlField("numberOfModulesZ")}
-                {createNumberField("beamHeight")}
+                {createNumberField("moduleDepth")}
                 {createNumberField("columnHeight")}
               </Stack>
             </Grid.Col>
@@ -112,8 +108,6 @@ export function BasicRackBuilder({ opened, close }) {
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
                 {createNumberField("baseHeight")}
-                {createNumberField("beamDepth")}
-                {createNumberField("uprightDepth")}
               </Stack>
             </Grid.Col>
           </Grid>

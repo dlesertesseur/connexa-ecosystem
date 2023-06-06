@@ -1,15 +1,14 @@
 import uuid from "react-uuid";
 import { lpad } from "../../Util";
 class RackBasicMetaDataBuilder {
-
   static createRack(values) {
-    const totalX = values.numberOfModulesX * values.beamLength + (values.numberOfModulesX + 1) * values.columnSide;
+    const totalX = values.numberOfModulesX * values.moduleWidth + (values.numberOfModulesX + 1) * values.columnSide;
     const totalY = values.columnHeight;
-    const totalZ = values.uprightDepth * values.numberOfModulesZ;
+    const totalZ = values.moduleDepth * values.numberOfModulesZ;
     const posZ = totalZ / 2;
 
     const framesList = RackBasicMetaDataBuilder.createSeparatorColumns(values);
-    
+
     framesList.push(RackBasicMetaDataBuilder.createLeftColumns(values, posZ));
     framesList.push(RackBasicMetaDataBuilder.createLeftColumns(values, -posZ));
     framesList.push(RackBasicMetaDataBuilder.createRightColumns(values, posZ));
@@ -37,7 +36,7 @@ class RackBasicMetaDataBuilder {
   }
 
   static createLeftColumns(values, posZ) {
-    const totalX = values.numberOfModulesX * values.beamLength + (values.numberOfModulesX - 1) * values.columnSide;
+    const totalX = values.numberOfModulesX * values.moduleWidth + (values.numberOfModulesX - 1) * values.columnSide;
     const totalY = values.columnHeight;
     const panel = {
       key: uuid(),
@@ -59,21 +58,21 @@ class RackBasicMetaDataBuilder {
   }
 
   static createRightColumns(values, posZ) {
-    const totalX = values.numberOfModulesX * values.beamLength + (values.numberOfModulesX - 1) * values.columnSide;
-    const totalY = values.columnHeight;
+    const totalX = parseFloat(values.numberOfModulesX) * parseFloat(values.moduleWidth) + (parseFloat(values.numberOfModulesX) - 1) * parseFloat(values.columnSide);
+    const totalY = parseFloat(values.columnHeight);
     const panel = {
       key: uuid(),
       number: 0,
       name: "COLUMN",
-      positionx: totalX / 2 + values.columnSide / 2,
+      positionx: totalX / 2 + parseFloat(values.columnSide) / 2,
       positiony: totalY / 2,
       positionz: posZ,
       rotationx: 0,
       rotationy: 0,
       rotationz: 0,
-      dimensionx: values.columnSide,
+      dimensionx: parseFloat(values.columnSide),
       dimensiony: totalY,
-      dimensionz: values.columnSide,
+      dimensionz: parseFloat(values.columnSide),
       type: 12,
     };
 
@@ -82,14 +81,22 @@ class RackBasicMetaDataBuilder {
 
   static createSeparatorColumns(values) {
     const frames = [];
-    const mw = values.beamLength;
-    const mvp = values.columnSide / 2;
-    const tm = values.numberOfModulesX;
-    const posZ = (values.uprightDepth * values.numberOfModulesZ) / 2;
-    let posX = -((values.numberOfModulesX * values.beamLength + (values.numberOfModulesX - 1) * values.columnSide) / 2);
-    posX += values.beamLength + mvp;
+    const mw = parseFloat(values.moduleWidth);
+    const mvp = parseFloat(values.columnSide) / 2;
+    const tm = parseFloat(values.numberOfModulesX);
+    const posZ = (parseFloat(values.moduleDepth) * parseFloat(values.numberOfModulesZ)) / 2;
+    let posX = -(
+      (parseFloat(values.numberOfModulesX) * parseFloat(values.moduleWidth) +
+        (parseFloat(values.numberOfModulesX) - 1) * parseFloat(values.columnSide)) /
+      2
+    );
+    posX += parseFloat(values.moduleWidth) + mvp;
 
-    for (let index = 0; index < values.numberOfModulesX - 1 && tm > 0; index++, posX += mw + values.columnSide) {
+    for (
+      let index = 0;
+      index < parseFloat(values.numberOfModulesX) - 1 && tm > 0;
+      index++, posX += mw + parseFloat(values.columnSide)
+    ) {
       frames.push(RackBasicMetaDataBuilder.createSeparatorColumn(values, index + 1, posX, posZ));
       frames.push(RackBasicMetaDataBuilder.createSeparatorColumn(values, index + 1, posX, -posZ));
     }
@@ -98,7 +105,8 @@ class RackBasicMetaDataBuilder {
   }
 
   static createSeparatorColumn(values, number, posX, posZ) {
-    const totalY = values.columnHeight;
+    const totalY = parseFloat(values.columnHeight);
+    const colSide = parseFloat(values.columnSide);
     const panel = {
       key: uuid(),
       number: number,
@@ -109,29 +117,33 @@ class RackBasicMetaDataBuilder {
       rotationx: 0,
       rotationy: 0,
       rotationz: 0,
-      dimensionx: values.columnSide,
+      dimensionx: colSide,
       dimensiony: totalY,
-      dimensionz: values.columnSide,
+      dimensionz: colSide,
       type: 12,
     };
-
     return panel;
   }
 
   static createRackModules(values) {
     const modules = [];
-    const mw = values.beamLength / 2;
-    const mvp = values.columnSide / 2;
-    const tm = values.numberOfModulesX - 1;
-    const totZ = (values.uprightDepth * values.numberOfModulesZ);
-    const deltaZ = (values.uprightDepth / 2);
-    
+    const mx = parseFloat(values.numberOfModulesX);
+    const mz = parseFloat(values.numberOfModulesZ);
+    const mDepth = parseFloat(values.moduleDepth);
+    const mw = parseFloat(values.moduleWidth) / 2;
+    const mvp = parseFloat(values.columnSide) / 2;
+    const tm = parseFloat(values.numberOfModulesX) - 1;
+    const totZ = parseFloat(values.moduleDepth) * mz;
+    const deltaZ = parseFloat(values.moduleDepth) / 2;
+
     let posX = -((tm * mw + tm * mvp) / 2);
     let posZ = -(totZ / 2) + deltaZ;
 
-    for (let z = 0; z < values.numberOfModulesZ; z++, posZ += values.uprightDepth) {
-      for (let index = 0; index < values.numberOfModulesX; index++, posX += mw + mvp) {
-        modules.push(RackBasicMetaDataBuilder.createRackModule(values, index + 1, posX, posZ, (values.numberOfModulesZ-z)));
+    for (let z = 0; z < mz; z++, posZ += mDepth) {
+      for (let index = 0; index < mx; index++, posX += mw + mvp) {
+        modules.push(
+          RackBasicMetaDataBuilder.createRackModule(values, index + 1, posX, posZ, mz - z)
+        );
       }
       posX = -((tm * mw + tm * mvp) / 2);
     }
@@ -141,8 +153,8 @@ class RackBasicMetaDataBuilder {
 
   static createRackModule(values, number, posX, posZ, zOrder) {
     const parts = [];
-    const mbh = values.baseHeight / 2;
-    const deltaZ = values.beamLength / 4;
+    const mbh = parseFloat(values.baseHeight) / 2;
+    const deltaZ = parseFloat(values.moduleWidth) / 4;
 
     const module = {
       key: uuid(),
@@ -153,9 +165,9 @@ class RackBasicMetaDataBuilder {
       rotationx: 0,
       rotationy: 0,
       rotationz: 0,
-      dimensionx: values.beamLength,
-      dimensiony: values.baseHeight,
-      dimensionz: values.uprightDepth,
+      dimensionx: parseFloat(values.moduleWidth),
+      dimensiony: parseFloat(values.baseHeight),
+      dimensionz: parseFloat(values.moduleDepth),
       parts: parts,
     };
 
@@ -164,9 +176,8 @@ class RackBasicMetaDataBuilder {
     return module;
   }
 
-
   static createRackBase(values, number, posX, posZ, xOrder, zOrder) {
-    const name = `${values.name}-M${lpad(number, 2, "0")}-${(xOrder+1)}${zOrder}`;
+    const name = `${values.name}-M${lpad(number, 2, "0")}-${xOrder + 1}${zOrder}`;
     const base = {
       key: uuid(),
       number: number,
@@ -177,9 +188,9 @@ class RackBasicMetaDataBuilder {
       rotationx: 0,
       rotationy: 0,
       rotationz: 0,
-      dimensionx: values.beamLength / 2,
-      dimensiony: values.baseHeight,
-      dimensionz: values.uprightDepth,
+      dimensionx: parseFloat(values.moduleWidth) / 2,
+      dimensiony: parseFloat(values.baseHeight),
+      dimensionz: parseFloat(values.moduleDepth),
       type: 10,
       subspaces: [],
     };
