@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { useRef } from "react";
-import { Detailed } from "@react-three/drei";
+import { useRef, useState } from "react";
+import { Detailed, Edges } from "@react-three/drei";
 
 const materialsMap = new Map();
 materialsMap.set(1, "grey");
@@ -23,8 +23,10 @@ function Box({
   transparent = false,
   onClick,
   userData,
+
 }) {
   const ref = useRef();
+  const [selected, setSelected] = useState(false);
   return (
     <mesh
       name={name}
@@ -37,11 +39,20 @@ function Box({
           THREE.MathUtils.degToRad(rotations[2])
         )
       }
-      onClick={onClick}
+      onClick={(event) => {
+        if(onClick){
+          setSelected(!selected);
+          onClick(event, ref);
+        }
+      }}
       userData={userData}
     >
       <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
       <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
+
+      <Edges visible={selected} scale={1} renderOrder={1000}>
+        <meshBasicMaterial transparent color="#ff0000" depthTest={true} />
+      </Edges>
     </mesh>
   );
 }

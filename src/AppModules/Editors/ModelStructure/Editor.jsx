@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Grid, TransformControls } from "@react-three/drei";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { buildModelStructure } from "../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
 import EditorToolbar from "./EditorToolbar";
@@ -10,12 +10,19 @@ const Editor = ({ structure, editing }) => {
   const [model, setModel] = useState(null);
   const [selectedPart, setSelectedPart] = useState(null);
   const [transformOption, setTransformOption] = useState("translate");
+  const canvasRef = useRef();
 
-  const onSelect = (event) => {
+  const onSelect = (event, ref) => {
     if (event.intersections && event.intersections.length > 0) {
       const obj = event.intersections[0].object;
       setSelectedPart(obj);
+
+      console.log("onSelect obj ->", ref.current.name);
+
     }
+
+    // console.log("canvasRef ->", canvasRef.current);
+    // canvasRef.current.add()
   };
 
   useEffect(() => {
@@ -63,14 +70,12 @@ const Editor = ({ structure, editing }) => {
           setTransformOption={setTransformOption}
         />
       </Group>
-      <Canvas camera={{ position: [5, 5, 5], fov: 25 }}>
-        <scene>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} />
-          <Grid infiniteGrid position={[0, 0, 0]} />
-          <axesHelper args={[10]} />
-          {model}
-        </scene>
+      <Canvas ref={canvasRef} camera={{ position: [5, 5, 5], fov: 25 }}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 5]} />
+        <Grid infiniteGrid position={[0, 0, 0]} />
+        <axesHelper args={[10]} />
+        {model}
         <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault />
 
         {selectedPart ? (

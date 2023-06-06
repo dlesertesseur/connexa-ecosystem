@@ -1,4 +1,5 @@
 import uuid from "react-uuid";
+import { lpad } from "../../Util";
 class RackBasicMetaDataBuilder {
 
   static createRack(values) {
@@ -130,7 +131,7 @@ class RackBasicMetaDataBuilder {
 
     for (let z = 0; z < values.numberOfModulesZ; z++, posZ += values.uprightDepth) {
       for (let index = 0; index < values.numberOfModulesX; index++, posX += mw + mvp) {
-        modules.push(RackBasicMetaDataBuilder.createRackModule(values, index + 1, posX, posZ));
+        modules.push(RackBasicMetaDataBuilder.createRackModule(values, index + 1, posX, posZ, (values.numberOfModulesZ-z)));
       }
       posX = -((tm * mw + tm * mvp) / 2);
     }
@@ -138,7 +139,7 @@ class RackBasicMetaDataBuilder {
     return modules;
   }
 
-  static createRackModule(values, number, posX, posZ) {
+  static createRackModule(values, number, posX, posZ, zOrder) {
     const parts = [];
     const mbh = values.baseHeight / 2;
     const deltaZ = values.beamLength / 4;
@@ -158,17 +159,18 @@ class RackBasicMetaDataBuilder {
       parts: parts,
     };
 
-    parts.push(RackBasicMetaDataBuilder.createRackBase(values, number, posX - deltaZ, posZ));
-    parts.push(RackBasicMetaDataBuilder.createRackBase(values, number, posX + deltaZ, posZ));
+    parts.push(RackBasicMetaDataBuilder.createRackBase(values, number, posX - deltaZ, posZ, "L", zOrder));
+    parts.push(RackBasicMetaDataBuilder.createRackBase(values, number, posX + deltaZ, posZ, "R", zOrder));
     return module;
   }
 
 
-  static createRackBase(values, number, posX, posZ) {
+  static createRackBase(values, number, posX, posZ, xOrder, zOrder) {
+    const name = `${values.name}-M${lpad(number, 2, "0")}-${(xOrder+1)}${zOrder}`;
     const base = {
       key: uuid(),
       number: number,
-      name: "BASE",
+      name: name,
       positionx: posX,
       positiony: 0,
       positionz: posZ,

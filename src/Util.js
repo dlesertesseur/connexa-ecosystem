@@ -264,6 +264,10 @@ function formatDateToDDMMYYYY(inputDate) {
   return `${date}/${month}/${year}`;
 }
 
+const lpad = function(s, width, char) {
+  return (s.length >= width) ? s : (new Array(width).join(char) + s).slice(-width);
+}
+
 export {
   findTranslatedField,
   getFillColor,
@@ -278,4 +282,5 @@ export {
   getPartStrokeColor,
   colorList,
   formatDateToDDMMYYYY,
+  lpad
 };
