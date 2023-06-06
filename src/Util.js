@@ -108,6 +108,7 @@ function getModulePartStrokeColor(type) {
       color = "#468faf";
       break;
     case 2:
+    case 10:
       color = "#d3d3d3";
       break;
     case 3:
@@ -118,6 +119,12 @@ function getModulePartStrokeColor(type) {
       break;
     case 5:
       color = "#F8F9D7";
+      break;
+    case 11:
+      color = "#FFA500";
+      break;
+    case 12:
+      color = "#0000ff";
       break;
 
     default:
@@ -264,9 +271,9 @@ function formatDateToDDMMYYYY(inputDate) {
   return `${date}/${month}/${year}`;
 }
 
-const lpad = function(s, width, char) {
-  return (s.length >= width) ? s : (new Array(width).join(char) + s).slice(-width);
-}
+const lpad = function (s, width, char) {
+  return s.length >= width ? s : (new Array(width).join(char) + s).slice(-width);
+};
 
 export {
   findTranslatedField,
@@ -282,5 +289,5 @@ export {
   getPartStrokeColor,
   colorList,
   formatDateToDDMMYYYY,
-  lpad
+  lpad,
 };

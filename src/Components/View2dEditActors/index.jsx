@@ -1,6 +1,7 @@
 import { Container, Menu } from "@mantine/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Stage } from "react-konva";
+import useImage from "use-image";
 import {
   buildActors,
   buildLayout,
@@ -10,6 +11,7 @@ import {
   selectObjectWithId,
   setDraggableGroups,
 } from "../Builder2d";
+import Konva from "konva";
 
 const scaleBy = 1.05;
 
@@ -48,6 +50,10 @@ function View2dEditActors({
 }) {
   const stageRef = useRef(null);
   const [openMenu, setOpenMenu] = useState(false);
+  const [backImageUrl, setBackImageUrl] = useState(null);
+  const [imageLayer, setImageLayer] = useState(null);
+  const [image] = useImage(backImageUrl);
+
   let lastCenter = null;
   let lastDist = 0;
 
@@ -85,12 +91,35 @@ function View2dEditActors({
   };
 
   useEffect(() => {
+    if (image, imageLayer) {
+
+      console.log("image -> ",image);
+
+      const layout = layouts[0];
+      const group = new Konva.Group({ id: "imageBack-group", x: (layout.imagePositionx * pixelMeterRelation), y: (layout.imagePositiony * pixelMeterRelation)});
+      group.scale({ x: pixelMeterRelation, y: pixelMeterRelation });
+      const img = new Konva.Image({ image: image });
+      group.add(img);
+
+      imageLayer.add(group);
+    } else {
+      console.log("image -> NULL");
+    }
+  }, [image]);
+
+  useEffect(() => {
     const ref = stageRef.current;
 
     ref.batchDraw();
 
     if (layouts && racks && pixelMeterRelation) {
       ref.destroyChildren();
+
+      const imageLayer = new Konva.Layer({ id: "image-layer" });
+      ref.add(imageLayer);
+      setImageLayer(imageLayer);
+
+      setBackImageUrl(layouts[0].image);
 
       buildLayout(ref, pixelMeterRelation, layouts[0], true);
 
@@ -150,7 +179,7 @@ function View2dEditActors({
       buildMarkers(stage, markers, false, onSelect, onDblClick);
       console.log("########### buildMarkers ###########");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [markers]);
 
   function zoomStage(event) {

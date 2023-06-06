@@ -55,7 +55,7 @@ function FilterControl({ onFilter, siteId, setSiteId, floorId, setFloorId, loadi
           label={t("label.site")}
           placeholder={t("label.select")}
           description={t("label.siteDesc")}
-          searchable
+          //searchable
           nothingFound={t("label.noData")}
           data={sites?.map((s) => {
             return { value: s.id, label: s.name };

@@ -14,9 +14,9 @@ import { t } from "i18next";
 import { hideNotification, showNotification } from "@mantine/notifications";
 import { findAllLayoutMarkersById, saveLayoutMarkers } from "../../../../DataAccess/LayoutsMarkers";
 import { IconTag } from "@tabler/icons-react";
-import TextEditor from "../../../../Components/TextEditor";
 import { useWindowSize } from "../../../../Hook";
 import { useMediaQuery } from "@mantine/hooks";
+import TextEditor from "../../../../Components/TextEditor";
 
 const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -145,6 +145,7 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
       setPixelmeterrelation(n);
 
       setLayouts(ret);
+
       findRacksByZoneId(params).then((ret) => {
         setRacks(ret);
 

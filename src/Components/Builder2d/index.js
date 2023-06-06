@@ -84,18 +84,20 @@ function buildLayout(stageRef, pixelMeterRelation, layout, cache = false) {
   let part;
   const parts = layout.parts;
 
-  layer = new Konva.Layer({ id: layout.id });
+  if (parts.length > 0) {
+    layer = new Konva.Layer({ id: layout.id });
 
-  for (let index = 0; index < parts.length; index++) {
-    part = buildPart(pixelMeterRelation, parts[index]);
-    layer.add(part);
+    for (let index = 0; index < parts.length; index++) {
+      part = buildPart(pixelMeterRelation, parts[index]);
+      layer.add(part);
+    }
+
+    if (cache) {
+      layer.cache();
+    }
+
+    stageRef.add(layer);
   }
-
-  if (cache) {
-    layer.cache();
-  }
-
-  stageRef.add(layer);
 }
 
 function buildEditableLayout(stageRef, pixelMeterRelation, layout, onSelect) {
@@ -435,10 +437,12 @@ function buildMarker(stageRef, pixelMeterRelation, marker, onSelect, onDblClick)
     x: marker.positionx * pixelMeterRelation,
     y: marker.positionz * pixelMeterRelation,
     rotation: -marker.rotationy,
-    draggable: marker.draggable
+    draggable: marker.draggable,
   });
 
-  grMarker.on("dblclick dbltap", (e) => {onDblClick(e, marker.id)});
+  grMarker.on("dblclick dbltap", (e) => {
+    onDblClick(e, marker.id);
+  });
 
   grMarker.on("mousedown touchstart", (e) => {
     const objects = stageRef.find("#transformer-obj");
@@ -459,7 +463,7 @@ function buildMarker(stageRef, pixelMeterRelation, marker, onSelect, onDblClick)
     fontFamily: marker.fontFamily,
     fill: marker.stroke,
     stroke: marker.stroke,
-    strokeWidth:0.5
+    strokeWidth: 0.5,
   });
 
   grMarker.add(text);
@@ -483,7 +487,7 @@ function buildMarkers(stageRef, markers, cache = false, onSelect = null, onDblCl
       layer.cache({ pixelRatio: 3 });
     }
     stageRef.add(layer);
-  }else{
+  } else {
     layer.removeChildren();
   }
 
@@ -506,5 +510,5 @@ export {
   buildEditableLayout,
   selectPolygon,
   buildMarkers,
-  clearSelection
+  clearSelection,
 };
