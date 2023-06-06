@@ -62,7 +62,9 @@
     "roles": "Roles",
     "sites": "Sites",
     "backStep": "Back",
-    "nextStep": "Next step"
+    "nextStep": "Next step", 
+    "objectInspector": "Object inspector",
+    "assignNames":"Assign names"
   },
 
   "label": {
@@ -154,7 +156,9 @@
     "retailerDesc": "Select a retailer to see the defined stores",
     "translate": "Translate",
     "rotate": "Rotate",
-    "scale": "Scale"
+    "scale": "Scale",
+    "jsonData":"Information data",
+    "reverseAssignment":"Reverse assignment"
   },
 
   "placeholder": {
@@ -162,7 +166,8 @@
     "password": "Your password",
     "firstName": "Your first name",
     "lastName": "Your last name",
-    "search": "Search by any field"
+    "search": "Search by any field",
+    "jsonData":"The information must be supplied in json format"
   },
 
   "language": {
@@ -187,7 +192,8 @@
     "1001": "Error trying to login",
     "1002": "Registration error",
     "404": "Invalid username or password",
-    "listCheckValidation": "You must check at least one row"
+    "listCheckValidation": "You must check at least one row",
+    "jsonData":"Invalid json format"
   },
 
   "notification": {
@@ -582,7 +588,9 @@
         "panelWidth": "Panel width",
         "spaceHeight": "Space height",
         "visible": "Visible",
-        "editor": "Edit"
+        "editor": "Edit",
+        "module": "Module",
+        "type":"Type"
       },
 
       "placeholder": {
@@ -852,7 +860,9 @@
       "title":{
         "create":"New structure",
         "racking":"New rack",
-        "shelving":"New shelves"
+        "shelving":"New shelves",
+        "objectList":"Object inspector",
+        "assignNames":"Assign names"
       },
       "label":{
         "name": "Name",
@@ -880,8 +890,9 @@
         "beamDepth":"Beam depth",
         "numberOfModulesX": "Modules (X)",
         "numberOfModulesZ": "Modules (Z)",
-        "columnHeight":"Column height"
-
+        "columnHeight":"Column height",
+        "module": "Module",
+        "type":"Type"
       },
       "placeholder":{
         "name": "a name"

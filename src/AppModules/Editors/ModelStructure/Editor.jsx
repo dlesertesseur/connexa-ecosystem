@@ -16,9 +16,6 @@ const Editor = ({ structure, editing }) => {
     if (event.intersections && event.intersections.length > 0) {
       const obj = event.intersections[0].object;
       setSelectedPart(obj);
-
-      console.log("onSelect obj ->", ref.current.name);
-
     }
 
     // console.log("canvasRef ->", canvasRef.current);

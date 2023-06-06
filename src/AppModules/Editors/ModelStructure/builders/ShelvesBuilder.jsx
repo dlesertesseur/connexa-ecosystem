@@ -118,7 +118,7 @@ export function ShelvesBuilder({ opened, close }) {
             </Grid.Col>
           </Grid>
 
-          <Group position="right" mt="xl" mb="xs">
+          <Group position="right">
             <Button type="submit">{t("button.create")}</Button>
           </Group>
         </form>

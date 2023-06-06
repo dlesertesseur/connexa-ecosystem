@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Group, Menu, SegmentedControl, TextInput } from "@mantine/core";
+import { Button, Group, Menu, SegmentedControl, Text, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
@@ -8,6 +8,8 @@ import { useState } from "react";
 import { ShelvesBuilder } from "./builders/ShelvesBuilder";
 import { RackBuilder } from "./builders/RackBuilder";
 import { BasicRackBuilder } from "./builders/BasicRackBuilder";
+import ObjectList from "./Modal/ObjectList";
+import AssignNames from "./Modal/AssignNames";
 
 const EditorToolbar = ({ structure, setTransformOption, transformOption, editing }) => {
   const { structureName, setStructureName } = useContext(AbmStateContext);
@@ -15,6 +17,8 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [open3, setOpen3] = useState(false);
+  const [open4, setOpen4] = useState(false);
 
   const { t } = useTranslation();
 
@@ -88,7 +92,7 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
 
       {!editing ? rackingMenu : null}
       {!editing ? shelvingMenu : null}
-      
+
       <SegmentedControl
         size="xs"
         value={transformOption}
@@ -99,6 +103,19 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
           { label: t("label.scale"), value: "scale" },
         ]}
       />
+
+      {structureName !== null ? (
+        <>
+          <Button size="xs" onClick={() => setOpen3(true)}>
+            <Text>{t("button.objectInspector")}</Text>
+          </Button>
+
+          <Button size="xs" onClick={() => setOpen4(true)}>
+            <Text>{t("button.assignNames")}</Text>
+          </Button>
+        </>
+      ) : null}
+
       <ShelvesBuilder
         opened={open}
         close={() => {
@@ -117,6 +134,22 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
         close={() => {
           setOpen2(false);
         }}
+      />
+
+      <ObjectList
+        opened={open3}
+        close={() => {
+          setOpen3(false);
+        }}
+        structure={structure}
+      />
+
+      <AssignNames
+        opened={open4}
+        close={() => {
+          setOpen4(false);
+        }}
+        structure={structure}
       />
     </Group>
   );

@@ -62,7 +62,9 @@
     "roles": "Perfiles",
     "sites": "Sitios",
     "backStep": "Anterior",
-    "nextStep": "Proximo"
+    "nextStep": "Proximo",
+    "objectInspector": "Inspector de objetos",
+    "assignNames":"Asignar nombres"
   },
 
   "label": {
@@ -154,7 +156,9 @@
     "retailerDesc": "Seleccione un retailer (cadeena) para ver los destinos definidos",
     "translate": "Trasladar",
     "rotate": "Rotar",
-    "scale": "Escalar"
+    "scale": "Escalar",
+    "jsonData":"información",
+    "reverseAssignment":"Asignación inversa"
   },
 
   "placeholder": {
@@ -162,7 +166,8 @@
     "password": "Su contraseña",
     "firstName": "Su nombre",
     "lastName": "Su apellido",
-    "search": "Buscar por cualquier campo"
+    "search": "Buscar por cualquier campo",
+    "jsonData":"La información debe suministrarse en formato json"
   },
 
   "language": {
@@ -187,7 +192,8 @@
     "1001": "Error al intentar iniciar session",
     "1002": "Error al registrarse",
     "404": "Usuario o clave invalida",
-    "listCheckValidation": "Debe marcar al menos una fila"
+    "listCheckValidation": "Debe marcar al menos una fila",
+    "jsonData":"Formato json inválido"
   },
 
   "notification": {
@@ -581,7 +587,10 @@
         "numberOfShelvesByModule": "Estantes por modulo",
         "panelWidth": "Ancho del panel trasero",
         "spaceHeight": "Alto del espacio",
-        "visible": "Visible"
+        "visible": "Visible",
+        "module": "Modulo",
+        "type":"Tipo"
+
       },
       "placeholder": {
         "name": "Nombre de la estructura",
@@ -836,7 +845,11 @@
   "editor": {
     "modelStructure": {
       "title": {
-        "create": "Nueva estrctura"
+        "create": "Nueva estrctura",
+        "racking":"Nuevo rack",
+        "shelving":"Nueva estanteria",
+        "objectList":"Inpector de objetos",
+        "assignNames":"Asignar nombres"
       },
       "label": {
         "name": "Nombre",
@@ -864,7 +877,9 @@
         "beamDepth": "Prof. viga",
         "numberOfModulesX": "Modulos en (X)",
         "numberOfModulesZ": "Modulos en (Z)",
-        "columnHeight":"Alto de columna"
+        "columnHeight":"Alto de columna",
+        "module": "Modulo",
+        "type":"Tipo"
       },
       "placeholder": {
         "name": "Un nombre"
