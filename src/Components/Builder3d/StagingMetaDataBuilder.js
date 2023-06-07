@@ -40,7 +40,7 @@ class StagingMetaDataBuilder {
     let posZ = 0;
 
     if(mx > 1){
-      posX = -((mx * mw + (mx - 1) * sx) / 2);
+      posX = -((mx * (mw) + (mx - 1) * sx) / 2);
     }
 
     if(mz > 1){
@@ -52,7 +52,7 @@ class StagingMetaDataBuilder {
       for (let x = 0; x < mx; x++, posX += mw + sx) {
         modules.push(StagingMetaDataBuilder.createRackModule(values, mNum, posX, posZ));
       }
-      posX = -((mx * mw + mx * sx) / 2);
+      posX = -((mx * mw + (mx - 1) * sx) / 2);
       mNum++;
     }
 
@@ -83,13 +83,17 @@ class StagingMetaDataBuilder {
 
   static createRackBase(values, number) {
     const name = `${values.name}-M${lpad(number, 2, "0")}`;
+    const md = parseFloat(values.moduleDepth) / 2;
+    const mw = parseFloat(values.moduleWidth) / 2;
+    const mx = parseFloat(values.numberOfModulesX);
+    const mz = parseFloat(values.numberOfModulesZ);
     const base = {
       key: uuid(),
       number: number,
       name: name,
-      positionx: 0,
+      positionx: mx > 1 ? mw : 0,
       positiony: 0,
-      positionz: 0,
+      positionz: mz > 1 ? md : 0,
       rotationx: 0,
       rotationy: 0,
       rotationz: 0,

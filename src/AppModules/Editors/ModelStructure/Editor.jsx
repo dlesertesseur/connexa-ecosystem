@@ -79,7 +79,7 @@ const Editor = ({ structure, editing }) => {
           setTransformOption={setTransformOption}
         />
       </Group>
-      <Canvas ref={canvasRef} camera={{ position: [5, 5, 5], fov: 25 }}>
+      <Canvas ref={canvasRef} camera={{ position: [0, 15, 15], fov: 25 }}>
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} />
         <Grid infiniteGrid position={[0, 0, 0]} />
