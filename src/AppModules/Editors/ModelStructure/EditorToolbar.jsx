@@ -3,13 +3,14 @@ import { Button, Group, Menu, SegmentedControl, Text, TextInput } from "@mantine
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
-import { IconBuildingWarehouse, IconShoppingCart } from "@tabler/icons-react";
+import { IconChevronRight } from "@tabler/icons-react";
 import { useState } from "react";
 import { ShelvesBuilder } from "./builders/ShelvesBuilder";
 import { RackBuilder } from "./builders/RackBuilder";
 import { BasicRackBuilder } from "./builders/BasicRackBuilder";
-import ObjectList from "./Modal/ObjectList";
-import AssignNames from "./Modal/AssignNames";
+import ObjectList from "./modal/ObjectList";
+import AssignNames from "./modal/AssignNames";
+import { StagingBuilder } from "./builders/StagingBuilder";
 
 const EditorToolbar = ({ structure, setTransformOption, transformOption, editing }) => {
   const { structureName, setStructureName } = useContext(AbmStateContext);
@@ -19,6 +20,7 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [open4, setOpen4] = useState(false);
+  const [open5, setOpen5] = useState(false);
 
   const { t } = useTranslation();
 
@@ -36,7 +38,7 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
 
       <Menu.Dropdown>
         <Menu.Item
-          icon={<IconBuildingWarehouse size={16} />}
+          icon={<IconChevronRight size={16} />}
           onClick={() => {
             setOpen2(true);
           }}
@@ -44,18 +46,24 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
           {t("editor.modelStructure.items.racking.basic")}
         </Menu.Item>
         <Menu.Item
-          icon={<IconBuildingWarehouse size={16} />}
+          icon={<IconChevronRight size={16} />}
           onClick={() => {
             setOpen1(true);
           }}
         >
           {t("editor.modelStructure.items.racking.selective")}
         </Menu.Item>
-        <Menu.Item icon={<IconBuildingWarehouse size={16} />}>
-          {t("editor.modelStructure.items.racking.pushBack")}
-        </Menu.Item>
-        <Menu.Item icon={<IconBuildingWarehouse size={16} />}>
+        <Menu.Item icon={<IconChevronRight size={16} />}>{t("editor.modelStructure.items.racking.pushBack")}</Menu.Item>
+        <Menu.Item icon={<IconChevronRight size={16} />}>
           {t("editor.modelStructure.items.racking.palletFlow")}
+        </Menu.Item>
+        <Menu.Item
+          icon={<IconChevronRight size={16} />}
+          onClick={() => {
+            setOpen5(true);
+          }}
+        >
+          {t("editor.modelStructure.items.racking.staging")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
@@ -69,7 +77,7 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
 
       <Menu.Dropdown>
         <Menu.Item
-          icon={<IconShoppingCart size={16} />}
+          icon={<IconChevronRight size={16} />}
           onClick={() => {
             setOpen(true);
           }}
@@ -148,6 +156,14 @@ const EditorToolbar = ({ structure, setTransformOption, transformOption, editing
         opened={open4}
         close={() => {
           setOpen4(false);
+        }}
+        structure={structure}
+      />
+
+      <StagingBuilder
+        opened={open5}
+        close={() => {
+          setOpen5(false);
         }}
         structure={structure}
       />

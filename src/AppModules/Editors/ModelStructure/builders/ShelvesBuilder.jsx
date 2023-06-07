@@ -43,7 +43,7 @@ export function ShelvesBuilder({ opened, close }) {
     const ret = (
       <TextInput
         label={t("editor.modelStructure.label." + field)}
-        placeholder={t("editor.modelStructure.placeholder." + field)}
+        placeholder={t("editor.modelStructure.placeholder.aValue")}
         mt="xs"
         {...form.getInputProps(field)}
       />
@@ -57,7 +57,7 @@ export function ShelvesBuilder({ opened, close }) {
       <TextInput
         type={"number"}
         label={t("editor.modelStructure.label." + field)}
-        placeholder={t("editor.modelStructure.placeholder." + field)}
+        placeholder={t("editor.modelStructure.placeholder.aValue")}
         mt="xs"
         {...form.getInputProps(field)}
       />
@@ -70,7 +70,7 @@ export function ShelvesBuilder({ opened, close }) {
     const ret = (
       <NumberInput
         label={t("editor.modelStructure.label." + field)}
-        placeholder={t("editor.modelStructure.placeholder." + field)}
+        placeholder={t("editor.modelStructure.placeholder.aValue")}
         mt="xs"
         {...form.getInputProps(field)}
       />
@@ -119,7 +119,7 @@ export function ShelvesBuilder({ opened, close }) {
           </Grid>
 
           <Group position="right">
-            <Button type="submit">{t("button.create")}</Button>
+            <Button type="submit" mt={"xs"}>{t("button.create")}</Button>
           </Group>
         </form>
       </Stack>

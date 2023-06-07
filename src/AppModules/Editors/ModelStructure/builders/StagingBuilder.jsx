@@ -1,39 +1,33 @@
 import { TextInput, Button, NumberInput, Stack, Group, Grid, Modal } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
-import { STRUCTURE_TYPE_RACK } from "../../../../Constants/structures";
 import { useContext } from "react";
+import { STRUCTURE_TYPE_STAGING } from "../../../../Constants/structures";
 import { AbmStateContext } from "../Context";
 
-export function RackBuilder({ opened, close }) {
+export function StagingBuilder({ opened, close }) {
   const { onCreate } = useContext(AbmStateContext);
   const { t } = useTranslation();
 
   const form = useForm({
     initialValues: {
       name: "",
-      numberOfModules: 1,
-      beamLength: 2.44,
-      maxLoadHeight: 1.5,
-      uprightDepth: 1.2,
+      numberOfModulesX: 1,
+      numberOfModulesZ: 1,
+      moduleWidth: 1.5,
+      moduleDepth: 1.5,
       baseHeight: 0.01,
-      levels: 3,
-      columnSide: 0.1,
-      beamDepth: 0.065,
-      beamHeight: 0.1,
+      separation: 0.05,
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
-      numberOfModules: (val) => (val ? null : t("validation.required")),
-      beamLength: (val) => (val ? null : t("validation.required")),
-      maxLoadHeight: (val) => (val ? null : t("validation.required")),
-      uprightDepth: (val) => (val ? null : t("validation.required")),
+      numberOfModulesX: (val) => (val ? null : t("validation.required")),
+      numberOfModulesZ: (val) => (val ? null : t("validation.required")),
+      moduleWidth: (val) => (val ? null : t("validation.required")),
+      moduleDepth: (val) => (val ? null : t("validation.required")),
       baseHeight: (val) => (val ? null : t("validation.required")),
-      levels: (val) => (val ? null : t("validation.required")),
-      beamDepth: (val) => (val ? null : t("validation.required")),
-      beamHeight: (val) => (val ? null : t("validation.required")),
-      columnSide: (val) => (val ? null : t("validation.required")),
+      separation: (val) => (val ? null : t("validation.required")),
     },
   });
 
@@ -78,11 +72,11 @@ export function RackBuilder({ opened, close }) {
   };
 
   return (
-    <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.racking")}>
+    <Modal opened={opened} onClose={close} title={t("editor.modelStructure.items.racking.staging")}>
       <Stack>
         <form
           onSubmit={form.onSubmit((values) => {
-            onCreate(values, STRUCTURE_TYPE_RACK);
+            onCreate(values, STRUCTURE_TYPE_STAGING);
             close();
           })}
         >
@@ -93,29 +87,26 @@ export function RackBuilder({ opened, close }) {
           <Grid>
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
-                {createNumberControlField("numberOfModules")}
-                {createNumberField("beamLength")}
-                {createNumberField("columnSide")}
+                {createNumberControlField("numberOfModulesX")}
+                {createNumberField("moduleWidth")}
               </Stack>
             </Grid.Col>
 
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
-                {createNumberField("maxLoadHeight")}
-                {createNumberField("beamHeight")}
+                {createNumberControlField("numberOfModulesZ")}
+                {createNumberField("moduleDepth")}
+              </Stack>
+            </Grid.Col>
+
+            <Grid.Col span={4}>
+              <Stack align="center" justify="flex-start">
                 {createNumberField("baseHeight")}
-              </Stack>
-            </Grid.Col>
-
-            <Grid.Col span={4}>
-              <Stack align="center" justify="flex-start">
-                {createNumberField("uprightDepth")}
-                {createNumberField("beamDepth")}
-                {createNumberControlField("levels")}
+                {createNumberField("separation")}
               </Stack>
             </Grid.Col>
           </Grid>
-
+          
           <Group position="right">
             <Button type="submit" mt={"xs"}>{t("button.create")}</Button>
           </Group>

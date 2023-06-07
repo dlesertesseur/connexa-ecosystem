@@ -873,7 +873,7 @@
         "levels": "Niveles",
         "uprightDepth": "Profundidad",
         "beamLength": "Largo (viga)",
-        "columnSide": "Ancho/Espe. columna",
+        "columnSide": "Ancho/Espe. col.",
         "beamHeight": "Alto viga",
         "beamDepth": "Prof. viga",
         "numberOfModulesX": "Modulos en (X)",
@@ -883,11 +883,21 @@
         "type":"Tipo",
         "dimx":"Ancho",
         "dimy":"Alto",
-        "dimz":"Prof."
-
+        "dimz":"Prof.",
+        "positionx":"Pos-X (mts)",
+        "positiony":"Pos-Y (mts)",
+        "positionz":"Pos-Z (mts)",
+        "rotationx":"Rot-X (gr)",
+        "rotationy":"Rot-Y (gr)",
+        "rotationz":"Rot-Z (gr)",
+        "dimensionx":"Dim-X (mts)",
+        "dimensiony":"Dim-Y (mts)",
+        "dimensionz":"Dim-Z (mts)",
+        "separation":"Separación"
       },
       "placeholder": {
-        "name": "Un nombre"
+        "name": "Un nombre",
+        "aValue": "un valor"
       },
       "dialog": {
         "structureBuilder": "Constructor de estructuras"
@@ -900,7 +910,8 @@
           "basic": "Basico",
           "selective": "Selectivo",
           "pushBack": "Push Back",
-          "palletFlow": "Pallet Flow"
+          "palletFlow": "Pallet Flow",
+          "staging":"Staging"
         }
       }
     }

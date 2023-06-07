@@ -134,6 +134,7 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
       token: user.token,
       siteId: site.id,
       floorId: floor.id,
+      types:"2,10"
     };
 
     setUnlockEditStorageStructures(false);

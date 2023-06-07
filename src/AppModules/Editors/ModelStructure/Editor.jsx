@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { buildModelStructure } from "../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
 import EditorToolbar from "./EditorToolbar";
-import PartInspector from "./Modal/PartInspector";
+import PartInspector from "./modal/PartInspector";
 
 const Editor = ({ structure, editing }) => {
   const [model, setModel] = useState(null);

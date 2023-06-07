@@ -45,6 +45,7 @@ const Viewer = ({ updateTime = 3000, editingEnabled = false, inspectRack, drawCe
       token: user.token,
       siteId: site.id,
       floorId: floor.id,
+      types:"2,10"
     };
 
     setLoading(true);

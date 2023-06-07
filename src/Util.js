@@ -88,6 +88,12 @@ function getModulePartColor(type) {
     case 5:
       color = "#F8F9D7";
       break;
+    case 10:
+      color = "#C0B99D";
+      break;
+    case 11:
+      color = "#F8F9D7";
+      break;
     case 12:
       color = "#0000FF";
       break;

@@ -41,6 +41,7 @@ const DynamicApp = ({ app }) => {
       token: user.token,
       siteId: site,
       floorId: floor,
+      types:"2,10"
     };
 
     initilizeContext();

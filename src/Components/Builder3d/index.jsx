@@ -372,8 +372,8 @@ const buildEnvironmentLOD = (racks, setSelectedPart) => {
 
   for (let index = 0; index < racks.length; index++) {
     const rack = racks[index];
-    //env.push(buildStructure(rack, setSelectedPart));
-    env.push(buildStructureLOD(rack, setSelectedPart));
+    env.push(buildStructure(rack, setSelectedPart));
+    //env.push(buildStructureLOD(rack, setSelectedPart));
   }
 
   return env;

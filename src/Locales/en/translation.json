@@ -896,10 +896,21 @@
         "type":"Type",
         "dimx":"Width",
         "dimy":"Height",
-        "dimz":"Depth"
+        "dimz":"Depth",
+        "positionx":"Pos-X (mts)",
+        "positiony":"Pos-Y (mts)",
+        "positionz":"Pos-Z (mts)",
+        "rotationx":"Rot-X (deg)",
+        "rotationy":"Rot-Y (deg)",
+        "rotationz":"Rot-Z (deg)",
+        "dimensionx":"Dim-X (mts)",
+        "dimensiony":"Dim-Y (mts)",
+        "dimensionz":"Dim-Z (mts)",
+        "separation":"Separation"
       },
       "placeholder":{
-        "name": "a name"
+        "name": "a name",
+        "aValue": "a value"
       },
       "dialog": {
         "structureBuilder": "Structure builder"
@@ -912,7 +923,8 @@
           "basic":"Basic",
           "selective":"Selective",
           "pushBack":"Push Back",
-          "palletFlow":"Pallet Flow"
+          "palletFlow":"Pallet Flow",
+          "staging":"Staging"
         }
       }
     }

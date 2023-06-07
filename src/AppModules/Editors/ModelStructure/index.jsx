@@ -10,8 +10,9 @@ import { AbmStateContext } from "./Context";
 import { FilterControl } from "./FilterControl";
 import { findAllRacksHeaders } from "../../../DataAccess/Racks";
 import StructureMetaDataBuilder from "../../../Components/Builder3d/StructureMetaDataBuilder";
-import { STRUCTURE_TYPE_RACK, STRUCTURE_TYPE_SHELVING, STRUCTURE_TYPE_RACK_BASIC } from "../../../Constants/structures";
+import { STRUCTURE_TYPE_RACK, STRUCTURE_TYPE_SHELVING, STRUCTURE_TYPE_RACK_BASIC, STRUCTURE_TYPE_STAGING } from "../../../Constants/structures";
 import RackBasicMetaDataBuilder from "../../../Components/Builder3d/RackBasicMetaDataBuilder";
+import StagingMetaDataBuilder from "../../../Components/Builder3d/StagingMetaDataBuilder";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -86,6 +87,12 @@ const DynamicApp = ({ app }) => {
         model = RackBasicMetaDataBuilder.createRack(values);
         console.log("STRUCTURE_TYPE_RACK_BASIC -> ", model);
         break;
+
+      case STRUCTURE_TYPE_STAGING:
+        model = StagingMetaDataBuilder.createRack(values);
+        console.log("STRUCTURE_TYPE_STAGING -> ", model);
+        break;
+
       default:
         break;
     }

@@ -16,7 +16,7 @@ const Editor = () => {
   const onSelect = (event) => {
     if (event.intersections && event.intersections.length > 0) {
       const obj = event.intersections[0].object;
-      setSelectedPart(obj);
+      //setSelectedPart(obj);
     }
   };
 
@@ -65,13 +65,10 @@ const Editor = () => {
         <EditorToolbar />
       </Group>
       <Canvas camera={{ position: [5, 5, 5], fov: 25 }}>
-        <scene background={new THREE.Color(0xff0000)}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} />
           {/* <Grid infiniteGrid position={[0, 0, 0]} /> */}
-          <axesHelper args={[10]} />
           {model}
-        </scene>
         {/* <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault /> */}
         <MapControls
           ref={controlRef}
