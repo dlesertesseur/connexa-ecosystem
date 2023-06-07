@@ -849,7 +849,8 @@
         "racking":"Nuevo rack",
         "shelving":"Nueva estanteria",
         "objectList":"Inpector de objetos",
-        "assignNames":"Asignar nombres"
+        "assignNames":"Asignar nombres",
+        "partInspector":"Inspector de partes"
       },
       "label": {
         "name": "Nombre",
@@ -879,7 +880,11 @@
         "numberOfModulesZ": "Modulos en (Z)",
         "columnHeight":"Alto de columna",
         "module": "Modulo",
-        "type":"Tipo"
+        "type":"Tipo",
+        "dimx":"Ancho",
+        "dimy":"Alto",
+        "dimz":"Prof."
+
       },
       "placeholder": {
         "name": "Un nombre"

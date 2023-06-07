@@ -22,6 +22,7 @@ function Box({
   opacity = 1,
   transparent = false,
   onClick,
+  onDlbClick,
   userData,
 
 }) {
@@ -45,6 +46,7 @@ function Box({
           onClick(event, ref);
         }
       }}
+      onDoubleClick={onDlbClick}
       userData={userData}
     >
       <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
@@ -57,7 +59,7 @@ function Box({
   );
 }
 
-function buildModelStructure(structure, setSelectedPart) {
+function buildModelStructure(structure, setSelectedPart, onDlbClick) {
   const modules = structure.modules;
   const frames = structure.frames;
 
@@ -110,6 +112,7 @@ function buildModelStructure(structure, setSelectedPart) {
                   opacity={part.type === 5 ? 0.5 : 1}
                   transparent={part.type === 5 ? true : false}
                   onClick={setSelectedPart}
+                  onDlbClick={onDlbClick}
                   userData={part}
                 />
               );

@@ -1,15 +1,18 @@
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Grid, TransformControls } from "@react-three/drei";
+import { OrbitControls, Grid, TransformControls, Center } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { buildModelStructure } from "../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
 import EditorToolbar from "./EditorToolbar";
+import PartInspector from "./Modal/PartInspector";
 
 const Editor = ({ structure, editing }) => {
   const [model, setModel] = useState(null);
   const [selectedPart, setSelectedPart] = useState(null);
   const [transformOption, setTransformOption] = useState("translate");
+  const [partInspectorOpen, setPartInspectorOpen] = useState(false);
+
   const canvasRef = useRef();
 
   const onSelect = (event, ref) => {
@@ -22,9 +25,18 @@ const Editor = ({ structure, editing }) => {
     // canvasRef.current.add()
   };
 
+  const onDlbClick = (event) => {
+    if (event.intersections && event.intersections.length > 0) {
+      const obj = event.intersections[0].object;
+      if (obj) {
+        setPartInspectorOpen(true);
+      }
+    }
+  };
+
   useEffect(() => {
     if (structure) {
-      const ret = buildModelStructure(structure, onSelect);
+      const ret = buildModelStructure(structure, onSelect, onDlbClick);
       setSelectedPart(null);
       setModel(ret);
     }
@@ -85,6 +97,14 @@ const Editor = ({ structure, editing }) => {
           />
         ) : null}
       </Canvas>
+
+      <PartInspector
+        opened={partInspectorOpen}
+        close={() => {
+          setPartInspectorOpen(false);
+        }}
+        part={selectedPart}
+      />
     </Stack>
   );
 };

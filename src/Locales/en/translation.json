@@ -862,7 +862,8 @@
         "racking":"New rack",
         "shelving":"New shelves",
         "objectList":"Object inspector",
-        "assignNames":"Assign names"
+        "assignNames":"Assign names",
+        "partInspector":"Part inspector"
       },
       "label":{
         "name": "Name",
@@ -892,7 +893,10 @@
         "numberOfModulesZ": "Modules (Z)",
         "columnHeight":"Column height",
         "module": "Module",
-        "type":"Type"
+        "type":"Type",
+        "dimx":"Width",
+        "dimy":"Height",
+        "dimz":"Depth"
       },
       "placeholder":{
         "name": "a name"

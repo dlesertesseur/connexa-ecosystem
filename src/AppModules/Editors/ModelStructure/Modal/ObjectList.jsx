@@ -1,4 +1,4 @@
-import { Accordion, Button, Group, Modal, ScrollArea, Stack, Table } from "@mantine/core";
+import { Accordion, Button, Group, Modal, ScrollArea, Stack, Table, UnstyledButton } from "@mantine/core";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
@@ -23,8 +23,10 @@ const ObjectList = ({ opened, close, structure }) => {
         const content = parts.map((part) => {
           return (
             <tr key={part.id}>
-              <td>{part.name}</td>
-              <td>{part.type}</td>
+              <td><UnstyledButton>{part.name}</UnstyledButton></td>
+              <td>{`${part.dimensionx.toFixed(2)}m`}</td>
+              <td>{`${part.dimensiony.toFixed(2)}m`}</td>
+              <td>{`${part.dimensionz.toFixed(2)}m`}</td>
             </tr>
           );
         });
@@ -33,11 +35,13 @@ const ObjectList = ({ opened, close, structure }) => {
           <Accordion.Item value={name} key={module.id}>
             <Accordion.Control>{name}</Accordion.Control>
             <Accordion.Panel>
-              <Table>
+              <Table striped highlightOnHover withBorder withColumnBorders>
                 <thead>
                   <tr>
                     <th>{t("editor.modelStructure.label.name")}</th>
-                    <th>{t("editor.modelStructure.label.type")}</th>
+                    <th>{t("editor.modelStructure.label.dimx")}</th>
+                    <th>{t("editor.modelStructure.label.dimy")}</th>
+                    <th>{t("editor.modelStructure.label.dimz")}</th>
                   </tr>
                 </thead>
                 <tbody>{content}</tbody>
