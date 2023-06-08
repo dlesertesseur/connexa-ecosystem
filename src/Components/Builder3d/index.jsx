@@ -18,7 +18,7 @@ function getColor(obj) {
   if (obj.color) {
     color = obj.color;
   } else {
-    color = materialsMap.get(frame.type);
+    color = materialsMap.get(obj.type);
   }
   return color;
 }
