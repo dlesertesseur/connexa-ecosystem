@@ -22,7 +22,7 @@ const ObjectList = ({ opened, close, structure }) => {
 
         const content = parts.map((part) => {
           return (
-            <tr key={part.id}>
+            <tr key={part.id ? part.id : part.key}>
               <td><UnstyledButton>{part.name}</UnstyledButton></td>
               <td>{`${part.dimensionx.toFixed(2)}m`}</td>
               <td>{`${part.dimensiony.toFixed(2)}m`}</td>
@@ -32,7 +32,7 @@ const ObjectList = ({ opened, close, structure }) => {
         });
 
         return (
-          <Accordion.Item value={name} key={module.id}>
+          <Accordion.Item value={name} key={module.id ? module.id : module.key}>
             <Accordion.Control>{name}</Accordion.Control>
             <Accordion.Panel>
               <Table striped highlightOnHover withBorder withColumnBorders>

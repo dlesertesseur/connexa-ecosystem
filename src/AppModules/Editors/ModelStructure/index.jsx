@@ -85,12 +85,10 @@ const DynamicApp = ({ app }) => {
 
       case STRUCTURE_TYPE_RACK_BASIC:
         model = RackBasicMetaDataBuilder.createRack(values);
-        console.log("STRUCTURE_TYPE_RACK_BASIC -> ", model);
         break;
 
       case STRUCTURE_TYPE_STAGING:
         model = StagingMetaDataBuilder.createRack(values);
-        console.log("STRUCTURE_TYPE_STAGING -> ", model);
         break;
 
       default:
