@@ -9,7 +9,7 @@ import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/S
 import { FilterControl } from "../Controls/FilterControl";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 
-const Viewer = ({ updateTime = 3000, editingEnabled = false, inspectRack, drawCenter = false, app }) => {
+const Viewer = ({ app }) => {
   const [actorId, setActorId] = useState(null);
   const [siteId, setSiteId] = useState(null);
   const [floorId, setFloorId] = useState(null);
@@ -39,32 +39,6 @@ const Viewer = ({ updateTime = 3000, editingEnabled = false, inspectRack, drawCe
       //   setOperatorsStatus(false);
     }
   };
-
-  // const loadData = (site, floor) => {
-  //   const params = {
-  //     token: user.token,
-  //     siteId: site.id,
-  //     floorId: floor.id,
-  //     types:"2,10"
-  //   };
-
-  //   setLoading(true);
-
-  //   findLayoutByFloorId(params).then((ret) => {
-
-  //     const n = (1.0 / ret[0].pixelmeterrelation) * PIXEL_METER_RELATION;
-  //     setPixelmeterrelation(n);
-
-  //     setLayouts(ret);
-  //     findRacksByZoneId(params).then((ret) => {
-  //       setRacks(ret);
-  //       findAllLayoutMarkersById(params).then((ret) => {
-  //         setMarkers(ret);
-  //         setLoading(false);
-  //       });
-  //     });
-  //   });
-  // };
 
   const loadData = async (site, floor) => {
     const params = {

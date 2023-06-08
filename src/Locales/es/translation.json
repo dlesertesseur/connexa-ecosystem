@@ -64,7 +64,9 @@
     "backStep": "Anterior",
     "nextStep": "Proximo",
     "objectInspector": "Inspector de objetos",
-    "assignNames":"Asignar nombres"
+    "assignNames":"Asignar nombres",
+    "options":"Options",
+    "menu":"Menu"
   },
 
   "label": {
@@ -157,8 +159,9 @@
     "translate": "Trasladar",
     "rotate": "Rotar",
     "scale": "Escalar",
-    "jsonData":"información",
-    "reverseAssignment":"Asignación inversa"
+    "informationData":"información",
+    "reverseAssignment":"Asignación inversa",
+    "options":"Opciones"
   },
 
   "placeholder": {
@@ -167,7 +170,7 @@
     "firstName": "Su nombre",
     "lastName": "Su apellido",
     "search": "Buscar por cualquier campo",
-    "jsonData":"La información debe suministrarse en formato json"
+    "informationData":"La información debe suministrar separada por salto de linea, espacio o coma"
   },
 
   "language": {

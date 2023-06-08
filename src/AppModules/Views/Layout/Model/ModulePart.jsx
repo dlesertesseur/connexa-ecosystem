@@ -12,7 +12,7 @@ const ModulePart = ({ name, x, y, width, height, type, selected = false }) => {
         name={name}
         width={width}
         height={height}
-        fill={getModulePartColor(type)}
+        fill={getModulePartColor({type:type})}
         stroke={selected ? getModulePartSelectedColor(type) : getModulePartStrokeColor(type)}
         strokeWidth={selected ? 0.5 : 0.2}
       />

@@ -1,5 +1,16 @@
 import React from "react";
-import { Accordion, Button, Checkbox, Group, JsonInput, Modal, SegmentedControl, Stack } from "@mantine/core";
+import {
+  Accordion,
+  Button,
+  Checkbox,
+  Group,
+  JsonInput,
+  LoadingOverlay,
+  Modal,
+  SegmentedControl,
+  Stack,
+  Textarea,
+} from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -7,52 +18,60 @@ import { IconPlus } from "@tabler/icons-react";
 
 const AssignNames = ({ opened, close, structure }) => {
   const { t } = useTranslation();
-  const [rows, setRows] = useState([]);
+  const [checked, setChecked] = useState(false);
+  const [data, setData] = useState("");
+  const [processing, setProcessing] = useState(false);
 
-  // useEffect(() => {
-  //   if (structure) {
-  //     const modules = structure.modules;
+  const assignNames = () => {
+    let arrData = data.split(/[\n\r,]+/);
 
-  //     modules.sort((a,b) => a.number - b.number)
+    setProcessing(true);
+    
+    if(checked){
+      arrData = arrData.reverse();
+    }
+    
+    const modules = structure.modules;
+    let valuesIdx = 0;
 
-  //     const rows = modules.map((module) => {
-  //       const name = t("editor.modelStructure.label.module") + "-" + module.number;
-  //       const parts = module.parts;
-  //       parts.sort((a,b) => a.positiony - b.positiony);
+    for (let index = 0; index < modules.length && index < arrData.length; index++) {
+      const module = modules[index];
+      const parts = module.parts;
 
-  //       const content = parts.map((part) => {
-  //         return (
-  //           <tr key={part.id}>
-  //             <td>{part.name}</td>
-  //             <td>{part.type}</td>
-  //           </tr>
-  //         );
-  //       });
+      parts.sort((a,b) => a.positionx - b.positionx)
 
-  //       return (
-
-  //       );
-  //     });
-
-  //     setRows(rows);
-  //   }
-  // }, [structure]);
+      for (let index = 0; index < parts.length; index++, valuesIdx++) {
+        if (valuesIdx < arrData.length) {
+          const part = parts[index];
+          part.name = arrData[valuesIdx];
+        }
+     }
+    }
+    setProcessing(false);
+    close();
+  };
 
   return (
     <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.assignNames")}>
       <Stack justify="flex-start">
-        <JsonInput
-          label={t("label.jsonData")}
-          placeholder={t("placeholder.jsonData")}
-          validationError={t("error.jsonData")}
-          formatOnBlur
+        <LoadingOverlay visible={processing} overlayBlur={2} />
+        <Textarea
+          label={t("label.informationData")}
+          placeholder={t("placeholder.informationData")}
           minRows={14}
+          value={data}
+          onChange={(event) => setData(event.currentTarget.value)}
         />
-        <Checkbox label={t("label.reverseAssignment")} />
+        <Checkbox
+          label={t("label.reverseAssignment")}
+          checked={checked}
+          onChange={(event) => setChecked(event.currentTarget.checked)}
+        />
         <Group position="right">
           <Button
+            disabled={!data}
             onClick={() => {
-              close();
+              assignNames();
             }}
           >
             {t("button.assignNames")}

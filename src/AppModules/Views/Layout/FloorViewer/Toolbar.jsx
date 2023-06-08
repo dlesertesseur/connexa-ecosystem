@@ -3,6 +3,7 @@ import { IconHeartbeat } from "@tabler/icons-react";
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
 import { useTranslation } from "react-i18next";
+import ActionsMenu from "./ActionsMenu";
 
 const Toolbar = ({ onOption = null, children }) => {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ const Toolbar = ({ onOption = null, children }) => {
       })}
     >
       <Group>
-        <Tooltip multiline width={200} label={t("tooltip.operatorsStatus")} position="bottom" withArrow>
+        {/* <Tooltip multiline width={200} label={t("tooltip.operatorsStatus")} position="bottom" withArrow>
           <ActionIcon variant="filled" color={"blue"} size={"md"}>
             <IconHeartbeat
               size={20}
@@ -32,7 +33,8 @@ const Toolbar = ({ onOption = null, children }) => {
               }}
             />
           </ActionIcon>
-        </Tooltip>
+        </Tooltip> */}
+        <ActionsMenu/>
       </Group>
       <Group>{children}</Group>
     </Group>

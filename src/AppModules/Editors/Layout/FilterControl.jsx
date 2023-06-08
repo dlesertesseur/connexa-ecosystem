@@ -52,7 +52,7 @@ function FilterControl() {
   return (
     <Popover width={300} position="bottom-start" withArrow shadow="md" opened={opened}>
       <Popover.Target>
-        <Button onClick={() => setOpened((o) => !o)}>
+        <Button onClick={() => setOpened((o) => !o)} size="xs">
           {t("label.crud.filter")}
         </Button>
       </Popover.Target>

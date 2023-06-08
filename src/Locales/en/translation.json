@@ -64,7 +64,9 @@
     "backStep": "Back",
     "nextStep": "Next step", 
     "objectInspector": "Object inspector",
-    "assignNames":"Assign names"
+    "assignNames":"Assign names",
+    "options":"Options",
+    "menu":"Menu"
   },
 
   "label": {
@@ -157,8 +159,9 @@
     "translate": "Translate",
     "rotate": "Rotate",
     "scale": "Scale",
-    "jsonData":"Information data",
-    "reverseAssignment":"Reverse assignment"
+    "informationData":"Information data",
+    "reverseAssignment":"Reverse assignment",
+    "options":"Options"
   },
 
   "placeholder": {
@@ -167,7 +170,7 @@
     "firstName": "Your first name",
     "lastName": "Your last name",
     "search": "Search by any field",
-    "jsonData":"The information must be supplied in json format"
+    "informationData":"The information must be provided separated by line break, space or comma."
   },
 
   "language": {
