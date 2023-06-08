@@ -101,6 +101,7 @@ class StagingMetaDataBuilder {
       dimensiony: parseFloat(values.baseHeight),
       dimensionz: parseFloat(values.moduleDepth),
       type: 10,
+      color:"#00ff00",
       subspaces: [],
     };
 

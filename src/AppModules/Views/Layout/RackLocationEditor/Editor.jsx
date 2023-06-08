@@ -57,7 +57,7 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
   }, [attrs]);
 
   const onActorDblClick = (e, id) => {
-    const marker = markers.find((r) => r.id === id);
+    const marker = markers?.find((r) => r.id === id);
     if (marker) {
       setSelectedMarker(marker);
       setOpened(true);
@@ -66,7 +66,7 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
   };
 
   const onSelectActor = (id) => {
-    const rack = racks.find((r) => r.id === id);
+    const rack = racks?.find((r) => r.id === id);
     if (rack) {
       setSelectedRack(rack);
     }

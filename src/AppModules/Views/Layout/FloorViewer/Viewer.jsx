@@ -9,7 +9,7 @@ import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/S
 import { FilterControl } from "../Controls/FilterControl";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 
-const Viewer = ({ updateTime = 3000, editingEnabled = false, inspectRack, drawCenter = false, app}) => {
+const Viewer = ({ updateTime = 3000, editingEnabled = false, inspectRack, drawCenter = false, app }) => {
   const [actorId, setActorId] = useState(null);
   const [siteId, setSiteId] = useState(null);
   const [floorId, setFloorId] = useState(null);
@@ -40,39 +40,63 @@ const Viewer = ({ updateTime = 3000, editingEnabled = false, inspectRack, drawCe
     }
   };
 
-  const loadData = (site, floor) => {
+  // const loadData = (site, floor) => {
+  //   const params = {
+  //     token: user.token,
+  //     siteId: site.id,
+  //     floorId: floor.id,
+  //     types:"2,10"
+  //   };
+
+  //   setLoading(true);
+
+  //   findLayoutByFloorId(params).then((ret) => {
+
+  //     const n = (1.0 / ret[0].pixelmeterrelation) * PIXEL_METER_RELATION;
+  //     setPixelmeterrelation(n);
+
+  //     setLayouts(ret);
+  //     findRacksByZoneId(params).then((ret) => {
+  //       setRacks(ret);
+  //       findAllLayoutMarkersById(params).then((ret) => {
+  //         setMarkers(ret);
+  //         setLoading(false);
+  //       });
+  //     });
+  //   });
+  // };
+
+  const loadData = async (site, floor) => {
     const params = {
       token: user.token,
       siteId: site.id,
       floorId: floor.id,
-      types:"2,10"
+      types: "2,10",
     };
 
     setLoading(true);
 
-    findLayoutByFloorId(params).then((ret) => {
-      
-      const n = (1.0 / ret[0].pixelmeterrelation) * PIXEL_METER_RELATION;
-      setPixelmeterrelation(n);
+    const layouts = await findLayoutByFloorId(params);
 
-      setLayouts(ret);
-      findRacksByZoneId(params).then((ret) => {
-        setRacks(ret);
-        findAllLayoutMarkersById(params).then((ret) => {
-          setMarkers(ret);
-          setLoading(false);
-        });
-      });
-    });
+    const n = (1.0 / layouts[0].pixelmeterrelation) * PIXEL_METER_RELATION;
+    setPixelmeterrelation(n);
+    setLayouts(layouts);
+
+    const racks = await findRacksByZoneId(params);
+    setRacks(racks);
+
+    const markerts = await findAllLayoutMarkersById(params);
+    setMarkers(markerts);
+    setLoading(false);
   };
 
   return (
     <Stack>
-      <ViewHeader app={app}/>
+      <ViewHeader app={app} />
       <Stack
         justify="flex-start"
         spacing="0"
-        sx={(theme, bodyContainerWidth) => ({
+        sx={(theme) => ({
           backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[2],
           height: "100%",
           border: "solid 1px" + theme.colors.gray[3],

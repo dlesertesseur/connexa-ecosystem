@@ -13,7 +13,7 @@ const Frame = ({ name, x, y, width, height, type, boundingBox = false, center = 
         name={name}
         width={width}
         height={height}
-        fill={getModulePartColor(type)}
+        fill={getModulePartColor({type:type})}
         stroke={getModulePartStrokeColor(type)}
         strokeWidth={0.2}
       />

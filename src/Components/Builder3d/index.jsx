@@ -13,6 +13,16 @@ materialsMap.set(11, "orange");
 materialsMap.set(12, "blue");
 materialsMap.set(100, "yellow");
 
+function getColor(obj) {
+  let color = null;
+  if (obj.color) {
+    color = obj.color;
+  } else {
+    color = materialsMap.get(frame.type);
+  }
+  return color;
+}
+
 function Box({
   name,
   position,
@@ -24,7 +34,6 @@ function Box({
   onClick,
   onDlbClick,
   userData,
-
 }) {
   const ref = useRef();
   const [selected, setSelected] = useState(false);
@@ -41,7 +50,7 @@ function Box({
         )
       }
       onClick={(event) => {
-        if(onClick){
+        if (onClick) {
           setSelected(!selected);
           onClick(event, ref);
         }
@@ -71,7 +80,7 @@ function buildModelStructure(structure, setSelectedPart, onDlbClick) {
       rotateY={(structure.rotationy * 3.14) / 180}
     >
       {frames?.map((frame) => {
-        const matColor = materialsMap.get(frame.type);
+        const matColor = getColor(frame);
         const box = (
           <Box
             key={frame.id ? frame.id : frame.key}
@@ -100,7 +109,7 @@ function buildModelStructure(structure, setSelectedPart, onDlbClick) {
             }
           >
             {module?.parts.map((part) => {
-              const matPart = materialsMap.get(part.type);
+              const matPart = getColor(part);
               const bPart = (
                 <Box
                   key={part.id ? part.id : part.key}
@@ -125,39 +134,6 @@ function buildModelStructure(structure, setSelectedPart, onDlbClick) {
   );
 }
 
-// function buildStructureLOD(structure) {
-//   const parts = structure.parts;
-//   const grStructure = new THREE.Group();
-//   const grLow = new THREE.Group();
-//   const grHigh = new THREE.Group();
-
-//   grStructure.name = structure.name;
-
-//   for (let i = 0; i < parts.length; i++) {
-//     const part = parts[i];
-//     switch (part.type) {
-//       case "BASE":
-//       case "STRUCTURE":
-//         grLow.add(createStructurePart(part));
-//       case "OTHER":
-//         grHigh.add(createStructurePart(part));
-//     }
-//   }
-
-//   const lod = new THREE.LOD();
-//   lod.addLevel(grHigh, 100);
-//   lod.addLevel(grLow, 500);
-//   lod.addLevel(createStructure(structure), 2000);
-
-//   grStructure.add(lod);
-//   grStructure.position.x = structure.pos_x * pixelMeterRelation;
-//   grStructure.position.y = structure.pos_y * pixelMeterRelation;
-//   grStructure.position.z = structure.pos_z * pixelMeterRelation;
-//   grStructure.rotateY((structure.rot * 3.14) / 180);
-
-//   group.add(grStructure);
-// }
-
 function buildStructure(structure, setSelectedPart) {
   const modules = structure.modules;
   const frames = structure.frames;
@@ -176,7 +152,7 @@ function buildStructure(structure, setSelectedPart) {
       }
     >
       {frames?.map((frame) => {
-        const matColor = materialsMap.get(frame.type);
+        const matColor = getColor(frame);
         const box = (
           <Box
             key={frame.id ? frame.id : frame.key}
@@ -205,7 +181,7 @@ function buildStructure(structure, setSelectedPart) {
             }
           >
             {module?.parts.map((part) => {
-              const matPart = materialsMap.get(part.type);
+              const matPart = getColor(part);
               const bPart = (
                 <Box
                   key={part.id ? part.id : part.key}
@@ -229,19 +205,19 @@ function buildStructure(structure, setSelectedPart) {
   );
 }
 
-function buildStructureLOD(structure, setSelectedPart) {
-  const grHigh = buildHighLevel(structure, setSelectedPart);
-  const grLow = buildLowLevel(structure, setSelectedPart);
-  const grBase = buildBaseLevel(structure, setSelectedPart);
+// function buildStructureLOD(structure, setSelectedPart) {
+//   const grHigh = buildHighLevel(structure, setSelectedPart);
+//   const grLow = buildLowLevel(structure, setSelectedPart);
+//   const grBase = buildBaseLevel(structure, setSelectedPart);
 
-  return (
-    <Detailed distances={[0, 50, 300]}>
-      {grHigh}
-      {grLow}
-      {grBase}
-    </Detailed>
-  );
-}
+//   return (
+//     <Detailed distances={[0, 50, 300]}>
+//       {grHigh}
+//       {grLow}
+//       {grBase}
+//     </Detailed>
+//   );
+// }
 
 const buildHighLevel = (structure, setSelectedPart) => {
   const modules = structure.modules;
@@ -260,7 +236,7 @@ const buildHighLevel = (structure, setSelectedPart) => {
       }
     >
       {frames?.map((frame) => {
-        const matColor = materialsMap.get(frame.type);
+        const matColor = getColor(frame);
         const box = (
           <Box
             // key={frame.id ? frame.id : frame.key}
@@ -289,7 +265,7 @@ const buildHighLevel = (structure, setSelectedPart) => {
             }
           >
             {module?.parts.map((part) => {
-              const matPart = materialsMap.get(part.type);
+              const matPart = getColor(part);
               const bPart = (
                 <Box
                   // key={part.id ? part.id : part.key}
@@ -329,7 +305,7 @@ const buildLowLevel = (structure, setSelectedPart) => {
       }
     >
       {frames?.map((frame) => {
-        const matColor = materialsMap.get(frame.type);
+        const matColor = getColor(frame);
         const box = (
           <Box
             // key={frame.id ? frame.id : frame.key}
@@ -346,26 +322,26 @@ const buildLowLevel = (structure, setSelectedPart) => {
   );
 };
 
-const buildBaseLevel = (structure, setSelectedPart) => {
-  const matColor = materialsMap.get(100);
-  return (
-    <Box
-      // key={structure.id ? structure.id : structure.key}
-      name={structure.name}
-      position={[structure.positionx, structure.positiony, structure.positionz]}
-      dimension={[structure.dimensionx, structure.dimensiony, structure.dimensionz]}
-      rotations={
-        new THREE.Euler(
-          THREE.MathUtils.degToRad(structure.rotationx),
-          THREE.MathUtils.degToRad(structure.rotationy),
-          THREE.MathUtils.degToRad(structure.rotationz)
-        )
-      }
-      color={matColor}
-      userData={structure}
-    />
-  );
-};
+// const buildBaseLevel = (structure, setSelectedPart) => {
+//   const matColor = materialsMap.get(100);
+//   return (
+//     <Box
+//       // key={structure.id ? structure.id : structure.key}
+//       name={structure.name}
+//       position={[structure.positionx, structure.positiony, structure.positionz]}
+//       dimension={[structure.dimensionx, structure.dimensiony, structure.dimensionz]}
+//       rotations={
+//         new THREE.Euler(
+//           THREE.MathUtils.degToRad(structure.rotationx),
+//           THREE.MathUtils.degToRad(structure.rotationy),
+//           THREE.MathUtils.degToRad(structure.rotationz)
+//         )
+//       }
+//       color={matColor}
+//       userData={structure}
+//     />
+//   );
+// };
 
 const buildEnvironmentLOD = (racks, setSelectedPart) => {
   const env = [];

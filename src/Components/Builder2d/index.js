@@ -143,7 +143,7 @@ function buildModule(grModule, parts, number) {
       rotation: modulePart.rotationy,
       name: "M" + number.toString().padStart(2, "0"),
       stroke: getModulePartStrokeColor(modulePart.type),
-      fill: getModulePartColor(modulePart.type),
+      fill: getModulePartColor(modulePart),
       perfectDrawEnabled: true,
     });
 
@@ -189,7 +189,7 @@ function buildActorFrames(grActor, frames) {
       rotation: frame.rotationy,
       name: frame.name,
       stroke: getModulePartStrokeColor(frame.type),
-      fill: getModulePartColor(frame.type),
+      fill: getModulePartColor(frame),
       strokeWidth: 0.2,
       listening: false,
       perfectDrawEnabled: true,

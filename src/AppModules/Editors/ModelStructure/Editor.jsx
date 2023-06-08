@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Grid, TransformControls, Center } from "@react-three/drei";
+import { OrbitControls, Grid, TransformControls } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { buildModelStructure } from "../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
@@ -20,9 +20,6 @@ const Editor = ({ structure, editing }) => {
       const obj = event.intersections[0].object;
       setSelectedPart(obj);
     }
-
-    // console.log("canvasRef ->", canvasRef.current);
-    // canvasRef.current.add()
   };
 
   const onDlbClick = (event) => {
