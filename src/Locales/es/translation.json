@@ -919,7 +919,8 @@
 
   "tooltip": {
     "operatorsStatus": "Muestra la posicion y actividad que estan realizando los operarios en tiempo real",
-    "lockMove": "Bloquea el movimiento y la rotación de las estructuras de almacenamiento"
+    "lockMove": "Bloquea el movimiento y la rotación de las estructuras de almacenamiento",
+    "snapToGrid": "Alinear a la cuadricula"
   },
 
   "partType": {

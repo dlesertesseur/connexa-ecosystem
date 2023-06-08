@@ -4,9 +4,13 @@ import { IconRefresh, IconDeviceFloppy } from "@tabler/icons-react";
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import { RackLocationEditorContext } from "./Context";
 
-const Toolbar = ({ onOption = null, lockMove, setLockMove, children, disabled }) => {
+const Toolbar = ({ onOption = null, children, disabled }) => {
   const { t } = useTranslation();
+  const { unlockEditStorageStructures, setUnlockEditStorageStructures } =
+    useContext(RackLocationEditorContext);
 
   const handleOption = (option) => {
     if (onOption) {
@@ -47,7 +51,12 @@ const Toolbar = ({ onOption = null, lockMove, setLockMove, children, disabled })
       </Group>
 
       <Group px={"xs"} spacing={"xs"}>
-        <LockAction checked={lockMove} setChecked={setLockMove} toolTip={t("tooltip.lockMove")} disabled={disabled}/>
+        <LockAction
+          checked={unlockEditStorageStructures}
+          setChecked={setUnlockEditStorageStructures}
+          toolTip={t("tooltip.lockMove")}
+          disabled={disabled}
+        />
         {children}
       </Group>
     </Group>

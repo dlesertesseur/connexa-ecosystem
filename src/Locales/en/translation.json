@@ -931,7 +931,8 @@
   },
   "tooltip": {
     "operatorsStatus": "Shows the position and activity that operators are performing in real time",
-    "lockMove": "Blocks movement and rotation of storage structures"
+    "lockMove": "Blocks movement and rotation of storage structures",
+    "snapToGrid": "Snap to grid"
   },
 
   "partType": {

@@ -348,7 +348,7 @@ function buildRelocatableActors(stageRef, actors, onSelect, dragend, transformen
 
   trasformer.on("dragend", dragend);
   trasformer.on("transformend", transformend);
-
+  
   layer.add(trasformer);
   stageRef.add(layer);
 

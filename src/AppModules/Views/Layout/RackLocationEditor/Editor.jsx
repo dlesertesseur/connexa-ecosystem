@@ -17,6 +17,7 @@ import { IconTag } from "@tabler/icons-react";
 import { useWindowSize } from "../../../../Hook";
 import { useMediaQuery } from "@mantine/hooks";
 import TextEditor from "../../../../Components/TextEditor";
+import { RackLocationEditorContext } from "./Context";
 
 const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -35,7 +36,8 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
   const [opened, setOpened] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const wSize = useWindowSize();
-  const matches = useMediaQuery('(min-width: 768px)');
+  const matches = useMediaQuery("(min-width: 768px)");
+  const snapToGrid = 4;
 
   useEffect(() => {
     if (selectedRack && selectedRack?.id === attrs.id) {
@@ -129,34 +131,30 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
     }
   };
 
-  const loadData = (site, floor) => {
+  const loadData = async (site, floor) => {
     const params = {
       token: user.token,
       siteId: site.id,
       floorId: floor.id,
-      types:"2,10"
+      types: "2,10",
     };
 
     setUnlockEditStorageStructures(false);
     setSelectedRack(null);
     setLoading(true);
 
-    findLayoutByFloorId(params).then((ret) => {
-      const n = (1.0 / ret[0].pixelmeterrelation) * PIXEL_METER_RELATION;
-      setPixelmeterrelation(n);
+    const layouts = await findLayoutByFloorId(params);
+    const n = (1.0 / layouts[0].pixelmeterrelation) * PIXEL_METER_RELATION;
+    setPixelmeterrelation(n);
+    setLayouts(layouts);
 
-      setLayouts(ret);
+    const racks = await findRacksByZoneId(params);
+    setRacks(racks);
 
-      findRacksByZoneId(params).then((ret) => {
-        setRacks(ret);
+    const markers = await findAllLayoutMarkersById(params);
+    setMarkers(markers);
 
-        findAllLayoutMarkersById(params).then((ret) => {
-          setMarkers(ret);
-        });
-
-        setLoading(false);
-      });
-    });
+    setLoading(false);
   };
 
   const updateAttrs = (param) => {
@@ -189,7 +187,7 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
       fill: "#ffffff",
       stroke: "#000000",
       isNew: true,
-      draggable:unlockEditStorageStructures
+      draggable: unlockEditStorageStructures,
     };
 
     setMarkers([...markers, marker]);
@@ -214,62 +212,65 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
       marker.fontFamily = values.fontFamily;
       marker.fontSize = values.fontSize;
 
-      markers.forEach(m => m.draggable = unlockEditStorageStructures);
+      markers.forEach((m) => (m.draggable = unlockEditStorageStructures));
       setMarkers([...markers]);
     }
   };
 
   return (
-    <Stack>
-      <ViewHeader app={app} />
+    <RackLocationEditorContext.Provider
+      value={{ unlockEditStorageStructures, setUnlockEditStorageStructures }}
+    >
+      <Stack>
+        <ViewHeader app={app} />
 
-      <Stack
-        justify="flex-start"
-        spacing="0"
-        sx={(theme) => ({
-          backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[2],
-          height: "100%",
-          border: "solid 1px" + theme.colors.gray[4],
-        })}
-      >
-        <Toolbar
-          onOption={onOption}
-          lockMove={unlockEditStorageStructures}
-          setLockMove={setUnlockEditStorageStructures}
-          disabled={savingData || loading || !racks}
+        <Stack
+          justify="flex-start"
+          spacing="0"
+          sx={(theme) => ({
+            backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[2],
+            height: "100%",
+            border: "solid 1px" + theme.colors.gray[4],
+          })}
         >
-          <FilterControl
-            siteId={siteId}
-            setSiteId={setSiteId}
-            floorId={floorId}
-            setFloorId={setFloorId}
-            onFilter={loadData}
-            loading={loading}
-            disabled={savingData}
+          <Toolbar
+            onOption={onOption}
+            disabled={savingData || loading || !racks}
+          >
+            <FilterControl
+              siteId={siteId}
+              setSiteId={setSiteId}
+              floorId={floorId}
+              setFloorId={setFloorId}
+              onFilter={loadData}
+              loading={loading}
+              disabled={savingData}
+            />
+          </Toolbar>
+
+          <TextEditor opened={opened} setOpened={setOpened} data={selectedMarker} updateMarker={updateMarker} />
+
+          <View2dEditActors
+            width={wSize.width - (matches ? 316 : 32)}
+            height={wSize.height - (HEADER_HIGHT + 24)}
+            layouts={layouts}
+            racks={racks}
+            markers={markers}
+            pixelMeterRelation={pixelmeterrelation}
+            onSelect={onSelectActor}
+            onDblClick={onActorDblClick}
+            enableActorRelocation={true}
+            updateAttrs={updateAttrs}
+            isLockStage={unlockEditStorageStructures}
+            stageContextMenu={stageContextMenu}
+            setClickContextMenuPosition={setClickContextMenuPosition}
+            snapToGrid={snapToGrid}
           />
-        </Toolbar>
-
-        <TextEditor opened={opened} setOpened={setOpened} data={selectedMarker} updateMarker={updateMarker} />
-
-        <View2dEditActors
-          width={wSize.width - (matches ? 316 : 32)}
-          height={wSize.height - (HEADER_HIGHT + 24)}
-          layouts={layouts}
-          racks={racks}
-          markers={markers}
-          pixelMeterRelation={pixelmeterrelation}
-          onSelect={onSelectActor}
-          onDblClick={onActorDblClick}
-          enableActorRelocation={true}
-          updateAttrs={updateAttrs}
-          isLockStage={unlockEditStorageStructures}
-          stageContextMenu={stageContextMenu}
-          setClickContextMenuPosition={setClickContextMenuPosition}
-        />
-        <Footer seletedObject={selectedRack} />
-        {console.log("REPAINT ----> Editor " + Date.now())}
+          <Footer seletedObject={selectedRack} />
+          {console.log("REPAINT ----> Editor " + Date.now())}
+        </Stack>
       </Stack>
-    </Stack>
+    </RackLocationEditorContext.Provider>
   );
 };
 

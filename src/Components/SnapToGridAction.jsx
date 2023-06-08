@@ -1,15 +1,15 @@
 import React from "react";
 import { Group, Switch, Tooltip } from "@mantine/core";
-import { IconLock, IconLockOpen } from "@tabler/icons-react";
+import { IconGridDots } from "@tabler/icons-react";
 
-const LockAction = ({ checked, setChecked, toolTip, disabled }) => {
+const SnapToGridAction = ({ checked, setChecked, toolTip, disabled }) => {
   return (
-    <Tooltip label={toolTip} position="bottom" withArrow multiline width={220}>
+    <Tooltip label={toolTip} position="bottom" withArrow multiline>
       <Group position="center">
         <Switch
           size="md"
-          onLabel={<IconLockOpen size={16} />}
-          offLabel={<IconLock size={16} />}
+          onLabel={<IconGridDots size={16} />}
+          offLabel={<IconGridDots size={16} />}
           checked={checked}
           onChange={(event) => setChecked(event.currentTarget.checked)}
           disabled={disabled}
@@ -19,4 +19,4 @@ const LockAction = ({ checked, setChecked, toolTip, disabled }) => {
   );
 };
 
-export default LockAction;
+export default SnapToGridAction;

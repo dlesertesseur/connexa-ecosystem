@@ -47,6 +47,7 @@ function View2dEditActors({
   stageContextMenu,
   setClickContextMenuPosition,
   markers,
+  snapToGrid = 4,
 }) {
   const stageRef = useRef(null);
   const [openMenu, setOpenMenu] = useState(false);
@@ -81,6 +82,15 @@ function View2dEditActors({
   const localDragend = (e) => {
     const tranform = e.target;
     const group = tranform.nodes()[0];
+
+    if (snapToGrid) {
+      const pos = group.absolutePosition();
+      group.absolutePosition({
+        x: Math.round(pos.x / snapToGrid) * snapToGrid,
+        y: Math.round(pos.y / snapToGrid) * snapToGrid,
+      });
+    }
+
     updateAttrs(group.attrs);
   };
 
@@ -91,12 +101,13 @@ function View2dEditActors({
   };
 
   useEffect(() => {
-    if (image, imageLayer) {
-
-      console.log("image -> ",image);
-
+    if ((image, imageLayer)) {
       const layout = layouts[0];
-      const group = new Konva.Group({ id: "imageBack-group", x: (layout.imagePositionx * pixelMeterRelation), y: (layout.imagePositiony * pixelMeterRelation)});
+      const group = new Konva.Group({
+        id: "imageBack-group",
+        x: layout.imagePositionx * pixelMeterRelation,
+        y: layout.imagePositiony * pixelMeterRelation,
+      });
       group.scale({ x: pixelMeterRelation, y: pixelMeterRelation });
       const img = new Konva.Image({ image: image });
       group.add(img);
