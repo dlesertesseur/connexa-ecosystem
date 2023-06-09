@@ -17,7 +17,8 @@ export function StagingBuilder({ opened, close }) {
       moduleWidth: 1.5,
       moduleDepth: 1.5,
       baseHeight: 0.01,
-      separation: 0.05,
+      separationX: 0.05,
+      separationZ: 0.05,
     },
 
     validate: {
@@ -27,7 +28,8 @@ export function StagingBuilder({ opened, close }) {
       moduleWidth: (val) => (val ? null : t("validation.required")),
       moduleDepth: (val) => (val ? null : t("validation.required")),
       baseHeight: (val) => (val ? null : t("validation.required")),
-      separation: (val) => (val ? null : t("validation.required")),
+      separationX: (val) => (val ? null : t("validation.required")),
+      separationZ: (val) => (val ? null : t("validation.required")),
     },
   });
 
@@ -89,6 +91,7 @@ export function StagingBuilder({ opened, close }) {
               <Stack align="center" justify="flex-start">
                 {createNumberControlField("numberOfModulesX")}
                 {createNumberField("moduleWidth")}
+                {createNumberField("separationX")}
               </Stack>
             </Grid.Col>
 
@@ -96,15 +99,17 @@ export function StagingBuilder({ opened, close }) {
               <Stack align="center" justify="flex-start">
                 {createNumberControlField("numberOfModulesZ")}
                 {createNumberField("moduleDepth")}
+                {createNumberField("separationZ")}
               </Stack>
             </Grid.Col>
 
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
                 {createNumberField("baseHeight")}
-                {createNumberField("separation")}
               </Stack>
             </Grid.Col>
+
+
           </Grid>
           
           <Group position="right">

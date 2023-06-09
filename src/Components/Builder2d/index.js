@@ -332,7 +332,6 @@ function selectPartWithId(stageRef, obj) {
 
     const pos = obj.getAbsolutePosition(stageRef);
 
-    console.log(obj.attrs)
     const group = obj.getParent();
     const rot = group.getParent().attrs.rotation;
 
@@ -355,7 +354,7 @@ function selectPartWithId(stageRef, obj) {
     });
 
     /*CARTEL*/
-    const label = new Konva.Label({ x: 0, y: 0 });
+    const label = new Konva.Label({ x:  obj.width()/2, y: obj.height()/2 });
     label.rotation(-rot);
     const tag = new Konva.Tag({
       cornerRadius: 2,

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Toolbar from "./Toolbar";
-import View2DRef from "../../../../Components/View2dRef";
 import ViewHeader from "../../ViewHeader";
+import FloorPlanView2d from "./FloorPlanView2d";
 import { useSelector } from "react-redux";
-import { DIVIDER_HIGHT, PIXEL_METER_RELATION, TOOLBAR_HIGHT, VIEW_HEADER_HIGHT } from "../../../../Constants";
+import { PIXEL_METER_RELATION } from "../../../../Constants";
 import { Stack } from "@mantine/core";
 import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/Surfaces";
 import { FilterControl } from "../Controls/FilterControl";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
+import { useWindowSize } from "../../../../Hook";
+import { FloorViewerStateContext } from "./Context";
 
 const Viewer = ({ app }) => {
   const [actorId, setActorId] = useState(null);
@@ -20,7 +22,7 @@ const Viewer = ({ app }) => {
   const [pixelmeterrelation, setPixelmeterrelation] = useState(null);
 
   const { user } = useSelector((state) => state.auth.value);
-  const { bodyContainerWidth, bodyContainerHeight } = useSelector((state) => state.app.value);
+  const wSize = useWindowSize();
 
   const onActorDblClick = (id) => {
     console.log("### Viewer ### onActorDblClick -> id:" + id);
@@ -65,42 +67,42 @@ const Viewer = ({ app }) => {
   };
 
   return (
-    <Stack>
-      <ViewHeader app={app} />
-      <Stack
-        justify="flex-start"
-        spacing="0"
-        sx={(theme) => ({
-          backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[2],
-          height: "100%",
-          border: "solid 1px" + theme.colors.gray[3],
-        })}
-      >
-        <Toolbar onOption={onOption}>
-          <FilterControl
-            siteId={siteId}
-            setSiteId={setSiteId}
-            floorId={floorId}
-            setFloorId={setFloorId}
-            onFilter={loadData}
-            loading={loading}
+    <FloorViewerStateContext.Provider value={{ siteId, floorId, layouts, racks, markers, actorId, pixelmeterrelation }}>
+      <Stack>
+        <ViewHeader app={app} />
+        <Stack
+          justify="flex-start"
+          spacing="0"
+          sx={(theme) => ({
+            backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[2],
+            height: "100%",
+            border: "solid 1px" + theme.colors.gray[3],
+          })}
+        >
+          <Toolbar onOption={onOption}>
+            <FilterControl
+              siteId={siteId}
+              setSiteId={setSiteId}
+              floorId={floorId}
+              setFloorId={setFloorId}
+              onFilter={loadData}
+              loading={loading}
+            />
+          </Toolbar>
+
+          <FloorPlanView2d
+            layouts={layouts}
+            pixelMeterRelation={pixelmeterrelation}
+            racks={racks}
+            markers={markers}
+            onSelect={onSelectActor}
+            onDblClick={onActorDblClick}
           />
-        </Toolbar>
 
-        <View2DRef
-          width={bodyContainerWidth}
-          height={bodyContainerHeight - (TOOLBAR_HIGHT + 2 + VIEW_HEADER_HIGHT + DIVIDER_HIGHT)}
-          layouts={layouts}
-          pixelMeterRelation={pixelmeterrelation}
-          racks={racks}
-          markers={markers}
-          onSelect={onSelectActor}
-          onDblClick={onActorDblClick}
-        />
-
-        {/* {console.log("REPAINT ----> Viewer " + Date.now())} */}
+          {/* {console.log("REPAINT ----> Viewer " + Date.now())} */}
+        </Stack>
       </Stack>
-    </Stack>
+    </FloorViewerStateContext.Provider>
   );
 };
 

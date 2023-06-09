@@ -14,7 +14,7 @@ export default function CustomHeader({ isOpen, setIsOpen }) {
           <Burger opened={isOpen} onClick={setIsOpen} size="md" color={theme.colors.gray[6]} mx="xs" />
         </MediaQuery>
 
-        <Logo />
+        <Logo width={230}/>
 
          <UserMenu compact={matches} />
       </Group>

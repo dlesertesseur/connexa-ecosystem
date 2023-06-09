@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import ResponceNotification from "../../../Modal/ResponceNotification";
+import StructureMetaDataBuilder from "../../../Components/Builder3d/StructureMetaDataBuilder";
+import RackBasicMetaDataBuilder from "../../../Components/Builder3d/RackBasicMetaDataBuilder";
+import StagingMetaDataBuilder from "../../../Components/Builder3d/StagingMetaDataBuilder";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
@@ -9,10 +12,7 @@ import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { FilterControl } from "./FilterControl";
 import { findAllRacksHeaders } from "../../../DataAccess/Racks";
-import StructureMetaDataBuilder from "../../../Components/Builder3d/StructureMetaDataBuilder";
 import { STRUCTURE_TYPE_RACK, STRUCTURE_TYPE_SHELVING, STRUCTURE_TYPE_RACK_BASIC, STRUCTURE_TYPE_STAGING } from "../../../Constants/structures";
-import RackBasicMetaDataBuilder from "../../../Components/Builder3d/RackBasicMetaDataBuilder";
-import StagingMetaDataBuilder from "../../../Components/Builder3d/StagingMetaDataBuilder";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);

@@ -48,6 +48,7 @@ function View2dEditActors({
   setClickContextMenuPosition,
   markers,
   snapToGrid = 4,
+  showBackImage
 }) {
   const stageRef = useRef(null);
   const [openMenu, setOpenMenu] = useState(false);
@@ -183,6 +184,13 @@ function View2dEditActors({
     setDraggableGroups(stage, "actors", isLockStage);
     setDraggableGroups(stage, "markers-layer", isLockStage);
   }, [isLockStage]);
+
+  useEffect(() => {
+    if(imageLayer){
+      // const imageLayer = new Konva.Layer({ id: "image-layer" });
+      imageLayer.visible(showBackImage);
+    }
+  }, [showBackImage]);
 
   useEffect(() => {
     const stage = stageRef.current;

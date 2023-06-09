@@ -2,9 +2,9 @@ import uuid from "react-uuid";
 import { lpad } from "../../Util";
 class StagingMetaDataBuilder {
   static createRack(values) {
-    const totalX = values.numberOfModulesX * values.moduleWidth + (values.numberOfModulesX - 1) * values.separation;
+    const totalX = values.numberOfModulesX * values.moduleWidth + (values.numberOfModulesX - 1) * values.separationX;
     const totalY = 0;
-    const totalZ = values.numberOfModulesZ * values.moduleDepth + (values.numberOfModulesZ - 1) * values.separation;
+    const totalZ = values.numberOfModulesZ * values.moduleDepth + (values.numberOfModulesZ - 1) * values.separationZ;
 
     const modulesList = StagingMetaDataBuilder.createRackModules(values);
     const framesList = [];
@@ -34,7 +34,8 @@ class StagingMetaDataBuilder {
     const mz = parseFloat(values.numberOfModulesZ);
     const md = parseFloat(values.moduleDepth);
     const mw = parseFloat(values.moduleWidth);
-    const sx = parseFloat(values.separation);
+    const sx = parseFloat(values.separationX);
+    const sz = parseFloat(values.separationZ);
 
     let posX = 0;
     let posZ = 0;
@@ -44,11 +45,11 @@ class StagingMetaDataBuilder {
     }
 
     if(mz > 1){
-      posZ = -((mz * md + (mz - 1) * sx) / 2);
+      posZ = -((mz * md + (mz - 1) * sz) / 2);
     }
 
     let mNum = 1;
-    for (let z = 0; z < mz; z++, posZ += md + sx) {
+    for (let z = 0; z < mz; z++, posZ += md + sz) {
       for (let x = 0; x < mx; x++, posX += mw + sx) {
         modules.push(StagingMetaDataBuilder.createRackModule(values, mNum, posX, posZ));
       }

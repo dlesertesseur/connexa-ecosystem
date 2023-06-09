@@ -1,20 +1,15 @@
 import React from "react";
 import {
-  Accordion,
   Button,
   Checkbox,
   Group,
-  JsonInput,
   LoadingOverlay,
   Modal,
-  SegmentedControl,
   Stack,
   Textarea,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
 import { useState } from "react";
-import { IconPlus } from "@tabler/icons-react";
 
 const AssignNames = ({ opened, close, structure }) => {
   const { t } = useTranslation();
@@ -30,7 +25,7 @@ const AssignNames = ({ opened, close, structure }) => {
     if(checked){
       arrData = arrData.reverse();
     }
-    
+
     const modules = structure.modules;
     let valuesIdx = 0;
 
@@ -49,6 +44,7 @@ const AssignNames = ({ opened, close, structure }) => {
     }
     setProcessing(false);
     close();
+    setData("");
   };
 
   return (
@@ -78,6 +74,7 @@ const AssignNames = ({ opened, close, structure }) => {
           </Button>
           <Button
             onClick={() => {
+              setData("");
               close();
             }}
           >

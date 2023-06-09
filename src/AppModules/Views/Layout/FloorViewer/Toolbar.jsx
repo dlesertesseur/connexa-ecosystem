@@ -1,18 +1,15 @@
 import React from "react";
-import { IconHeartbeat } from "@tabler/icons-react";
-import { ActionIcon, Group, Tooltip } from "@mantine/core";
+import { Group } from "@mantine/core";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
 import { useTranslation } from "react-i18next";
-import ActionsMenu from "./ActionsMenu";
+import { useContext } from "react";
+import { FloorViewerStateContext } from "./Context";
+import OptionsMenu from "./menu/OptionsMenu";
 
 const Toolbar = ({ onOption = null, children }) => {
   const { t } = useTranslation();
+  const {racks} = useContext(FloorViewerStateContext)
 
-  const handleOption = (option) => {
-    if (onOption) {
-      onOption(option);
-    }
-  };
   return (
     <Group
       px={"xs"}
@@ -24,17 +21,7 @@ const Toolbar = ({ onOption = null, children }) => {
       })}
     >
       <Group>
-        {/* <Tooltip multiline width={200} label={t("tooltip.operatorsStatus")} position="bottom" withArrow>
-          <ActionIcon variant="filled" color={"blue"} size={"md"}>
-            <IconHeartbeat
-              size={20}
-              onClick={(event) => {
-                handleOption("operatorsStatus");
-              }}
-            />
-          </ActionIcon>
-        </Tooltip> */}
-        <ActionsMenu/>
+        <OptionsMenu disabled={racks ? false : true}/>
       </Group>
       <Group>{children}</Group>
     </Group>

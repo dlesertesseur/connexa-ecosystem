@@ -104,14 +104,14 @@ const TextEditor = ({ data, opened, setOpened, updateMarker }) => {
           />
 
           <SegmentedControl
-            {...form.getInputProps("align")}
+           {...form.getInputProps("align")}
             data={[
               {
                 value: "left",
                 label: (
                   <Center>
                     <IconAlignLeft size={16} />
-                    <Box ml={10}>{t("label.left")}</Box>
+                    <Box ml={5}>{t("label.left")}</Box>
                   </Center>
                 ),
               },
@@ -120,7 +120,7 @@ const TextEditor = ({ data, opened, setOpened, updateMarker }) => {
                 label: (
                   <Center>
                     <IconAlignCenter size={16} />
-                    <Box ml={10}>{t("label.center")}</Box>
+                    <Box ml={5}>{t("label.center")}</Box>
                   </Center>
                 ),
               },
@@ -129,7 +129,7 @@ const TextEditor = ({ data, opened, setOpened, updateMarker }) => {
                 label: (
                   <Center>
                     <IconAlignRight size={16} />
-                    <Box ml={10}>{t("label.right")}</Box>
+                    <Box ml={5}>{t("label.right")}</Box>
                   </Center>
                 ),
               },

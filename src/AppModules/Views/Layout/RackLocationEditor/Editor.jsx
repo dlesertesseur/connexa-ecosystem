@@ -24,6 +24,7 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
   const [selectedRack, setSelectedRack] = useState(null);
   const [savingData, setSavingData] = useState(false);
   const [unlockEditStorageStructures, setUnlockEditStorageStructures] = useState(false);
+  const [showBackImage, setShowBackImage] = useState(true);
   const [siteId, setSiteId] = useState(null);
   const [floorId, setFloorId] = useState(null);
   const [layouts, setLayouts] = useState(null);
@@ -219,7 +220,7 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
 
   return (
     <RackLocationEditorContext.Provider
-      value={{ unlockEditStorageStructures, setUnlockEditStorageStructures }}
+      value={{ unlockEditStorageStructures, setUnlockEditStorageStructures, showBackImage, setShowBackImage }}
     >
       <Stack>
         <ViewHeader app={app} />
@@ -265,6 +266,7 @@ const Editor = ({ inspectRack, drawCenter = false, refresh, app }) => {
             stageContextMenu={stageContextMenu}
             setClickContextMenuPosition={setClickContextMenuPosition}
             snapToGrid={snapToGrid}
+            showBackImage={showBackImage}
           />
           <Footer seletedObject={selectedRack} />
           {console.log("REPAINT ----> Editor " + Date.now())}

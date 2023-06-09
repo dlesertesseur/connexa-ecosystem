@@ -6,12 +6,11 @@ import { TOOLBAR_HIGHT } from "../../../../Constants";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { RackLocationEditorContext } from "./Context";
+import ShowImageAction from "../../../../Components/ShowImageAction";
 
 const Toolbar = ({ onOption = null, children, disabled }) => {
   const { t } = useTranslation();
-  const { unlockEditStorageStructures, setUnlockEditStorageStructures } =
-    useContext(RackLocationEditorContext);
-
+  const { unlockEditStorageStructures, setUnlockEditStorageStructures, showBackImage, setShowBackImage } = useContext(RackLocationEditorContext);
   const handleOption = (option) => {
     if (onOption) {
       onOption(option);
@@ -55,6 +54,12 @@ const Toolbar = ({ onOption = null, children, disabled }) => {
           checked={unlockEditStorageStructures}
           setChecked={setUnlockEditStorageStructures}
           toolTip={t("tooltip.lockMove")}
+          disabled={disabled}
+        />
+        <ShowImageAction
+          checked={showBackImage}
+          setChecked={setShowBackImage}
+          toolTip={t("tooltip.showBackImage")}
           disabled={disabled}
         />
         {children}

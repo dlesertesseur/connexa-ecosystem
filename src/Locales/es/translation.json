@@ -896,7 +896,9 @@
         "dimensionx":"Dim-X (mts)",
         "dimensiony":"Dim-Y (mts)",
         "dimensionz":"Dim-Z (mts)",
-        "separation":"Separación"
+        "separation":"Separación",
+        "separationX": "Separación (X)",
+        "separationZ": "Separación (Z)"
       },
       "placeholder": {
         "name": "Un nombre",
@@ -923,7 +925,8 @@
   "tooltip": {
     "operatorsStatus": "Muestra la posicion y actividad que estan realizando los operarios en tiempo real",
     "lockMove": "Bloquea el movimiento y la rotación de las estructuras de almacenamiento",
-    "snapToGrid": "Alinear a la cuadricula"
+    "snapToGrid": "Alinear a la cuadricula",
+    "showBackImage":"Mostrar imagen de fondo"
   },
 
   "partType": {

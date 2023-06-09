@@ -62,11 +62,11 @@
     "roles": "Roles",
     "sites": "Sites",
     "backStep": "Back",
-    "nextStep": "Next step", 
+    "nextStep": "Next step",
     "objectInspector": "Object inspector",
-    "assignNames":"Assign names",
-    "options":"Options",
-    "menu":"Menu"
+    "assignNames": "Assign names",
+    "options": "Options",
+    "menu": "Menu"
   },
 
   "label": {
@@ -159,9 +159,9 @@
     "translate": "Translate",
     "rotate": "Rotate",
     "scale": "Scale",
-    "informationData":"Information data",
-    "reverseAssignment":"Reverse assignment",
-    "options":"Options"
+    "informationData": "Information data",
+    "reverseAssignment": "Reverse assignment",
+    "options": "Options"
   },
 
   "placeholder": {
@@ -170,7 +170,7 @@
     "firstName": "Your first name",
     "lastName": "Your last name",
     "search": "Search by any field",
-    "informationData":"The information must be provided separated by line break, space or comma."
+    "informationData": "The information must be provided separated by line break, space or comma."
   },
 
   "language": {
@@ -196,7 +196,7 @@
     "1002": "Registration error",
     "404": "Invalid username or password",
     "listCheckValidation": "You must check at least one row",
-    "jsonData":"Invalid json format"
+    "jsonData": "Invalid json format"
   },
 
   "notification": {
@@ -593,7 +593,7 @@
         "visible": "Visible",
         "editor": "Edit",
         "module": "Module",
-        "type":"Type"
+        "type": "Type"
       },
 
       "placeholder": {
@@ -855,20 +855,28 @@
           "usersConnected": "Users Connected"
         }
       }
+    },
+    "floorViewer": {
+      "menu": {
+        "label": "Options",
+        "title": "Search options",
+        "subTitle": "Select a group of information",
+        "options": ["Item by code", "Items by description", "Items by department", "Locked positions"]
+      }
     }
   },
 
   "editor": {
     "modelStructure": {
-      "title":{
-        "create":"New structure",
-        "racking":"New rack",
-        "shelving":"New shelves",
-        "objectList":"Object inspector",
-        "assignNames":"Assign names",
-        "partInspector":"Part inspector"
+      "title": {
+        "create": "New structure",
+        "racking": "New rack",
+        "shelving": "New shelves",
+        "objectList": "Object inspector",
+        "assignNames": "Assign names",
+        "partInspector": "Part inspector"
       },
-      "label":{
+      "label": {
         "name": "Name",
         "numberOfModules": "Modules",
         "moduleWidth": "Module width",
@@ -882,36 +890,38 @@
         "panelThickness": "Back thickness",
         "spaceHeight": "Space height",
         "visible": "Visible",
-        "palletWidth":"Pallet width",
-        "palletHeight":"Pallet Height",
-        "palletDepth":"Pallet depth",
-        "maxLoadHeight":"Max. load height",
-        "levels":"Levels",
-        "uprightDepth":"Upright depth",
-        "beamLength":"Beam length",
-        "columnSide":"Column side",
-        "beamHeight":"Beam heigh",
-        "beamDepth":"Beam depth",
+        "palletWidth": "Pallet width",
+        "palletHeight": "Pallet Height",
+        "palletDepth": "Pallet depth",
+        "maxLoadHeight": "Max. load height",
+        "levels": "Levels",
+        "uprightDepth": "Upright depth",
+        "beamLength": "Beam length",
+        "columnSide": "Column side",
+        "beamHeight": "Beam heigh",
+        "beamDepth": "Beam depth",
         "numberOfModulesX": "Modules (X)",
         "numberOfModulesZ": "Modules (Z)",
-        "columnHeight":"Column height",
+        "columnHeight": "Column height",
         "module": "Module",
-        "type":"Type",
-        "dimx":"Width",
-        "dimy":"Height",
-        "dimz":"Depth",
-        "positionx":"Pos-X (mts)",
-        "positiony":"Pos-Y (mts)",
-        "positionz":"Pos-Z (mts)",
-        "rotationx":"Rot-X (deg)",
-        "rotationy":"Rot-Y (deg)",
-        "rotationz":"Rot-Z (deg)",
-        "dimensionx":"Dim-X (mts)",
-        "dimensiony":"Dim-Y (mts)",
-        "dimensionz":"Dim-Z (mts)",
-        "separation":"Separation"
+        "type": "Type",
+        "dimx": "Width",
+        "dimy": "Height",
+        "dimz": "Depth",
+        "positionx": "Pos-X (mts)",
+        "positiony": "Pos-Y (mts)",
+        "positionz": "Pos-Z (mts)",
+        "rotationx": "Rot-X (deg)",
+        "rotationy": "Rot-Y (deg)",
+        "rotationz": "Rot-Z (deg)",
+        "dimensionx": "Dim-X (mts)",
+        "dimensiony": "Dim-Y (mts)",
+        "dimensionz": "Dim-Z (mts)",
+        "separation": "Separation",
+        "separationX": "Separation (X)",
+        "separationZ": "Separation (Z)"
       },
-      "placeholder":{
+      "placeholder": {
         "name": "a name",
         "aValue": "a value"
       },
@@ -920,14 +930,14 @@
       },
       "items": {
         "shelving": {
-          "retailStore":"Retail store"
+          "retailStore": "Retail store"
         },
         "racking": {
-          "basic":"Basic",
-          "selective":"Selective",
-          "pushBack":"Push Back",
-          "palletFlow":"Pallet Flow",
-          "staging":"Staging"
+          "basic": "Basic",
+          "selective": "Selective",
+          "pushBack": "Push Back",
+          "palletFlow": "Pallet Flow",
+          "staging": "Staging"
         }
       }
     }
@@ -935,7 +945,8 @@
   "tooltip": {
     "operatorsStatus": "Shows the position and activity that operators are performing in real time",
     "lockMove": "Blocks movement and rotation of storage structures",
-    "snapToGrid": "Snap to grid"
+    "snapToGrid": "Snap to grid",
+    "showBackImage": "Show background image"
   },
 
   "partType": {
