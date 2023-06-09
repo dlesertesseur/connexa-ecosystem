@@ -9,6 +9,7 @@ import {
   buildSelectionLayer,
   clearSelection,
   selectObjectWithId,
+  selectPartWithId,
   setDraggableGroups,
 } from "../Builder2d";
 
@@ -56,9 +57,13 @@ function View2DRef({
     (evt) => {
       const ref = stageRef.current;
       const obj = evt.target;
-      const group = obj.getParent();
-      selectObjectWithId(ref, obj);
-      onSelect(group.id());
+      // const group = obj.getParent();
+      // selectObjectWithId(ref, obj);
+      // onSelect(group.id());
+
+      selectPartWithId(ref, obj);
+      onSelect(obj.id());
+
     },
     [onSelect]
   );

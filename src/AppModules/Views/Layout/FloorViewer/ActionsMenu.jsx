@@ -15,9 +15,9 @@ const ActionsMenu = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>{t("label.options")}</Menu.Label>
-        <Menu.Item icon={<IconSettings size={14} />}>Settings</Menu.Item>
-        <Menu.Item icon={<IconSearch size={14} />}>Messages</Menu.Item>
+        <Menu.Label>{t("button.menu")}</Menu.Label>
+        <Menu.Item icon={<IconSettings size={14} />}>{t("button.search")}</Menu.Item>
+        <Menu.Item icon={<IconSearch size={14} />}>{t("button.search")}</Menu.Item>
       </Menu.Dropdown>
     </Menu>
   );
