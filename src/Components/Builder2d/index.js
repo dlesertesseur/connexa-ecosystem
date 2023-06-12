@@ -214,7 +214,7 @@ function buildActorBase(grActor, actor, fill = null) {
   grActor.add(grBase);
 }
 
-function buildActor(pixelMeterRelation, actor, onDblClick) {
+function buildActor(pixelMeterRelation, actor, onDblClick, selectPart = false) {
   let grActor = null;
 
   grActor = new Konva.Group({
@@ -225,18 +225,21 @@ function buildActor(pixelMeterRelation, actor, onDblClick) {
     width: actor.dimensionx * pixelMeterRelation,
     height: actor.dimensionz * pixelMeterRelation,
     rotation: -actor.rotationy,
+    userData:actor
   });
 
   grActor.on("dblclick dbltap", onDblClick);
 
   buildActorModules(grActor, actor.modules);
   buildActorFrames(grActor, actor.frames);
-  //buildActorBase(grActor, actor);
+  if (!selectPart) {
+    buildActorBase(grActor, actor);
+  }
 
   return grActor;
 }
 
-function buildActors(stageRef, actors, cache = false, onSelect = null, onDblClick = null) {
+function buildActors(stageRef, actors, cache = false, onSelect = null, onDblClick = null, selectPart = false) {
   let layer = null;
   let actor = null;
 
@@ -244,8 +247,7 @@ function buildActors(stageRef, actors, cache = false, onSelect = null, onDblClic
   layer.on("mousedown touchstart", onSelect);
 
   for (let index = 0; index < actors.length; index++) {
-    actor = buildActor(PIXEL_METER_RELATION, actors[index], onDblClick);
-
+    actor = buildActor(PIXEL_METER_RELATION, actors[index], onDblClick, selectPart);
     layer.add(actor);
   }
 
@@ -340,9 +342,9 @@ function selectPartWithId(stageRef, obj) {
       y: pos.y,
       rotation: rot,
       width: obj.width(),
-      height: obj.height()
+      height: obj.height(),
     });
-    
+
     /*MARCO*/
     const selector = new Konva.Rect({
       x: 0,
@@ -354,7 +356,7 @@ function selectPartWithId(stageRef, obj) {
     });
 
     /*CARTEL*/
-    const label = new Konva.Label({ x:  obj.width()/2, y: obj.height()/2 });
+    const label = new Konva.Label({ x: obj.width() / 2, y: obj.height() / 2 });
     label.rotation(-rot);
     const tag = new Konva.Tag({
       cornerRadius: 2,
@@ -375,7 +377,6 @@ function selectPartWithId(stageRef, obj) {
     gr.add(selector, label);
 
     layer.add(gr);
-
   }
 }
 

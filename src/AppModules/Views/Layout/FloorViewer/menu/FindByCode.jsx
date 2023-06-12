@@ -20,6 +20,7 @@ const FindByCode = () => {
       <HueSlider value={value} onChange={onChange} size="md" />
       <Group position="right">
         <Button
+          size="xs"
           disabled={!textValue}
           onClick={() => {
             console.log("obClick");

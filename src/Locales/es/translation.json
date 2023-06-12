@@ -926,7 +926,8 @@
     "operatorsStatus": "Muestra la posicion y actividad que estan realizando los operarios en tiempo real",
     "lockMove": "Bloquea el movimiento y la rotación de las estructuras de almacenamiento",
     "snapToGrid": "Alinear a la cuadricula",
-    "showBackImage":"Mostrar imagen de fondo"
+    "showBackImage":"Mostrar imagen de fondo",
+    "moduleSelection":"Selección por módulo"
   },
 
   "partType": {
