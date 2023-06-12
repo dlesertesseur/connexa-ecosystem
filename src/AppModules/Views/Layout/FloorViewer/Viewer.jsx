@@ -8,8 +8,8 @@ import { Stack } from "@mantine/core";
 import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/Surfaces";
 import { FilterControl } from "../Controls/FilterControl";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
-import { useWindowSize } from "../../../../Hook";
 import { FloorViewerStateContext } from "./Context";
+import { showPart } from "../../../../Components/Builder2d";
 
 const Viewer = ({ app }) => {
   const [actorId, setActorId] = useState(null);
@@ -20,9 +20,16 @@ const Viewer = ({ app }) => {
   const [loading, setLoading] = useState(false);
   const [markers, setMarkers] = useState([]);
   const [pixelmeterrelation, setPixelmeterrelation] = useState(null);
+  const [partsMap, setPartsMap] = useState(null);
+  const [stageRef, setStageRef] = useState(null);
 
   const { user } = useSelector((state) => state.auth.value);
-  const wSize = useWindowSize();
+  // const wSize = useWindowSize();
+
+  const setPartsDictionary = (stageRef, partsMap) => {
+    setPartsMap(partsMap);
+    setStageRef(stageRef);
+  }
 
   const onActorDblClick = (id) => {
     console.log("### Viewer ### onActorDblClick -> id:" + id);
@@ -34,11 +41,10 @@ const Viewer = ({ app }) => {
     setActorId(id);
   };
 
-  const onOption = (option) => {
-    if (option === "operatorsStatus") {
-      //   setOperatorsStatus(true);
-      // } else {
-      //   setOperatorsStatus(false);
+  const showData = (data, color) => {
+    if(partsMap){
+      const part = partsMap.get(data);
+      showPart(stageRef, part, color);
     }
   };
 
@@ -67,7 +73,9 @@ const Viewer = ({ app }) => {
   };
 
   return (
-    <FloorViewerStateContext.Provider value={{ siteId, floorId, layouts, racks, markers, actorId, pixelmeterrelation }}>
+    <FloorViewerStateContext.Provider
+      value={{ siteId, floorId, layouts, racks, markers, actorId, pixelmeterrelation, showData, setPartsDictionary }}
+    >
       <Stack>
         <ViewHeader app={app} />
         <Stack
@@ -79,7 +87,7 @@ const Viewer = ({ app }) => {
             border: "solid 1px" + theme.colors.gray[3],
           })}
         >
-          <Toolbar onOption={onOption}>
+          <Toolbar>
             <FilterControl
               siteId={siteId}
               setSiteId={setSiteId}

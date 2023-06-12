@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import FindByCode from "./FindByCode";
 import FindByDescription from "./FindByDescription";
 import FindByDepartment from "./FindByDepartment";
+import FindByStatus from "./FindByStatus";
 
 const OptionsMenu = ({ loading = false, disabled = false }) => {
   const { t } = useTranslation();
@@ -27,15 +28,16 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
     let ret = null;
     switch (opt) {
       case 1:
-        ret = <FindByCode />;
+        ret = <FindByCode/>;
         break;
       case 2:
-        ret = <FindByDescription />;
+        ret = <FindByDescription/>;
         break;
       case 3:
         ret = <FindByDepartment/>
         break;
       case 4:
+        ret = <FindByStatus/>
         break;
       default:
         break;

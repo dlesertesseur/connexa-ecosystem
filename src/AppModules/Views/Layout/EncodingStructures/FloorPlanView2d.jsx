@@ -70,7 +70,7 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
       ref.destroyChildren();
 
       buildLayout(ref, pixelMeterRelation, layouts[0], true);
-      buildActors(ref, racks, true, onLocalSelection, onLocalDblClick, structureDetail);
+      buildActors(ref, racks, true, onLocalSelection, onLocalDblClick, structureDetail, true);
       buildSelectionLayer(ref);
 
       if (markers) {

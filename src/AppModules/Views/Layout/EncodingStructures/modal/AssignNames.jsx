@@ -1,78 +1,47 @@
 import React from "react";
-import {
-  Accordion,
-  Button,
-  Checkbox,
-  Group,
-  LoadingOverlay,
-  Modal,
-  ScrollArea,
-  Stack,
-  Table,
-  Textarea,
-  UnstyledButton,
-} from "@mantine/core";
+import { Button, Checkbox, Group, LoadingOverlay, Modal, Stack, Textarea } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { updateRack } from "../../../../../DataAccess/Racks";
+import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { FloorViewerStateContext } from "../Context";
 
 const AssignNames = ({ opened, close, structure }) => {
   const { t } = useTranslation();
   const [checked, setChecked] = useState(false);
   const [data, setData] = useState("");
   const [processing, setProcessing] = useState(false);
-  const [rows, setRows] = useState([]);
   const [reloadData, setReloadData] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const { user } = useSelector((state) => state.auth.value);
+  const { siteId, floorId } = useContext(FloorViewerStateContext);
 
   useEffect(() => {
-    setData("");
     if (structure) {
       const modules = structure.modules;
-
+      let positions = "";
       modules.sort((a, b) => a.number - b.number);
 
-      const rows = modules.map((module) => {
-        const name = t("editor.modelStructure.label.module") + "-" + module.number;
+      modules.forEach((module, moduleIdx) => {
         const parts = module.parts;
         parts.sort((a, b) => a.positiony - b.positiony);
 
-        const content = parts.map((part) => {
-          return (
-            <tr key={part.id ? part.id : part.key}>
-              <td>
-                <UnstyledButton>{part.name}</UnstyledButton>
-              </td>
-              <td>{`${part.dimensionx.toFixed(2)}m`}</td>
-              <td>{`${part.dimensiony.toFixed(2)}m`}</td>
-              <td>{`${part.dimensionz.toFixed(2)}m`}</td>
-            </tr>
-          );
+        parts.forEach((part, partIdx) => {
+          positions += part.name;
+          if(moduleIdx < (modules.length-1)){
+            positions += "\n";
+          }
+          else{
+            if(partIdx < (parts.length-1)){
+              positions += "\n";
+            }
+          }
         });
-
-        return (
-          <Accordion.Item value={name} key={module.id ? module.id : module.key}>
-            <Accordion.Control>{name}</Accordion.Control>
-            <Accordion.Panel>
-              <Table striped highlightOnHover withBorder withColumnBorders>
-                <thead>
-                  <tr>
-                    <th>{t("editor.modelStructure.label.name")}</th>
-                    <th>{t("editor.modelStructure.label.dimx")}</th>
-                    <th>{t("editor.modelStructure.label.dimy")}</th>
-                    <th>{t("editor.modelStructure.label.dimz")}</th>
-                  </tr>
-                </thead>
-                <tbody>{content}</tbody>
-              </Table>
-            </Accordion.Panel>
-          </Accordion.Item>
-        );
       });
 
-      setRows(rows);
+      setData(positions);
     }
   }, [structure, reloadData]);
 
@@ -108,12 +77,14 @@ const AssignNames = ({ opened, close, structure }) => {
   const onSave = async () => {
     const params = {
       token: user.token,
-      data: modelStructure,
-      siteId: site,
-      floorId: floor,
+      data: structure,
+      siteId: siteId,
+      floorId: floorId,
     };
 
     setProcessing(true);
+
+    assignNames();
 
     try {
       const ret = await updateRack(params);
@@ -123,6 +94,7 @@ const AssignNames = ({ opened, close, structure }) => {
       } else {
         setErrorMessage(null);
         setProcessing(false);
+        close();
       }
     } catch (error) {
       setErrorMessage(error);
@@ -131,61 +103,33 @@ const AssignNames = ({ opened, close, structure }) => {
   };
 
   return (
-    <Modal size={"xl"} opened={opened} onClose={close} title={t("editor.modelStructure.title.assignNames")}>
-      <Group position="apart">
-        <Stack w={"48%"}>
-          <ScrollArea h={400}>
-            <Accordion
-              chevron={<IconPlus size={16} />}
-              styles={{
-                chevron: {
-                  "&[data-rotate]": {
-                    transform: "rotate(45deg)",
-                  },
-                },
-              }}
-            >
-              {rows}
-            </Accordion>
-          </ScrollArea>
-        </Stack>
-        <Stack w={"48%"}>
-          <LoadingOverlay visible={processing} overlayBlur={2} />
-          <Textarea
-            w={"100%"}
-            label={t("label.informationData")}
-            placeholder={t("placeholder.informationData")}
-            minRows={14}
-            value={data}
-            onChange={(event) => setData(event.currentTarget.value)}
-          />
-          <Checkbox
-            label={t("label.reverseAssignment")}
-            checked={checked}
-            onChange={(event) => setChecked(event.currentTarget.checked)}
-          />
-        </Stack>
-      </Group>
+    <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.assignNames")}>
+      <Stack>
+        <LoadingOverlay visible={processing} overlayBlur={2} />
+        <Textarea
+          w={"100%"}
+          label={t("label.informationData")}
+          placeholder={t("placeholder.informationData")}
+          minRows={14}
+          value={data}
+          onChange={(event) => setData(event.currentTarget.value)}
+        />
+        <Checkbox
+          label={t("label.reverseAssignment")}
+          checked={checked}
+          onChange={(event) => setChecked(event.currentTarget.checked)}
+        />
+      </Stack>
       <Group position="right" mt={"xs"}>
         <Button
-          disabled={!data}
           onClick={() => {
-            assignNames();
-          }}
-        >
-          {t("button.assignNames")}
-        </Button>
-        <Button
-          disabled={reloadData === null ? true : false}
-          onClick={() => {
-            close();
+            onSave();
           }}
         >
           {t("button.save")}
         </Button>
         <Button
           onClick={() => {
-            setData("");
             close();
           }}
         >

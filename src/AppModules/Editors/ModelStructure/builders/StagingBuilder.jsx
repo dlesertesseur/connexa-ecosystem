@@ -13,23 +13,23 @@ export function StagingBuilder({ opened, close }) {
     initialValues: {
       name: "",
       numberOfModulesX: 1,
-      numberOfModulesZ: 1,
+      // numberOfModulesZ: 1,
       moduleWidth: 1.5,
       moduleDepth: 1.5,
       baseHeight: 0.01,
       separationX: 0.05,
-      separationZ: 0.05,
+      // separationZ: 0.05,
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
       numberOfModulesX: (val) => (val ? null : t("validation.required")),
-      numberOfModulesZ: (val) => (val ? null : t("validation.required")),
+      // numberOfModulesZ: (val) => (val ? null : t("validation.required")),
       moduleWidth: (val) => (val ? null : t("validation.required")),
       moduleDepth: (val) => (val ? null : t("validation.required")),
       baseHeight: (val) => (val ? null : t("validation.required")),
       separationX: (val) => (val ? null : t("validation.required")),
-      separationZ: (val) => (val ? null : t("validation.required")),
+      // separationZ: (val) => (val ? null : t("validation.required")),
     },
   });
 
@@ -90,22 +90,22 @@ export function StagingBuilder({ opened, close }) {
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
                 {createNumberControlField("numberOfModulesX")}
-                {createNumberField("moduleWidth")}
                 {createNumberField("separationX")}
               </Stack>
             </Grid.Col>
 
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
-                {createNumberControlField("numberOfModulesZ")}
-                {createNumberField("moduleDepth")}
-                {createNumberField("separationZ")}
+                {/* {createNumberControlField("numberOfModulesZ")} */}
+                {/* {createNumberField("separationZ")} */}
+                {createNumberField("moduleWidth")}
+                {createNumberField("baseHeight")}
               </Stack>
             </Grid.Col>
 
             <Grid.Col span={4}>
               <Stack align="center" justify="flex-start">
-                {createNumberField("baseHeight")}
+              {createNumberField("moduleDepth")}
               </Stack>
             </Grid.Col>
 

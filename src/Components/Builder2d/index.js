@@ -127,9 +127,11 @@ function buildEditableLayout(stageRef, pixelMeterRelation, layout, onSelect) {
   stageRef.add(layer);
 }
 
-function buildModule(grModule, parts, number) {
+function buildModule(grModule, parts, number, firtsBaseIndicador = false) {
   let grPart = null;
   let modulePart = null;
+
+  parts.sort((a,b) => a.positionx - b.positionx)
 
   for (let index = 0; index < parts.length; index++) {
     modulePart = parts[index];
@@ -148,10 +150,20 @@ function buildModule(grModule, parts, number) {
     });
 
     grModule.add(grPart);
+
+    if (number === 1 && index === 0 && firtsBaseIndicador) {
+      var circle = new Konva.Circle({
+        radius: (modulePart.dimensionx * PIXEL_METER_RELATION) / 8,
+        x: modulePart.positionx * PIXEL_METER_RELATION,
+        y: modulePart.positionz * PIXEL_METER_RELATION,
+        fill: "red",
+      });
+      grModule.add(circle);
+    }
   }
 }
 
-function buildActorModules(grActor, modules) {
+function buildActorModules(grActor, modules, firtsBaseIndicador) {
   let module = null;
   let grModule = null;
 
@@ -167,10 +179,11 @@ function buildActorModules(grActor, modules) {
       rotation: -module.rotationy,
     });
 
-    buildModule(grModule, module.parts, module.number);
-
+    buildModule(grModule, module.parts, module.number, firtsBaseIndicador);
     grActor.add(grModule);
   }
+
+  return(grModule);
 }
 
 function buildActorFrames(grActor, frames) {
@@ -214,7 +227,7 @@ function buildActorBase(grActor, actor, fill = null) {
   grActor.add(grBase);
 }
 
-function buildActor(pixelMeterRelation, actor, onDblClick, selectPart = false) {
+function buildActor(pixelMeterRelation, actor, onDblClick, selectPart = false, firtsBaseIndicador) {
   let grActor = null;
 
   grActor = new Konva.Group({
@@ -225,13 +238,14 @@ function buildActor(pixelMeterRelation, actor, onDblClick, selectPart = false) {
     width: actor.dimensionx * pixelMeterRelation,
     height: actor.dimensionz * pixelMeterRelation,
     rotation: -actor.rotationy,
-    userData:actor
+    userData: actor,
   });
 
   grActor.on("dblclick dbltap", onDblClick);
 
-  buildActorModules(grActor, actor.modules);
+  buildActorModules(grActor, actor.modules, firtsBaseIndicador);
   buildActorFrames(grActor, actor.frames);
+  
   if (!selectPart) {
     buildActorBase(grActor, actor);
   }
@@ -239,7 +253,7 @@ function buildActor(pixelMeterRelation, actor, onDblClick, selectPart = false) {
   return grActor;
 }
 
-function buildActors(stageRef, actors, cache = false, onSelect = null, onDblClick = null, selectPart = false) {
+function buildActors(stageRef, actors, cache = false, onSelect = null, onDblClick = null, selectPart = false, firtsBaseIndicador = false) {
   let layer = null;
   let actor = null;
 
@@ -247,7 +261,7 @@ function buildActors(stageRef, actors, cache = false, onSelect = null, onDblClic
   layer.on("mousedown touchstart", onSelect);
 
   for (let index = 0; index < actors.length; index++) {
-    actor = buildActor(PIXEL_METER_RELATION, actors[index], onDblClick, selectPart);
+    actor = buildActor(PIXEL_METER_RELATION, actors[index], onDblClick, selectPart, firtsBaseIndicador);
     layer.add(actor);
   }
 
@@ -257,6 +271,105 @@ function buildActors(stageRef, actors, cache = false, onSelect = null, onDblClic
   stageRef.add(layer);
 
   return layer;
+}
+
+function buildActorsAndAnchors(stageRef, actors, cache = false, onSelect = null, onDblClick = null) {
+  let layer = null;
+  let actor = null;
+
+  layer = new Konva.Layer({ id: "actors" });
+  layer.on("mousedown touchstart", onSelect);
+
+  const anchorMap = new Map();
+
+  for (let index = 0; index < actors.length; index++) {
+    actor = buildActorAndAnchor(anchorMap, PIXEL_METER_RELATION, actors[index], onDblClick);
+    layer.add(actor);
+  }
+
+  if (cache) {
+    layer.cache({ pixelRatio: 3 });
+  }
+  stageRef.add(layer);
+
+  return(anchorMap);
+}
+
+
+function buildActorAndAnchor(anchorMap, pixelMeterRelation, actor, onDblClick) {
+  let grActor = null;
+
+  grActor = new Konva.Group({
+    id: actor.id,
+    x: actor.positionx * pixelMeterRelation,
+    y: actor.positionz * pixelMeterRelation,
+    name: actor.name,
+    width: actor.dimensionx * pixelMeterRelation,
+    height: actor.dimensionz * pixelMeterRelation,
+    rotation: -actor.rotationy,
+    userData: actor,
+  });
+
+  grActor.on("dblclick dbltap", onDblClick);
+
+  buildActorModulesAndAnchor(anchorMap, grActor, actor.modules);
+  buildActorFrames(grActor, actor.frames);
+  
+  return grActor;
+}
+
+function buildActorModulesAndAnchor(anchorMap, grActor, modules) {
+  let module = null;
+  let grModule = null;
+
+  for (let index = 0; index < modules.length; index++) {
+    module = modules[index];
+
+    grModule = new Konva.Group({
+      x: module.positionx * PIXEL_METER_RELATION,
+      y: module.positionz * PIXEL_METER_RELATION,
+      name: "moduleGroup",
+      width: module.dimensionx * PIXEL_METER_RELATION,
+      height: module.dimensionz * PIXEL_METER_RELATION,
+      rotation: -module.rotationy,
+    });
+
+    buildModuleAndAnchor(anchorMap, grModule, module.parts, module.number);
+    grActor.add(grModule);
+  }
+
+  return(grModule);
+}
+
+function buildModuleAndAnchor(anchorMap, grModule, parts) {
+  let grPart = null;
+  let modulePart = null;
+
+  parts.sort((a,b) => a.positionx - b.positionx)
+
+  for (let index = 0; index < parts.length; index++) {
+    modulePart = parts[index];
+
+    grPart = new Konva.Rect({
+      id: modulePart.id,
+      x: (modulePart.positionx - modulePart.dimensionx / 2.0) * PIXEL_METER_RELATION,
+      y: (modulePart.positionz - modulePart.dimensionz / 2.0) * PIXEL_METER_RELATION,
+      width: modulePart.dimensionx * PIXEL_METER_RELATION,
+      height: modulePart.dimensionz * PIXEL_METER_RELATION,
+      rotation: modulePart.rotationy,
+      name: modulePart.name,
+      stroke: getModulePartStrokeColor(modulePart.type),
+      fill: getModulePartColor(modulePart),
+      perfectDrawEnabled: true,
+    });
+
+    grModule.add(grPart);
+
+    if(anchorMap){
+      anchorMap.set(modulePart.name, grPart);
+    }
+
+  }
 }
 
 function transformerActor(stageRef, obj) {
@@ -382,6 +495,11 @@ function selectPartWithId(stageRef, obj) {
 
 function buildSelectionLayer(stageRef) {
   const selectionLayer = new Konva.Layer({ id: "selection-layer" });
+  stageRef.add(selectionLayer);
+}
+
+function buildDataInformationLayer(stageRef) {
+  const selectionLayer = new Konva.Layer({ id: "dataInformation-layer" });
   stageRef.add(selectionLayer);
 }
 
@@ -558,6 +676,44 @@ function buildMarkers(stageRef, markers, cache = false, onSelect = null, onDblCl
   return layer;
 }
 
+
+function showPart(stageRef, obj, color) {
+  const layers = stageRef.find("#dataInformation-layer");
+
+  if (layers) {
+    const layer = layers[0];
+
+    layer.removeChildren();
+
+    const pos = obj.getAbsolutePosition(stageRef);
+
+    const group = obj.getParent();
+    const rot = group.getParent().attrs.rotation;
+
+    const gr = new Konva.Group({
+      x: pos.x,
+      y: pos.y,
+      rotation: rot,
+      width: obj.width(),
+      height: obj.height(),
+    });
+
+    const selector = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: obj.width(),
+      height: obj.height(),
+      fill:color,
+      // stroke: getPartSelectedColor(),
+      // strokeWidth: 0,
+    });
+
+    gr.add(selector);
+
+    layer.add(gr);
+  }
+}
+
 export {
   buildLayout,
   buildActors,
@@ -571,4 +727,7 @@ export {
   buildMarkers,
   clearSelection,
   selectPartWithId,
+  buildActorsAndAnchors,
+  showPart,
+  buildDataInformationLayer
 };

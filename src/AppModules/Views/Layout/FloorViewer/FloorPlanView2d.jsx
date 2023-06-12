@@ -1,18 +1,19 @@
 import { Stack } from "@mantine/core";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { Stage } from "react-konva";
 import {
-  buildActors,
+  buildActorsAndAnchors,
+  buildDataInformationLayer,
   buildLayout,
   buildMarkers,
   buildSelectionLayer,
   clearSelection,
-  selectObjectWithId,
   selectPartWithId,
 } from "../../../../Components/Builder2d";
 import { useWindowSize } from "../../../../Hook";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { useMediaQuery } from "@mantine/hooks";
+import { FloorViewerStateContext } from "./Context";
 
 const scaleBy = 1.05;
 
@@ -31,17 +32,11 @@ function isTouchEnabled() {
   return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 }
 
-function FloorPlanView2d({
-  pixelMeterRelation,
-  layouts,
-  racks,
-  markers,
-  onSelect,
-  onDblClick,
-}) {
+function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect, onDblClick }) {
   const stageRef = useRef(null);
   const matches = useMediaQuery("(min-width: 768px)");
   const wSize = useWindowSize();
+  const { setPartsDictionary } = useContext(FloorViewerStateContext);
 
   let lastCenter = null;
   let lastDist = 0;
@@ -50,10 +45,6 @@ function FloorPlanView2d({
     (evt) => {
       const ref = stageRef.current;
       const obj = evt.target;
-
-      // const group = obj.getParent();
-      // selectObjectWithId(ref, obj);
-      // onSelect(group.id());
 
       selectPartWithId(ref, obj);
       onSelect(obj.id());
@@ -78,8 +69,11 @@ function FloorPlanView2d({
       ref.destroyChildren();
 
       buildLayout(ref, pixelMeterRelation, layouts[0], true);
-      buildActors(ref, racks, true, onLocalSelection, onLocalDblClick);
+      const anchorMap = buildActorsAndAnchors(ref, racks, true, onLocalSelection, onLocalDblClick);
+      setPartsDictionary(ref, anchorMap);
+
       buildSelectionLayer(ref);
+      buildDataInformationLayer(ref);
 
       if (markers) {
         buildMarkers(ref, markers);

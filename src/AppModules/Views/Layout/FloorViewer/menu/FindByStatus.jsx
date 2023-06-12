@@ -1,9 +1,9 @@
-import { Stack, Button, Group, HueSlider, Select, ColorPicker } from "@mantine/core";
 import React from "react";
+import { Stack, Button, Group, Select, ColorPicker } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const FindByDepartment = () => {
+const FindByStatus = () => {
   const { t } = useTranslation();
 
   const [color, onChange] = useState("#ff0000");
@@ -12,8 +12,8 @@ const FindByDepartment = () => {
   return (
     <Stack>
       <Select
-        label="Select a department"
-        placeholder="a departmento"
+        label="Select a status"
+        placeholder="a status"
         data={[
           { value: "AL", label: "ALMACEN" },
           { value: "BE", label: "BEBIDAS CON ALCHOOL" },
@@ -43,4 +43,4 @@ const FindByDepartment = () => {
   );
 };
 
-export default FindByDepartment;
+export default FindByStatus;

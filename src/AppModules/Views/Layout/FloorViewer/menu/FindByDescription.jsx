@@ -1,13 +1,13 @@
 import React from "react";
-import { Stack, Button, Group, HueSlider, Textarea } from "@mantine/core";
+import { Stack, Button, Group, Textarea, ColorPicker } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const FindByDescription = () => {
   const { t } = useTranslation();
 
-  const [value, onChange] = useState(250);
-  const [textValue, setTextValue] = useState(null);
+  const [color, onChange] = useState("#ff0000");
+  const [textValue, setTextValue] = useState("");
   return (
     <Stack>
       <Textarea
@@ -18,7 +18,8 @@ const FindByDescription = () => {
         onChange={(event) => setTextValue(event.currentTarget.value)}
       />
 
-      <HueSlider value={value} onChange={onChange} size="md" />
+      <ColorPicker format="hex" value={color} onChange={onChange} fullWidth withPicker={true} />
+
       <Group position="right">
         <Button
           size="xs"
