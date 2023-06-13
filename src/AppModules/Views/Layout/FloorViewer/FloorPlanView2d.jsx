@@ -7,7 +7,6 @@ import {
   buildLayout,
   buildMarkers,
   buildSelectionLayer,
-  clearSelection,
   selectPartWithId,
 } from "../../../../Components/Builder2d";
 import { useWindowSize } from "../../../../Hook";
@@ -46,7 +45,7 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
       const ref = stageRef.current;
       const obj = evt.target;
 
-      selectPartWithId(ref, obj);
+      selectPartWithId(ref, obj, onDblClick);
       onSelect(obj.id());
     },
     [onSelect]
@@ -56,7 +55,9 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
     (evt) => {
       const obj = evt.target;
       const group = obj.getParent();
-      onDblClick(evt, group.id());
+      if(group){
+        onDblClick(evt, group.id());
+      }
     },
     [onDblClick]
   );
@@ -72,8 +73,8 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
       const anchorMap = buildActorsAndAnchors(ref, racks, true, onLocalSelection, onLocalDblClick);
       setPartsDictionary(ref, anchorMap);
 
-      buildSelectionLayer(ref);
       buildDataInformationLayer(ref);
+      buildSelectionLayer(ref);
 
       if (markers) {
         buildMarkers(ref, markers);
@@ -230,22 +231,6 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
     lastDist = 0;
   }
 
-  function handleSelect(e) {
-    if (racks) {
-      if (stageRef.current === e.target) {
-        const objects = stageRef.current.find("#transformer-obj");
-
-        clearSelection(stageRef.current);
-        onSelect(null);
-
-        if (objects.length > 0) {
-          const transformer = objects[0];
-          transformer.nodes([]);
-        }
-      }
-    }
-  }
-
   return (
     <Stack>
       <Stage
@@ -253,14 +238,9 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
         height={wSize.height - HEADER_HIGHT}
         draggable={!isTouchEnabled()}
         onWheel={zoomStage}
+        ref={stageRef}
         onTouchMove={handleTouch}
         onTouchEnd={handleTouchEnd}
-        ref={stageRef}
-        onContextMenu={(e) => {
-          contextMenu(e);
-        }}
-        onMouseDown={handleSelect}
-        onTap={handleSelect}
       ></Stage>
     </Stack>
   );

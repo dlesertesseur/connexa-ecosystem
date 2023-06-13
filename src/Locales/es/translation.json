@@ -842,6 +842,34 @@
           "usersConnected": "Usuarios Connectados"
         }
       }
+    },
+    "floorViewer": {
+      "menu": {
+        "label": "Items",
+        "title": "Opciones de busqueda",
+        "subTitle": "Seleccionar un grupo de informacion",
+        "options": ["Items por codigo", "Items por descripcion", "Items por departamento", "Items por estado"]
+      },
+      "option":{
+        "itemByCode":{
+          "description":"Buscar item con un codio exacto",
+          "placeholder":"un codigo",
+          "label":"Codigo de item"
+        },
+        "itemByDescription":{
+          "description":"Buscar items con una decripcion similar",
+          "placeholder":"a descripcion",
+          "label":"Descripcion de item"
+        },
+        "itemByDepartament":{
+          "placeholder":"un departamento",
+          "label":"Seleccione un departamento"
+        },
+        "findByStatus":{
+          "placeholder":"un estado",
+          "label":"Seleccione un estado"
+        }
+      }
     }
   },
 

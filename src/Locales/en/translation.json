@@ -868,6 +868,19 @@
           "description":"Search item by exact code",
           "placeholder":"a code",
           "label":"Item code"
+        },
+        "itemByDescription":{
+          "description":"Search items by similar description",
+          "placeholder":"a description",
+          "label":"Item description"
+        },
+        "itemByDepartament":{
+          "placeholder":"a department",
+          "label":"Select a department"
+        },
+        "findByStatus":{
+          "placeholder":"a status",
+          "label":"Select a status"
         }
       }
     }

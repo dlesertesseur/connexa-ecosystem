@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FloorViewerStateContext } from "../Context";
 
-const FindByCode = () => {
+const FindByCode = ({code}) => {
   const { t } = useTranslation();
 
   const [color, onChange] = useState("#ff0000");
@@ -30,7 +30,7 @@ const FindByCode = () => {
           size="xs"
           disabled={!textValue}
           onClick={(evt) => {
-            showData(textValue, color);
+            showData(code, textValue, color);
           }}
         >
           {t("button.accept")}

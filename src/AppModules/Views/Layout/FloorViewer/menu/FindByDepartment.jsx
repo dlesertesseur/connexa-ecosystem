@@ -1,10 +1,13 @@
 import { Stack, Button, Group, HueSlider, Select, ColorPicker } from "@mantine/core";
 import React from "react";
+import { useContext } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FloorViewerStateContext } from "../Context";
 
-const FindByDepartment = () => {
+const FindByDepartment = ({ code }) => {
   const { t } = useTranslation();
+  const { showData } = useContext(FloorViewerStateContext);
 
   const [color, onChange] = useState("#ff0000");
   const [department, setDepartment] = useState(null);
@@ -12,8 +15,8 @@ const FindByDepartment = () => {
   return (
     <Stack>
       <Select
-        label="Select a department"
-        placeholder="a departmento"
+        label={t("view.floorViewer.option.itemByDepartament.label")}
+        placeholder={t("view.floorViewer.option.itemByDepartament.placeholder")}
         data={[
           { value: "AL", label: "ALMACEN" },
           { value: "BE", label: "BEBIDAS CON ALCHOOL" },
@@ -32,8 +35,8 @@ const FindByDepartment = () => {
         <Button
           size="xs"
           disabled={!department}
-          onClick={() => {
-            console.log("obClick");
+          onClick={(evt) => {
+            showData(code, department, color);
           }}
         >
           {t("button.accept")}

@@ -20,24 +20,24 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
 
   useEffect(() => {
     if (option) {
-      setContent(bluildContent(option));
+      setContent(buildContent(option));
     }
   }, [option]);
 
-  const bluildContent = (opt) => {
+  const buildContent = (opt) => {
     let ret = null;
     switch (opt) {
       case 1:
-        ret = <FindByCode/>;
+        ret = <FindByCode code={1}/>;
         break;
       case 2:
-        ret = <FindByDescription/>;
+        ret = <FindByDescription code={2}/>;
         break;
       case 3:
-        ret = <FindByDepartment/>
+        ret = <FindByDepartment code={3}/>
         break;
       case 4:
-        ret = <FindByStatus/>
+        ret = <FindByStatus code={4}/>
         break;
       default:
         break;

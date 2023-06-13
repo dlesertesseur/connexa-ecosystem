@@ -9,7 +9,7 @@ import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/S
 import { FilterControl } from "../Controls/FilterControl";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 import { FloorViewerStateContext } from "./Context";
-import { showPart } from "../../../../Components/Builder2d";
+import { showParts } from "../../../../Components/Builder2d";
 
 const Viewer = ({ app }) => {
   const [actorId, setActorId] = useState(null);
@@ -29,10 +29,10 @@ const Viewer = ({ app }) => {
   const setPartsDictionary = (stageRef, partsMap) => {
     setPartsMap(partsMap);
     setStageRef(stageRef);
-  }
+  };
 
-  const onActorDblClick = (id) => {
-    console.log("### Viewer ### onActorDblClick -> id:" + id);
+  const onActorDblClick = (attrs) => {
+    console.log("### Viewer ### onActorDblClick -> id:", attrs);
     //inspectRack(actorId);
   };
 
@@ -41,10 +41,61 @@ const Viewer = ({ app }) => {
     setActorId(id);
   };
 
-  const showData = (data, color) => {
-    if(partsMap){
-      const part = partsMap.get(data);
-      showPart(stageRef, part, color);
+  const getPartsFromPositions = (positions) => {
+    const parts = [];
+    if (positions) {
+      positions.forEach((pos) => {
+        const part = partsMap.get(pos);
+        if (part) {
+          parts.push(part);
+        }
+      });
+    }
+    return parts;
+  };
+
+  const getDummyPositions = (items, amount = 1) => {
+    const ret = [];
+
+    for (let index = 0; index < amount; index++) {
+      const item = items[Math.floor(Math.random() * items.length)];
+      ret.push(item);
+    }
+    return ret;
+  };
+
+  const showData = async (filter, data, color) => {
+    let parts = null;
+    let positions = null;
+
+    let keys = Array.from(partsMap.keys());
+
+    if (partsMap) {
+      switch (filter) {
+        case 1:
+          positions = getDummyPositions(keys);
+          break;
+
+        case 2:
+          positions = getDummyPositions(keys, 10);
+          break;
+
+        case 3:
+          positions = getDummyPositions(keys, 100);
+          break;
+
+        case 4:
+          positions = getDummyPositions(keys, 200);
+          break;
+
+        default:
+          break;
+      }
+
+      parts = getPartsFromPositions(positions);
+      if (parts) {
+        showParts(stageRef, parts, color, onSelectActor, onActorDblClick);
+      }
     }
   };
 

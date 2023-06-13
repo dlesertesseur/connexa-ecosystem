@@ -2,28 +2,31 @@ import React from "react";
 import { Stack, Button, Group, Select, ColorPicker } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import { FloorViewerStateContext } from "../Context";
 
-const FindByStatus = () => {
+const FindByStatus = ({code}) => {
   const { t } = useTranslation();
+  const { showData } = useContext(FloorViewerStateContext);
 
   const [color, onChange] = useState("#ff0000");
-  const [department, setDepartment] = useState(null);
+  const [status, setStatus] = useState(null);
 
   return (
     <Stack>
       <Select
-        label="Select a status"
-        placeholder="a status"
+        label={t("view.floorViewer.option.findByStatus.label")}
+        placeholder={t("view.floorViewer.option.findByStatus.placeholder")}
         data={[
-          { value: "AL", label: "ALMACEN" },
-          { value: "BE", label: "BEBIDAS CON ALCHOOL" },
-          { value: "BS", label: "BEBIDAS SIN ALCHOOL" },
-          { value: "LI", label: "LIMPIEZA" },
-          { value: "PF", label: "PERFUMERIA" },
-          { value: "EL", label: "ELECTRO" },
+          { value: 1, label: "BLOQUEADOS" },
+          { value: 2, label: "INCIDENCIA" },
+          { value: 3, label: "BLOQUEADO POR QA" },
+          { value: 4, label: "INVENTARIO" },
+          { value: 5, label: "LIMPIEZA" },
+          { value: 6, label: "LIBRE" },
         ]}
-        value={department}
-        onChange={setDepartment}
+        value={status}
+        onChange={setStatus}
       />
 
       <ColorPicker format="hex" value={color} onChange={onChange} fullWidth withPicker={true} />
@@ -31,9 +34,9 @@ const FindByStatus = () => {
       <Group position="right">
         <Button
           size="xs"
-          disabled={!department}
-          onClick={() => {
-            console.log("obClick");
+          disabled={!status}
+          onClick={(evt) => {
+            showData(code, status, color);
           }}
         >
           {t("button.accept")}
