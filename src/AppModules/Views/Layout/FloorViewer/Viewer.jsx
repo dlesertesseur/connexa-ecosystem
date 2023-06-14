@@ -10,6 +10,7 @@ import { FilterControl } from "../Controls/FilterControl";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 import { FloorViewerStateContext } from "./Context";
 import { showParts } from "../../../../Components/Builder2d";
+import ModuleInspector from "./modal/ModuleInspector";
 
 const Viewer = ({ app }) => {
   const [actorId, setActorId] = useState(null);
@@ -22,6 +23,7 @@ const Viewer = ({ app }) => {
   const [pixelmeterrelation, setPixelmeterrelation] = useState(null);
   const [partsMap, setPartsMap] = useState(null);
   const [stageRef, setStageRef] = useState(null);
+  const [moduleInspectorOpen, setModuleInspectorOpen] = useState(false);
 
   const { user } = useSelector((state) => state.auth.value);
   // const wSize = useWindowSize();
@@ -33,7 +35,7 @@ const Viewer = ({ app }) => {
 
   const onActorDblClick = (attrs) => {
     console.log("### Viewer ### onActorDblClick -> id:", attrs);
-    //inspectRack(actorId);
+    setModuleInspectorOpen(true);
   };
 
   const onSelectActor = (id) => {
@@ -159,6 +161,13 @@ const Viewer = ({ app }) => {
           />
 
           {/* {console.log("REPAINT ----> Viewer " + Date.now())} */}
+
+          <ModuleInspector
+            opened={moduleInspectorOpen}
+            close={() => {
+              setModuleInspectorOpen(false);
+            }}
+          />
         </Stack>
       </Stack>
     </FloorViewerStateContext.Provider>
