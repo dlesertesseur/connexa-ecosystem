@@ -37,12 +37,14 @@ const EditablePolygon = ({
     updatePart(partId, geometry);
   };
 
-  const drawEditing = () => {
+  const drawEditing = (cx, cy) => {
     const points = geometry.points;
     const ret = points.map((p) => (
       <EditPoint
         key={p.id}
         id={p.id}
+        cx={cx}
+        cy={cy}
         x={p.positionx}
         y={p.positiony}
         updateLocation={updateLocation}
@@ -93,7 +95,7 @@ const EditablePolygon = ({
   return (
     <Group id={partId} x={x} y={y} rotation={rotation} draggable={editing} onDragEnd={onDragEnd}>
       {drawPolygon()}
-      {editing ? drawEditing() : null}
+      {editing ? drawEditing(x, y) : null}
     </Group>
   );
 };

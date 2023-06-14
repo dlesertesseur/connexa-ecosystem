@@ -778,6 +778,26 @@
         "End date",
         "Status"
       ]
+    },
+
+    "variables": {
+      "name": "VARIABLES",
+      "title": {
+        "create": "Create a new variable",
+        "update": "Update variable",
+        "delete": "Delete variable"
+      },
+      "label": {
+        "name": "Name",
+        "value": "Value"
+      },
+      "placeholder": {
+        "name": "Name",
+        "value": "Value"
+      },
+      "columns": ["Name", "value"],
+      "align": ["left", "left"],
+      "width": ["40%", "60%"]
     }
   },
 

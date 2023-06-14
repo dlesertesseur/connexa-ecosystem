@@ -774,6 +774,26 @@
         "Dia de fin",
         "Estado"
       ]
+    },
+
+    "variables": {
+      "name": "VARIABLES",
+      "title": {
+        "create": "Crear una nueva variable",
+        "update": "Modificar una variable",
+        "delete": "Eliminar una variable"
+      },
+      "label": {
+        "name": "Nombre",
+        "value": "Valor"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "value": "un valor"
+      },
+      "columns": ["Nombre", "Valor"],
+      "align": ["left", "left"],
+      "width": ["40%", "60%"]
     }
   },
 

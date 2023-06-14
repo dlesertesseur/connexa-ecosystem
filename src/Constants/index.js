@@ -285,6 +285,14 @@ export const API = {
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/retailers/stores/",
   },
 
+  variables: {
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/variables",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/variables/",
+    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/variables/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/variables",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/variables/",
+  },
+
   registation: {
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/registrations",
   },
