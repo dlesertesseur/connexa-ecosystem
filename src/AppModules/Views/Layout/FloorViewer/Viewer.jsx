@@ -34,7 +34,7 @@ const Viewer = ({ app }) => {
   };
 
   const onActorDblClick = (attrs) => {
-    console.log("### Viewer ### onActorDblClick -> id:", attrs);
+    console.log("### Viewer ### onActorDblClick -> attrs:", attrs);
     setModuleInspectorOpen(true);
   };
 
@@ -160,13 +160,12 @@ const Viewer = ({ app }) => {
             onDblClick={onActorDblClick}
           />
 
-          {/* {console.log("REPAINT ----> Viewer " + Date.now())} */}
-
           <ModuleInspector
             opened={moduleInspectorOpen}
             close={() => {
               setModuleInspectorOpen(false);
             }}
+            actorId={actorId}
           />
         </Stack>
       </Stack>

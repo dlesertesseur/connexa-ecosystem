@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { useRef, useState } from "react";
-import { Detailed, Edges } from "@react-three/drei";
+import { Edges, useSelect } from "@react-three/drei";
 
 const materialsMap = new Map();
 materialsMap.set(1, "grey");
@@ -21,6 +21,50 @@ function getColor(obj) {
     color = materialsMap.get(obj.type);
   }
   return color;
+}
+
+function SelectebleBox({
+  name,
+  position,
+  dimension,
+  rotations,
+  color = 0xd5d5d5,
+  opacity = 1,
+  transparent = false,
+  onClick,
+  onDlbClick,
+  userData,
+}) {
+  const ref = useRef();
+  const selected = useSelect().map((sel) => sel.userData.id)
+  const isSelected = !!selected.find((sel) => sel === userData.id)
+
+  return (
+    <mesh
+      name={name}
+      position={position}
+      ref={ref}
+      rotation={
+        new THREE.Euler(
+          THREE.MathUtils.degToRad(rotations[0]),
+          THREE.MathUtils.degToRad(rotations[1]),
+          THREE.MathUtils.degToRad(rotations[2])
+        )
+      }
+      onClick={(event) => {
+        if (onClick) {
+          onClick(event, ref);
+        }
+      }}
+      onDoubleClick={onDlbClick}
+      userData={userData}
+    >
+      <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
+      <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
+
+      <Edges visible={isSelected} scale={1} renderOrder={1000} color="#ff0000"/>
+    </mesh>
+  );
 }
 
 function Box({
@@ -60,13 +104,10 @@ function Box({
     >
       <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
       <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
-
-      <Edges visible={selected} scale={1} renderOrder={1000}>
-        <meshBasicMaterial transparent color="#ff0000" depthTest={true} />
-      </Edges>
     </mesh>
   );
 }
+
 
 function buildModelStructure(structure, setSelectedPart, onDlbClick) {
   const modules = structure.modules;
@@ -355,4 +396,4 @@ const buildEnvironmentLOD = (racks, setSelectedPart) => {
   return env;
 };
 
-export { buildModelStructure, buildEnvironmentLOD };
+export { buildModelStructure, buildEnvironmentLOD, SelectebleBox };

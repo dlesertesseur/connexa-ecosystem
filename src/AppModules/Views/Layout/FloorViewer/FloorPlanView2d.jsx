@@ -56,7 +56,7 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
       const obj = evt.target;
       const group = obj.getParent();
       if(group){
-        onDblClick(evt, group.id());
+        onDblClick(evt, group.attrs);
       }
     },
     [onDblClick]
