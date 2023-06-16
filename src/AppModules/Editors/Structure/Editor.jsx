@@ -1,22 +1,26 @@
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Grid, TransformControls } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
-import { buildModelStructure } from "../../../Components/Builder3d";
+import { OrbitControls, Grid, TransformControls, Select, useSelect } from "@react-three/drei";
+import { useContext, useEffect, useRef, useState } from "react";
+import { buildParts } from "../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
+import { AbmStateContext } from "./Context";
 import EditorToolbar from "./EditorToolbar";
+import EditorSidebar from "./EditorSidebar";
 
-const Editor = ({ structure, editing }) => {
+const Editor = () => {
   const [model, setModel] = useState(null);
   const [selectedPart, setSelectedPart] = useState(null);
-  const [transformOption, setTransformOption] = useState("translate");
-  
+  const [transformOption] = useState("translate");
+  const { parts } = useContext(AbmStateContext);
   const canvasRef = useRef();
 
   const onSelect = (event, ref) => {
-    if (event.intersections && event.intersections.length > 0) {
-      const obj = event.intersections[0].object;
-      setSelectedPart(obj);
+
+    if (ref) {
+      setSelectedPart(ref.current);
+    } else {
+      setSelectedPart(null);
     }
   };
 
@@ -30,12 +34,12 @@ const Editor = ({ structure, editing }) => {
   };
 
   useEffect(() => {
-    if (structure) {
-      const ret = buildModelStructure(structure, onSelect, onDlbClick);
+    if (parts) {
+      const ret = buildParts(parts, onSelect);
       setSelectedPart(null);
       setModel(ret);
     }
-  }, [structure]);
+  }, [parts]);
 
   const onUpdateData = (event) => {
     const userData = selectedPart.userData;
@@ -52,7 +56,7 @@ const Editor = ({ structure, editing }) => {
     ];
 
     userData.positionx = positions.x;
-    userData.positiony = -positions.y;
+    userData.positiony = positions.y;
     userData.positionz = positions.z;
 
     userData.rotationx = rotations[0];
@@ -67,14 +71,24 @@ const Editor = ({ structure, editing }) => {
   return (
     <Stack w={"100%"} h={"100%"} spacing={0}>
       <Group mb={"xs"}>
-        <EditorToolbar/>
+        <EditorToolbar />
       </Group>
-      <Canvas ref={canvasRef} camera={{ position: [0, 15, 15], fov: 25 }}>
+      <Canvas
+        ref={canvasRef}
+        camera={{ position: [0, 15, 15], fov: 25 }}
+        onPointerMissed={() => {
+          setSelectedPart(null);
+        }}
+      >
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} />
         <Grid infiniteGrid position={[0, 0, 0]} />
         <axesHelper args={[10]} />
-        {model}
+
+        <Select box multiple>
+          {model}
+        </Select>
+
         <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault />
 
         {selectedPart ? (
@@ -87,6 +101,7 @@ const Editor = ({ structure, editing }) => {
           />
         ) : null}
       </Canvas>
+      <EditorSidebar part={selectedPart} open={selectedPart ? true : false} />
     </Stack>
   );
 };

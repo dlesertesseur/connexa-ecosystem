@@ -1,9 +1,10 @@
+import uuid from "react-uuid";
 import { PRIMITIVE_BOX } from "../../Constants/structures";
 
 class PrimitiveMetaDataBuilder {
   static createBox() {
     const metaData = {
-      key: uuid(),
+      id: uuid(),
       number: 0,
       name: "BOX",
       positionx: 0,

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import ResponceNotification from "../../../Modal/ResponceNotification";
-import StructureMetaDataBuilder from "../../../Components/Builder3d/StructureMetaDataBuilder";
-import RackBasicMetaDataBuilder from "../../../Components/Builder3d/RackBasicMetaDataBuilder";
-import StagingMetaDataBuilder from "../../../Components/Builder3d/StagingMetaDataBuilder";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
@@ -12,7 +9,7 @@ import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { FilterControl } from "./FilterControl";
 import { findAllRacksHeaders } from "../../../DataAccess/Racks";
-import { STRUCTURE_TYPE_RACK, STRUCTURE_TYPE_SHELVING, STRUCTURE_TYPE_RACK_BASIC, STRUCTURE_TYPE_STAGING, PRIMITIVE_BOX, PRIMITIVE_SPHERE, PRIMITIVE_CONE } from "../../../Constants/structures";
+import { PRIMITIVE_BOX, PRIMITIVE_SPHERE, PRIMITIVE_CONE } from "../../../Constants/structures";
 import { PrimitiveMetaDataBuilder } from "../../../Components/Builder3d/PrimitiveMetaDataBuilder";
 
 const DynamicApp = ({ app }) => {
@@ -29,9 +26,8 @@ const DynamicApp = ({ app }) => {
   const [parts, setParts] = useState([]);
 
   const initilizeContext = () => {
-    setModelStructure(null);
-    setStructureName(null);
     console.log("initilizeContext -> ");
+    setParts([]);
   };
 
   const getData = async () => {
@@ -55,8 +51,6 @@ const DynamicApp = ({ app }) => {
   };
 
   useEffect(() => {
-    setStructureName(null);
-    setSelectedRowId(null);
     if (site && floor) {
       getData();
     }

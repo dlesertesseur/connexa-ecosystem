@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { useRef, useState } from "react";
-import { Edges, useSelect } from "@react-three/drei";
+import { Edges, TransformControls, useSelect } from "@react-three/drei";
+import uuid from "react-uuid";
 
 const materialsMap = new Map();
 materialsMap.set(1, "grey");
@@ -36,8 +37,10 @@ function SelectebleBox({
   userData,
 }) {
   const ref = useRef();
-  const selected = useSelect().map((sel) => sel.userData.id)
-  const isSelected = !!selected.find((sel) => sel === userData.id)
+  const selected = useSelect().map((sel) => {
+    return sel.userData.id;
+  });
+  const isSelected = !!selected.find((sel) => sel === userData.id);
 
   return (
     <mesh
@@ -53,7 +56,7 @@ function SelectebleBox({
       }
       onClick={(event) => {
         if (onClick) {
-          onClick(event, ref);
+          onClick(event, ref, isSelected);
         }
       }}
       onDoubleClick={onDlbClick}
@@ -62,7 +65,7 @@ function SelectebleBox({
       <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
       <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
 
-      <Edges visible={isSelected} scale={1} renderOrder={1000} color="#ff0000"/>
+      <Edges visible={isSelected} scale={1} renderOrder={1000} color="#ff0000" />
     </mesh>
   );
 }
@@ -107,7 +110,6 @@ function Box({
     </mesh>
   );
 }
-
 
 function buildModelStructure(structure, setSelectedPart, onDlbClick) {
   const modules = structure.modules;
@@ -396,4 +398,23 @@ const buildEnvironmentLOD = (racks, setSelectedPart) => {
   return env;
 };
 
-export { buildModelStructure, buildEnvironmentLOD, SelectebleBox };
+function buildParts(parts, onSelect, selectedId) {
+  return parts?.map((part) => {
+    const matColor = getColor(part);
+    const box = (
+      <SelectebleBox
+        key={part.id ? part.id : part.key}
+        position={[part.positionx, part.positiony, part.positionz]}
+        dimension={[part.dimensionx, part.dimensiony, part.dimensionz]}
+        rotations={[part.rotationx, part.rotationy, part.rotationz]}
+        color={matColor}
+        onClick={onSelect}
+        userData={part}
+        selectedId={selectedId}
+      />
+    );
+    return box;
+  });
+}
+
+export { buildModelStructure, buildEnvironmentLOD, SelectebleBox, buildParts };

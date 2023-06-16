@@ -15,7 +15,7 @@ export function CreatePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { refresh, site, floor, initilizeContext, modelStructure } = useContext(AbmStateContext);
+  const { refresh, site, floor, initilizeContext} = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
   const wSize = useWindowSize();
@@ -68,7 +68,7 @@ export function CreatePage() {
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
       <Group position="center" spacing={0} h={wSize.height - HEADER_HIGHT}>
-        <Editor structure={modelStructure} />
+        <Editor/>
       </Group>
 
       <Group position="right" mt="xs" mb="xs" width="100%">
