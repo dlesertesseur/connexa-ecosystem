@@ -1,6 +1,9 @@
 import Konva from "konva";
 import { PIXEL_METER_RELATION } from "../../Constants";
 import { getModulePartColor, getModulePartStrokeColor, getPartSelectedColor } from "../../Util";
+import uuid from "react-uuid";
+
+const radioNode = 16;
 
 function buildPolygon(pixelMeterRelation, geometry, fill, stroke) {
   let polygon = null;
@@ -266,7 +269,7 @@ function buildActors(
   let actor = null;
 
   layer = new Konva.Layer({ id: "actors" });
-  
+
   for (let index = 0; index < actors.length; index++) {
     actor = buildActor(PIXEL_METER_RELATION, actors[index], onDblClick, selectPart, firtsBaseIndicador);
     actor.on("mousedown touchstart", onSelect);
@@ -282,17 +285,20 @@ function buildActors(
   return layer;
 }
 
-function buildActorsAndAnchors(stageRef, actors, cache = false, onSelect = null, onDblClick = null) {
+function buildActorsAndAnchors(stageRef, actors, cache = false, onSelect = null) {
   let layer = null;
   let actor = null;
 
   layer = new Konva.Layer({ id: "actors" });
-  layer.on("mousedown touchstart", onSelect);
+
+  if (onSelect) {
+    layer.on("mousedown touchstart", onSelect);
+  }
 
   const anchorMap = new Map();
 
   for (let index = 0; index < actors.length; index++) {
-    actor = buildActorAndAnchor(anchorMap, PIXEL_METER_RELATION, actors[index], onDblClick);
+    actor = buildActorAndAnchor(anchorMap, PIXEL_METER_RELATION, actors[index]);
     layer.add(actor);
   }
 
@@ -304,7 +310,7 @@ function buildActorsAndAnchors(stageRef, actors, cache = false, onSelect = null,
   return anchorMap;
 }
 
-function buildActorAndAnchor(anchorMap, pixelMeterRelation, actor, onDblClick) {
+function buildActorAndAnchor(anchorMap, pixelMeterRelation, actor) {
   let grActor = null;
 
   grActor = new Konva.Group({
@@ -386,11 +392,8 @@ function transformerActor(stageRef, obj) {
   }
 }
 
-function clearSelection(stageRef) {
+function clearSelection(stageRef) {  
   const layers = stageRef.find("#selection-layer");
-
-  // console.log("#################### clearSelection()", layers);
-
   if (layers) {
     const layer = layers[0];
     layer.removeChildren();
@@ -416,7 +419,7 @@ function selectObjectWithId(stageRef, obj) {
       stroke: getPartSelectedColor(),
       strokeWidth: 2,
     });
-
+    
     /*CARTEL*/
     const label = new Konva.Label({ x: 0, y: 0 });
     label.rotation(-group.rotation());
@@ -429,15 +432,17 @@ function selectObjectWithId(stageRef, obj) {
       stroke: "#000",
       strokeWidth: 0.5,
     });
+
     const text = new Konva.Text({
       padding: 2,
       text: group.name(),
       align: "center",
     });
 
+    
     label.add(tag, text);
     group.add(selector, label);
-
+    
     layer.add(group);
   }
 }
@@ -464,7 +469,7 @@ function selectPartWithId(stageRef, obj, onDblClick) {
       });
 
       gr.on("dblclick dbltap", (e) => {
-        if(onDblClick){
+        if (onDblClick) {
           onDblClick(obj.attrs);
         }
       });
@@ -509,11 +514,28 @@ function selectPartWithId(stageRef, obj, onDblClick) {
 function buildSelectionLayer(stageRef) {
   const selectionLayer = new Konva.Layer({ id: "selection-layer" });
   stageRef.add(selectionLayer);
+  return selectionLayer;
 }
 
 function buildDataInformationLayer(stageRef) {
   const selectionLayer = new Konva.Layer({ id: "dataInformation-layer" });
   stageRef.add(selectionLayer);
+}
+
+function buildGraphNodeLayer(stageRef) {
+  const layer = new Konva.Layer({ id: "graphNode-layer" });
+  stageRef.add(layer);
+  return layer;
+}
+
+function buildGraphAxisLayer(stageRef) {
+  const layer = new Konva.Layer({ id: "graphAxis-layer" });
+  stageRef.add(layer);
+}
+
+function addLayer(stageRef, name) {
+  const layer = new Konva.Layer({ id: name });
+  stageRef.add(layer);
 }
 
 function buildRelocatableActors(stageRef, actors, onSelect, dragend, transformend) {
@@ -760,8 +782,8 @@ function showParts(stageRef, bases, color, onSelect, onDblClick) {
       });
 
       gr.on("dblclick dbltap", (e) => {
-        if(onDblClick){
-          onDblClick(base.attrs)
+        if (onDblClick) {
+          onDblClick(base.attrs);
         }
       });
 
@@ -821,6 +843,198 @@ function selectDataInformation(stageRef, group, base) {
   }
 }
 
+function selectNode(stageRef, group, base) {
+  const layers = stageRef.find("#selection-layer");
+
+  if (layers) {
+    const layer = layers[0];
+
+    layer.removeChildren();
+
+    /*MARCO*/
+    const selector = new Konva.Circle({
+      x: base.width() / 2,
+      y: base.height() / 2,
+      width: radioNode,
+      height: radioNode,
+      stroke: getPartSelectedColor(),
+      strokeWidth: 2,
+    });
+
+    /*CARTEL*/
+    const label = new Konva.Label({ x: base.width() / 2, y: base.height() / 2 });
+    label.rotation(-group.rotation());
+    const tag = new Konva.Tag({
+      cornerRadius: 2,
+      pointerDirection: "down",
+      pointerWidth: 6,
+      pointerHeight: 6,
+      fill: "#fff",
+      stroke: "#000",
+      strokeWidth: 0.5,
+    });
+    const text = new Konva.Text({
+      padding: 2,
+      text: base.name(),
+      align: "center",
+    });
+
+    label.add(tag, text);
+    group.add(selector, label);
+
+    layer.add(group);
+  }
+}
+
+function showNodes(stageRef, nodes, color, onSelect) {
+  const layers = stageRef.find("#graphNode-layer");
+  if (layers) {
+    const layer = layers[0];
+
+    layer.removeChildren();
+
+    for (let index = 0; index < nodes.length; index++) {
+      const base = nodes[index];
+
+      const pos = base.getAbsolutePosition(stageRef);
+
+      const group = base.getParent();
+      const rot = group.getParent().attrs.rotation;
+
+      const gr = new Konva.Group({
+        x: pos.x,
+        y: pos.y,
+        name: "dataInformation-box",
+        rotation: rot,
+        width: base.width(),
+        height: base.height(),
+      });
+
+      const node = new Konva.Circle({
+        x: base.width() / 2,
+        y: base.height() / 2,
+        width: radioNode,
+        height: radioNode,
+        fill: color,
+        type: "GRAPH_NODE",
+      });
+
+      // gr.on("dblclick dbltap", (e) => {
+      //   if(onDblClick){
+      //     onDblClick(base.attrs)
+      //   }
+      // });
+
+      node.on("mousedown touchstart", (e) => {
+        selectNode(stageRef, gr.clone(), base);
+        if (onSelect) {
+          onSelect(base.attrs.id);
+        }
+      });
+
+      gr.add(node);
+      layer.add(gr);
+    }
+
+    layer.cache({ pixelRatio: 3 });
+  }
+}
+
+function buildNode(stageRef, onSelect, pos, color) {
+  const layers = stageRef.find("#graphNode-layer");
+  if (layers) {
+    const layer = layers[0];
+
+    const base = new Konva.Rect({
+      id: uuid(),
+      x: 0,
+      y: 0,
+      width: radioNode,
+      height: radioNode,
+      rotation: 0,
+      name: "NEW-NODE",
+    });
+
+    const gr = new Konva.Group({
+      x: pos.x - (radioNode/2),
+      y: pos.y - (radioNode/2),
+      name: "dataInformation-box",
+      rotation: 0,
+      width: base.width(),
+      height: base.height(),
+    });
+
+    const node = new Konva.Circle({
+      x: radioNode/2,
+      y: radioNode/2,
+      width: radioNode,
+      height: radioNode,
+      fill: color,
+      type: "GRAPH_NODE",
+    });
+
+    node.on("mousedown touchstart", (e) => {
+      selectNode(stageRef, gr.clone(), base);
+      if (onSelect) {
+        onSelect(base.attrs.id);
+      }
+    });
+
+    gr.add(node);
+    layer.add(gr);
+
+    layer.cache({ pixelRatio: 3 });
+  }
+}
+
+function selectActor(stageRef, obj) {
+  const layers = stageRef.find("#selection-layer");
+
+  if (layers) {
+    const layer = layers[0];
+
+    layer.removeChildren();
+
+    const group = obj.getParent().clone();
+    group.removeChildren();
+
+    /*MARCO*/
+    const selector = new Konva.Rect({
+      x: -(group.width() / 2),
+      y: -(group.height() / 2),
+      width: group.width(),
+      height: group.height(),
+      stroke: getPartSelectedColor(),
+      strokeWidth: 2,
+    });
+    
+    /*CARTEL*/
+    const label = new Konva.Label({ x: 0, y: 0 });
+    label.rotation(-group.rotation());
+    const tag = new Konva.Tag({
+      cornerRadius: 2,
+      pointerDirection: "down",
+      pointerWidth: 6,
+      pointerHeight: 6,
+      fill: "#fff",
+      stroke: "#000",
+      strokeWidth: 0.5,
+    });
+
+    const text = new Konva.Text({
+      padding: 2,
+      text: group.name(),
+      align: "center",
+    });
+
+    
+    label.add(tag, text);
+    group.add(selector, label);
+    
+    layer.add(group);
+  }
+}
+
 export {
   buildLayout,
   buildActors,
@@ -838,4 +1052,10 @@ export {
   buildDataInformationLayer,
   showPart,
   showParts,
+  showNodes,
+  selectActor,
+  addLayer,
+  buildGraphNodeLayer,
+  buildGraphAxisLayer,
+  buildNode
 };

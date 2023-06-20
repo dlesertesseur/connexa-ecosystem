@@ -1,18 +1,27 @@
-import { Stack } from "@mantine/core";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { Flex, Group, LoadingOverlay, Paper, ScrollArea, Stack, Switch } from "@mantine/core";
+import { useContext, useEffect, useRef } from "react";
 import { Stage } from "react-konva";
 import {
   buildActorsAndAnchors,
-  buildDataInformationLayer,
+  buildGraphNodeLayer,
   buildLayout,
   buildMarkers,
+  buildNode,
   buildSelectionLayer,
-  selectPartWithId,
+  clearSelection,
+  selectActor,
+  showNodes,
 } from "../../../../Components/Builder2d";
+import Toolbar from "./Toolbar";
 import { useWindowSize } from "../../../../Hook";
-import { HEADER_HIGHT } from "../../../../Constants";
+import { HEADER_HIGHT, PIXEL_METER_RELATION, TOOLBAR_HIGHT } from "../../../../Constants";
 import { useMediaQuery } from "@mantine/hooks";
-import { FloorViewerStateContext } from "./Context";
+import { AbmStateContext } from "./Context";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/Surfaces";
+import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
+import { useTranslation } from "react-i18next";
 
 const scaleBy = 1.05;
 
@@ -31,60 +40,143 @@ function isTouchEnabled() {
   return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 }
 
-function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect, onDblClick }) {
+function FloorPlanView2d() {
   const stageRef = useRef(null);
   const matches = useMediaQuery("(min-width: 768px)");
   const wSize = useWindowSize();
-  const { setPartsDictionary } = useContext(FloorViewerStateContext);
+  const { t } = useTranslation();
+  const { user } = useSelector((state) => state.auth.value);
+  const [racks, setRacks] = useState(null);
+  const [layouts, setLayouts] = useState(null);
+  const [markers, setMarkers] = useState([]);
+  const [baseNodes, setBaseNodes] = useState([]);
+  const [nodes, setNodes] = useState([]);
+  const [partsMap, setPartsMap] = useState(null);
+  const [pixelMeterRelation, setPixelMeterRelation] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [addNodeOnClick, setAddNodeOnClick] = useState(false);
+
+  const { site, floor } = useContext(AbmStateContext);
 
   let lastCenter = null;
   let lastDist = 0;
 
-  const onLocalSelection = useCallback(
-    (evt) => {
-      const ref = stageRef.current;
-      const obj = evt.target;
-
-      selectPartWithId(ref, obj, onDblClick);
-      onSelect(obj.id());
-    },
-    [onSelect]
-  );
-
-  const onLocalDblClick = useCallback(
-    (evt) => {
-      const obj = evt.target;
-      const group = obj.getParent();
-      if(group){
-        onDblClick(evt, group.attrs);
-      }
-    },
-    [onDblClick]
-  );
+  const onLocalLayerSelection = (evt) => {
+    const ref = stageRef.current;
+    const obj = evt.target;
+    console.log("onLocalSelection ->", evt);
+  };
 
   useEffect(() => {
     const ref = stageRef.current;
+    ref.off("mousedown touchstart");
+    ref.on("mousedown touchstart", (e) => {
+      onLocalSelect(e, addNodeOnClick);
+    });
+  }, [addNodeOnClick]);
+
+  const addNode = (e) => {
+    if (e.target.getStage()) {
+      const color = "green";
+      const ref = stageRef.current;
+      var transform = ref.getAbsoluteTransform().copy();
+      transform.invert();
+      const pos = e.target.getStage().getPointerPosition();
+      let clickPos = transform.point(pos);
+      buildNode(ref, onLocalLayerSelection, clickPos, color);
+    }
+  };
+
+  const onLocalSelect = (e, addNodeOnClick) => {
+    const ref = stageRef.current;
+
+    if (!e.target.attrs.type && !e.target.attrs.id) {
+      clearSelection(ref);
+      if (addNodeOnClick) {
+        addNode(e);
+      }
+    }
+  };
+
+  const onLocalDblClick = (evt) => {
+    const obj = evt.target;
+    const group = obj.getParent();
+  };
+
+  const getData = async () => {
+    const params = {
+      token: user.token,
+      siteId: site,
+      floorId: floor,
+      types: "2,10",
+    };
+
+    setLoading(true);
+
+    const layouts = await findLayoutByFloorId(params);
+
+    const n = (1.0 / layouts[0].pixelmeterrelation) * PIXEL_METER_RELATION;
+    setPixelMeterRelation(n);
+    setLayouts(layouts);
+
+    const racks = await findRacksByZoneId(params);
+    setRacks(racks);
+
+    const markerts = await findAllLayoutMarkersById(params);
+    setMarkers(markerts);
+
+    setDataLoaded(Date.now());
+    setLoading(false);
+  };
+
+  const onSelectActor = (evt) => {
+    const obj = evt.target;
+    const ref = stageRef.current;
+    selectActor(ref, obj.getParent());
+  };
+
+  const buildData = () => {
+    const ref = stageRef.current;
     ref.batchDraw();
 
-    if (layouts && racks && pixelMeterRelation) {
+    ref.off("mousedown touchstart");
+    ref.on("mousedown touchstart", (e) => {
+      onLocalSelect(e, addNodeOnClick);
+    });
+
+    if (layouts && racks && pixelMeterRelation && markers) {
       ref.destroyChildren();
 
       buildLayout(ref, pixelMeterRelation, layouts[0], true);
-      const anchorMap = buildActorsAndAnchors(ref, racks, true, onLocalSelection);
-      setPartsDictionary(ref, anchorMap);
+      const anchorMap = buildActorsAndAnchors(ref, racks, true, onSelectActor);
+      setPartsMap(anchorMap);
 
-      buildDataInformationLayer(ref);
+      // buildDataInformationLayer(ref);
+      buildGraphNodeLayer(ref);
+
+      // buildGraphAxisLayer(ref);
       buildSelectionLayer(ref);
 
       if (markers) {
         buildMarkers(ref, markers);
       }
 
-      console.log("########### buildActors ###########");
-    }
+      const baseNodes = Array.from(anchorMap.values());
+      showNodes(ref, baseNodes, "orange", onLocalLayerSelection);
+      setBaseNodes(baseNodes);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layouts, pixelMeterRelation, racks, markers]);
+      console.log("########### buildActors ########### ");
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    buildData();
+  }, [dataLoaded]);
 
   function zoomStage(event) {
     event.evt.preventDefault();
@@ -233,9 +325,17 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
 
   return (
     <Stack>
+      <LoadingOverlay visible={loading} overlayBlur={2} />
+      <Toolbar>
+        <Switch
+          label={t("crud.floorGrapthEditor.label.addNode")}
+          checked={addNodeOnClick}
+          onChange={(event) => setAddNodeOnClick(event.currentTarget.checked)}
+        />
+      </Toolbar>
       <Stage
         width={wSize.width - (matches ? 316 : 32)}
-        height={wSize.height - HEADER_HIGHT}
+        height={wSize.height - HEADER_HIGHT - TOOLBAR_HIGHT - 16}
         draggable={!isTouchEnabled()}
         onWheel={zoomStage}
         ref={stageRef}

@@ -283,6 +283,14 @@
       "width": ["30%", "50%", "20%"]
     },
 
+    "floorGrapthEditor": {
+      "name": "FLOOR_GRAPH_EDITOR",
+      "columns": ["Name", "Description"],
+      "label": {
+        "addNode": "Agregar nodo al hacer clic"
+      }
+    },
+
     "role": {
       "name": "ROLES",
       "title": {

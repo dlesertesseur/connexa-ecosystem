@@ -189,8 +189,6 @@ export const findLayoutByFloorId = async (parameters) => {
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
-    console.log("-> findLayoutByFloorId")
-
     return data;
   } catch (error) {
     return error;

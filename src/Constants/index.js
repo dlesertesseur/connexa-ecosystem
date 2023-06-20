@@ -296,6 +296,14 @@ export const API = {
   registation: {
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/registrations",
   },
+
+  graph: {
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites/",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites/",
+    findAllHeaders: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
+  },
+
 };
 
 export const ERRORS = {
