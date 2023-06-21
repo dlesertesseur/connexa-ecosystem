@@ -1,4 +1,4 @@
-import { LoadingOverlay, Stack, Switch } from "@mantine/core";
+import { ActionIcon, Button, Divider, Group, LoadingOverlay, Paper, Stack, Switch, Text } from "@mantine/core";
 import { useContext, useEffect, useRef } from "react";
 import { Stage } from "react-konva";
 import {
@@ -14,6 +14,7 @@ import {
   buildDraggableGraphNodeLayer,
   findObjectInLayer,
   findObjectsInLayer,
+  selectMarckActor,
 } from "../../../../Components/Builder2d";
 import Toolbar from "./Toolbar";
 import { useWindowSize } from "../../../../Hook";
@@ -26,6 +27,7 @@ import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/S
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
+import { IconClearAll, IconLink } from "@tabler/icons-react";
 
 const scaleBy = 1.05;
 
@@ -60,14 +62,25 @@ function FloorPlanView2d() {
   const [dataLoaded, setDataLoaded] = useState(null);
   const [loading, setLoading] = useState(false);
   const [addNodeOnClick, setAddNodeOnClick] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
+
+  const [actor1, setActor1] = useState(null);
+  const [actor2, setActor2] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null);
 
   const { site, floor } = useContext(AbmStateContext);
 
   let lastCenter = null;
   let lastDist = 0;
 
-  const onLocalLayerSelection = useCallback((evt) => {
+  useEffect(() => {
+    if (actor1 === null) {
+      setActor1(selectedNode);
+    } else {
+      setActor2(selectedNode);
+    }
+  }, [selectedNode]);
+
+  const onLocalLayerSelection = (evt) => {
     const ref = stageRef.current;
 
     clearDraggableNodesSelection(ref);
@@ -77,7 +90,7 @@ function FloorPlanView2d() {
       node.children[0].stroke("red");
       node.children[0].strokeWidth(2);
     }
-  }, []);
+  };
 
   useEffect(() => {
     const ref = stageRef.current;
@@ -110,7 +123,7 @@ function FloorPlanView2d() {
     }
   };
 
-  const onLocalSelect = useCallback((e, addNodeOnClick) => {
+  const onLocalSelect = (e, addNodeOnClick) => {
     const ref = stageRef.current;
 
     if (!e.target.attrs.type && !e.target.attrs.id) {
@@ -120,11 +133,12 @@ function FloorPlanView2d() {
         addNode(e);
       }
     }
-  }, []);
+  };
 
-  const onLocalDblClick = (evt) => {
+  const onDblClickActor = (evt) => {
     const obj = evt.target;
     const group = obj.getParent();
+    setSelectedNode(group.attrs);
   };
 
   const getData = async () => {
@@ -156,7 +170,7 @@ function FloorPlanView2d() {
   const onSelectActor = (evt) => {
     const obj = evt.target;
     const ref = stageRef.current;
-    selectActor(ref, obj.getParent());
+    selectActor(ref, obj);
   };
 
   const buildData = () => {
@@ -172,7 +186,7 @@ function FloorPlanView2d() {
       ref.destroyChildren();
 
       buildLayout(ref, pixelMeterRelation, layouts[0], true);
-      const anchorMap = buildActorsAndAnchors(ref, racks, true, onSelectActor);
+      const anchorMap = buildActorsAndAnchors(ref, racks, true, onSelectActor, onDblClickActor);
       setPartsMap(anchorMap);
 
       buildStaticsGraphNodeLayer(ref);
@@ -346,6 +360,39 @@ function FloorPlanView2d() {
     lastDist = 0;
   }
 
+  const linkActors = () => {
+    const ref = stageRef.current;
+    const basesAct1 = [];
+    const basesAct2 = [];
+
+    const m1 = actor1.userData.modules;
+    const m2 = actor2.userData.modules;
+
+    m1.forEach((m) => {
+      m.parts.forEach((p) => basesAct1.push(p));
+    });
+
+    m2.forEach((m) => {
+      m.parts.forEach((p) => basesAct2.push(p));
+    });
+
+    for (let index = 0; index < basesAct1.length; index++) {
+      const b1 = basesAct1[index];
+      const b2 = basesAct2[index];
+
+      const node1 = partsMap.get(b1.name);
+      const node2 = partsMap.get(b2.name);
+
+      const absPos1 = node1.getAbsolutePosition(ref);
+      const absPos2 = node2.getAbsolutePosition(ref);
+
+      const posx = ((absPos2.x - absPos1.x) / 2) + absPos1.x ;
+      const posy = absPos1.y - (node1.height() / 2);
+      
+      buildNode(ref, onLocalLayerSelection, {x:posx, y:posy}, "grey");
+    }
+  };
+
   return (
     <Stack>
       <LoadingOverlay visible={loading} overlayBlur={2} />
@@ -355,6 +402,37 @@ function FloorPlanView2d() {
           checked={addNodeOnClick}
           onChange={(event) => setAddNodeOnClick(event.currentTarget.checked)}
         />
+
+        <Group spacing={"xs"}>
+          <Divider orientation="vertical" />
+          {actor1 ? <Text>{actor1?.name}</Text> : null}
+          {actor2 ? <Text>{actor2?.name}</Text> : null}
+          {actor1 || actor2 ? (
+            <ActionIcon
+              disabled={actor1 && actor2 ? false : true}
+              color="blue"
+              size="sm"
+              variant="filled"
+              onClick={linkActors}
+            >
+              <IconLink size={16} />
+            </ActionIcon>
+          ) : null}
+
+          {actor1 || actor2 ? (
+            <ActionIcon
+              color="red"
+              size="sm"
+              variant="filled"
+              onClick={() => {
+                setActor1(null);
+                setActor2(null);
+              }}
+            >
+              <IconClearAll size={16} />
+            </ActionIcon>
+          ) : null}
+        </Group>
       </Toolbar>
       <Stage
         width={wSize.width - (matches ? 316 : 32)}

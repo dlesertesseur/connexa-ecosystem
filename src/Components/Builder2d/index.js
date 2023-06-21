@@ -285,7 +285,7 @@ function buildActors(
   return layer;
 }
 
-function buildActorsAndAnchors(stageRef, actors, cache = false, onSelect = null) {
+function buildActorsAndAnchors(stageRef, actors, cache = false, onSelect = null, onDblClickActor = null) {
   let layer = null;
   let actor = null;
 
@@ -299,6 +299,11 @@ function buildActorsAndAnchors(stageRef, actors, cache = false, onSelect = null)
 
   for (let index = 0; index < actors.length; index++) {
     actor = buildActorAndAnchor(anchorMap, PIXEL_METER_RELATION, actors[index]);
+    
+    if (onDblClickActor) {
+      actor.on("dblclick dbltap", onDblClickActor);
+    }
+  
     layer.add(actor);
   }
 
@@ -1030,11 +1035,12 @@ function selectActor(stageRef, obj) {
 
     layer.removeChildren();
 
-    const group = obj.getParent().clone();
+    const group = obj.getParent().getParent().clone();
     group.removeChildren();
 
     /*MARCO*/
     const selector = new Konva.Rect({
+      id: obj.attrs.id,
       x: -(group.width() / 2),
       y: -(group.height() / 2),
       width: group.width(),
@@ -1069,6 +1075,37 @@ function selectActor(stageRef, obj) {
   }
 }
 
+function selectMarckActor(stageRef, racks) {
+  const layers = stageRef.find("#actors");
+  const selLayers = stageRef.find("#selection-layer");
+
+  if (layers && selLayers) {
+    const layer = layers[0];
+    const setLayer = selLayers[0];
+
+    racks.forEach(rack => {
+      const arrObj = layer.find("#" + rack);
+      const obj = arrObj[0].getParent();
+      const group = obj.getParent().clone();
+
+      group.removeChildren();
+  
+      const selector = new Konva.Rect({
+        x: -(group.width() / 2),
+        y: -(group.height() / 2),
+        width: group.width(),
+        height: group.height(),
+        stroke: "blue",
+        strokeWidth: 2,
+      });
+  
+      group.add(selector);
+  
+      setLayer.add(group);
+    });
+  }
+}
+
 export {
   buildLayout,
   buildActors,
@@ -1094,5 +1131,6 @@ export {
   buildGraphAxisLayer,
   buildNode,
   findObjectInLayer,
-  findObjectsInLayer
+  findObjectsInLayer,
+  selectMarckActor
 };

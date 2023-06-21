@@ -297,7 +297,8 @@
       "name": "FLOOR_GRAPH_EDITOR",
       "columns": ["Name", "Description"],
       "label": {
-        "addNode": "Add node on click"
+        "addNode": "Add node on click",
+        "linkStructures":"Link structures"
       }
     },
 
