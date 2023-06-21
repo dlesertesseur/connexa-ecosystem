@@ -1,13 +1,9 @@
 import React from "react";
-import { Group, Switch } from "@mantine/core";
+import { Group } from "@mantine/core";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
-import { useTranslation } from "react-i18next";
-import { useContext } from "react";
-import { AbmStateContext } from "./Context";
+
 
 const Toolbar = ({ children }) => {
-  // const { t } = useTranslation();
-  // const {} = useContext(AbmStateContext)
    return (
     <Group
       px={"xs"}
@@ -18,10 +14,6 @@ const Toolbar = ({ children }) => {
         height: TOOLBAR_HIGHT + "px",
       })}
     >
-      {/* <Group>
-        <OptionsMenu disabled={racks ? false : true}/>
-      </Group> */}
-
       <Group>{children}</Group>
     </Group>
   );

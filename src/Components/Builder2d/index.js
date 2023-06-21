@@ -392,7 +392,7 @@ function transformerActor(stageRef, obj) {
   }
 }
 
-function clearSelection(stageRef) {  
+function clearSelection(stageRef) {
   const layers = stageRef.find("#selection-layer");
   if (layers) {
     const layer = layers[0];
@@ -419,7 +419,7 @@ function selectObjectWithId(stageRef, obj) {
       stroke: getPartSelectedColor(),
       strokeWidth: 2,
     });
-    
+
     /*CARTEL*/
     const label = new Konva.Label({ x: 0, y: 0 });
     label.rotation(-group.rotation());
@@ -439,10 +439,9 @@ function selectObjectWithId(stageRef, obj) {
       align: "center",
     });
 
-    
     label.add(tag, text);
     group.add(selector, label);
-    
+
     layer.add(group);
   }
 }
@@ -522,10 +521,14 @@ function buildDataInformationLayer(stageRef) {
   stageRef.add(selectionLayer);
 }
 
-function buildGraphNodeLayer(stageRef) {
-  const layer = new Konva.Layer({ id: "graphNode-layer" });
+function buildStaticsGraphNodeLayer(stageRef) {
+  const layer = new Konva.Layer({ id: "staticGraphNode-layer" });
   stageRef.add(layer);
-  return layer;
+}
+
+function buildDraggableGraphNodeLayer(stageRef) {
+  const layer = new Konva.Layer({ id: "draggableGraphNode-layer" });
+  stageRef.add(layer);
 }
 
 function buildGraphAxisLayer(stageRef) {
@@ -886,67 +889,98 @@ function selectNode(stageRef, group, base) {
   }
 }
 
+function findObjectInLayer(stageRef, layerName, objId) {
+  let group = null;
+  const layers = stageRef.find("#" + layerName);
+
+  if (layers) {
+    const layer = layers[0];
+    const groups = layer.find("#" + objId);
+    if (groups) {
+      group = groups[0];
+    }
+  }
+
+  return group;
+}
+
+function findObjectsInLayer(stageRef, layerName) {
+  let children = null;
+  const layers = stageRef.find("#" + layerName);
+
+  if (layers && layers.length > 0) {
+    const layer = layers[0];
+    children = layer.children;
+  }
+
+  return (children);
+}
+
 function showNodes(stageRef, nodes, color, onSelect) {
-  const layers = stageRef.find("#graphNode-layer");
+  const layers = stageRef.find("#staticGraphNode-layer");
   if (layers) {
     const layer = layers[0];
 
-    layer.removeChildren();
+    if (layer) {
+      layer.removeChildren();
 
-    for (let index = 0; index < nodes.length; index++) {
-      const base = nodes[index];
+      for (let index = 0; index < nodes.length; index++) {
+        const base = nodes[index];
 
-      const pos = base.getAbsolutePosition(stageRef);
+        const pos = base.getAbsolutePosition(stageRef);
 
-      const group = base.getParent();
-      const rot = group.getParent().attrs.rotation;
+        const group = base.getParent();
+        const rot = group.getParent().attrs.rotation;
 
-      const gr = new Konva.Group({
-        x: pos.x,
-        y: pos.y,
-        name: "dataInformation-box",
-        rotation: rot,
-        width: base.width(),
-        height: base.height(),
-      });
+        const gr = new Konva.Group({
+          x: pos.x,
+          y: pos.y,
+          name: "dataInformation-box",
+          rotation: rot,
+          width: base.width(),
+          height: base.height(),
+        });
 
-      const node = new Konva.Circle({
-        x: base.width() / 2,
-        y: base.height() / 2,
-        width: radioNode,
-        height: radioNode,
-        fill: color,
-        type: "GRAPH_NODE",
-      });
+        const node = new Konva.Circle({
+          x: base.width() / 2,
+          y: base.height() / 2,
+          width: radioNode,
+          height: radioNode,
+          fill: color,
+          type: "GRAPH_NODE",
+        });
 
-      // gr.on("dblclick dbltap", (e) => {
-      //   if(onDblClick){
-      //     onDblClick(base.attrs)
-      //   }
-      // });
+        // gr.on("dblclick dbltap", (e) => {
+        //   if(onDblClick){
+        //     onDblClick(base.attrs)
+        //   }
+        // });
 
-      node.on("mousedown touchstart", (e) => {
-        selectNode(stageRef, gr.clone(), base);
-        if (onSelect) {
-          onSelect(base.attrs.id);
-        }
-      });
+        node.on("mousedown touchstart", (e) => {
+          selectNode(stageRef, gr.clone(), base);
+          if (onSelect) {
+            onSelect(base.attrs.id);
+          }
+        });
 
-      gr.add(node);
-      layer.add(gr);
+        gr.add(node);
+        layer.add(gr);
+      }
+
+      layer.cache({ pixelRatio: 3 });
     }
-
-    layer.cache({ pixelRatio: 3 });
   }
 }
 
 function buildNode(stageRef, onSelect, pos, color) {
-  const layers = stageRef.find("#graphNode-layer");
+  const layers = stageRef.find("#draggableGraphNode-layer");
+
   if (layers) {
+    const id = uuid();
     const layer = layers[0];
 
     const base = new Konva.Rect({
-      id: uuid(),
+      id: id,
       x: 0,
       y: 0,
       width: radioNode,
@@ -956,17 +990,19 @@ function buildNode(stageRef, onSelect, pos, color) {
     });
 
     const gr = new Konva.Group({
-      x: pos.x - (radioNode/2),
-      y: pos.y - (radioNode/2),
+      id: id,
+      x: pos.x - radioNode / 2,
+      y: pos.y - radioNode / 2,
       name: "dataInformation-box",
       rotation: 0,
       width: base.width(),
       height: base.height(),
+      draggable:true
     });
 
     const node = new Konva.Circle({
-      x: radioNode/2,
-      y: radioNode/2,
+      x: radioNode / 2,
+      y: radioNode / 2,
       width: radioNode,
       height: radioNode,
       fill: color,
@@ -974,7 +1010,6 @@ function buildNode(stageRef, onSelect, pos, color) {
     });
 
     node.on("mousedown touchstart", (e) => {
-      selectNode(stageRef, gr.clone(), base);
       if (onSelect) {
         onSelect(base.attrs.id);
       }
@@ -983,7 +1018,7 @@ function buildNode(stageRef, onSelect, pos, color) {
     gr.add(node);
     layer.add(gr);
 
-    layer.cache({ pixelRatio: 3 });
+    // layer.cache({ pixelRatio: 3 });
   }
 }
 
@@ -1007,7 +1042,7 @@ function selectActor(stageRef, obj) {
       stroke: getPartSelectedColor(),
       strokeWidth: 2,
     });
-    
+
     /*CARTEL*/
     const label = new Konva.Label({ x: 0, y: 0 });
     label.rotation(-group.rotation());
@@ -1027,10 +1062,9 @@ function selectActor(stageRef, obj) {
       align: "center",
     });
 
-    
     label.add(tag, text);
     group.add(selector, label);
-    
+
     layer.add(group);
   }
 }
@@ -1055,7 +1089,10 @@ export {
   showNodes,
   selectActor,
   addLayer,
-  buildGraphNodeLayer,
+  buildStaticsGraphNodeLayer,
+  buildDraggableGraphNodeLayer,
   buildGraphAxisLayer,
-  buildNode
+  buildNode,
+  findObjectInLayer,
+  findObjectsInLayer
 };

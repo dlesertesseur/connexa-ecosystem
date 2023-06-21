@@ -1,9 +1,9 @@
-import { Flex, Group, LoadingOverlay, Paper, ScrollArea, Stack, Switch } from "@mantine/core";
+import { LoadingOverlay, Stack, Switch } from "@mantine/core";
 import { useContext, useEffect, useRef } from "react";
 import { Stage } from "react-konva";
 import {
   buildActorsAndAnchors,
-  buildGraphNodeLayer,
+  buildStaticsGraphNodeLayer,
   buildLayout,
   buildMarkers,
   buildNode,
@@ -11,6 +11,9 @@ import {
   clearSelection,
   selectActor,
   showNodes,
+  buildDraggableGraphNodeLayer,
+  findObjectInLayer,
+  findObjectsInLayer,
 } from "../../../../Components/Builder2d";
 import Toolbar from "./Toolbar";
 import { useWindowSize } from "../../../../Hook";
@@ -22,6 +25,7 @@ import { useSelector } from "react-redux";
 import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/Surfaces";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 import { useTranslation } from "react-i18next";
+import { useCallback } from "react";
 
 const scaleBy = 1.05;
 
@@ -56,17 +60,24 @@ function FloorPlanView2d() {
   const [dataLoaded, setDataLoaded] = useState(null);
   const [loading, setLoading] = useState(false);
   const [addNodeOnClick, setAddNodeOnClick] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   const { site, floor } = useContext(AbmStateContext);
 
   let lastCenter = null;
   let lastDist = 0;
 
-  const onLocalLayerSelection = (evt) => {
+  const onLocalLayerSelection = useCallback((evt) => {
     const ref = stageRef.current;
-    const obj = evt.target;
-    console.log("onLocalSelection ->", evt);
-  };
+
+    clearDraggableNodesSelection(ref);
+
+    const node = findObjectInLayer(ref, "draggableGraphNode-layer", evt);
+    if (node) {
+      node.children[0].stroke("red");
+      node.children[0].strokeWidth(2);
+    }
+  }, []);
 
   useEffect(() => {
     const ref = stageRef.current;
@@ -88,16 +99,28 @@ function FloorPlanView2d() {
     }
   };
 
-  const onLocalSelect = (e, addNodeOnClick) => {
+  const clearDraggableNodesSelection = (ref) => {
+    const nodes = findObjectsInLayer(ref, "draggableGraphNode-layer");
+
+    if (nodes) {
+      nodes.forEach((node) => {
+        node.children[0].stroke("green");
+        node.children[0].strokeWidth(0);
+      });
+    }
+  };
+
+  const onLocalSelect = useCallback((e, addNodeOnClick) => {
     const ref = stageRef.current;
 
     if (!e.target.attrs.type && !e.target.attrs.id) {
       clearSelection(ref);
+      clearDraggableNodesSelection(ref);
       if (addNodeOnClick) {
         addNode(e);
       }
     }
-  };
+  }, []);
 
   const onLocalDblClick = (evt) => {
     const obj = evt.target;
@@ -152,8 +175,8 @@ function FloorPlanView2d() {
       const anchorMap = buildActorsAndAnchors(ref, racks, true, onSelectActor);
       setPartsMap(anchorMap);
 
-      // buildDataInformationLayer(ref);
-      buildGraphNodeLayer(ref);
+      buildStaticsGraphNodeLayer(ref);
+      buildDraggableGraphNodeLayer(ref);
 
       // buildGraphAxisLayer(ref);
       buildSelectionLayer(ref);
