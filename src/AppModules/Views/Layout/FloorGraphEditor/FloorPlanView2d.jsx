@@ -26,7 +26,6 @@ import { useSelector } from "react-redux";
 import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/Surfaces";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 import { useTranslation } from "react-i18next";
-import { useCallback } from "react";
 import { IconClearAll, IconLink } from "@tabler/icons-react";
 
 const scaleBy = 1.05;

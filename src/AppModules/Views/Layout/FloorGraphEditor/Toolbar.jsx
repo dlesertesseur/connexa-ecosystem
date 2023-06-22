@@ -3,7 +3,7 @@ import { Group } from "@mantine/core";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
 
 
-const Toolbar = ({ children }) => {
+const Toolbar = ({ disable, children }) => {
    return (
     <Group
       px={"xs"}

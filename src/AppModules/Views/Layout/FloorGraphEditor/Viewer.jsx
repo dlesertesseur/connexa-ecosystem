@@ -1,5 +1,6 @@
 import React from "react";
 import FloorPlanView2d from "./FloorPlanView2d";
+import View2d from "./surface/View2d";
 import { Stack } from "@mantine/core";
 
 const Viewer = () => {
@@ -14,7 +15,7 @@ const Viewer = () => {
           border: "solid 1px" + theme.colors.gray[3],
         })}
       >
-        <FloorPlanView2d />
+        <View2d />
       </Stack>
     </Stack>
   );
