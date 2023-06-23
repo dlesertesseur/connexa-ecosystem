@@ -1,4 +1,4 @@
-import { Stack } from "@mantine/core";
+import { Button, Group, NumberInput, SegmentedControl, Stack, Text } from "@mantine/core";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
@@ -9,6 +9,9 @@ import G2dMarker from "./models/G2dMarker";
 import G2dNode from "./models/G2dNode";
 import G2dBaseNode from "./models/G2dBaseNode";
 import uuid from "react-uuid";
+import Toolbar from "../Toolbar";
+import { TOOLBAR_HIGHT } from "../../../../../Constants";
+import { useTranslation } from "react-i18next";
 
 const scaleBy = 1.05;
 
@@ -40,6 +43,8 @@ function Editor2d({
   pixelMeterRelation,
   multiSelect = true,
 }) {
+  const { t } = useTranslation();
+
   const stageRef = useRef(null);
   const baseLayerRef = useRef(null);
   const nodeLayerRef = useRef(null);
@@ -52,8 +57,12 @@ function Editor2d({
   const [racksG2d, setRacksG2d] = useState(null);
   const [markersG2d, setMarkersG2d] = useState(null);
   const [nodesG2d, setNodesG2d] = useState(null);
-  const [selectedNode, setSelectedNode] = useState([]);
-  const [selectedRack, setSelectedRack] = useState([]);
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedRack, setSelectedRack] = useState(null);
+
+  const [selectedRacks, setSelectedRacks] = useState([]);
+  const [selectedNodes, setSelectedNodes] = useState([]);
+  const [elementGroup, setElementGroup] = useState(2);
 
   const buildLayout = (layout) => {
     const parts = layout.parts;
@@ -71,7 +80,16 @@ function Editor2d({
     const list = [];
 
     racks.forEach((rack) => {
-      const component = <G2dRack key={rack.id} rack={rack} onSelect={onSelectRack} onDblClick={onDblClickRack} />;
+      const component = (
+        <G2dRack
+          key={rack.id}
+          rack={rack}
+          onSelect={(event) => {
+            onSelectRack(event);
+          }}
+          onDblClick={onDblClickRack}
+        />
+      );
       list.push(component);
     });
 
@@ -122,9 +140,7 @@ function Editor2d({
     const ref = stageRef.current;
     const node = event.target;
 
-    console.log("onSelectNode node -> ", node.name());
-
-    setSelectedNode([...selectedNode, node]);
+    setSelectedNode(node);
 
     const position = node.getAbsolutePosition(ref);
     const rotation = node.getAbsoluteRotation();
@@ -148,9 +164,8 @@ function Editor2d({
     const ref = stageRef.current;
     const rack = event.target;
 
-    console.log("onSelectRack rack -> ", rack.name());
-
-    setSelectedRack([...selectedRack, rack]);
+    //console.log("onSelectRack rack -> ", rack.name());
+    setSelectedRack(rack);
 
     const position = rack.getAbsolutePosition(ref);
     const rotation = rack.getAbsoluteRotation();
@@ -171,16 +186,16 @@ function Editor2d({
   const onDblClickRack = (evt) => {
     const rack = evt.target;
     console.log("onDblClickRack rack -> ", rack.name());
-    // setSelectedRack(rack);
-    // rack.fill("red");
   };
 
-  const onEmptySelection = (evt) => {
+  const onEmptySelection = () => {
     const ref = selLayerRef.current;
 
-    setSelectedRack([]);
-    setSelectedNode([]);
-    
+    setSelectedRack(null);
+    setSelectedNode(null);
+    setSelectedRacks([]);
+    setSelectedNodes([]);
+
     ref.removeChildren();
   };
 
@@ -231,6 +246,22 @@ function Editor2d({
       console.log("CACHE NODE LAYER");
     }
   }, [nodesG2d]);
+
+  useEffect(() => {
+    if (selectedRack) {
+      setSelectedRacks([...selectedRacks, selectedRack]);
+    }
+  }, [selectedRack]);
+
+  useEffect(() => {
+    if (selectedNode) {
+      setSelectedNodes([...selectedNodes, selectedNode]);
+    }
+  }, [selectedNode]);
+
+  useEffect(() => {
+    onEmptySelection();
+  }, [elementGroup]);
 
   function zoomStage(event) {
     event.evt.preventDefault();
@@ -377,12 +408,134 @@ function Editor2d({
     lastDist = 0;
   }
 
+  const onLinkNodes = () => {
+    console.log("onLinkNodes");
+  };
+
+  const processRackGroup = (racksGroup) => {
+    const ref = stageRef.current;
+
+    const nodes = [];
+
+    for (let index = 0; index < racksGroup.length; index++) {
+      if (index + 1 < racksGroup.length) {
+        const rack1 = racksGroup[index];
+        const rack2 = racksGroup[index + 1];
+
+        console.log("rack1:", rack1 , "rack2:", rack2);
+
+        // const basesRack1 = [];
+        // const basesRack2 = [];
+
+        // const m1 = rack1.userData.modules;
+        // const m2 = rack2.userData.modules;
+        
+        // m1.forEach((m) => {
+        //   m.parts.forEach((p) => basesRack1.push(p));
+        // });
+        // m2.forEach((m) => {
+        //   m.parts.forEach((p) => basesRack2.push(p));
+        // });
+
+        // for (let index = 0; index < basesRack1.length; index++) {
+        //   const b1 = basesRack1[index];
+        //   const b2 = basesRack2[index];
+        //   const node1 = partsMap.get(b1.name);
+        //   const node2 = partsMap.get(b2.name);
+        //   const absPos1 = node1.getAbsolutePosition(ref);
+        //   const absPos2 = node2.getAbsolutePosition(ref);
+        //   const posx = (absPos2.x - absPos1.x) / 2 + absPos1.x;
+        //   const posy = absPos1.y - node1.height() / 2;
+
+        //   const metaData = {
+        //     x:posx,
+        //     y:posy,
+        //     fill:"grey",
+        //     type:`${b1.name} - ${b2.name}`,
+        //     draggable:draggable
+        //   }
+        //   const component = <G2dNode key={uuid()} node={metaData} draggable={true} />;
+        //   nodes.push(component);
+        // }
+      }
+    }
+  };
+
+  const onLinkStructures = () => {
+    const totalRacks = selectedRacks.length;
+    let startIdxGroup = 0;
+    let endIdxGroup = elementGroup;
+
+    for (
+      let index = 0;
+      index < totalRacks;
+      index += elementGroup, startIdxGroup += elementGroup, endIdxGroup += elementGroup
+    ) {
+      const racksGroup = selectedRacks.slice(startIdxGroup, endIdxGroup);
+      processRackGroup(racksGroup);
+    }
+  };
+
+  const isLinkRacksDisabled = () => {
+    let ret = false;
+
+    if (selectedRacks) {
+      if (selectedRacks.length > 0) {
+        ret = selectedRacks.length % elementGroup !== 0;
+      } else {
+        ret = true;
+      }
+    } else {
+      ret = true;
+    }
+
+    return ret;
+  };
+
+  const isLinkNodesDisabled = () => {
+    let ret = false;
+
+    if (selectedNodes) {
+      if (selectedNodes.length > 0) {
+        ret = selectedNodes.length % elementGroup !== 0;
+      } else {
+        ret = true;
+      }
+    } else {
+      ret = true;
+    }
+
+    return ret;
+  };
+
   return (
     <Stack>
+      <Toolbar>
+        <Group>
+          <Button size="xs" onClick={onLinkStructures} disabled={isLinkRacksDisabled()}>
+            <Text>{t("crud.floorGrapthEditor.label.linkStructures")}</Text>
+          </Button>
+          <Button size="xs" onClick={onLinkNodes} disabled={isLinkNodesDisabled()}>
+            <Text>{t("crud.floorGrapthEditor.label.linkNodes")}</Text>
+          </Button>
+          <Group spacing={"xs"}>
+            <Text size={"xs"}>{t("crud.floorGrapthEditor.label.group")}</Text>
+            <NumberInput
+              defaultValue={2}
+              size="xs"
+              step={1}
+              min={1}
+              w={60}
+              value={elementGroup}
+              onChange={setElementGroup}
+            />
+          </Group>
+        </Group>
+      </Toolbar>
       <Stage
         ref={stageRef}
         width={width ? width : 0}
-        height={height ? height : 0}
+        height={height ? height - TOOLBAR_HIGHT : 0}
         draggable={!isTouchEnabled()}
         onWheel={zoomStage}
         onTouchMove={handleTouch}

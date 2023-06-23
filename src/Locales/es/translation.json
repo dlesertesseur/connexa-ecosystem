@@ -288,7 +288,9 @@
       "columns": ["Name", "Description"],
       "label": {
         "addNode": "Agregar nodo al hacer clic",
-        "linkStructures":"Vincular estructuras"
+        "linkStructures":"Vincular estructuras",
+        "linkNodes":"Vincular nodos",
+        "group":"Agrupado"
       }
     },
 

@@ -19,6 +19,7 @@ const DynamicApp = ({ app }) => {
   const [loading, setLoading] = useState(false);
   const [site, setSite] = useState(null);
   const [floor, setFloor] = useState(null);
+  const [disabledActionButtons, setDisabledActionButtons] = useState(false);
 
   const [enableCreateButton, setEnableCreateButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -76,6 +77,8 @@ const DynamicApp = ({ app }) => {
         setFloor,
         onCreate,
         initilizeContext,
+        disabledActionButtons,
+        setDisabledActionButtons
       }}
     >
       <ResponceNotification

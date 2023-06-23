@@ -26,7 +26,7 @@ const View2d = () => {
   const [connectors, setConnectors] = useState(null);
   const [pixelMeterRelation, setPixelMeterRelation] = useState(null);
 
-  const { site, floor } = useContext(AbmStateContext);
+  const { site, floor, setDisabledActionButtons } = useContext(AbmStateContext);
 
   const matches = useMediaQuery("(min-width: 768px)");
   const wSize = useWindowSize();
@@ -40,6 +40,7 @@ const View2d = () => {
     };
 
     setLoading(true);
+    setDisabledActionButtons(true);
 
     const layouts = await findLayoutByFloorId(params);
 
@@ -54,27 +55,23 @@ const View2d = () => {
     setMarkers(markerts);
 
     setLoading(false);
+    setDisabledActionButtons(false);
   };
 
   useEffect(() => {
     getData();
   }, []);
 
-  const onLinkStructures = () => {
-    console.log("onLinkStructures");
-  }
-
   return (
     <Stack>
-      <Toolbar disabled={loading} onLinkStructures={onLinkStructures}/>
       {loading ? (
-        <Center w={wSize.width - (matches ? 316 : 32)} h={wSize.height - HEADER_HIGHT - TOOLBAR_HIGHT - 16}>
+        <Center w={wSize.width - (matches ? 316 : 32)} h={wSize.height - HEADER_HIGHT}>
           <Loader />
         </Center>
       ) : (
         <Editor2d
           width={wSize.width - (matches ? 316 : 32)}
-          height={wSize.height - HEADER_HIGHT - TOOLBAR_HIGHT - 16}
+          height={wSize.height - HEADER_HIGHT - 16}
           layouts={layouts}
           racks={racks}
           markers={markers}

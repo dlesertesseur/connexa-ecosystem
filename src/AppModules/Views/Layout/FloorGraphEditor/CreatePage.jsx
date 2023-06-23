@@ -13,7 +13,7 @@ export function CreatePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { refresh, site, floor, initilizeContext } = useContext(AbmStateContext);
+  const { refresh, site, floor, initilizeContext, disabledActionButtons } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
   const [working, setWorking] = useState(false);
   const wSize = useWindowSize();
@@ -68,7 +68,7 @@ export function CreatePage() {
       <Viewer/>
 
       <Group position="right" mt="xs" mb="xs" width="100%">
-        <Button
+        <Button disabled={disabledActionButtons}
           onClick={() => {
             onSave();
           }}

@@ -298,7 +298,9 @@
       "columns": ["Name", "Description"],
       "label": {
         "addNode": "Add node on click",
-        "linkStructures":"Link structures"
+        "linkStructures":"Link structures",
+        "linkNodes":"Link nodes",
+        "group":"Group"
       }
     },
 
