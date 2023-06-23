@@ -27,7 +27,19 @@ function isTouchEnabled() {
   return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 }
 
-function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRelation, multiSelect }) {
+function Editor2d({
+  width,
+  height,
+  layouts,
+  racks,
+  markers,
+  nodes,
+  staticNodes,
+  setStaticNodes,
+  connectors,
+  pixelMeterRelation,
+  multiSelect = true,
+}) {
   const stageRef = useRef(null);
   const baseLayerRef = useRef(null);
   const nodeLayerRef = useRef(null);
@@ -40,8 +52,8 @@ function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRel
   const [racksG2d, setRacksG2d] = useState(null);
   const [markersG2d, setMarkersG2d] = useState(null);
   const [nodesG2d, setNodesG2d] = useState(null);
-  const [selectedNode, setSelectedNode] = useState(null);
-  const [selectedRack, setSelectedRack] = useState(null);
+  const [selectedNode, setSelectedNode] = useState([]);
+  const [selectedRack, setSelectedRack] = useState([]);
 
   const buildLayout = (layout) => {
     const parts = layout.parts;
@@ -109,10 +121,10 @@ function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRel
 
     const ref = stageRef.current;
     const node = event.target;
-    
+
     console.log("onSelectNode node -> ", node.name());
 
-    setSelectedNode(node);
+    setSelectedNode([...selectedNode, node]);
 
     const position = node.getAbsolutePosition(ref);
     const rotation = node.getAbsoluteRotation();
@@ -123,8 +135,8 @@ function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRel
     selObj.rotation(rotation);
     selObj.stroke("red");
 
-    if(!multiSelect){
-      selLayerRef.current.removeChildren();  
+    if (!multiSelect) {
+      selLayerRef.current.removeChildren();
     }
 
     selLayerRef.current.add(selObj);
@@ -135,10 +147,10 @@ function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRel
 
     const ref = stageRef.current;
     const rack = event.target;
-    
+
     console.log("onSelectRack rack -> ", rack.name());
 
-    setSelectedRack(rack);
+    setSelectedRack([...selectedRack, rack]);
 
     const position = rack.getAbsolutePosition(ref);
     const rotation = rack.getAbsoluteRotation();
@@ -149,8 +161,8 @@ function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRel
     selObj.rotation(rotation);
     selObj.stroke("red");
 
-    if(!multiSelect){
-      selLayerRef.current.removeChildren();  
+    if (!multiSelect) {
+      selLayerRef.current.removeChildren();
     }
 
     selLayerRef.current.add(selObj);
@@ -165,6 +177,10 @@ function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRel
 
   const onEmptySelection = (evt) => {
     const ref = selLayerRef.current;
+
+    setSelectedRack([]);
+    setSelectedNode([]);
+    
     ref.removeChildren();
   };
 
@@ -186,7 +202,7 @@ function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRel
         setNodesG2d(nodesG2d);
       }
     }
-  }, [racks, multiSelect]);
+  }, [racks]);
 
   useEffect(() => {
     if (markers && markers.length > 0) {
@@ -384,8 +400,7 @@ function Editor2d({ width, height, layouts, racks, markers, nodes, pixelMeterRel
           {nodesG2d}
         </Layer>
 
-        <Layer ref={selLayerRef} name="sel-layer">
-        </Layer>
+        <Layer ref={selLayerRef} name="sel-layer" />
       </Stage>
     </Stack>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import Editor2d from "./Editor2d";
+import Toolbar from "../Toolbar";
 import { findLayoutByFloorId, findRacksByZoneId } from "../../../../../DataAccess/Surfaces";
 import { findAllLayoutMarkersById } from "../../../../../DataAccess/LayoutsMarkers";
 import { AbmStateContext } from "../Context";
@@ -11,8 +12,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useWindowSize } from "../../../../../Hook";
-import { Box, Button, Center, Loader, LoadingOverlay, Stack, Switch, Text } from "@mantine/core";
-import Toolbar from "../Toolbar";
+import { Center, Loader, Stack } from "@mantine/core";
 
 const View2d = () => {
   const { t } = useTranslation();
@@ -20,10 +20,11 @@ const View2d = () => {
   const [racks, setRacks] = useState(null);
   const [layouts, setLayouts] = useState(null);
   const [markers, setMarkers] = useState(null);
-  const [pixelMeterRelation, setPixelMeterRelation] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const [checked, setChecked] = useState(true);
+  const [staticNodes, setStaticNodes] = useState(null);
+  const [nodes, setNodes] = useState(null);
+  const [connectors, setConnectors] = useState(null);
+  const [pixelMeterRelation, setPixelMeterRelation] = useState(null);
 
   const { site, floor } = useContext(AbmStateContext);
 
@@ -59,18 +60,13 @@ const View2d = () => {
     getData();
   }, []);
 
+  const onLinkStructures = () => {
+    console.log("onLinkStructures");
+  }
+
   return (
     <Stack>
-      <Toolbar disable={loading}>
-        {/* <Switch
-          label="Multiple seleccion"
-          checked={checked}
-          onChange={(event) => setChecked(event.currentTarget.checked)}
-        /> */}
-        <Button size="xs">
-          <Text>{t("crud.floorGrapthEditor.label.linkStructures")}</Text>
-        </Button>
-      </Toolbar>
+      <Toolbar disabled={loading} onLinkStructures={onLinkStructures}/>
       {loading ? (
         <Center w={wSize.width - (matches ? 316 : 32)} h={wSize.height - HEADER_HIGHT - TOOLBAR_HIGHT - 16}>
           <Loader />
@@ -82,9 +78,11 @@ const View2d = () => {
           layouts={layouts}
           racks={racks}
           markers={markers}
+          nodes={nodes}
+          staticNodes={staticNodes}
+          connectors={connectors}
+          setStaticNodes={setStaticNodes}
           pixelMeterRelation={pixelMeterRelation}
-          nodes={null}
-          multiSelect={checked}
         />
       )}
     </Stack>
