@@ -1,13 +1,12 @@
 import React from "react";
 import Editor2d from "./Editor2d";
-import Toolbar from "../Toolbar";
 import { findLayoutByFloorId, findRacksByZoneId } from "../../../../../DataAccess/Surfaces";
 import { findAllLayoutMarkersById } from "../../../../../DataAccess/LayoutsMarkers";
 import { AbmStateContext } from "../Context";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
-import { HEADER_HIGHT, PIXEL_METER_RELATION, TOOLBAR_HIGHT } from "../../../../../Constants";
+import { HEADER_HIGHT, PIXEL_METER_RELATION } from "../../../../../Constants";
 import { useMediaQuery } from "@mantine/hooks";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -22,8 +21,8 @@ const View2d = () => {
   const [markers, setMarkers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [staticNodes, setStaticNodes] = useState(null);
-  const [nodes, setNodes] = useState(null);
-  const [connectors, setConnectors] = useState(null);
+  const [nodes, setNodes] = useState([]);
+  const [connectors, setConnectors] = useState([]);
   const [pixelMeterRelation, setPixelMeterRelation] = useState(null);
 
   const { site, floor, setDisabledActionButtons } = useContext(AbmStateContext);
@@ -76,8 +75,10 @@ const View2d = () => {
           racks={racks}
           markers={markers}
           nodes={nodes}
+          setNodes={setNodes}
           staticNodes={staticNodes}
           connectors={connectors}
+          setConnectors={setConnectors}
           setStaticNodes={setStaticNodes}
           pixelMeterRelation={pixelMeterRelation}
         />

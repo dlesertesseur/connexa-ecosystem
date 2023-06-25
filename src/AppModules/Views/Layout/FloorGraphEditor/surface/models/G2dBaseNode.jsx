@@ -22,6 +22,7 @@ const G2dBaseNode = ({
     parts.forEach((part) => {
       const g2dPart = (
         <Circle
+          id={part.id}
           ref={nodeRef}
           key={uuid()}
           x={part.positionx * PIXEL_METER_RELATION}

@@ -40,16 +40,18 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
   let lastDist = 0;
 
   const onLocalSelection = (evt) => {
-    const ref = stageRef.current;
-    const obj = evt.target;
+    if (evt.evt.detail === 1) {
+      const ref = stageRef.current;
+      const obj = evt.target;
 
-    if (structureDetail) {
-      selectPartWithId(ref, obj);
-      onSelect(obj.id());
-    } else {
-      const group = obj.getParent();
-      selectObjectWithId(ref, obj);
-      onSelect(group.id());
+      if (structureDetail) {
+        selectPartWithId(ref, obj);
+        onSelect(obj.id());
+      } else {
+        const group = obj.getParent();
+        selectObjectWithId(ref, obj);
+        onSelect(group.id());
+      }
     }
   };
 

@@ -1,17 +1,19 @@
-import { Button, Group, NumberInput, SegmentedControl, Stack, Text } from "@mantine/core";
+import { Button, Center, Group, NumberInput, SegmentedControl, Stack, Text } from "@mantine/core";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
 import { Layer, Stage } from "react-konva";
+import { CONNECTOR_ONE_WAY, CONNECTOR_TWO_WAY, TOOLBAR_HIGHT } from "../../../../../Constants";
+import { useTranslation } from "react-i18next";
+import { IconArrowNarrowRight, IconArrowsHorizontal } from "@tabler/icons-react";
 import G2dPolygon from "./models/G2dPolygon";
 import G2dRack from "./models/G2dRack";
 import G2dMarker from "./models/G2dMarker";
 import G2dNode from "./models/G2dNode";
 import G2dBaseNode from "./models/G2dBaseNode";
+import G2dConnector from "./models/G2dConnector";
 import uuid from "react-uuid";
 import Toolbar from "../Toolbar";
-import { TOOLBAR_HIGHT } from "../../../../../Constants";
-import { useTranslation } from "react-i18next";
 
 const scaleBy = 1.05;
 
@@ -37,9 +39,11 @@ function Editor2d({
   racks,
   markers,
   nodes,
+  setNodes,
   staticNodes,
   setStaticNodes,
   connectors,
+  setConnectors,
   pixelMeterRelation,
   multiSelect = true,
 }) {
@@ -48,6 +52,8 @@ function Editor2d({
   const stageRef = useRef(null);
   const baseLayerRef = useRef(null);
   const nodeLayerRef = useRef(null);
+  const staticNodeLayerRef = useRef(null);
+  const connectorsLayerRef = useRef(null);
   const selLayerRef = useRef(null);
 
   let lastCenter = null;
@@ -56,13 +62,16 @@ function Editor2d({
   const [layoutG2d, setLayoutG2d] = useState(null);
   const [racksG2d, setRacksG2d] = useState(null);
   const [markersG2d, setMarkersG2d] = useState(null);
+  const [staticNodesG2d, setStaticNodesG2d] = useState(null);
   const [nodesG2d, setNodesG2d] = useState(null);
+  const [connectorsG2d, setConnectorsG2d] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedRack, setSelectedRack] = useState(null);
 
   const [selectedRacks, setSelectedRacks] = useState([]);
   const [selectedNodes, setSelectedNodes] = useState([]);
   const [elementGroup, setElementGroup] = useState(2);
+  const [direction, setDirection] = useState(CONNECTOR_TWO_WAY);
 
   const buildLayout = (layout) => {
     const parts = layout.parts;
@@ -100,8 +109,49 @@ function Editor2d({
     const list = [];
 
     nodes.forEach((node) => {
-      const component = <G2dNode key={node.id} node={node} draggable={false} />;
+      const component = <G2dNode key={node.id} node={node} draggable={node.draggable} onSelect={onSelectNode} />;
       list.push(component);
+    });
+
+    return list;
+  };
+
+  const buildConnectors = (nodes) => {
+    const list = [];
+    const ref = stageRef.current;
+    const staticNodesLayer = staticNodeLayerRef.current;
+    let prevNode = null;
+
+    nodes.forEach((node) => {
+      node.connectors.forEach((connector) => {
+        const target = staticNodesLayer.find(`.${connector}`);
+        if (target && target.length > 0) {
+          const targetPos = target[0].getAbsolutePosition(ref);
+          const component = (
+            <G2dConnector
+              origin={{ x: node.positionx, y: node.positionz }}
+              target={targetPos}
+              key={uuid()}
+              bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
+            />
+          );
+          list.push(component);
+        }
+      });
+
+      if(prevNode){
+        const component = (
+          <G2dConnector
+            origin={{ x: prevNode.positionx, y: prevNode.positionz }}
+            target={{ x: node.positionx, y: node.positionz }}
+            key={uuid()}
+            bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
+          />
+        );
+        list.push(component);
+      }
+      
+      prevNode = node;
     });
 
     return list;
@@ -144,18 +194,43 @@ function Editor2d({
 
     const position = node.getAbsolutePosition(ref);
     const rotation = node.getAbsoluteRotation();
+
     const selObj = node.clone();
 
+    console.log("onSelectNode selObj ->", selObj.attrs);
+
+    selObj.stroke("red");
     selObj.x(position.x);
     selObj.y(position.y);
-    selObj.rotation(rotation);
+    selObj.rotation(0);
     selObj.stroke("red");
+
+    /*CARTEL*/
+    const label = new Konva.Label({ x: position.x, y: position.y });
+    label.rotation(-selObj.rotation());
+    const tag = new Konva.Tag({
+      cornerRadius: 2,
+      pointerDirection: "down",
+      pointerWidth: 6,
+      pointerHeight: 6,
+      fill: "#fff",
+      stroke: "#000",
+      strokeWidth: 0.5,
+    });
+
+    const text = new Konva.Text({
+      padding: 2,
+      text: selObj.name(),
+      align: "center",
+    });
+
+    label.add(tag, text);
 
     if (!multiSelect) {
       selLayerRef.current.removeChildren();
     }
 
-    selLayerRef.current.add(selObj);
+    selLayerRef.current.add(selObj, label);
   };
 
   const onSelectRack = (event) => {
@@ -164,23 +239,45 @@ function Editor2d({
     const ref = stageRef.current;
     const rack = event.target;
 
-    //console.log("onSelectRack rack -> ", rack.name());
-    setSelectedRack(rack);
+    setSelectedRack(rack.attrs.userData);
 
     const position = rack.getAbsolutePosition(ref);
     const rotation = rack.getAbsoluteRotation();
-    const selObj = rack.clone();
 
-    selObj.x(position.x);
-    selObj.y(position.y);
-    selObj.rotation(rotation);
+    const selObj = rack.clone();
+    const group = rack.getParent().clone();
+
+    group.removeChildren();
     selObj.stroke("red");
+
+    /*CARTEL*/
+    const label = new Konva.Label({ x: 0, y: 0 });
+    label.rotation(-selObj.rotation());
+    const tag = new Konva.Tag({
+      cornerRadius: 2,
+      pointerDirection: "down",
+      pointerWidth: 6,
+      pointerHeight: 6,
+      fill: "#fff",
+      stroke: "#000",
+      strokeWidth: 0.5,
+    });
+
+    const text = new Konva.Text({
+      padding: 2,
+      text: selObj.name(),
+      align: "center",
+    });
+
+    label.add(tag, text);
+
+    group.add(selObj, label);
 
     if (!multiSelect) {
       selLayerRef.current.removeChildren();
     }
 
-    selLayerRef.current.add(selObj);
+    selLayerRef.current.add(group);
   };
 
   const onDblClickRack = (evt) => {
@@ -212,9 +309,9 @@ function Editor2d({
       const racksG2d = buildRacks(racks);
       setRacksG2d(racksG2d);
 
-      if (nodes === null) {
+      if (staticNodes === null) {
         const nodesG2d = buildNodesFromRacks(racks);
-        setNodesG2d(nodesG2d);
+        setStaticNodesG2d(nodesG2d);
       }
     }
   }, [racks]);
@@ -230,6 +327,9 @@ function Editor2d({
     if (nodes) {
       const nodesG2d = buildNodes(nodes);
       setNodesG2d(nodesG2d);
+
+      const connectrosG2d = buildConnectors(nodes);
+      setConnectorsG2d(connectrosG2d);
     }
   }, [nodes]);
 
@@ -241,11 +341,11 @@ function Editor2d({
   }, [layoutG2d && racksG2d && markersG2d]);
 
   useEffect(() => {
-    if (nodesG2d) {
-      nodeLayerRef.current.cache({ pixelRatio: 3 });
-      console.log("CACHE NODE LAYER");
+    if (staticNodesG2d) {
+      staticNodeLayerRef.current.cache({ pixelRatio: 3 });
+      console.log("CACHE STATIC NODE LAYER");
     }
-  }, [nodesG2d]);
+  }, [staticNodesG2d]);
 
   useEffect(() => {
     if (selectedRack) {
@@ -414,57 +514,77 @@ function Editor2d({
 
   const processRackGroup = (racksGroup) => {
     const ref = stageRef.current;
+    const layerRef = staticNodeLayerRef.current;
 
-    const nodes = [];
+    const newNodes = [];
 
     for (let index = 0; index < racksGroup.length; index++) {
       if (index + 1 < racksGroup.length) {
         const rack1 = racksGroup[index];
         const rack2 = racksGroup[index + 1];
 
-        console.log("rack1:", rack1 , "rack2:", rack2);
+        const basesRack1 = [];
+        const basesRack2 = [];
 
-        // const basesRack1 = [];
-        // const basesRack2 = [];
+        const m1 = rack1.modules;
+        const m2 = rack2.modules;
 
-        // const m1 = rack1.userData.modules;
-        // const m2 = rack2.userData.modules;
-        
-        // m1.forEach((m) => {
-        //   m.parts.forEach((p) => basesRack1.push(p));
-        // });
-        // m2.forEach((m) => {
-        //   m.parts.forEach((p) => basesRack2.push(p));
-        // });
+        m1.sort((a, b) => a.number - b.number);
+        m2.sort((a, b) => a.number - b.number);
 
-        // for (let index = 0; index < basesRack1.length; index++) {
-        //   const b1 = basesRack1[index];
-        //   const b2 = basesRack2[index];
-        //   const node1 = partsMap.get(b1.name);
-        //   const node2 = partsMap.get(b2.name);
-        //   const absPos1 = node1.getAbsolutePosition(ref);
-        //   const absPos2 = node2.getAbsolutePosition(ref);
-        //   const posx = (absPos2.x - absPos1.x) / 2 + absPos1.x;
-        //   const posy = absPos1.y - node1.height() / 2;
+        m1.forEach((m) => {
+          m.parts.forEach((p) => {
+            const arr = layerRef.find(`.${p.name}`);
+            const node = arr[0];
+            const pos = node.getAbsolutePosition(ref);
+            p["absPos"] = pos;
+            basesRack1.push(p);
+          });
+        });
+        m2.forEach((m) => {
+          m.parts.forEach((p) => {
+            const arr = layerRef.find(`.${p.name}`);
+            const node = arr[0];
+            const pos = node.getAbsolutePosition(ref);
+            p["absPos"] = pos;
+            basesRack2.push(p);
+          });
+        });
 
-        //   const metaData = {
-        //     x:posx,
-        //     y:posy,
-        //     fill:"grey",
-        //     type:`${b1.name} - ${b2.name}`,
-        //     draggable:draggable
-        //   }
-        //   const component = <G2dNode key={uuid()} node={metaData} draggable={true} />;
-        //   nodes.push(component);
-        // }
+        basesRack1.sort((a, b) => a.absPos.y - b.absPos.y);
+        basesRack2.sort((a, b) => a.absPos.y - b.absPos.y);
+
+        for (let index = 0; index < basesRack1.length; index++) {
+          const b1 = basesRack1[index];
+          const b2 = basesRack2[index];
+
+          const absPos1 = b1.absPos;
+          const absPos2 = b2.absPos;
+
+          const posx = (absPos2.x - absPos1.x) / 2 + absPos1.x;
+          const posy = absPos1.y;
+
+          const metaData = {
+            id: uuid(),
+            positionx: posx,
+            positionz: posy,
+            fill: "grey",
+            name: `${b1.name} - ${b2.name}`,
+            draggable: false,
+            connectors: [b1.name, b2.name],
+          };
+          newNodes.push(metaData);
+        }
       }
     }
+    return newNodes;
   };
 
   const onLinkStructures = () => {
     const totalRacks = selectedRacks.length;
     let startIdxGroup = 0;
     let endIdxGroup = elementGroup;
+    let arr = [];
 
     for (
       let index = 0;
@@ -472,8 +592,12 @@ function Editor2d({
       index += elementGroup, startIdxGroup += elementGroup, endIdxGroup += elementGroup
     ) {
       const racksGroup = selectedRacks.slice(startIdxGroup, endIdxGroup);
-      processRackGroup(racksGroup);
+      const newNodes = processRackGroup(racksGroup);
+      arr = arr.concat(newNodes);
     }
+
+    setNodes([...nodes, ...arr]);
+    onEmptySelection();
   };
 
   const isLinkRacksDisabled = () => {
@@ -530,6 +654,30 @@ function Editor2d({
               onChange={setElementGroup}
             />
           </Group>
+
+          <SegmentedControl
+            value={direction}
+            onChange={setDirection}
+            size="xs"
+            data={[
+              {
+                value: CONNECTOR_TWO_WAY,
+                label: (
+                  <Center>
+                    <IconArrowsHorizontal size={20} />
+                  </Center>
+                ),
+              },
+              {
+                value: CONNECTOR_ONE_WAY,
+                label: (
+                  <Center>
+                    <IconArrowNarrowRight size={20} />
+                  </Center>
+                ),
+              },
+            ]}
+          />
         </Group>
       </Toolbar>
       <Stage
@@ -542,6 +690,7 @@ function Editor2d({
         onTouchEnd={handleTouchEnd}
         onMouseDown={onEmptySelection}
         onTap={onEmptySelection}
+        onContextMenu={(event)=>{event.evt.preventDefault()}}
       >
         <Layer ref={baseLayerRef} name="base-layer">
           {layoutG2d}
@@ -551,6 +700,14 @@ function Editor2d({
 
         <Layer ref={nodeLayerRef} name="node-layer">
           {nodesG2d}
+        </Layer>
+
+        <Layer ref={staticNodeLayerRef} name="staticNode-layer">
+          {staticNodesG2d}
+        </Layer>
+
+        <Layer ref={connectorsLayerRef} name="connecttrs-layer">
+          {connectorsG2d}
         </Layer>
 
         <Layer ref={selLayerRef} name="sel-layer" />

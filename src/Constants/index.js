@@ -6,6 +6,8 @@ export const VIEW_HEADER_HIGHT = 48;
 export const DIVIDER_HIGHT = 20;
 export const PIXEL_METER_RELATION = 25.0;
 export const BLOCK_SNAP_SIZE = 1.0;
+export const CONNECTOR_TWO_WAY = "two_way"
+export const CONNECTOR_ONE_WAY = "one_way"
 
 export const GUIDELINE_OFFSET = 5;
 

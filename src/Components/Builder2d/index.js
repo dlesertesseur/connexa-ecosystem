@@ -273,7 +273,6 @@ function buildActors(
   for (let index = 0; index < actors.length; index++) {
     actor = buildActor(PIXEL_METER_RELATION, actors[index], onDblClick, selectPart, firtsBaseIndicador);
     actor.on("mousedown touchstart", onSelect);
-
     layer.add(actor);
   }
 
@@ -407,13 +406,14 @@ function clearSelection(stageRef) {
 
 function selectObjectWithId(stageRef, obj) {
   const layers = stageRef.find("#selection-layer");
+  let group = null;
 
   if (layers) {
     const layer = layers[0];
 
     layer.removeChildren();
 
-    const group = obj.getParent().clone();
+    group = obj.getParent().clone();
 
     /*MARCO*/
     const selector = new Konva.Rect({
@@ -449,14 +449,17 @@ function selectObjectWithId(stageRef, obj) {
 
     layer.add(group);
   }
+
+  return(group);
 }
 
 function selectPartWithId(stageRef, obj, onDblClick) {
   const layers = stageRef.find("#selection-layer");
+  let group = null;
 
   if (layers) {
     const layer = layers[0];
-    const group = obj.getParent();
+    group = obj.getParent();
 
     if (group && group.attrs.name !== "selection-box") {
       layer.removeChildren();
