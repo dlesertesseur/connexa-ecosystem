@@ -291,7 +291,8 @@
         "linkStructures":"Vincular estructuras",
         "linkNodes":"Vincular nodos",
         "group":"Agrupado",
-        "rackOrientation":"Orientación"
+        "rackOrientation":"Orientación",
+        "createBaseNodes":"Agregar nodos base"
       }
     },
 

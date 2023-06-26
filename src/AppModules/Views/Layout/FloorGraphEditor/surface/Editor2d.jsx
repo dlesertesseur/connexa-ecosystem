@@ -21,6 +21,7 @@ import G2dBaseNode from "./models/G2dBaseNode";
 import G2dConnector from "./models/G2dConnector";
 import uuid from "react-uuid";
 import Toolbar from "../Toolbar";
+import G2dIntermediateNode from "./models/G2dIntermediateNode";
 
 const scaleBy = 1.05;
 
@@ -69,8 +70,9 @@ function Editor2d({
   const [layoutG2d, setLayoutG2d] = useState(null);
   const [racksG2d, setRacksG2d] = useState(null);
   const [markersG2d, setMarkersG2d] = useState(null);
-  const [staticNodesG2d, setStaticNodesG2d] = useState(null);
-  const [nodesG2d, setNodesG2d] = useState(null);
+  const [staticNodesG2d, setStaticNodesG2d] = useState([]);
+  const [nodesG2d, setNodesG2d] = useState([]);
+  const [intermediateNodes, setIntermediateNodes] = useState([]);
   const [connectorsG2d, setConnectorsG2d] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedRack, setSelectedRack] = useState(null);
@@ -121,12 +123,13 @@ function Editor2d({
     const node = event.target;
 
     setSelectedNode(node);
+
     setNodesIdsSelected([...nodesIdsSelected, node.attrs.id]);
   };
 
   const onUpdatePosition = (id, position) => {
     // setUpdatedNode(position);
-  }
+  };
 
   const buildNodes = (nodes) => {
     const list = [];
@@ -134,7 +137,7 @@ function Editor2d({
     nodes.forEach((node) => {
       const component = (
         <G2dNode
-          key={node.id}
+          key={uuid()}
           node={node}
           selected={nodesIdsSelected.includes(node.id)}
           onSelect={onSelectNode}
@@ -147,17 +150,39 @@ function Editor2d({
     return list;
   };
 
+  const buildIntemediateNodes = (nodes) => {
+    const list = [];
+
+    nodes.forEach((node) => {
+      const component = <G2dIntermediateNode key={uuid()} node={node} color={"grey"} onSelect={onSelectStaticNode} />;
+      list.push(component);
+    });
+
+    return list;
+  };
+
+  const findNode = (connector) => {
+    let ret = null;
+    const staticNodesLayer = staticNodeLayerRef.current;
+    const target = staticNodesLayer.find(`.${connector}`);
+    if (target && target.length > 0) {
+      ret = target[0];
+    } else {
+      console.log("findNode ", connector, " -> NOT FOUD");
+    }
+
+    return ret;
+  };
+
   const buildConnectors = (nodes) => {
     const list = [];
     const ref = stageRef.current;
-    const staticNodesLayer = staticNodeLayerRef.current;
-    let prevNode = null;
 
     nodes.forEach((node) => {
       node.connectors.forEach((connector) => {
-        const target = staticNodesLayer.find(`.${connector}`);
-        if (target && target.length > 0) {
-          const targetPos = target[0].getAbsolutePosition(ref);
+        const target = findNode(connector);
+        if (target) {
+          const targetPos = target.getAbsolutePosition(ref);
           const component = (
             <G2dConnector
               origin={{ x: node.positionx, y: node.positionz }}
@@ -169,22 +194,6 @@ function Editor2d({
           list.push(component);
         }
       });
-
-      if (node.linked) {
-        if (prevNode) {
-          const component = (
-            <G2dConnector
-              origin={{ x: prevNode.positionx, y: prevNode.positionz }}
-              target={{ x: node.positionx, y: node.positionz }}
-              key={uuid()}
-              bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
-            />
-          );
-          list.push(component);
-        }
-      }
-
-      prevNode = node;
     });
 
     return list;
@@ -267,13 +276,9 @@ function Editor2d({
   const onSelectRack = (event) => {
     event.cancelBubble = true;
 
-    const ref = stageRef.current;
     const rack = event.target;
 
     setSelectedRack(rack.attrs.userData);
-
-    const position = rack.getAbsolutePosition(ref);
-    const rotation = rack.getAbsoluteRotation();
 
     const selObj = rack.clone();
     const group = rack.getParent().clone();
@@ -340,11 +345,6 @@ function Editor2d({
     if (racks && racks.length > 0) {
       const racksG2d = buildRacks(racks);
       setRacksG2d(racksG2d);
-
-      if (staticNodes === null) {
-        const nodesG2d = buildNodesFromRacks(racks);
-        setStaticNodesG2d(nodesG2d);
-      }
     }
   }, [racks]);
 
@@ -355,23 +355,32 @@ function Editor2d({
     }
   }, [markers]);
 
-  useEffect(() => {
-    if (nodes) {
-      const nodesG2d = buildNodes(nodes);
-      setNodesG2d(nodesG2d);
 
-      // const connectrosG2d = buildConnectors(nodes);
-      // setConnectorsG2d(connectrosG2d);
+  useEffect(() => {
+    console.log("useEffect nodesIdsSelected -> ", nodesIdsSelected)
+  }, [nodesIdsSelected]);
+
+
+  useEffect(() => {
+    if (intermediateNodes) {
+      const nodesG2d = buildIntemediateNodes(intermediateNodes);
+      setStaticNodesG2d([...staticNodesG2d, ...nodesG2d]);
     }
-  }, [nodes, selectedNode]);
-
+  }, [intermediateNodes]);
 
   useEffect(() => {
     if (nodes) {
-      const connectrosG2d = buildConnectors(nodes);
+      const ret = buildNodes(nodes);
+      setNodesG2d(ret);
+    }
+  }, [nodes]);
+
+  useEffect(() => {
+    if (intermediateNodes) {
+      const connectrosG2d = buildConnectors(intermediateNodes);
       setConnectorsG2d(connectrosG2d);
     }
-  }, [nodes, updatedNode]);
+  }, [staticNodesG2d]);
 
   useEffect(() => {
     if (layoutG2d && racksG2d && markersG2d) {
@@ -381,9 +390,9 @@ function Editor2d({
   }, [layoutG2d && racksG2d && markersG2d]);
 
   useEffect(() => {
-    if (staticNodesG2d) {
+    if (staticNodesG2d && staticNodesG2d.length > 0) {
       staticNodeLayerRef.current.cache({ pixelRatio: 3 });
-      console.log("CACHE STATIC NODE LAYER");
+      console.log("CACHE STATIC NODE LAYER [" + staticNodesG2d.length + "]");
     }
   }, [staticNodesG2d]);
 
@@ -557,6 +566,7 @@ function Editor2d({
     const layerRef = staticNodeLayerRef.current;
 
     const newNodes = [];
+    const aisleNodes = [];
 
     for (let index = 0; index < racksGroup.length; index++) {
       if (index + 1 < racksGroup.length) {
@@ -575,19 +585,24 @@ function Editor2d({
         m1.forEach((m) => {
           m.parts.forEach((p) => {
             const arr = layerRef.find(`.${p.name}`);
-            const node = arr[0];
-            const pos = node.getAbsolutePosition(ref);
-            p["absPos"] = pos;
-            basesRack1.push(p);
+            if (arr.length > 0) {
+              const node = arr[0];
+              const pos = node.getAbsolutePosition(ref);
+              p["absPos"] = pos;
+              basesRack1.push(p);
+            }
           });
         });
+
         m2.forEach((m) => {
           m.parts.forEach((p) => {
             const arr = layerRef.find(`.${p.name}`);
-            const node = arr[0];
-            const pos = node.getAbsolutePosition(ref);
-            p["absPos"] = pos;
-            basesRack2.push(p);
+            if (arr.length > 0) {
+              const node = arr[0];
+              const pos = node.getAbsolutePosition(ref);
+              p["absPos"] = pos;
+              basesRack2.push(p);
+            }
           });
         });
 
@@ -613,12 +628,24 @@ function Editor2d({
             id: uuid(),
             positionx: posx,
             positionz: posy,
-            name: `${b1.name} - ${b2.name}`,
+            name: `${b1.name}|${b2.name}`,
             draggable: false,
             connectors: [b1.name, b2.name],
+            inboundConnectors: [],
+            outboundConnectors: [],
             linked: true,
           };
           newNodes.push(metaData);
+          aisleNodes.push(metaData);
+        }
+
+        let prev = null;
+        for (let index = 0; index < aisleNodes.length; index++) {
+          const r = aisleNodes[index];
+          if (prev) {
+            r.connectors.push(prev.name);
+          }
+          prev = r;
         }
       }
     }
@@ -641,7 +668,7 @@ function Editor2d({
       arr = arr.concat(newNodes);
     }
 
-    setNodes([...nodes, ...arr]);
+    setIntermediateNodes([...intermediateNodes, ...arr]);
     onEmptySelection();
   };
 
@@ -698,6 +725,8 @@ function Editor2d({
           name: "NODE-" + id,
           draggable: true,
           connectors: [],
+          inboundConnectors: [],
+          outboundConnectors: [],
           linked: false,
         };
 
@@ -706,10 +735,20 @@ function Editor2d({
     }
   };
 
+  const onCreateBaseNodes = () => {
+    const nodesG2d = buildNodesFromRacks(selectedRacks);
+    const arr = staticNodesG2d.concat(nodesG2d);
+    setStaticNodesG2d(arr);
+  };
+
   return (
     <Stack>
       <Toolbar>
         <Group>
+          <Button size="xs" onClick={onCreateBaseNodes} disabled={selectedRacks && selectedRacks.length === 0}>
+            <Text>{t("crud.floorGrapthEditor.label.createBaseNodes")}</Text>
+          </Button>
+
           <Button size="xs" onClick={onLinkStructures} disabled={isLinkRacksDisabled()}>
             <Text>{t("crud.floorGrapthEditor.label.linkStructures")}</Text>
           </Button>
@@ -782,7 +821,12 @@ function Editor2d({
 
           <Group spacing={"xs"}>
             <Text size={"xs"}>{t("crud.floorGrapthEditor.label.addNode")}</Text>
-            <Switch checked={activeAddNode} onChange={(event) => setActiveAddNode(event.currentTarget.checked)} />
+            <Switch
+              checked={activeAddNode}
+              onChange={(event) => {
+                setActiveAddNode(event.currentTarget.checked);
+              }}
+            />
           </Group>
         </Group>
       </Toolbar>

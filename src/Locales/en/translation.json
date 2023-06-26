@@ -301,7 +301,8 @@
         "linkStructures":"Link structures",
         "linkNodes":"Link nodes",
         "group":"Group",
-        "rackOrientation":"Orientation"
+        "rackOrientation":"Orientation",
+        "createBaseNodes":"Add base nodes"
       }
     },
 
