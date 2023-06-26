@@ -290,7 +290,8 @@
         "addNode": "Agregar nodo al hacer clic",
         "linkStructures":"Vincular estructuras",
         "linkNodes":"Vincular nodos",
-        "group":"Agrupado"
+        "group":"Agrupado",
+        "rackOrientation":"Orientación"
       }
     },
 

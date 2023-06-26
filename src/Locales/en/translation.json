@@ -300,7 +300,8 @@
         "addNode": "Add node on click",
         "linkStructures":"Link structures",
         "linkNodes":"Link nodes",
-        "group":"Group"
+        "group":"Group",
+        "rackOrientation":"Orientation"
       }
     },
 

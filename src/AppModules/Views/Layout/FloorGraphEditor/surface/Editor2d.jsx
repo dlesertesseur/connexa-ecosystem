@@ -1,11 +1,18 @@
-import { Button, Center, Group, NumberInput, SegmentedControl, Stack, Text } from "@mantine/core";
+import { Button, Center, Group, NumberInput, SegmentedControl, Stack, Switch, Text } from "@mantine/core";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
 import { Layer, Stage } from "react-konva";
-import { CONNECTOR_ONE_WAY, CONNECTOR_TWO_WAY, TOOLBAR_HIGHT } from "../../../../../Constants";
+import {
+  CONNECTOR_ONE_WAY,
+  CONNECTOR_TWO_WAY,
+  NODE_RADIO,
+  RACK_ORIENTATION_X,
+  RACK_ORIENTATION_Y,
+  TOOLBAR_HIGHT,
+} from "../../../../../Constants";
 import { useTranslation } from "react-i18next";
-import { IconArrowNarrowRight, IconArrowsHorizontal } from "@tabler/icons-react";
+import { IconArrowNarrowRight, IconArrowsHorizontal, IconAxisX, IconAxisY } from "@tabler/icons-react";
 import G2dPolygon from "./models/G2dPolygon";
 import G2dRack from "./models/G2dRack";
 import G2dMarker from "./models/G2dMarker";
@@ -72,6 +79,10 @@ function Editor2d({
   const [selectedNodes, setSelectedNodes] = useState([]);
   const [elementGroup, setElementGroup] = useState(2);
   const [direction, setDirection] = useState(CONNECTOR_TWO_WAY);
+  const [rackOrientation, setRackOrientation] = useState(RACK_ORIENTATION_Y);
+  const [activeAddNode, setActiveAddNode] = useState(false);
+  const [nodesIdsSelected, setNodesIdsSelected] = useState([]);
+  const [updatedNode, setUpdatedNode] = useState(null);
 
   const buildLayout = (layout) => {
     const parts = layout.parts;
@@ -105,11 +116,31 @@ function Editor2d({
     return list;
   };
 
+  const onSelectNode = (event) => {
+    event.cancelBubble = true;
+    const node = event.target;
+
+    setSelectedNode(node);
+    setNodesIdsSelected([...nodesIdsSelected, node.attrs.id]);
+  };
+
+  const onUpdatePosition = (id, position) => {
+    // setUpdatedNode(position);
+  }
+
   const buildNodes = (nodes) => {
     const list = [];
 
     nodes.forEach((node) => {
-      const component = <G2dNode key={node.id} node={node} draggable={node.draggable} onSelect={onSelectNode} />;
+      const component = (
+        <G2dNode
+          key={node.id}
+          node={node}
+          selected={nodesIdsSelected.includes(node.id)}
+          onSelect={onSelectNode}
+          onUpdatePosition={onUpdatePosition}
+        />
+      );
       list.push(component);
     });
 
@@ -139,18 +170,20 @@ function Editor2d({
         }
       });
 
-      if(prevNode){
-        const component = (
-          <G2dConnector
-            origin={{ x: prevNode.positionx, y: prevNode.positionz }}
-            target={{ x: node.positionx, y: node.positionz }}
-            key={uuid()}
-            bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
-          />
-        );
-        list.push(component);
+      if (node.linked) {
+        if (prevNode) {
+          const component = (
+            <G2dConnector
+              origin={{ x: prevNode.positionx, y: prevNode.positionz }}
+              target={{ x: node.positionx, y: node.positionz }}
+              key={uuid()}
+              bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
+            />
+          );
+          list.push(component);
+        }
       }
-      
+
       prevNode = node;
     });
 
@@ -164,7 +197,7 @@ function Editor2d({
       const modules = rack.modules;
       modules.forEach((module) => {
         const component = (
-          <G2dBaseNode key={uuid()} rack={rack} module={module} draggable={false} onSelect={onSelectNode} />
+          <G2dBaseNode key={uuid()} rack={rack} module={module} draggable={false} onSelect={onSelectStaticNode} />
         );
         list.push(component);
       });
@@ -184,7 +217,7 @@ function Editor2d({
     return list;
   };
 
-  const onSelectNode = (event) => {
+  const onSelectStaticNode = (event) => {
     event.cancelBubble = true;
 
     const ref = stageRef.current;
@@ -196,8 +229,6 @@ function Editor2d({
     const rotation = node.getAbsoluteRotation();
 
     const selObj = node.clone();
-
-    console.log("onSelectNode selObj ->", selObj.attrs);
 
     selObj.stroke("red");
     selObj.x(position.x);
@@ -292,6 +323,7 @@ function Editor2d({
     setSelectedNode(null);
     setSelectedRacks([]);
     setSelectedNodes([]);
+    setNodesIdsSelected([]);
 
     ref.removeChildren();
   };
@@ -328,10 +360,18 @@ function Editor2d({
       const nodesG2d = buildNodes(nodes);
       setNodesG2d(nodesG2d);
 
+      // const connectrosG2d = buildConnectors(nodes);
+      // setConnectorsG2d(connectrosG2d);
+    }
+  }, [nodes, selectedNode]);
+
+
+  useEffect(() => {
+    if (nodes) {
       const connectrosG2d = buildConnectors(nodes);
       setConnectorsG2d(connectrosG2d);
     }
-  }, [nodes]);
+  }, [nodes, updatedNode]);
 
   useEffect(() => {
     if (layoutG2d && racksG2d && markersG2d) {
@@ -551,8 +591,13 @@ function Editor2d({
           });
         });
 
-        basesRack1.sort((a, b) => a.absPos.y - b.absPos.y);
-        basesRack2.sort((a, b) => a.absPos.y - b.absPos.y);
+        if (rackOrientation === RACK_ORIENTATION_Y) {
+          basesRack1.sort((a, b) => a.absPos.y - b.absPos.y);
+          basesRack2.sort((a, b) => a.absPos.y - b.absPos.y);
+        } else {
+          basesRack1.sort((a, b) => a.absPos.x - b.absPos.x);
+          basesRack2.sort((a, b) => a.absPos.x - b.absPos.x);
+        }
 
         for (let index = 0; index < basesRack1.length; index++) {
           const b1 = basesRack1[index];
@@ -568,10 +613,10 @@ function Editor2d({
             id: uuid(),
             positionx: posx,
             positionz: posy,
-            fill: "grey",
             name: `${b1.name} - ${b2.name}`,
             draggable: false,
             connectors: [b1.name, b2.name],
+            linked: true,
           };
           newNodes.push(metaData);
         }
@@ -632,6 +677,35 @@ function Editor2d({
     return ret;
   };
 
+  const addNodeOnPoint = (e) => {
+    if (activeAddNode) {
+      if (e.target.getStage()) {
+        const ref = stageRef.current;
+        var transform = ref.getAbsoluteTransform().copy();
+        transform.invert();
+        const pos = e.target.getStage().getPointerPosition();
+        let clickPos = transform.point(pos);
+
+        const color = "blue";
+        const id = uuid();
+        const node = {
+          id: id,
+          positionx: clickPos.x,
+          positionz: clickPos.y,
+          width: NODE_RADIO,
+          height: NODE_RADIO,
+          color: color,
+          name: "NODE-" + id,
+          draggable: true,
+          connectors: [],
+          linked: false,
+        };
+
+        setNodes([...nodes, node]);
+      }
+    }
+  };
+
   return (
     <Stack>
       <Toolbar>
@@ -678,6 +752,38 @@ function Editor2d({
               },
             ]}
           />
+
+          <Group spacing={2}>
+            <Text size={"xs"}>{t("crud.floorGrapthEditor.label.rackOrientation")}</Text>
+            <SegmentedControl
+              value={rackOrientation}
+              onChange={setRackOrientation}
+              size="xs"
+              data={[
+                {
+                  value: RACK_ORIENTATION_X,
+                  label: (
+                    <Center>
+                      <IconAxisX size={20} />
+                    </Center>
+                  ),
+                },
+                {
+                  value: RACK_ORIENTATION_Y,
+                  label: (
+                    <Center>
+                      <IconAxisY size={20} />
+                    </Center>
+                  ),
+                },
+              ]}
+            />
+          </Group>
+
+          <Group spacing={"xs"}>
+            <Text size={"xs"}>{t("crud.floorGrapthEditor.label.addNode")}</Text>
+            <Switch checked={activeAddNode} onChange={(event) => setActiveAddNode(event.currentTarget.checked)} />
+          </Group>
         </Group>
       </Toolbar>
       <Stage
@@ -690,7 +796,10 @@ function Editor2d({
         onTouchEnd={handleTouchEnd}
         onMouseDown={onEmptySelection}
         onTap={onEmptySelection}
-        onContextMenu={(event)=>{event.evt.preventDefault()}}
+        onContextMenu={(event) => {
+          event.evt.preventDefault();
+        }}
+        onClick={addNodeOnPoint}
       >
         <Layer ref={baseLayerRef} name="base-layer">
           {layoutG2d}

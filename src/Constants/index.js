@@ -8,6 +8,10 @@ export const PIXEL_METER_RELATION = 25.0;
 export const BLOCK_SNAP_SIZE = 1.0;
 export const CONNECTOR_TWO_WAY = "two_way"
 export const CONNECTOR_ONE_WAY = "one_way"
+export const NODE_RADIO = 6
+
+export const RACK_ORIENTATION_Y = "rack_orientation_y_axis"
+export const RACK_ORIENTATION_X = "rack_orientation_x_axis"
 
 export const GUIDELINE_OFFSET = 5;
 
