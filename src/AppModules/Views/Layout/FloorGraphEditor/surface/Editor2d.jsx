@@ -1,4 +1,4 @@
-import { Button, Center, Group, NumberInput, SegmentedControl, Stack, Switch, Text } from "@mantine/core";
+import { ActionIcon, Button, Center, Group, NumberInput, SegmentedControl, Stack, Switch, Text } from "@mantine/core";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
@@ -12,7 +12,20 @@ import {
   TOOLBAR_HIGHT,
 } from "../../../../../Constants";
 import { useTranslation } from "react-i18next";
-import { IconArrowNarrowRight, IconArrowsHorizontal, IconAxisX, IconAxisY } from "@tabler/icons-react";
+import {
+  IconArrowNarrowRight,
+  IconArrowRightCircle,
+  IconArrowRightSquare,
+  IconArrowsHorizontal,
+  IconAxisX,
+  IconAxisY,
+  IconCircleArrowRight,
+  IconClick,
+  IconLayoutAlignCenter,
+  IconLayoutAlignMiddle,
+  IconSquare,
+  IconSquarePlus,
+} from "@tabler/icons-react";
 import G2dPolygon from "./models/G2dPolygon";
 import G2dRack from "./models/G2dRack";
 import G2dMarker from "./models/G2dMarker";
@@ -22,6 +35,10 @@ import G2dConnector from "./models/G2dConnector";
 import uuid from "react-uuid";
 import Toolbar from "../Toolbar";
 import G2dIntermediateNode from "./models/G2dIntermediateNode";
+import NodePropertiesModal from "./modals/NodePropertiesModal";
+import { useHotkeys } from "@mantine/hooks";
+import DeleteConfirmation from "../../../../../Modal/DeleteConfirmation";
+import { IconCirclePlus } from "@tabler/icons-react";
 
 const scaleBy = 1.05;
 
@@ -61,6 +78,7 @@ function Editor2d({
   const baseLayerRef = useRef(null);
   const nodeLayerRef = useRef(null);
   const staticNodeLayerRef = useRef(null);
+  const staticConnectorsLayerRef = useRef(null);
   const connectorsLayerRef = useRef(null);
   const selLayerRef = useRef(null);
 
@@ -73,7 +91,8 @@ function Editor2d({
   const [staticNodesG2d, setStaticNodesG2d] = useState([]);
   const [nodesG2d, setNodesG2d] = useState([]);
   const [intermediateNodes, setIntermediateNodes] = useState([]);
-  const [connectorsG2d, setConnectorsG2d] = useState(null);
+  const [staticConnectorsG2d, setStaticConnectorsG2d] = useState([]);
+  const [connectorsG2d, setConnectorsG2d] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedRack, setSelectedRack] = useState(null);
 
@@ -84,7 +103,10 @@ function Editor2d({
   const [rackOrientation, setRackOrientation] = useState(RACK_ORIENTATION_Y);
   const [activeAddNode, setActiveAddNode] = useState(false);
   const [nodesIdsSelected, setNodesIdsSelected] = useState([]);
-  const [updatedNode, setUpdatedNode] = useState(null);
+  const [openNodeProperties, setOpenNodeProperties] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  useHotkeys([["ctrl+d", () => deleteNodes()]]);
 
   const buildLayout = (layout) => {
     const parts = layout.parts;
@@ -123,25 +145,48 @@ function Editor2d({
     const node = event.target;
 
     setSelectedNode(node);
-
     setNodesIdsSelected([...nodesIdsSelected, node.attrs.id]);
   };
 
   const onUpdatePosition = (id, position) => {
-    // setUpdatedNode(position);
+    const layer = connectorsLayerRef.current;
+
+    //Origin
+    let connectors = layer.find((c) => {
+      return c.attrs.userData.originId === id;
+    });
+
+    connectors.forEach((c) => {
+      c.attrs.points[0] = position.x;
+      c.attrs.points[1] = position.y;
+    });
+
+    //Target
+    connectors = layer.find((c) => {
+      return c.attrs.userData.targetId === id;
+    });
+
+    connectors.forEach((c) => {
+      c.attrs.points[2] = position.x;
+      c.attrs.points[3] = position.y;
+    });
+
+    layer.draw();
   };
 
-  const buildNodes = (nodes) => {
+  const buildNodes = (nodes, initialize = false) => {
     const list = [];
 
     nodes.forEach((node) => {
       const component = (
         <G2dNode
-          key={uuid()}
+          key={node.id}
           node={node}
           selected={nodesIdsSelected.includes(node.id)}
           onSelect={onSelectNode}
           onUpdatePosition={onUpdatePosition}
+          onDblClick={node.onDblClick}
+          initialize={initialize ? true : false}
         />
       );
       list.push(component);
@@ -182,13 +227,17 @@ function Editor2d({
       node.connectors.forEach((connector) => {
         const target = findNode(connector);
         if (target) {
+          const userData = { originId: node.id, targetId: target.attrs.id };
+
           const targetPos = target.getAbsolutePosition(ref);
           const component = (
             <G2dConnector
               origin={{ x: node.positionx, y: node.positionz }}
               target={targetPos}
+              name={node.id + "-" + target.attrs.id}
               key={uuid()}
               bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
+              userData={userData}
             />
           );
           list.push(component);
@@ -333,6 +382,35 @@ function Editor2d({
     ref.removeChildren();
   };
 
+  const deleteNodes = () => {
+    if (nodesIdsSelected.length > 0) {
+      setConfirmModalOpen(true);
+    }
+  };
+
+  const onConfirm = () => {
+    setConfirmModalOpen(false);
+
+    const list = nodes.filter((n) => {
+      const rest = !nodesIdsSelected.includes(n.id);
+      return rest;
+    });
+
+    setNodes(list);
+
+    let conn = connectorsG2d.filter((c) => {
+      const ori = !nodesIdsSelected.includes(c.props.userData.originId);
+      return ori;
+    });
+
+    conn = conn.filter((c) => {
+      const tar = !nodesIdsSelected.includes(c.props.userData.targetId);
+      return tar;
+    });
+
+    setConnectorsG2d(conn);
+  };
+
   useEffect(() => {
     if (layouts && layouts.length > 0) {
       const layout = layouts[0];
@@ -355,16 +433,10 @@ function Editor2d({
     }
   }, [markers]);
 
-
-  useEffect(() => {
-    console.log("useEffect nodesIdsSelected -> ", nodesIdsSelected)
-  }, [nodesIdsSelected]);
-
-
   useEffect(() => {
     if (intermediateNodes) {
-      const nodesG2d = buildIntemediateNodes(intermediateNodes);
-      setStaticNodesG2d([...staticNodesG2d, ...nodesG2d]);
+      const list = buildIntemediateNodes(intermediateNodes);
+      setStaticNodesG2d([...staticNodesG2d, ...list]);
     }
   }, [intermediateNodes]);
 
@@ -373,12 +445,12 @@ function Editor2d({
       const ret = buildNodes(nodes);
       setNodesG2d(ret);
     }
-  }, [nodes]);
+  }, [nodes, selectedNode]);
 
   useEffect(() => {
     if (intermediateNodes) {
-      const connectrosG2d = buildConnectors(intermediateNodes);
-      setConnectorsG2d(connectrosG2d);
+      const connG2d = buildConnectors(intermediateNodes);
+      setStaticConnectorsG2d(connG2d);
     }
   }, [staticNodesG2d]);
 
@@ -388,6 +460,13 @@ function Editor2d({
       console.log("CACHE BASE LAYER");
     }
   }, [layoutG2d && racksG2d && markersG2d]);
+
+  useEffect(() => {
+    if (staticConnectorsG2d && staticConnectorsG2d.length > 0) {
+      staticConnectorsLayerRef.current.cache({ pixelRatio: 3 });
+      console.log("CACHE STATIC CONNECTORS LAYER");
+    }
+  }, [staticConnectorsG2d]);
 
   useEffect(() => {
     if (staticNodesG2d && staticNodesG2d.length > 0) {
@@ -558,7 +637,36 @@ function Editor2d({
   }
 
   const onLinkNodes = () => {
-    console.log("onLinkNodes");
+    const ref = stageRef.current;
+    const totalNodes = selectedNodes.length;
+    const list = [];
+    let node = null;
+    let previusNode = null;
+
+    for (let index = 0; index < totalNodes && totalNodes > 1; index++) {
+      node = selectedNodes[index];
+      if (previusNode) {
+        const originPos = { x: previusNode.attrs.x, y: previusNode.attrs.y };
+        const targetPos = node.getAbsolutePosition(ref);
+        const userData = { originId: previusNode.attrs.id, targetId: node.attrs.id };
+        const component = (
+          <G2dConnector
+            origin={originPos}
+            target={targetPos}
+            name={previusNode.attrs.id + "-" + node.attrs.id}
+            key={uuid()}
+            userData={userData}
+            bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
+          />
+        );
+        list.push(component);
+      }
+      previusNode = node;
+    }
+
+    setConnectorsG2d([...connectorsG2d, ...list]);
+
+    onEmptySelection();
   };
 
   const processRackGroup = (racksGroup) => {
@@ -704,6 +812,10 @@ function Editor2d({
     return ret;
   };
 
+  const onDblClickNode = (e) => {
+    setOpenNodeProperties(true);
+  };
+
   const addNodeOnPoint = (e) => {
     if (activeAddNode) {
       if (e.target.getStage()) {
@@ -728,6 +840,7 @@ function Editor2d({
           inboundConnectors: [],
           outboundConnectors: [],
           linked: false,
+          onDblClick: onDblClickNode,
         };
 
         setNodes([...nodes, node]);
@@ -736,25 +849,64 @@ function Editor2d({
   };
 
   const onCreateBaseNodes = () => {
-    const nodesG2d = buildNodesFromRacks(selectedRacks);
-    const arr = staticNodesG2d.concat(nodesG2d);
+    const list = buildNodesFromRacks(selectedRacks);
+    const arr = staticNodesG2d.concat(list);
     setStaticNodesG2d(arr);
   };
+
+  const onHorizontalAlignNodes = () => {
+    const referenceNode = selectedNodes[0];
+    const toUpdate = nodes.filter(n => nodesIdsSelected.includes(n.id));
+
+    toUpdate.forEach((n) => {
+      n.positionz = referenceNode.attrs.y;
+    })
+
+    setNodesG2d(buildNodes(nodes, true));
+  }
+
+  const onVerticalAlignNodes = () => {
+    const referenceNode = selectedNodes[0];
+    const toUpdate = nodes.filter(n => nodesIdsSelected.includes(n.id));
+
+    toUpdate.forEach((n) => {
+      n.positionx = referenceNode.attrs.x;
+    })
+
+    setNodesG2d(buildNodes(nodes, true));
+  }
 
   return (
     <Stack>
       <Toolbar>
         <Group>
-          <Button size="xs" onClick={onCreateBaseNodes} disabled={selectedRacks && selectedRacks.length === 0}>
+          <Button
+            leftIcon={<IconCirclePlus size={20} />}
+            size="xs"
+            onClick={onCreateBaseNodes}
+            disabled={selectedRacks && selectedRacks.length === 0}
+          >
             <Text>{t("crud.floorGrapthEditor.label.createBaseNodes")}</Text>
           </Button>
 
-          <Button size="xs" onClick={onLinkStructures} disabled={isLinkRacksDisabled()}>
+          <Button
+            leftIcon={<IconArrowRightSquare size={20} />}
+            size="xs"
+            onClick={onLinkStructures}
+            disabled={isLinkRacksDisabled()}
+          >
             <Text>{t("crud.floorGrapthEditor.label.linkStructures")}</Text>
           </Button>
-          <Button size="xs" onClick={onLinkNodes} disabled={isLinkNodesDisabled()}>
+
+          <Button
+            leftIcon={<IconArrowRightCircle size={20} />}
+            size="xs"
+            onClick={onLinkNodes}
+            disabled={selectedNodes && selectedNodes.length <= 1}
+          >
             <Text>{t("crud.floorGrapthEditor.label.linkNodes")}</Text>
           </Button>
+
           <Group spacing={"xs"}>
             <Text size={"xs"}>{t("crud.floorGrapthEditor.label.group")}</Text>
             <NumberInput
@@ -822,11 +974,23 @@ function Editor2d({
           <Group spacing={"xs"}>
             <Text size={"xs"}>{t("crud.floorGrapthEditor.label.addNode")}</Text>
             <Switch
+              size="md"
               checked={activeAddNode}
               onChange={(event) => {
                 setActiveAddNode(event.currentTarget.checked);
               }}
+              onLabel={<IconClick size={16} />}
+              offLabel={<IconClick size={16} />}
             />
+          </Group>
+
+          <Group spacing={"xs"}>
+            <ActionIcon disabled={selectedNodes && selectedNodes.length <= 1} color={"blue"} variant="filled" onClick={onVerticalAlignNodes}>
+              <IconLayoutAlignMiddle size={20} />
+            </ActionIcon>
+            <ActionIcon disabled={selectedNodes && selectedNodes.length <= 1} color={"blue"} variant="filled" onClick={onHorizontalAlignNodes}>
+              <IconLayoutAlignCenter size={20} />
+            </ActionIcon>
           </Group>
         </Group>
       </Toolbar>
@@ -859,12 +1023,33 @@ function Editor2d({
           {staticNodesG2d}
         </Layer>
 
-        <Layer ref={connectorsLayerRef} name="connecttrs-layer">
+        <Layer ref={staticConnectorsLayerRef} name="staticConnectors-layer">
+          {staticConnectorsG2d}
+        </Layer>
+
+        <Layer ref={connectorsLayerRef} name="connectors-layer">
           {connectorsG2d}
         </Layer>
 
         <Layer ref={selLayerRef} name="sel-layer" />
       </Stage>
+
+      <NodePropertiesModal
+        opened={openNodeProperties}
+        close={() => {
+          setOpenNodeProperties(false);
+        }}
+        node={selectedNode}
+        setSelectedNode={setSelectedNode}
+      />
+
+      <DeleteConfirmation
+        opened={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={onConfirm}
+        title={t("notification.title")}
+        text={t("notification.delete")}
+      />
     </Stack>
   );
 }

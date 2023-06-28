@@ -288,11 +288,13 @@
       "columns": ["Name", "Description"],
       "label": {
         "addNode": "Agregar nodo al hacer clic",
-        "linkStructures":"Vincular estructuras",
-        "linkNodes":"Vincular nodos",
+        "linkStructures":"Racks",
+        "linkNodes":"Nodos",
         "group":"Agrupado",
         "rackOrientation":"Orientación",
-        "createBaseNodes":"Agregar nodos base"
+        "createBaseNodes":"Base",
+        "nodeProperties":"Propiedades del nodo",
+        "name":"Nombre"
       }
     },
 

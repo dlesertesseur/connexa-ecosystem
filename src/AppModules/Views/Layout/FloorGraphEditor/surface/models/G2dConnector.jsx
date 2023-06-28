@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Arrow } from "react-konva";
 
-const G2dConnector = ({ origin, target, color = "black", bidirectional }) => {
+const G2dConnector = ({ name, origin, target, color = "black", bidirectional, userData }) => {
   return (
     <Arrow
+      name={name}
       strokeWidth={1}
       fill={color}
       stroke={color}
@@ -12,6 +13,7 @@ const G2dConnector = ({ origin, target, color = "black", bidirectional }) => {
       pointerWidth={4}
       pointerAtBeginning={bidirectional}
       pointerAtEnding
+      userData={userData}
     />
   );
 };

@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Circle, Group } from "react-konva";
 import { useState } from "react";
 import G2dLabel from "./G2dLabel";
 
-const G2dNode = ({ node, selected = false, radioNode = 15, onSelect, onUpdatePosition }) => {
+const G2dNode = ({ node, selected = false, radioNode = 15, onSelect, onUpdatePosition, initialize }) => {
   const [location, setLocation] = useState({ x: node.positionx, y: node.positionz });
+
+  useEffect(() => {
+    if(initialize){
+      setLocation({ x: node.positionx, y: node.positionz });
+    }
+  }, [initialize])
+
   return (
-    <Group>
+    <Group draggable onDblClick={node.onDblClick}>
       <Circle
         id={node.id}
         x={node.positionx}
