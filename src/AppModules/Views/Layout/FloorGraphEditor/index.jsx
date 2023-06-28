@@ -78,7 +78,8 @@ const DynamicApp = ({ app }) => {
         onCreate,
         initilizeContext,
         disabledActionButtons,
-        setDisabledActionButtons
+        setDisabledActionButtons,
+        setErrorMessage
       }}
     >
       <ResponceNotification
@@ -104,6 +105,7 @@ const DynamicApp = ({ app }) => {
         deletePage={<DeletePage />}
         filterControl={<Filter />}
       />
+      
     </AbmStateContext.Provider>
   );
 

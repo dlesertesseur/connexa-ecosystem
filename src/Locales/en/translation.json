@@ -300,11 +300,15 @@
         "addNode": "Add node on click",
         "linkStructures":"Racks",
         "linkNodes":"Nodes",
-        "group":"Group",
+        "group":"Rakcs group",
         "rackOrientation":"Orientation",
         "createBaseNodes":"Base",
         "nodeProperties":"Node properties",
-        "name":"Name"
+        "name":"Name",
+        "nameDescription":"Name that identifies the graph",
+        "settingsNenu":"Settings",
+        "graph":"Graph",
+        "connectors":"Connectors"
       }
     },
 

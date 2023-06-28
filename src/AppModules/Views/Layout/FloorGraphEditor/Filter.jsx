@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
-import { findAllSites } from "../../../../DataAccess/sites.js"
+import { findAllSites } from "../../../../DataAccess/Sites";
 import { findAllFloorsBySiteId } from "../../../../DataAccess/Floors";
 
 export function Filter() {

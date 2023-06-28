@@ -1,49 +1,12 @@
 import ResponceNotification from "../../../../Modal/ResponceNotification";
-import { Button, Group, LoadingOverlay, Stack } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useContext } from "react";
-import { AbmStateContext } from "./Context";
-import { useWindowSize } from "../../../../Hook";
 import Viewer from "./Viewer";
 
 export function CreatePage() {
-  const navigate = useNavigate();
   const { t } = useTranslation();
-  const { user } = useSelector((state) => state.auth.value);
-  const { refresh, site, floor, initilizeContext, disabledActionButtons } = useContext(AbmStateContext);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [working, setWorking] = useState(false);
-  const wSize = useWindowSize();
-
-  const onSave = async () => {
-    // const params = {
-    //   token: user.token,
-    //   // data: modelStructure,
-    //   siteId: site,
-    //   floorId: floor,
-    // };
-
-    // setWorking(true);
-
-    // try {
-    //   const ret = await createRack(params);
-    //   if (ret.error) {
-    //     setWorking(false);
-    //     setErrorMessage(ret.message);
-    //   } else {
-    //     setErrorMessage(null);
-    //     setWorking(false);
-    //     refresh();
-    //     navigate("../");
-    //   }
-    // } catch (error) {
-    //   setErrorMessage(error);
-    // }
-    // setWorking(false);
-  };
 
   return (
     <Stack
@@ -63,27 +26,7 @@ export function CreatePage() {
         text={errorMessage}
       />
 
-      <LoadingOverlay overlayOpacity={0.5} visible={working} />
-
       <Viewer/>
-
-      <Group position="right" mt="xs" mb="xs" width="100%">
-        <Button disabled={disabledActionButtons}
-          onClick={() => {
-            onSave();
-          }}
-        >
-          {t("button.accept")}
-        </Button>
-        <Button
-          onClick={(event) => {
-            initilizeContext();
-            navigate(-1);
-          }}
-        >
-          {t("button.cancel")}
-        </Button>
-      </Group>
     </Stack>
   );
 }

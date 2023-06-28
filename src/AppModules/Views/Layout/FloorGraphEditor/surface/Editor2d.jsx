@@ -1,30 +1,18 @@
 import { ActionIcon, Button, Center, Group, NumberInput, SegmentedControl, Stack, Switch, Text } from "@mantine/core";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
 import { Layer, Stage } from "react-konva";
-import {
-  CONNECTOR_ONE_WAY,
-  CONNECTOR_TWO_WAY,
-  NODE_RADIO,
-  RACK_ORIENTATION_X,
-  RACK_ORIENTATION_Y,
-  TOOLBAR_HIGHT,
-} from "../../../../../Constants";
+import { CONNECTOR_TWO_WAY, NODE_RADIO, RACK_ORIENTATION_Y, TOOLBAR_HIGHT } from "../../../../../Constants";
 import { useTranslation } from "react-i18next";
 import {
-  IconArrowNarrowRight,
   IconArrowRightCircle,
   IconArrowRightSquare,
-  IconArrowsHorizontal,
-  IconAxisX,
-  IconAxisY,
-  IconCircleArrowRight,
   IconClick,
   IconLayoutAlignCenter,
   IconLayoutAlignMiddle,
-  IconSquare,
-  IconSquarePlus,
+  IconCirclePlus,
+  IconDeviceFloppy,
 } from "@tabler/icons-react";
 import G2dPolygon from "./models/G2dPolygon";
 import G2dRack from "./models/G2dRack";
@@ -36,9 +24,12 @@ import uuid from "react-uuid";
 import Toolbar from "../Toolbar";
 import G2dIntermediateNode from "./models/G2dIntermediateNode";
 import NodePropertiesModal from "./modals/NodePropertiesModal";
-import { useHotkeys } from "@mantine/hooks";
 import DeleteConfirmation from "../../../../../Modal/DeleteConfirmation";
-import { IconCirclePlus } from "@tabler/icons-react";
+import SettingsMenu from "./SettingsMenu";
+import { useHotkeys } from "@mantine/hooks";
+import { IconArrowBack } from "@tabler/icons-react";
+import { AbmStateContext } from "../Context";
+import { useNavigate } from "react-router-dom";
 
 const scaleBy = 1.05;
 
@@ -57,21 +48,7 @@ function isTouchEnabled() {
   return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 }
 
-function Editor2d({
-  width,
-  height,
-  layouts,
-  racks,
-  markers,
-  nodes,
-  setNodes,
-  staticNodes,
-  setStaticNodes,
-  connectors,
-  setConnectors,
-  pixelMeterRelation,
-  multiSelect = true,
-}) {
+function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, multiSelect = true, onSave }) {
   const { t } = useTranslation();
 
   const stageRef = useRef(null);
@@ -98,6 +75,7 @@ function Editor2d({
 
   const [selectedRacks, setSelectedRacks] = useState([]);
   const [selectedNodes, setSelectedNodes] = useState([]);
+  const [graphName, setGraphName] = useState("");
   const [elementGroup, setElementGroup] = useState(2);
   const [direction, setDirection] = useState(CONNECTOR_TWO_WAY);
   const [rackOrientation, setRackOrientation] = useState(RACK_ORIENTATION_Y);
@@ -105,6 +83,11 @@ function Editor2d({
   const [nodesIdsSelected, setNodesIdsSelected] = useState([]);
   const [openNodeProperties, setOpenNodeProperties] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [nodes, setNodes] = useState([]);
+  const navigate = useNavigate();
+
+  const { initilizeContext } = useContext(AbmStateContext);
 
   useHotkeys([["ctrl+d", () => deleteNodes()]]);
 
@@ -187,6 +170,7 @@ function Editor2d({
           onUpdatePosition={onUpdatePosition}
           onDblClick={node.onDblClick}
           initialize={initialize ? true : false}
+          type={"G2dNode"}
         />
       );
       list.push(component);
@@ -199,7 +183,15 @@ function Editor2d({
     const list = [];
 
     nodes.forEach((node) => {
-      const component = <G2dIntermediateNode key={uuid()} node={node} color={"grey"} onSelect={onSelectStaticNode} />;
+      const component = (
+        <G2dIntermediateNode
+          key={uuid()}
+          node={node}
+          color={"grey"}
+          onSelect={onSelectStaticNode}
+          type={"G2dIntermediateNode"}
+        />
+      );
       list.push(component);
     });
 
@@ -214,6 +206,18 @@ function Editor2d({
       ret = target[0];
     } else {
       console.log("findNode ", connector, " -> NOT FOUD");
+    }
+
+    return ret;
+  };
+
+  const findNodeById = (layer, id) => {
+    let ret = null;
+    const target = layer.find(`#${id}`);
+    if (target && target.length > 0) {
+      ret = target[0];
+    } else {
+      console.log("findNodeById ", id, " -> NOT FOUD");
     }
 
     return ret;
@@ -238,6 +242,7 @@ function Editor2d({
               key={uuid()}
               bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
               userData={userData}
+              type={"G2dConnector"}
             />
           );
           list.push(component);
@@ -255,7 +260,14 @@ function Editor2d({
       const modules = rack.modules;
       modules.forEach((module) => {
         const component = (
-          <G2dBaseNode key={uuid()} rack={rack} module={module} draggable={false} onSelect={onSelectStaticNode} />
+          <G2dBaseNode
+            key={uuid()}
+            rack={rack}
+            module={module}
+            draggable={false}
+            onSelect={onSelectStaticNode}
+            type={"G2dBaseNode"}
+          />
         );
         list.push(component);
       });
@@ -657,6 +669,7 @@ function Editor2d({
             key={uuid()}
             userData={userData}
             bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
+            type={"G2dConnector"}
           />
         );
         list.push(component);
@@ -856,140 +869,259 @@ function Editor2d({
 
   const onHorizontalAlignNodes = () => {
     const referenceNode = selectedNodes[0];
-    const toUpdate = nodes.filter(n => nodesIdsSelected.includes(n.id));
+    const toUpdate = nodes.filter((n) => nodesIdsSelected.includes(n.id));
 
     toUpdate.forEach((n) => {
       n.positionz = referenceNode.attrs.y;
-    })
+    });
 
     setNodesG2d(buildNodes(nodes, true));
-  }
+
+    toUpdate.forEach((n) => {
+      onUpdatePosition(n.id, { x: n.positionx, y: n.positionz });
+    });
+  };
 
   const onVerticalAlignNodes = () => {
     const referenceNode = selectedNodes[0];
-    const toUpdate = nodes.filter(n => nodesIdsSelected.includes(n.id));
+    const toUpdate = nodes.filter((n) => nodesIdsSelected.includes(n.id));
 
     toUpdate.forEach((n) => {
       n.positionx = referenceNode.attrs.x;
-    })
+    });
 
     setNodesG2d(buildNodes(nodes, true));
-  }
+
+    toUpdate.forEach((n) => {
+      onUpdatePosition(n.id, { x: n.positionx, y: n.positionz });
+    });
+  };
+
+  const createNodeList = (objList) => {
+    const list = [];
+
+    console.log("createNodeList -> ", objList);
+
+    objList.forEach((node) => {
+      switch (node.props.type) {
+        case "G2dBaseNode":
+          const parts = node.props.module.parts;
+          parts.forEach((part) => {
+            const ret = {
+              id: part.id,
+              name: part.name,
+            };
+            list.push(ret);
+          });
+          break;
+
+        case "G2dNode":
+        case "G2dIntermediateNode":
+          list.push({
+            id: node.props.node.id,
+            name: node.props.node.name,
+          });
+          break;
+
+        default:
+          const ret = {
+            id: node.props.node.id,
+            name: node.props.node.name,
+          };
+          list.push(ret);
+          break;
+      }
+    });
+
+    return list;
+  };
+
+  const createNodes = () => {
+    let stNode = [];
+    const dNode = [];
+
+    const ref = stageRef.current;
+    const staticNodesLayer = staticNodeLayerRef.current;
+    const nodesLayer = nodeLayerRef.current;
+
+    const staticNodesList = createNodeList(staticNodesG2d);
+    const nodesList = createNodeList(nodesG2d);
+
+    staticNodesList.forEach((b) => {
+      const node = findNodeById(staticNodesLayer, b.id);
+      if (node) {
+        const position = node.getAbsolutePosition(ref);
+        const obj = {
+          id: node.attrs.id,
+          name: node.attrs.name,
+          locationx: position.x,
+          locationy: 0,
+          locationz: position.y,
+        };
+
+        stNode.push(obj);
+      }
+    });
+
+    nodesList.forEach((b) => {
+      const node = findNodeById(nodesLayer, b.id);
+      if (node) {
+        const position = node.getAbsolutePosition(ref);
+        const obj = {
+          id: node.attrs.id,
+          name: node.attrs.name,
+          locationx: position.x,
+          locationy: 0,
+          locationz: position.y,
+        };
+
+        dNode.push(obj);
+      }
+    });
+
+    const ret = stNode.concat(dNode);
+    return ret;
+  };
+
+  const createConnectorMetaData = (connector) => {
+    const ret = {
+      id: connector.id,
+      rotx: 0,
+      roty: 0,
+      rotz: 0,
+      distance: 0,
+      originNodeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      targetNodeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    };
+    return ret;
+  };
+
+  const createEdges = () => {
+    const ret = [];
+
+    let stConn = [];
+    const dConn = [];
+
+    const ref = stageRef.current;
+    const staticConnLayer = staticConnectorsLayerRef.current;
+    const connLayer = connectorsLayerRef.current;
+
+    const staticConnList = createNodeList(staticConnectorsG2d);
+
+    console.log("staticConnList -> ", staticConnList);
+    //const connList = createNodeList(connectorsG2d);
+
+    return ret;
+  };
+
+  const buildFloorGraph = () => {
+    const nodes = createNodes();
+    const edges = createEdges();
+    const graph = {
+      description: graphName,
+      state: 0,
+      initialNodeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      nodes: nodes,
+      //  edges: edges,
+    };
+    return graph;
+  };
+  const onLocalSave = () => {
+    const graph = buildFloorGraph();
+    console.log("onLocalSave -> ", graph);
+    //onSave(graph);
+  };
 
   return (
     <Stack>
       <Toolbar>
-        <Group>
-          <Button
-            leftIcon={<IconCirclePlus size={20} />}
-            size="xs"
-            onClick={onCreateBaseNodes}
-            disabled={selectedRacks && selectedRacks.length === 0}
-          >
-            <Text>{t("crud.floorGrapthEditor.label.createBaseNodes")}</Text>
-          </Button>
-
-          <Button
-            leftIcon={<IconArrowRightSquare size={20} />}
-            size="xs"
-            onClick={onLinkStructures}
-            disabled={isLinkRacksDisabled()}
-          >
-            <Text>{t("crud.floorGrapthEditor.label.linkStructures")}</Text>
-          </Button>
-
-          <Button
-            leftIcon={<IconArrowRightCircle size={20} />}
-            size="xs"
-            onClick={onLinkNodes}
-            disabled={selectedNodes && selectedNodes.length <= 1}
-          >
-            <Text>{t("crud.floorGrapthEditor.label.linkNodes")}</Text>
-          </Button>
-
+        <Group spacing={"xs"} position="apart" w={"100%"}>
           <Group spacing={"xs"}>
-            <Text size={"xs"}>{t("crud.floorGrapthEditor.label.group")}</Text>
-            <NumberInput
-              defaultValue={2}
-              size="xs"
-              step={1}
-              min={1}
-              w={60}
-              value={elementGroup}
-              onChange={setElementGroup}
+            <Group spacing={"xs"}>
+              <ActionIcon disabled={graphName ? false : true} color={"blue"} variant="filled" onClick={onLocalSave}>
+                <IconDeviceFloppy size={20} />
+              </ActionIcon>
+            </Group>
+
+            <SettingsMenu
+              name={graphName}
+              setName={setGraphName}
+              elementGroup={elementGroup}
+              setElementGroup={setElementGroup}
+              direction={direction}
+              setDirection={setDirection}
+              rackOrientation={rackOrientation}
+              setRackOrientation={setRackOrientation}
             />
-          </Group>
-
-          <SegmentedControl
-            value={direction}
-            onChange={setDirection}
-            size="xs"
-            data={[
-              {
-                value: CONNECTOR_TWO_WAY,
-                label: (
-                  <Center>
-                    <IconArrowsHorizontal size={20} />
-                  </Center>
-                ),
-              },
-              {
-                value: CONNECTOR_ONE_WAY,
-                label: (
-                  <Center>
-                    <IconArrowNarrowRight size={20} />
-                  </Center>
-                ),
-              },
-            ]}
-          />
-
-          <Group spacing={2}>
-            <Text size={"xs"}>{t("crud.floorGrapthEditor.label.rackOrientation")}</Text>
-            <SegmentedControl
-              value={rackOrientation}
-              onChange={setRackOrientation}
+            <Button
+              leftIcon={<IconCirclePlus size={20} />}
               size="xs"
-              data={[
-                {
-                  value: RACK_ORIENTATION_X,
-                  label: (
-                    <Center>
-                      <IconAxisX size={20} />
-                    </Center>
-                  ),
-                },
-                {
-                  value: RACK_ORIENTATION_Y,
-                  label: (
-                    <Center>
-                      <IconAxisY size={20} />
-                    </Center>
-                  ),
-                },
-              ]}
-            />
-          </Group>
+              onClick={onCreateBaseNodes}
+              disabled={selectedRacks && selectedRacks.length === 0}
+            >
+              <Text>{t("crud.floorGrapthEditor.label.createBaseNodes")}</Text>
+            </Button>
 
+            <Button
+              leftIcon={<IconArrowRightSquare size={20} />}
+              size="xs"
+              onClick={onLinkStructures}
+              disabled={isLinkRacksDisabled()}
+            >
+              <Text>{t("crud.floorGrapthEditor.label.linkStructures")}</Text>
+            </Button>
+
+            <Button
+              leftIcon={<IconArrowRightCircle size={20} />}
+              size="xs"
+              onClick={onLinkNodes}
+              disabled={selectedNodes && selectedNodes.length <= 1}
+            >
+              <Text>{t("crud.floorGrapthEditor.label.linkNodes")}</Text>
+            </Button>
+
+            <Group spacing={"xs"}>
+              <Text size={"xs"}>{t("crud.floorGrapthEditor.label.addNode")}</Text>
+              <Switch
+                size="md"
+                checked={activeAddNode}
+                onChange={(event) => {
+                  setActiveAddNode(event.currentTarget.checked);
+                }}
+                onLabel={<IconClick size={16} />}
+                offLabel={<IconClick size={16} />}
+              />
+            </Group>
+
+            <Group spacing={"xs"}>
+              <ActionIcon
+                disabled={selectedNodes && selectedNodes.length <= 1}
+                color={"blue"}
+                variant="filled"
+                onClick={onVerticalAlignNodes}
+              >
+                <IconLayoutAlignMiddle size={20} />
+              </ActionIcon>
+              <ActionIcon
+                disabled={selectedNodes && selectedNodes.length <= 1}
+                color={"blue"}
+                variant="filled"
+                onClick={onHorizontalAlignNodes}
+              >
+                <IconLayoutAlignCenter size={20} />
+              </ActionIcon>
+            </Group>
+          </Group>
           <Group spacing={"xs"}>
-            <Text size={"xs"}>{t("crud.floorGrapthEditor.label.addNode")}</Text>
-            <Switch
-              size="md"
-              checked={activeAddNode}
-              onChange={(event) => {
-                setActiveAddNode(event.currentTarget.checked);
+            <ActionIcon
+              color={"blue"}
+              variant="filled"
+              onClick={() => {
+                initilizeContext();
+                navigate(-1);
               }}
-              onLabel={<IconClick size={16} />}
-              offLabel={<IconClick size={16} />}
-            />
-          </Group>
-
-          <Group spacing={"xs"}>
-            <ActionIcon disabled={selectedNodes && selectedNodes.length <= 1} color={"blue"} variant="filled" onClick={onVerticalAlignNodes}>
-              <IconLayoutAlignMiddle size={20} />
-            </ActionIcon>
-            <ActionIcon disabled={selectedNodes && selectedNodes.length <= 1} color={"blue"} variant="filled" onClick={onHorizontalAlignNodes}>
-              <IconLayoutAlignCenter size={20} />
+            >
+              <IconArrowBack size={20} />
             </ActionIcon>
           </Group>
         </Group>

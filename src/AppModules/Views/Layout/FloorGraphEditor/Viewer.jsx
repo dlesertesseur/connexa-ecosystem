@@ -1,9 +1,49 @@
 import React from "react";
-import FloorPlanView2d from "./FloorPlanView2d";
 import View2d from "./surface/View2d";
-import { Stack } from "@mantine/core";
+import { LoadingOverlay, Stack } from "@mantine/core";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { updateGraph } from "../../../../DataAccess/Graph";
 
 const Viewer = () => {
+  const [working, setWorking] = useState(false);
+  const { user } = useSelector((state) => state.auth.value);
+  const { refresh, site, floor, selectedRowId, setErrorMessage } = useContext(AbmStateContext);
+
+  const onSave = async (graph) => {
+
+    if(selectedRowId){
+      graph["id"] = selectedRowId;
+    }
+    
+    const params = {
+      token: user.token,
+      siteId: site,
+      floorId: floor,
+      data:graph
+    };
+
+    setWorking(true);
+
+    try {
+      const ret = await updateGraph(params);
+      if (ret.error) {
+        setWorking(false);
+        setErrorMessage(ret.message);
+      } else {
+        setErrorMessage(null);
+        setWorking(false);
+        refresh();
+        navigate("../");
+      }
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    setWorking(false);
+  };
+
   return (
     <Stack>
       <Stack
@@ -15,7 +55,9 @@ const Viewer = () => {
           border: "solid 1px" + theme.colors.gray[3],
         })}
       >
-        <View2d />
+        <LoadingOverlay overlayOpacity={0.5} visible={working} />
+
+        <View2d onSave={onSave} />
       </Stack>
     </Stack>
   );

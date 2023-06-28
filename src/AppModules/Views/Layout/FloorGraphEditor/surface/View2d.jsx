@@ -13,19 +13,17 @@ import { useState } from "react";
 import { useWindowSize } from "../../../../../Hook";
 import { Center, Loader, Stack } from "@mantine/core";
 
-const View2d = () => {
-  const { t } = useTranslation();
+
+const View2d = ({onSave}) => {
+  
   const { user } = useSelector((state) => state.auth.value);
+  const { site, floor, setDisabledActionButtons } = useContext(AbmStateContext);
+
   const [racks, setRacks] = useState(null);
   const [layouts, setLayouts] = useState(null);
   const [markers, setMarkers] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [staticNodes, setStaticNodes] = useState(null);
-  const [nodes, setNodes] = useState([]);
-  const [connectors, setConnectors] = useState([]);
   const [pixelMeterRelation, setPixelMeterRelation] = useState(null);
-
-  const { site, floor, setDisabledActionButtons } = useContext(AbmStateContext);
 
   const matches = useMediaQuery("(min-width: 768px)");
   const wSize = useWindowSize();
@@ -64,25 +62,38 @@ const View2d = () => {
   return (
     <Stack>
       {loading ? (
-        <Center w={wSize.width - (matches ? 316 : 32)} h={wSize.height - HEADER_HIGHT}>
+        <Center w={wSize.width - (matches ? 316 : 32)} h={wSize.height - HEADER_HIGHT + 56}>
           <Loader />
         </Center>
       ) : (
         <Editor2d
           width={wSize.width - (matches ? 316 : 32)}
-          height={wSize.height - HEADER_HIGHT - 16}
+          height={wSize.height - HEADER_HIGHT + 40}
           layouts={layouts}
           racks={racks}
           markers={markers}
-          nodes={nodes}
-          setNodes={setNodes}
-          staticNodes={staticNodes}
-          connectors={connectors}
-          setConnectors={setConnectors}
-          setStaticNodes={setStaticNodes}
           pixelMeterRelation={pixelMeterRelation}
+          onSave={onSave}
         />
       )}
+
+      {/* <Group position="right" mt="xs" mb="xs" width="100%">
+        <Button disabled={disabledActionButtons}
+          onClick={() => {
+            //onSave();
+          }}
+        >
+          {t("button.accept")}
+        </Button>
+        <Button
+          onClick={(event) => {
+            initilizeContext();
+            navigate(-1);
+          }}
+        >
+          {t("button.cancel")}
+        </Button>
+      </Group> */}
     </Stack>
   );
 };

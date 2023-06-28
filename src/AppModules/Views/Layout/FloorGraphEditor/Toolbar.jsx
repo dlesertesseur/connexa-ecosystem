@@ -5,6 +5,7 @@ import { TOOLBAR_HIGHT } from "../../../../Constants";
 const Toolbar = ({ children }) => {
   return (
     <Group
+      grow
       px={"xs"}
       spacing={"xs"}
       position="apart"

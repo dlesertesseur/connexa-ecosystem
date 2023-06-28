@@ -3,7 +3,7 @@ import { Circle, Group } from "react-konva";
 import { useState } from "react";
 import G2dLabel from "./G2dLabel";
 
-const G2dNode = ({ node, selected = false, radioNode = 15, onSelect, onUpdatePosition, initialize }) => {
+const G2dNode = ({ node, selected = false, radioNode = 15, onSelect, onUpdatePosition, initialize, type="G2dNode" }) => {
   const [location, setLocation] = useState({ x: node.positionx, y: node.positionz });
 
   useEffect(() => {
