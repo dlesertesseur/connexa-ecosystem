@@ -44,32 +44,28 @@ function SelectebleBox({
   const isSelected = !!selected.find((sel) => sel === userData.id);
 
   return (
-    <group
-      position={position}
-      rotation={
-        new THREE.Euler(
-          THREE.MathUtils.degToRad(rotations[0]),
-          THREE.MathUtils.degToRad(rotations[1]),
-          THREE.MathUtils.degToRad(rotations[2])
-        )
-      }
-    >
-      <mesh
-        name={name}
-        ref={ref}
-        onClick={(event) => {
-          if (onClick) {
-            onClick(event, ref, isSelected);
-          }
-        }}
-        onDoubleClick={onDlbClick}
-        userData={userData}
+    <group name={"gPos"} position={position}>
+      <group
+        name={"gRot"}
+        rotation={rotations.map(r => THREE.MathUtils.degToRad(r))}
       >
-        <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
-        <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
+        <mesh
+          name={name}
+          ref={ref}
+          onClick={(event) => {
+            if (onClick) {
+              onClick(event, ref, isSelected);
+            }
+          }}
+          onDoubleClick={onDlbClick}
+          userData={userData}
+        >
+          <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
+          <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
 
-        <Edges visible={isSelected} scale={1} renderOrder={1000} color="#ff0000" />
-      </mesh>
+          <Edges visible={isSelected} scale={1} renderOrder={1000} color="#ff0000" />
+        </mesh>
+      </group>
     </group>
   );
 }

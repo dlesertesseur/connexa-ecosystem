@@ -55,7 +55,7 @@ const findGraphById = async (parameters) => {
         token: parameters.token,
       },
     };
-    const url = API.graph.findById + "/" + parameters.siteId + "/floors/" + parameters.floorId +"/graphs/" + parameters.rackId;
+    const url = API.graph.findById + "/" + parameters.siteId + "/floors/" + parameters.floorId +"/graphs/" + parameters.graphId;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 

@@ -30,9 +30,12 @@ const EditorSidebar = ({ open, part }) => {
 
   useEffect(() => {
     if (part) {
-      const pos = part.position;
+      const gRot = part.parent;
+      const gPos = gRot.parent;
+
+      const pos = gPos.position;
+      const rot = gRot.rotation;
       const dim = part.scale;
-      const rot = part.rotation;
       const color = part.userData.color;
 
       setPosX(pos.x);
@@ -54,6 +57,8 @@ const EditorSidebar = ({ open, part }) => {
 
   const updateUserData = () => {
     const ud = part.userData;
+    const gRot = part.parent;
+    const gPos = gRot.parent;
 
     ud.positionx = posX;
     ud.positiony = posY;
@@ -63,9 +68,9 @@ const EditorSidebar = ({ open, part }) => {
     ud.rotationy = rotY;
     ud.rotationz = rotZ;
 
-    ud.dimesionx = dimX;
-    ud.dimesiony = dimY;
-    ud.dimesionz = dimZ;
+    ud.dimensionx = dimX;
+    ud.dimensiony = dimY;
+    ud.dimensionz = dimZ;
 
     ud.name = name;
 
@@ -74,9 +79,9 @@ const EditorSidebar = ({ open, part }) => {
     part.material.color.set(color);
 
     part.name = name;
-    part.position.set(posX, posY, posZ);
-    part.rotation.set(THREE.MathUtils.degToRad(rotX), THREE.MathUtils.degToRad(rotY), THREE.MathUtils.degToRad(rotZ));
     part.scale.set(dimX, dimY, dimZ);
+    gRot.rotation.set(THREE.MathUtils.degToRad(rotX), THREE.MathUtils.degToRad(rotY), THREE.MathUtils.degToRad(rotZ));
+    gPos.position.set(posX, posY, posZ);
   };
 
   useEffect(() => {

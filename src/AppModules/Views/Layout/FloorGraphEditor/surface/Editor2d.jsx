@@ -49,7 +49,7 @@ function isTouchEnabled() {
   return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 }
 
-function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, multiSelect = true, onSave }) {
+function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRelation, multiSelect = true, onSave }) {
   const { t } = useTranslation();
 
   const stageRef = useRef(null);
@@ -66,16 +66,21 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
   const [layoutG2d, setLayoutG2d] = useState(null);
   const [racksG2d, setRacksG2d] = useState(null);
   const [markersG2d, setMarkersG2d] = useState(null);
+  
   const [staticNodesG2d, setStaticNodesG2d] = useState([]);
   const [nodesG2d, setNodesG2d] = useState([]);
-  const [intermediateNodes, setIntermediateNodes] = useState([]);
   const [staticConnectorsG2d, setStaticConnectorsG2d] = useState([]);
   const [connectorsG2d, setConnectorsG2d] = useState([]);
+
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedRack, setSelectedRack] = useState(null);
+  const [intermediateNodes, setIntermediateNodes] = useState([]);
 
   const [selectedRacks, setSelectedRacks] = useState([]);
   const [selectedNodes, setSelectedNodes] = useState([]);
+  const [savedNodes, setSavedNodes] = useState([]);
+  const [baseNodes, setBaseNodes] = useState([]);
+  
   const [graphName, setGraphName] = useState("");
   const [elementGroup, setElementGroup] = useState(2);
   const [direction, setDirection] = useState(CONNECTOR_TWO_WAY);
@@ -89,6 +94,38 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
   const navigate = useNavigate();
 
   const { initilizeContext } = useContext(AbmStateContext);
+
+  const connectGraph = () => {
+    const nodes = graph.nodes;
+    const edges = graph.edges;
+    let tableNodeById = null;
+
+    if (nodes) {
+      tableNodeById = new Map(
+        nodes.map((n) => {
+          return [n.id, n];
+        })
+      );
+    }
+
+    if (edges) {
+      edges.forEach((e) => {
+        const node = tableNodeById.get(e.originNodeId);
+        if (!node.connectors) {
+          node["connectors"] = [];
+        }
+        node.connectors.push(e.targetNodeId);
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (graph) {
+      connectGraph();
+      setGraphName(graph.description);
+      setSavedNodes(graph.nodes);
+    }
+  }, [graph]);
 
   useHotkeys([["ctrl+d", () => deleteNodes()]]);
 
@@ -182,7 +219,6 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
 
   const buildIntemediateNodes = (nodes) => {
     const list = [];
-
     nodes.forEach((node) => {
       const component = (
         <G2dIntermediateNode
@@ -202,11 +238,12 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
   const findNode = (connector) => {
     let ret = null;
     const staticNodesLayer = staticNodeLayerRef.current;
-    const target = staticNodesLayer.find(`.${connector}`);
+    const target = staticNodesLayer.find(`#${connector}`);
+
     if (target && target.length > 0) {
       ret = target[0];
     } else {
-      console.log("findNode ", connector, " -> NOT FOUD");
+      // console.log("findNode ", connector, " -> NOT FOUD");
     }
 
     return ret;
@@ -218,7 +255,7 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
     if (target && target.length > 0) {
       ret = target[0];
     } else {
-      console.log("findNodeById ", id, " -> NOT FOUD");
+      // console.log("findNodeById ", id, " -> NOT FOUD");
     }
 
     return ret;
@@ -229,7 +266,7 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
     const ref = stageRef.current;
 
     nodes.forEach((node) => {
-      node.connectors.forEach((connector) => {
+      node.connectors?.forEach((connector) => {
         const target = findNode(connector);
         if (target) {
           const userData = { originId: node.id, targetId: target.attrs.id };
@@ -238,7 +275,7 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
           const targetPos = target.getAbsolutePosition(ref);
           const component = (
             <G2dConnector
-              origin={{ x: node.positionx, y: node.positionz }}
+              origin={{ x: node.locationx, y: node.locationz }}
               target={targetPos}
               name={node.id + "-" + target.attrs.id}
               key={id}
@@ -450,10 +487,11 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
 
   useEffect(() => {
     if (intermediateNodes) {
-      const list = buildIntemediateNodes(intermediateNodes);
-      setStaticNodesG2d([...staticNodesG2d, ...list]);
+      const intermNodeList = buildIntemediateNodes(intermediateNodes);
+      const savedNodeList = buildIntemediateNodes(savedNodes);
+      setStaticNodesG2d([...intermNodeList, ...savedNodeList, ...baseNodes]);
     }
-  }, [intermediateNodes]);
+  }, [intermediateNodes, savedNodes, baseNodes]);
 
   useEffect(() => {
     if (nodes) {
@@ -463,10 +501,18 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
   }, [nodes, selectedNode]);
 
   useEffect(() => {
+    let iNodes = null;
+    let sNodes = null;
+
     if (intermediateNodes) {
-      const connG2d = buildConnectors(intermediateNodes);
-      setStaticConnectorsG2d(connG2d);
+      iNodes = buildConnectors(intermediateNodes);
     }
+    if (savedNodes) {
+      sNodes = buildConnectors(savedNodes);
+    }
+
+    setStaticConnectorsG2d([...sNodes, ...iNodes]);
+
   }, [staticNodesG2d]);
 
   useEffect(() => {
@@ -669,7 +715,7 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
           <G2dConnector
             origin={originPos}
             target={targetPos}
-            name={previusNode.attrs.id + "-" + node.attrs.id}
+            name={previusNode.attrs.name + "-" + node.attrs.name}
             key={id}
             id={id}
             userData={userData}
@@ -752,11 +798,11 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
 
           const metaData = {
             id: uuid(),
-            positionx: posx,
-            positionz: posy,
+            locationx: posx,
+            locationz: posy,
             name: `${b1.name}|${b2.name}`,
             draggable: false,
-            connectors: [b1.name, b2.name],
+            connectors: [b1.id, b2.id],
             inboundConnectors: [],
             outboundConnectors: [],
             linked: true,
@@ -769,7 +815,7 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
         for (let index = 0; index < aisleNodes.length; index++) {
           const r = aisleNodes[index];
           if (prev) {
-            r.connectors.push(prev.name);
+            r.connectors.push(prev.id);
           }
           prev = r;
         }
@@ -847,8 +893,8 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
         const id = uuid();
         const node = {
           id: id,
-          positionx: clickPos.x,
-          positionz: clickPos.y,
+          locationx: clickPos.x,
+          locationz: clickPos.y,
           width: NODE_RADIO,
           height: NODE_RADIO,
           color: color,
@@ -868,8 +914,9 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
 
   const onCreateBaseNodes = () => {
     const list = buildNodesFromRacks(selectedRacks);
-    const arr = staticNodesG2d.concat(list);
-    setStaticNodesG2d(arr);
+    setBaseNodes([...baseNodes, ...list]);
+    // const arr = staticNodesG2d.concat(list);
+    // setStaticNodesG2d(arr);
   };
 
   const onHorizontalAlignNodes = () => {
@@ -877,13 +924,13 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
     const toUpdate = nodes.filter((n) => nodesIdsSelected.includes(n.id));
 
     toUpdate.forEach((n) => {
-      n.positionz = referenceNode.attrs.y;
+      n.locationz = referenceNode.attrs.y;
     });
 
     setNodesG2d(buildNodes(nodes, true));
 
     toUpdate.forEach((n) => {
-      onUpdatePosition(n.id, { x: n.positionx, y: n.positionz });
+      onUpdatePosition(n.id, { x: n.locationx, y: n.locationz });
     });
   };
 
@@ -892,13 +939,13 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
     const toUpdate = nodes.filter((n) => nodesIdsSelected.includes(n.id));
 
     toUpdate.forEach((n) => {
-      n.positionx = referenceNode.attrs.x;
+      n.locationx = referenceNode.attrs.x;
     });
 
     setNodesG2d(buildNodes(nodes, true));
 
     toUpdate.forEach((n) => {
-      onUpdatePosition(n.id, { x: n.positionx, y: n.positionz });
+      onUpdatePosition(n.id, { x: n.locationx, y: n.locationz });
     });
   };
 
@@ -1024,12 +1071,13 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
     const graph = {
       description: graphName,
       state: 0,
-      initialNodeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      initialNodeId: null,
       nodes: nodes,
       edges: edges,
     };
     return graph;
   };
+
   const onLocalSave = async () => {
     showNotification({
       id: "savingData-notification",
@@ -1043,9 +1091,10 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
     console.log("onLocalSave -> ", graph);
     try {
       await onSave(graph);
+      console.log("onLocalSave <- ", graph);
       hideNotification("savingData-notification");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       showNotification({
         id: "savingData-error",
         disallowClose: true,

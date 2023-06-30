@@ -21,9 +21,11 @@
   },
 
   "message": {
-    "update": "La actualizacio fue realizada con éxito",
-    "savingData": "Actualizando datos en el servidor",
-    "savingDataSub": "Espere hasta que la información termine de actualizarse."
+    "update": "La actualizacio fue realizada con éxito.",
+    "savingData": "Actualizando datos en el servidor.",
+    "savingDataSub": "Espere hasta que la información termine de actualizarse.",
+    "loadingData": "Cargando datos desde el servidor.",
+    "loadingDataSub": "Por favor espere hasta que la información termine de cargarse."
   },
 
   "status": {

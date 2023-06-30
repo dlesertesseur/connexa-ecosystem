@@ -4,11 +4,11 @@ import { useState } from "react";
 import G2dLabel from "./G2dLabel";
 
 const G2dNode = ({ node, selected = false, radioNode = 15, onSelect, onUpdatePosition, initialize, type="G2dNode" }) => {
-  const [location, setLocation] = useState({ x: node.positionx, y: node.positionz });
+  const [location, setLocation] = useState({ x: node.locationx, y: node.locationz });
 
   useEffect(() => {
     if(initialize){
-      setLocation({ x: node.positionx, y: node.positionz });
+      setLocation({ x: node.locationx, y: node.locationz });
     }
   }, [initialize])
 
@@ -16,8 +16,8 @@ const G2dNode = ({ node, selected = false, radioNode = 15, onSelect, onUpdatePos
     <Group draggable onDblClick={node.onDblClick}>
       <Circle
         id={node.id}
-        x={node.positionx}
-        y={node.positionz}
+        x={node.locationx}
+        y={node.locationz}
         width={radioNode}
         height={radioNode}
         fill={node.color ? node.color : "green"}
@@ -31,8 +31,8 @@ const G2dNode = ({ node, selected = false, radioNode = 15, onSelect, onUpdatePos
         strokeWidth={selected ? 2 : 0}
         onDragMove={(e) => {
           const userData = e.target.attrs.userData;
-          userData.positionx = e.target.position().x;
-          userData.positionz = e.target.position().y;
+          userData.locationx = e.target.position().x;
+          userData.locationz = e.target.position().y;
           setLocation(e.target.position());
           onUpdatePosition ? onUpdatePosition(node.id, e.target.position()) : null;
         }}

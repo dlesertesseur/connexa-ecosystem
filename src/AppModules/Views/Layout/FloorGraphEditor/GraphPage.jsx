@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import Viewer from "./Viewer";
 
-export function CreatePage() {
+export function GraphPage() {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState(null);
 

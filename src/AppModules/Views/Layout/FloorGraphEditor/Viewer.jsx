@@ -10,7 +10,7 @@ import { updateGraph } from "../../../../DataAccess/Graph";
 const Viewer = () => {
   const [working, setWorking] = useState(false);
   const { user } = useSelector((state) => state.auth.value);
-  const { refresh, site, floor, selectedRowId, setErrorMessage } = useContext(AbmStateContext);
+  const { site, floor, selectedRowId, setErrorMessage } = useContext(AbmStateContext);
 
   const onSave = async (graph) => {
 
@@ -35,8 +35,6 @@ const Viewer = () => {
       } else {
         setErrorMessage(null);
         setWorking(false);
-        refresh();
-        navigate("../");
       }
     } catch (error) {
       setErrorMessage(error);

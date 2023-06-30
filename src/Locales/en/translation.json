@@ -23,7 +23,9 @@
   "message": {
     "update": "Update was successful",
     "savingData": "Updating data on the server",
-    "savingDataSub": "Please wait until the information is finished updating."
+    "savingDataSub": "Please wait until the information is finished updating.",
+    "loadingData": "Loading data from the server",
+    "loadingDataSub": "Please wait until the information finishes loading."
   },
 
   "status": {

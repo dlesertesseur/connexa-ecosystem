@@ -12,7 +12,7 @@ const Editor = () => {
   const [model, setModel] = useState(null);
   const [selectedPart, setSelectedPart] = useState(null);
   const [transformOption] = useState("translate");
-  const { parts } = useContext(AbmStateContext);
+  const { parts, setParts } = useContext(AbmStateContext);
   const canvasRef = useRef();
 
   const onSelect = (event, ref) => {

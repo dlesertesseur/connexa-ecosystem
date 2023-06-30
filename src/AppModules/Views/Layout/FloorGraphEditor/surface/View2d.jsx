@@ -12,21 +12,39 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useWindowSize } from "../../../../../Hook";
 import { Center, Loader, Stack } from "@mantine/core";
+import { findGraphById } from "../../../../../DataAccess/Graph";
 
-
-const View2d = ({onSave}) => {
-  
+const View2d = ({ onSave }) => {
   const { user } = useSelector((state) => state.auth.value);
-  const { site, floor, setDisabledActionButtons } = useContext(AbmStateContext);
+  const { site, floor, setDisabledActionButtons, selectedRowId } = useContext(AbmStateContext);
 
   const [racks, setRacks] = useState(null);
   const [layouts, setLayouts] = useState(null);
   const [markers, setMarkers] = useState(null);
+  const [graph, setGraph] = useState(null);
   const [loading, setLoading] = useState(false);
   const [pixelMeterRelation, setPixelMeterRelation] = useState(null);
-
+  const { t } = useTranslation();
   const matches = useMediaQuery("(min-width: 768px)");
   const wSize = useWindowSize();
+
+  const loadGraph = async () => {
+    let graph = null;
+    const params = {
+      token: user.token,
+      siteId: site,
+      floorId: floor,
+      graphId: selectedRowId,
+    };
+
+    try {
+      graph = await findGraphById(params);
+    } catch (error) {
+      console.log(error);
+    }
+
+    return graph;
+  };
 
   const getData = async () => {
     const params = {
@@ -51,6 +69,11 @@ const View2d = ({onSave}) => {
     const markerts = await findAllLayoutMarkersById(params);
     setMarkers(markerts);
 
+    if (selectedRowId) {
+      const graph = await loadGraph();
+      setGraph(graph);
+    }
+
     setLoading(false);
     setDisabledActionButtons(false);
   };
@@ -72,28 +95,11 @@ const View2d = ({onSave}) => {
           layouts={layouts}
           racks={racks}
           markers={markers}
+          graph={graph}
           pixelMeterRelation={pixelMeterRelation}
           onSave={onSave}
         />
       )}
-
-      {/* <Group position="right" mt="xs" mb="xs" width="100%">
-        <Button disabled={disabledActionButtons}
-          onClick={() => {
-            //onSave();
-          }}
-        >
-          {t("button.accept")}
-        </Button>
-        <Button
-          onClick={(event) => {
-            initilizeContext();
-            navigate(-1);
-          }}
-        >
-          {t("button.cancel")}
-        </Button>
-      </Group> */}
     </Stack>
   );
 };

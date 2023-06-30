@@ -11,8 +11,8 @@ const G2dIntermediateNode = ({
   return (
     <Circle
       id={node.id}
-      x={node.positionx}
-      y={node.positionz}
+      x={node.locationx}
+      y={node.locationz}
       width={radioNode}
       height={radioNode}
       fill={color}

@@ -3,8 +3,7 @@ import CrudFrame from "../../../../Components/Crud/CrudFrame";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { CreatePage } from "./CreatePage";
-import { UpdatePage } from "./UpdatePage";
+import { GraphPage } from "./GraphPage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { Filter } from "./Filter";
@@ -56,8 +55,7 @@ const DynamicApp = ({ app }) => {
 
   const cols = t("crud.floorGrapthEditor.columns", { returnObjects: true });
   const columns = [
-    { headerName: cols[0], fieldName: "name", align: "left" },
-    { headerName: cols[1], fieldName: "description", align: "left" },
+    { headerName: cols[0], fieldName: "description", align: "left" },
   ];
 
   const refresh = () => {
@@ -100,8 +98,8 @@ const DynamicApp = ({ app }) => {
         setRowSelected={setSelectedRowId}
         loading={loading}
         enableCreateButton={enableCreateButton}
-        createPage={<CreatePage />}
-        updatePage={<UpdatePage />}
+        createPage={<GraphPage />}
+        updatePage={<GraphPage />}
         deletePage={<DeletePage />}
         filterControl={<Filter />}
       />
