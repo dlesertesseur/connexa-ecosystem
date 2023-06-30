@@ -8,7 +8,7 @@ class PrimitiveMetaDataBuilder {
       number: 0,
       name: "BOX",
       positionx: 0,
-      positiony: 0.5,
+      positiony: 0,
       positionz: 0,
       rotationx: 0,
       rotationy: 0,
@@ -16,6 +16,7 @@ class PrimitiveMetaDataBuilder {
       dimensionx: 1,
       dimensiony: 1,
       dimensionz: 1,
+      color:"rgb(129,129,129)",
       type: PRIMITIVE_BOX,
     };
 

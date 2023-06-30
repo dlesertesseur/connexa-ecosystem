@@ -1,27 +1,127 @@
+import * as THREE from "three";
 import React from "react";
-import { Button, Dialog, Group, Text, TextInput } from "@mantine/core";
+import { ColorPicker, Dialog, Paper, ScrollArea, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../Hook";
+import { useState } from "react";
+import { useEffect } from "react";
+import NumberProperty from "../../../Components/NumberProperty";
 
 const EditorSidebar = ({ open, part }) => {
   const { t } = useTranslation();
   const wSize = useWindowSize();
 
+  const [posX, setPosX] = useState();
+  const [posY, setPosY] = useState();
+  const [posZ, setPosZ] = useState();
+
+  const [rotX, setRotX] = useState();
+  const [rotY, setRotY] = useState();
+  const [rotZ, setRotZ] = useState();
+
+  const [dimX, setDimX] = useState();
+  const [dimY, setDimY] = useState();
+  const [dimZ, setDimZ] = useState();
+
+  const [color, setColor] = useState("#f5f5f5");
+  const [name, setName] = useState("");
+
+  const panelBaseColor = "#f5f5f5";
+
+  useEffect(() => {
+    if (part) {
+      const pos = part.position;
+      const dim = part.scale;
+      const rot = part.rotation;
+      const color = part.userData.color;
+
+      setPosX(pos.x);
+      setPosY(pos.y);
+      setPosZ(pos.z);
+
+      setRotX(THREE.MathUtils.radToDeg(rot.x));
+      setRotY(THREE.MathUtils.radToDeg(rot.y));
+      setRotZ(THREE.MathUtils.radToDeg(rot.z));
+
+      setDimX(dim.x);
+      setDimY(dim.y);
+      setDimZ(dim.z);
+
+      setName(part.userData.name);
+      setColor(color);
+    }
+  }, [part]);
+
+  const updateUserData = () => {
+    const ud = part.userData;
+
+    ud.positionx = posX;
+    ud.positiony = posY;
+    ud.positionz = posZ;
+
+    ud.rotationx = rotX;
+    ud.rotationy = rotY;
+    ud.rotationz = rotZ;
+
+    ud.dimesionx = dimX;
+    ud.dimesiony = dimY;
+    ud.dimesionz = dimZ;
+
+    ud.name = name;
+
+    ud.color = color;
+
+    part.material.color.set(color);
+
+    part.name = name;
+    part.position.set(posX, posY, posZ);
+    part.rotation.set(THREE.MathUtils.degToRad(rotX), THREE.MathUtils.degToRad(rotY), THREE.MathUtils.degToRad(rotZ));
+    part.scale.set(dimX, dimY, dimZ);
+  };
+
+  useEffect(() => {
+    if (part) {
+      updateUserData();
+    }
+  }, [name, posX, posY, posZ, rotX, rotY, rotZ, dimX, dimY, dimZ, color]);
+
   return (
-    <Dialog position={{ top: 190, right: 20 }} opened={open} size="lg" radius="md">
-      <Text size="sm" mb="xs" weight={500}>
-        {part?.userData.name}
-      </Text>
+    <Dialog position={{ top: 185, right: 20 }} opened={open} size="mb">
+      <ScrollArea h={400}>
+        <Stack spacing={"xs"} mb={"xs"}>
+          <TextInput size="xs" value={name} onChange={(event) => setName(event.currentTarget.value)} />
+        </Stack>
 
-      <Group grow position="apart" align="center">
-        <TextInput label={"PosX"} placeholder="" value={part?.userData.positionx}/>
-        <TextInput label={"PosY"} placeholder="" value={part?.userData.positiony}/>
-        <TextInput label={"PosZ"} placeholder="" value={part?.userData.positionz}/>
-      </Group>
+        <Paper withBorder p={"xs"} bg={panelBaseColor} mb={"xs"}>
+          <Stack spacing={"xs"}>
+            <NumberProperty label={t("label.locationX")} value={posX} setValue={setPosX} />
+            <NumberProperty label={t("label.locationY")} value={posY} setValue={setPosY} />
+            <NumberProperty label={t("label.locationZ")} value={posZ} setValue={setPosZ} />
+          </Stack>
+        </Paper>
 
-      <Group position="right" mt={"xs"}>
-        <Button onClick={close}>Subscribe</Button>
-      </Group>
+        <Paper withBorder p={"xs"} bg={panelBaseColor} mb={"xs"}>
+          <Stack spacing={"xs"}>
+            <NumberProperty label={t("label.rotationX")} value={rotX} setValue={setRotX} />
+            <NumberProperty label={t("label.rotationY")} value={rotY} setValue={setRotY} />
+            <NumberProperty label={t("label.rotationZ")} value={rotZ} setValue={setRotZ} />
+          </Stack>
+        </Paper>
+
+        <Paper withBorder p={"xs"} bg={panelBaseColor} mb={"xs"}>
+          <Stack spacing={"xs"}>
+            <NumberProperty label={t("label.dimensionX")} value={dimX} setValue={setDimX} />
+            <NumberProperty label={t("label.dimensionY")} value={dimY} setValue={setDimY} />
+            <NumberProperty label={t("label.dimensionZ")} value={dimZ} setValue={setDimZ} />
+          </Stack>
+        </Paper>
+
+        <Paper withBorder p={"xs"} bg={panelBaseColor}>
+          <Stack spacing={"xs"}>
+            <ColorPicker format="rgb" value={color} onChange={setColor} fullWidth withPicker={true} />
+          </Stack>
+        </Paper>
+      </ScrollArea>
     </Dialog>
   );
 };

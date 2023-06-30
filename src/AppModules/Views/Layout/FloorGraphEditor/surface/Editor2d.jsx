@@ -30,6 +30,7 @@ import { useHotkeys } from "@mantine/hooks";
 import { IconArrowBack } from "@tabler/icons-react";
 import { AbmStateContext } from "../Context";
 import { useNavigate } from "react-router-dom";
+import { hideNotification, showNotification } from "@mantine/notifications";
 
 const scaleBy = 1.05;
 
@@ -233,13 +234,15 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
         if (target) {
           const userData = { originId: node.id, targetId: target.attrs.id };
 
+          const id = uuid();
           const targetPos = target.getAbsolutePosition(ref);
           const component = (
             <G2dConnector
               origin={{ x: node.positionx, y: node.positionz }}
               target={targetPos}
               name={node.id + "-" + target.attrs.id}
-              key={uuid()}
+              key={id}
+              id={id}
               bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
               userData={userData}
               type={"G2dConnector"}
@@ -658,6 +661,7 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
     for (let index = 0; index < totalNodes && totalNodes > 1; index++) {
       node = selectedNodes[index];
       if (previusNode) {
+        const id = uuid();
         const originPos = { x: previusNode.attrs.x, y: previusNode.attrs.y };
         const targetPos = node.getAbsolutePosition(ref);
         const userData = { originId: previusNode.attrs.id, targetId: node.attrs.id };
@@ -666,7 +670,8 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
             origin={originPos}
             target={targetPos}
             name={previusNode.attrs.id + "-" + node.attrs.id}
-            key={uuid()}
+            key={id}
+            id={id}
             userData={userData}
             bidirectional={direction === CONNECTOR_TWO_WAY ? true : false}
             type={"G2dConnector"}
@@ -900,8 +905,6 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
   const createNodeList = (objList) => {
     const list = [];
 
-    console.log("createNodeList -> ", objList);
-
     objList.forEach((node) => {
       switch (node.props.type) {
         case "G2dBaseNode":
@@ -931,6 +934,18 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
           list.push(ret);
           break;
       }
+    });
+
+    return list;
+  };
+
+  const createConnList = (objList) => {
+    const list = [];
+
+    objList.forEach((conn) => {
+      const userData = conn.props.userData;
+      const obj = createConnectorMetaData(conn.props.id, userData.originId, userData.targetId);
+      list.push(obj);
     });
 
     return list;
@@ -983,34 +998,23 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
     return ret;
   };
 
-  const createConnectorMetaData = (connector) => {
+  const createConnectorMetaData = (id, originId, targetId) => {
     const ret = {
-      id: connector.id,
+      id: id,
       rotx: 0,
       roty: 0,
       rotz: 0,
       distance: 0,
-      originNodeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      targetNodeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      originNodeId: originId,
+      targetNodeId: targetId,
     };
     return ret;
   };
 
   const createEdges = () => {
-    const ret = [];
-
-    let stConn = [];
-    const dConn = [];
-
-    const ref = stageRef.current;
-    const staticConnLayer = staticConnectorsLayerRef.current;
-    const connLayer = connectorsLayerRef.current;
-
-    const staticConnList = createNodeList(staticConnectorsG2d);
-
-    console.log("staticConnList -> ", staticConnList);
-    //const connList = createNodeList(connectorsG2d);
-
+    const staticConnList = createConnList(staticConnectorsG2d);
+    const connList = createConnList(connectorsG2d);
+    const ret = staticConnList.concat(connList);
     return ret;
   };
 
@@ -1022,14 +1026,34 @@ function Editor2d({ width, height, layouts, racks, markers, pixelMeterRelation, 
       state: 0,
       initialNodeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       nodes: nodes,
-      //  edges: edges,
+      edges: edges,
     };
     return graph;
   };
-  const onLocalSave = () => {
+  const onLocalSave = async () => {
+    showNotification({
+      id: "savingData-notification",
+      disallowClose: true,
+      title: t("message.savingData"),
+      message: t("message.savingDataSub"),
+      loading: true,
+    });
+
     const graph = buildFloorGraph();
     console.log("onLocalSave -> ", graph);
-    //onSave(graph);
+    try {
+      await onSave(graph);
+      hideNotification("savingData-notification");
+    } catch (error) {
+      console.log(error)
+      showNotification({
+        id: "savingData-error",
+        disallowClose: true,
+        title: t("message.error"),
+        message: error,
+        loading: true,
+      });
+    }
   };
 
   return (

@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { useRef, useState } from "react";
-import { Edges, TransformControls, useSelect } from "@react-three/drei";
-import uuid from "react-uuid";
+import { Edges, useSelect } from "@react-three/drei";
 
 const materialsMap = new Map();
 materialsMap.set(1, "grey");
@@ -37,16 +36,16 @@ function SelectebleBox({
   userData,
 }) {
   const ref = useRef();
-  const selected = useSelect().map((sel) => {
+
+  const list = useSelect();
+  const selected = list.map((sel) => {
     return sel.userData.id;
   });
   const isSelected = !!selected.find((sel) => sel === userData.id);
 
   return (
-    <mesh
-      name={name}
+    <group
       position={position}
-      ref={ref}
       rotation={
         new THREE.Euler(
           THREE.MathUtils.degToRad(rotations[0]),
@@ -54,19 +53,24 @@ function SelectebleBox({
           THREE.MathUtils.degToRad(rotations[2])
         )
       }
-      onClick={(event) => {
-        if (onClick) {
-          onClick(event, ref, isSelected);
-        }
-      }}
-      onDoubleClick={onDlbClick}
-      userData={userData}
     >
-      <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
-      <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
+      <mesh
+        name={name}
+        ref={ref}
+        onClick={(event) => {
+          if (onClick) {
+            onClick(event, ref, isSelected);
+          }
+        }}
+        onDoubleClick={onDlbClick}
+        userData={userData}
+      >
+        <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
+        <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
 
-      <Edges visible={isSelected} scale={1} renderOrder={1000} color="#ff0000" />
-    </mesh>
+        <Edges visible={isSelected} scale={1} renderOrder={1000} color="#ff0000" />
+      </mesh>
+    </group>
   );
 }
 
@@ -403,6 +407,7 @@ function buildParts(parts, onSelect, selectedId) {
     const matColor = getColor(part);
     const box = (
       <SelectebleBox
+        id={part.id}
         key={part.id ? part.id : part.key}
         position={[part.positionx, part.positiony, part.positionz]}
         dimension={[part.dimensionx, part.dimensiony, part.dimensionz]}

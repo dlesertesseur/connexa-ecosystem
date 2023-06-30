@@ -161,7 +161,16 @@
     "scale": "Scale",
     "informationData": "Information data",
     "reverseAssignment": "Reverse assignment",
-    "options": "Options"
+    "options": "Options",
+    "locationX":"Location X",
+    "locationY":"Location Y",
+    "locationZ":"Location Z",
+    "rotationX":"Rotation X",
+    "rotationY":"Rotation Y",
+    "rotationZ":"Rotation Z",
+    "dimensionX":"Dimension X",
+    "dimensionY":"Dimension Y",
+    "dimensionZ":"Dimension Z"
   },
 
   "placeholder": {

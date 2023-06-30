@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Grid, TransformControls, Select, useSelect } from "@react-three/drei";
+import { OrbitControls, Grid, TransformControls, Select } from "@react-three/drei";
 import { useContext, useEffect, useRef, useState } from "react";
 import { buildParts } from "../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
@@ -16,9 +16,8 @@ const Editor = () => {
   const canvasRef = useRef();
 
   const onSelect = (event, ref) => {
-
-    if (ref) {
-      setSelectedPart(ref.current);
+    if (event.object) {
+      setSelectedPart(event.object);
     } else {
       setSelectedPart(null);
     }
