@@ -6,7 +6,8 @@ const G2dIntermediateNode = ({
   radioNode = 15,
   draggable = false,
   onSelect = null,
-  color="grey"
+  color="grey",
+  userData
 }) => {
   return (
     <Circle
@@ -21,6 +22,7 @@ const G2dIntermediateNode = ({
       draggable={draggable}
       onMouseDown={onSelect}
       onTap={onSelect}
+      userData={userData}
     />
   );
 };

@@ -13,6 +13,7 @@ import {
   IconLayoutAlignMiddle,
   IconCirclePlus,
   IconDeviceFloppy,
+  IconEdit,
 } from "@tabler/icons-react";
 import G2dPolygon from "./models/G2dPolygon";
 import G2dRack from "./models/G2dRack";
@@ -31,6 +32,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 import { AbmStateContext } from "../Context";
 import { useNavigate } from "react-router-dom";
 import { hideNotification, showNotification } from "@mantine/notifications";
+import Konva from "konva";
 
 const scaleBy = 1.05;
 
@@ -66,7 +68,7 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
   const [layoutG2d, setLayoutG2d] = useState(null);
   const [racksG2d, setRacksG2d] = useState(null);
   const [markersG2d, setMarkersG2d] = useState(null);
-  
+
   const [staticNodesG2d, setStaticNodesG2d] = useState([]);
   const [nodesG2d, setNodesG2d] = useState([]);
   const [staticConnectorsG2d, setStaticConnectorsG2d] = useState([]);
@@ -80,7 +82,7 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
   const [selectedNodes, setSelectedNodes] = useState([]);
   const [savedNodes, setSavedNodes] = useState([]);
   const [baseNodes, setBaseNodes] = useState([]);
-  
+
   const [graphName, setGraphName] = useState("");
   const [elementGroup, setElementGroup] = useState(2);
   const [direction, setDirection] = useState(CONNECTOR_TWO_WAY);
@@ -227,6 +229,7 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
           color={"grey"}
           onSelect={onSelectStaticNode}
           type={"G2dIntermediateNode"}
+          userData={node}
         />
       );
       list.push(component);
@@ -269,7 +272,11 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
       node.connectors?.forEach((connector) => {
         const target = findNode(connector);
         if (target) {
-          const userData = { originId: node.id, targetId: target.attrs.id };
+          const userData = {
+            originId: node.id,
+            targetId: target.attrs.id,
+            bidirectional: direction === CONNECTOR_TWO_WAY ? true : false,
+          };
 
           const id = uuid();
           const targetPos = target.getAbsolutePosition(ref);
@@ -329,22 +336,21 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
 
   const onSelectStaticNode = (event) => {
     event.cancelBubble = true;
-
+    const radioNode = 15;
     const ref = stageRef.current;
     const node = event.target;
 
     setSelectedNode(node);
 
     const position = node.getAbsolutePosition(ref);
-    const rotation = node.getAbsoluteRotation();
 
     const selObj = node.clone();
-
     selObj.stroke("red");
     selObj.x(position.x);
     selObj.y(position.y);
     selObj.rotation(0);
     selObj.stroke("red");
+    selObj.off("mousedown touchstart tap");
 
     /*CARTEL*/
     const label = new Konva.Label({ x: position.x, y: position.y });
@@ -512,7 +518,6 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
     }
 
     setStaticConnectorsG2d([...sNodes, ...iNodes]);
-
   }, [staticNodesG2d]);
 
   useEffect(() => {
@@ -710,7 +715,11 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
         const id = uuid();
         const originPos = { x: previusNode.attrs.x, y: previusNode.attrs.y };
         const targetPos = node.getAbsolutePosition(ref);
-        const userData = { originId: previusNode.attrs.id, targetId: node.attrs.id };
+        const userData = {
+          originId: previusNode.attrs.id,
+          targetId: node.attrs.id,
+          bidirectional: direction === CONNECTOR_TWO_WAY ? true : false,
+        };
         const component = (
           <G2dConnector
             origin={originPos}
@@ -1105,6 +1114,86 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
     }
   };
 
+  const onEditNodes = (e) => {
+    const list = [];
+    const newConns = [];
+    const connIdsToRemove = [];
+    const color = "cyan";
+    const ref = stageRef.current;
+    const staticNodesLayer = staticNodeLayerRef.current;
+    const staticConnectorsLayer = staticConnectorsLayerRef.current;
+
+    selectedNodes.forEach((node) => {
+      const userData = node.attrs.userData;
+
+      const nodeFound = findNodeById(staticNodesLayer, userData.id);
+
+      if (nodeFound) {
+        const position = nodeFound.getAbsolutePosition(ref);
+
+        node.destroy();
+        const newNode = {
+          id: userData.id,
+          locationx: position.x,
+          locationz: position.y,
+          width: NODE_RADIO,
+          height: NODE_RADIO,
+          color: color,
+          name: userData.name,
+          draggable: true,
+          connectors: userData.connectors ? [...userData.connectors] : [],
+          inboundConnectors: [],
+          outboundConnectors: [],
+          linked: false,
+          onDblClick: onDblClickNode,
+        };
+
+        list.push(newNode);
+
+        const connectors = staticConnectorsLayer.find((c) => {
+          return c.attrs.userData.originId === userData.id || c.attrs.userData.targetId === userData.id;
+        });
+
+        connectors.forEach((c) => {
+          const id = uuid();
+          const points = c.attrs.points;
+          const component = (
+            <G2dConnector
+              origin={{ x: points[0], y: points[1] }}
+              target={{ x: points[2], y: points[3] }}
+              name={c.attrs.name}
+              key={id}
+              id={id}
+              userData={c.attrs.userData}
+              bidirectional={c.attrs.userData.bidirectional}
+              type={"G2dConnector"}
+            />
+          );
+
+          c.remove();
+          c.destroy();
+          newConns.push(component);
+          connIdsToRemove.push(c.attrs.name);
+        });
+      }
+    });
+
+    setNodes([...nodes, ...list]);
+    setConnectorsG2d([...connectorsG2d, ...newConns]);
+
+    const filterstaticConnectorsG2d = staticConnectorsG2d.filter((c) => {
+      const ret = connIdsToRemove.includes(c.props.name);
+      return(!ret)
+    })
+
+    setStaticConnectorsG2d(filterstaticConnectorsG2d);
+
+    staticNodeLayerRef.current.cache({ pixelRatio: 3 });
+    staticConnectorsLayerRef.current.cache({ pixelRatio: 3 });
+
+    onEmptySelection();
+  };
+
   return (
     <Stack>
       <Toolbar>
@@ -1183,6 +1272,15 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
               >
                 <IconLayoutAlignCenter size={20} />
               </ActionIcon>
+
+              <ActionIcon
+                disabled={selectedNodes && selectedNodes.length === 0}
+                color={"blue"}
+                variant="filled"
+                onClick={onEditNodes}
+              >
+                <IconEdit size={20} />
+              </ActionIcon>
             </Group>
           </Group>
           <Group spacing={"xs"}>
@@ -1236,7 +1334,7 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
           {connectorsG2d}
         </Layer>
 
-        <Layer ref={selLayerRef} name="sel-layer" />
+        <Layer ref={selLayerRef} name="sel-layer"></Layer>
       </Stage>
 
       <NodePropertiesModal
