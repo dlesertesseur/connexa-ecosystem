@@ -66,9 +66,9 @@
     "backStep": "Anterior",
     "nextStep": "Proximo",
     "objectInspector": "Inspector de objetos",
-    "assignNames":"Asignar nombres",
-    "options":"Options",
-    "menu":"Menu"
+    "assignNames": "Asignar nombres",
+    "options": "Options",
+    "menu": "Menu"
   },
 
   "label": {
@@ -161,18 +161,18 @@
     "translate": "Trasladar",
     "rotate": "Rotar",
     "scale": "Escalar",
-    "informationData":"información",
-    "reverseAssignment":"Asignación inversa",
-    "options":"Opciones",
-    "locationX":"Posición X",
-    "locationY":"Posición Y",
-    "locationZ":"Posición Z",
-    "rotationX":"Rotación X",
-    "rotationY":"Rotación Y",
-    "rotationZ":"Rotación Z",
-    "dimensionX":"Dimension X",
-    "dimensionY":"Dimension Y",
-    "dimensionZ":"Dimension Z"
+    "informationData": "información",
+    "reverseAssignment": "Asignación inversa",
+    "options": "Opciones",
+    "locationX": "Posición X",
+    "locationY": "Posición Y",
+    "locationZ": "Posición Z",
+    "rotationX": "Rotación X",
+    "rotationY": "Rotación Y",
+    "rotationZ": "Rotación Z",
+    "dimensionX": "Dimension X",
+    "dimensionY": "Dimension Y",
+    "dimensionZ": "Dimension Z"
   },
 
   "placeholder": {
@@ -181,7 +181,7 @@
     "firstName": "Su nombre",
     "lastName": "Su apellido",
     "search": "Buscar por cualquier campo",
-    "informationData":"La información debe suministrar separada por salto de linea, espacio o coma"
+    "informationData": "La información debe suministrar separada por salto de linea, espacio o coma"
   },
 
   "language": {
@@ -207,7 +207,7 @@
     "1002": "Error al registrarse",
     "404": "Usuario o clave invalida",
     "listCheckValidation": "Debe marcar al menos una fila",
-    "jsonData":"Formato json inválido"
+    "jsonData": "Formato json inválido"
   },
 
   "notification": {
@@ -299,13 +299,21 @@
       "columns": ["Name", "Description"],
       "label": {
         "addNode": "Agregar nodo al hacer clic",
-        "linkStructures":"Racks",
-        "linkNodes":"Nodos",
-        "group":"Agrupado",
-        "rackOrientation":"Orientación",
-        "createBaseNodes":"Base",
-        "nodeProperties":"Propiedades del nodo",
-        "name":"Nombre"
+        "linkStructures": "Racks",
+        "linkNodes": "Nodos",
+        "group": "Agrupado",
+        "rackOrientation": "Orientación",
+        "createBaseNodes": "Base",
+        "nodeProperties": "Propiedades del nodo",
+        "name": "Nombre",
+        "description":"Descripcion",
+        "nameDescription": "Nonbre que identifica al grafo",
+        "settingsNenu": "Configuracion",
+        "graph": "Grafo",
+        "connectors": "Conectores"
+      },
+      "title": {
+        "delete": "Eliminar grafo"
       }
     },
 
@@ -618,8 +626,7 @@
         "spaceHeight": "Alto del espacio",
         "visible": "Visible",
         "module": "Modulo",
-        "type":"Tipo"
-
+        "type": "Tipo"
       },
       "placeholder": {
         "name": "Nombre de la estructura",
@@ -890,30 +897,34 @@
       }
     },
     "floorViewer": {
+      "findRouteNenu": {
+        "button": "Buscar camino",
+        "label": { "startPosition": "Posicion inicial", "endPosition": "Posicion final", "find": "Buscar" }
+      },
       "menu": {
         "label": "Items",
         "title": "Opciones de busqueda",
         "subTitle": "Seleccionar un grupo de informacion",
         "options": ["Items por codigo", "Items por descripcion", "Items por departamento", "Items por estado"]
       },
-      "option":{
-        "itemByCode":{
-          "description":"Buscar item con un codio exacto",
-          "placeholder":"un codigo",
-          "label":"Codigo de item"
+      "option": {
+        "itemByCode": {
+          "description": "Buscar item con un codio exacto",
+          "placeholder": "un codigo",
+          "label": "Codigo de item"
         },
-        "itemByDescription":{
-          "description":"Buscar items con una decripcion similar",
-          "placeholder":"a descripcion",
-          "label":"Descripcion de item"
+        "itemByDescription": {
+          "description": "Buscar items con una decripcion similar",
+          "placeholder": "a descripcion",
+          "label": "Descripcion de item"
         },
-        "itemByDepartament":{
-          "placeholder":"un departamento",
-          "label":"Seleccione un departamento"
+        "itemByDepartament": {
+          "placeholder": "un departamento",
+          "label": "Seleccione un departamento"
         },
-        "findByStatus":{
-          "placeholder":"un estado",
-          "label":"Seleccione un estado"
+        "findByStatus": {
+          "placeholder": "un estado",
+          "label": "Seleccione un estado"
         }
       }
     }
@@ -923,11 +934,11 @@
     "modelStructure": {
       "title": {
         "create": "Nueva estrctura",
-        "racking":"Nuevo rack",
-        "shelving":"Nueva estanteria",
-        "objectList":"Inpector de objetos",
-        "assignNames":"Asignar nombres",
-        "partInspector":"Inspector de partes"
+        "racking": "Nuevo rack",
+        "shelving": "Nueva estanteria",
+        "objectList": "Inpector de objetos",
+        "assignNames": "Asignar nombres",
+        "partInspector": "Inspector de partes"
       },
       "label": {
         "name": "Nombre",
@@ -955,22 +966,22 @@
         "beamDepth": "Prof. viga",
         "numberOfModulesX": "Modulos en (X)",
         "numberOfModulesZ": "Modulos en (Z)",
-        "columnHeight":"Alto de columna",
+        "columnHeight": "Alto de columna",
         "module": "Modulo",
-        "type":"Tipo",
-        "dimx":"Ancho",
-        "dimy":"Alto",
-        "dimz":"Prof.",
-        "positionx":"Pos-X (mts)",
-        "positiony":"Pos-Y (mts)",
-        "positionz":"Pos-Z (mts)",
-        "rotationx":"Rot-X (gr)",
-        "rotationy":"Rot-Y (gr)",
-        "rotationz":"Rot-Z (gr)",
-        "dimensionx":"Dim-X (mts)",
-        "dimensiony":"Dim-Y (mts)",
-        "dimensionz":"Dim-Z (mts)",
-        "separation":"Separación",
+        "type": "Tipo",
+        "dimx": "Ancho",
+        "dimy": "Alto",
+        "dimz": "Prof.",
+        "positionx": "Pos-X (mts)",
+        "positiony": "Pos-Y (mts)",
+        "positionz": "Pos-Z (mts)",
+        "rotationx": "Rot-X (gr)",
+        "rotationy": "Rot-Y (gr)",
+        "rotationz": "Rot-Z (gr)",
+        "dimensionx": "Dim-X (mts)",
+        "dimensiony": "Dim-Y (mts)",
+        "dimensionz": "Dim-Z (mts)",
+        "separation": "Separación",
         "separationX": "Separación (X)",
         "separationZ": "Separación (Z)"
       },
@@ -990,7 +1001,7 @@
           "selective": "Selectivo",
           "pushBack": "Push Back",
           "palletFlow": "Pallet Flow",
-          "staging":"Staging"
+          "staging": "Staging"
         }
       }
     }
@@ -1000,8 +1011,8 @@
     "operatorsStatus": "Muestra la posicion y actividad que estan realizando los operarios en tiempo real",
     "lockMove": "Bloquea el movimiento y la rotación de las estructuras de almacenamiento",
     "snapToGrid": "Alinear a la cuadricula",
-    "showBackImage":"Mostrar imagen de fondo",
-    "moduleSelection":"Selección por módulo"
+    "showBackImage": "Mostrar imagen de fondo",
+    "moduleSelection": "Selección por módulo"
   },
 
   "partType": {

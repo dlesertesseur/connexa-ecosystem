@@ -11,6 +11,8 @@ import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers"
 import { FloorViewerStateContext } from "./Context";
 import { showParts } from "../../../../Components/Builder2d";
 import ModuleInspector from "./modal/ModuleInspector";
+import { findAllGraphsHeaders, findGraphById } from "../../../../DataAccess/Graph";
+import { GraphRouter } from "./graphRouter";
 
 const Viewer = ({ app }) => {
   const [actorId, setActorId] = useState(null);
@@ -24,6 +26,8 @@ const Viewer = ({ app }) => {
   const [partsMap, setPartsMap] = useState(null);
   const [stageRef, setStageRef] = useState(null);
   const [moduleInspectorOpen, setModuleInspectorOpen] = useState(false);
+
+  const [graphRoute, setGraphRoute] = useState(null);
 
   const { user } = useSelector((state) => state.auth.value);
   // const wSize = useWindowSize();
@@ -122,7 +126,31 @@ const Viewer = ({ app }) => {
 
     const markerts = await findAllLayoutMarkersById(params);
     setMarkers(markerts);
+
+    const graphs = await findAllGraphsHeaders(params);
+    if (graphs) {
+      const graphHeader = graphs[0];
+
+      const params = {
+        token: user.token,
+        siteId: site.id,
+        floorId: floor.id,
+        graphId: graphHeader.id,
+      };
+
+      const graph = await findGraphById(params);
+      const gr = new GraphRouter(graph);
+      gr.build();
+      setGraphRoute(gr);
+    }
+
     setLoading(false);
+  };
+
+  const onFind = (startPos, endPos) => {
+    console.log("onFind graphRoute -> ", graphRoute);
+    const route = graphRoute.getPath(startPos, endPos);
+    console.log(route);
   };
 
   return (
@@ -140,7 +168,7 @@ const Viewer = ({ app }) => {
             border: "solid 1px" + theme.colors.gray[3],
           })}
         >
-          <Toolbar>
+          <Toolbar onFind={onFind}>
             <FilterControl
               siteId={siteId}
               setSiteId={setSiteId}

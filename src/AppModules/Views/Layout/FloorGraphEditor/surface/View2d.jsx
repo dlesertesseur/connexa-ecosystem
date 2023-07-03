@@ -14,7 +14,7 @@ import { useWindowSize } from "../../../../../Hook";
 import { Center, Loader, Stack } from "@mantine/core";
 import { findGraphById } from "../../../../../DataAccess/Graph";
 
-const View2d = ({ onSave }) => {
+const View2d = ({ onSave, action }) => {
   const { user } = useSelector((state) => state.auth.value);
   const { site, floor, setDisabledActionButtons, selectedRowId } = useContext(AbmStateContext);
 
@@ -69,9 +69,11 @@ const View2d = ({ onSave }) => {
     const markerts = await findAllLayoutMarkersById(params);
     setMarkers(markerts);
 
-    if (selectedRowId) {
-      const graph = await loadGraph();
-      setGraph(graph);
+    if (action === "update") {
+      if (selectedRowId) {
+        const graph = await loadGraph();
+        setGraph(graph);
+      }
     }
 
     setLoading(false);

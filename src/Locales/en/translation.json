@@ -164,15 +164,15 @@
     "informationData": "Information data",
     "reverseAssignment": "Reverse assignment",
     "options": "Options",
-    "locationX":"Location X",
-    "locationY":"Location Y",
-    "locationZ":"Location Z",
-    "rotationX":"Rotation X",
-    "rotationY":"Rotation Y",
-    "rotationZ":"Rotation Z",
-    "dimensionX":"Dimension X",
-    "dimensionY":"Dimension Y",
-    "dimensionZ":"Dimension Z"
+    "locationX": "Location X",
+    "locationY": "Location Y",
+    "locationZ": "Location Z",
+    "rotationX": "Rotation X",
+    "rotationY": "Rotation Y",
+    "rotationZ": "Rotation Z",
+    "dimensionX": "Dimension X",
+    "dimensionY": "Dimension Y",
+    "dimensionZ": "Dimension Z"
   },
 
   "placeholder": {
@@ -309,18 +309,20 @@
       "columns": ["Name", "Description"],
       "label": {
         "addNode": "Add node on click",
-        "linkStructures":"Racks",
-        "linkNodes":"Nodes",
-        "group":"Rakcs group",
-        "rackOrientation":"Orientation",
-        "createBaseNodes":"Base",
-        "nodeProperties":"Node properties",
-        "name":"Name",
-        "nameDescription":"Name that identifies the graph",
-        "settingsNenu":"Settings",
-        "graph":"Graph",
-        "connectors":"Connectors"
-      }
+        "linkStructures": "Racks",
+        "linkNodes": "Nodes",
+        "group": "Rakcs group",
+        "rackOrientation": "Orientation",
+        "createBaseNodes": "Base",
+        "nodeProperties": "Node properties",
+        "name": "Name",
+        "description": "Description",
+        "nameDescription": "Name that identifies the graph",
+        "settingsNenu": "Settings",
+        "graph": "Graph",
+        "connectors": "Connectors"
+      },
+      "title": { "delete": "Delete graph" }
     },
 
     "role": {
@@ -907,30 +909,34 @@
       }
     },
     "floorViewer": {
+      "findRouteNenu": {
+        "button": "find route",
+        "label": { "startPosition": "Start position", "endPosition": "End position", "find": "Find" }
+      },
       "menu": {
         "label": "Options",
         "title": "Search options",
         "subTitle": "Select a group of information",
         "options": ["Item by code", "Items by description", "Items by department", "Items  by status"]
       },
-      "option":{
-        "itemByCode":{
-          "description":"Search item by exact code",
-          "placeholder":"a code",
-          "label":"Item code"
+      "option": {
+        "itemByCode": {
+          "description": "Search item by exact code",
+          "placeholder": "a code",
+          "label": "Item code"
         },
-        "itemByDescription":{
-          "description":"Search items by similar description",
-          "placeholder":"a description",
-          "label":"Item description"
+        "itemByDescription": {
+          "description": "Search items by similar description",
+          "placeholder": "a description",
+          "label": "Item description"
         },
-        "itemByDepartament":{
-          "placeholder":"a department",
-          "label":"Select a department"
+        "itemByDepartament": {
+          "placeholder": "a department",
+          "label": "Select a department"
         },
-        "findByStatus":{
-          "placeholder":"a status",
-          "label":"Select a status"
+        "findByStatus": {
+          "placeholder": "a status",
+          "label": "Select a status"
         }
       }
     }
@@ -1017,7 +1023,7 @@
     "lockMove": "Blocks movement and rotation of storage structures",
     "snapToGrid": "Snap to grid",
     "showBackImage": "Show background image",
-    "moduleSelection":"Selection by module"
+    "moduleSelection": "Selection by module"
   },
 
   "partType": {

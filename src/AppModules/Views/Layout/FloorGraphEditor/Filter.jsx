@@ -63,13 +63,14 @@ export function Filter() {
           label={t("label.site")}
           placeholder={t("label.select")}
           description={t("label.siteDesc")}
-          //searchable
           nothingFound={t("label.noData")}
           data={sites?.map((s) => {
             return { value: s.id, label: s.name };
           })}
           value={site}
-          onChange={setSite}
+          onChange={(e) => {
+            setFloor(null);
+            setSite(e)}}
         />
         <Space my={"md"} />
         <Select

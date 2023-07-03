@@ -95,7 +95,7 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
   const [nodes, setNodes] = useState([]);
   const navigate = useNavigate();
 
-  const { initilizeContext } = useContext(AbmStateContext);
+  const { initilizeContext, refresh } = useContext(AbmStateContext);
 
   const connectGraph = () => {
     const nodes = graph.nodes;
@@ -1097,11 +1097,12 @@ function Editor2d({ width, height, layouts, racks, markers, graph, pixelMeterRel
     });
 
     const graph = buildFloorGraph();
-    console.log("onLocalSave -> ", graph);
+    // console.log("onLocalSave -> ", graph);
     try {
       await onSave(graph);
-      console.log("onLocalSave <- ", graph);
+      // console.log("onLocalSave <- ", graph);
       hideNotification("savingData-notification");
+      refresh();
     } catch (error) {
       console.log(error);
       showNotification({

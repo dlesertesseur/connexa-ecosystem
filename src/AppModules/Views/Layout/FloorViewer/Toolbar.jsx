@@ -5,10 +5,11 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { FloorViewerStateContext } from "./Context";
 import OptionsMenu from "./menu/OptionsMenu";
+import FindPathMenu from "./menu/FindPathMenu";
 
-const Toolbar = ({ onOption = null, children }) => {
+const Toolbar = ({ onOption = null, children, onFind }) => {
   const { t } = useTranslation();
-  const {racks} = useContext(FloorViewerStateContext)
+  const { racks } = useContext(FloorViewerStateContext);
 
   return (
     <Group
@@ -20,8 +21,13 @@ const Toolbar = ({ onOption = null, children }) => {
         height: TOOLBAR_HIGHT + "px",
       })}
     >
-      <Group>
-        <OptionsMenu disabled={racks ? false : true}/>
+      <Group position="left">
+        <Group>
+          <OptionsMenu disabled={racks ? false : true} />
+        </Group>
+        <Group>
+          <FindPathMenu disabled={racks ? false : true} onFind={onFind}/>
+        </Group>
       </Group>
       <Group>{children}</Group>
     </Group>

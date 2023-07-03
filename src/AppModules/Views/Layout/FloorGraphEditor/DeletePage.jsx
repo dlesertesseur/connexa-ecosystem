@@ -13,7 +13,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AbmStateContext } from "./Context";
-import { deleteRack, findRackById } from "../../../../DataAccess/Racks";
+import { deleteGraph, findAllGraphHeaderById, findGraphById } from "../../../../DataAccess/Graph";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 
 export function DeletePage() {
@@ -27,7 +27,6 @@ export function DeletePage() {
 
   const form = useForm({
     initialValues: {
-      name: "",
       description: "",
     },
 
@@ -37,16 +36,16 @@ export function DeletePage() {
   const getData = async () => {
     const params = {
       token: user.token,
-      siteId: site.id,
-      floorId: floor.id,
-      rackId: selectedRowId,
+      siteId: site,
+      floorId: floor,
+      graphId: selectedRowId,
     };
 
     setWorking(true);
 
-    const ret = await findRackById(params);
-    form.setFieldValue("name", ret.name);
-    //form.setFieldValue("description", ret.description);
+    const ret = await findAllGraphHeaderById(params);
+
+    form.setFieldValue("description", ret.description);
 
     setWorking(false);
   };
@@ -72,13 +71,13 @@ export function DeletePage() {
       token: user.token,
       siteId: site,
       floorId: floor,
-      rackId: selectedRowId
+      graphId: selectedRowId
     };
 
     setWorking(true);
 
     try {
-      const ret = await deleteRack(params);
+      const ret = await deleteGraph(params);
       if (ret.error) {
         setWorking(false);
         setErrorMessage(ret.message);
@@ -137,9 +136,6 @@ export function DeletePage() {
             setConfirmModalOpen(true);
           })}
         >
-          <Group grow mb={"md"}>
-            {createTextField("name")}
-          </Group>
           <Group grow mb={"md"}>
             {createTextField("description")}
           </Group>

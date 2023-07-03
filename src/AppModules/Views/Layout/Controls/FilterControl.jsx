@@ -61,7 +61,10 @@ function FilterControl({ onFilter, siteId, setSiteId, floorId, setFloorId, loadi
             return { value: s.id, label: s.name };
           })}
           value={siteId}
-          onChange={setSiteId}
+          onChange=
+          {(e) => {
+            setFloorId(null);
+            setSiteId(e)}}
         />
         <Space my={"md"} />
         <Select

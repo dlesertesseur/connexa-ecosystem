@@ -45,6 +45,26 @@ const findAllGraphsHeaders = async (parameters) => {
   }
 };
 
+const findAllGraphHeaderById = async (parameters) => {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+    };
+    const url = API.graph.findAllHeaders + "/" + parameters.siteId + "/floors/" + parameters.floorId +"/graphs/header/"+parameters.graphId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const findGraphById = async (parameters) => {
   try {
     const requestOptions = {
@@ -99,7 +119,7 @@ const deleteGraph = async (parameters) => {
         token: parameters.token,
       },
     };
-    const url = API.graph.findById + "/" + parameters.siteId + "/floors/" + parameters.floorId +"/graphs/" + parameters.rackId;
+    const url = API.graph.findById + "/" + parameters.siteId + "/floors/" + parameters.floorId +"/graphs/" + parameters.graphId;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
@@ -109,4 +129,4 @@ const deleteGraph = async (parameters) => {
   }
 };
 
-export { createGraph, findAllGraphsHeaders, findGraphById, updateGraph, deleteGraph };
+export { createGraph, findAllGraphsHeaders, findAllGraphHeaderById, findGraphById, updateGraph, deleteGraph };

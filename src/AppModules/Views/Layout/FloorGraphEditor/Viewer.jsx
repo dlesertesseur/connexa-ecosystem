@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import { updateGraph } from "../../../../DataAccess/Graph";
 
-const Viewer = () => {
+const Viewer = ({action}) => {
   const [working, setWorking] = useState(false);
   const { user } = useSelector((state) => state.auth.value);
   const { site, floor, selectedRowId, setErrorMessage } = useContext(AbmStateContext);
@@ -55,7 +55,7 @@ const Viewer = () => {
       >
         <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
-        <View2d onSave={onSave} />
+        <View2d onSave={onSave} action={action}/>
       </Stack>
     </Stack>
   );

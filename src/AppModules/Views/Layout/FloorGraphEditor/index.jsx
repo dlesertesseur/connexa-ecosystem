@@ -98,8 +98,8 @@ const DynamicApp = ({ app }) => {
         setRowSelected={setSelectedRowId}
         loading={loading}
         enableCreateButton={enableCreateButton}
-        createPage={<GraphPage />}
-        updatePage={<GraphPage />}
+        createPage={<GraphPage action={"new"}/>}
+        updatePage={<GraphPage action={"update"}/>}
         deletePage={<DeletePage />}
         filterControl={<Filter />}
       />
