@@ -4,12 +4,14 @@ import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import FindByCode from "./FindByCode";
 import FindByDescription from "./FindByDescription";
-import FindByDepartment from "./FindByDepartment";
+import FindByTrademark from "./FindByTrademark";
 import FindByStatus from "./FindByStatus";
+import FindByType from "./FindByType";
+import { useContext } from "react";
+import { FloorViewerStateContext } from "../Context";
 
 const OptionsMenu = ({ loading = false, disabled = false }) => {
   const { t } = useTranslation();
-  const [opened, setOpened] = useState(false);
   const [option, setOption] = useState(null);
   const [content, setContent] = useState(null);
   const [optionList] = useState(
@@ -17,6 +19,8 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
       return { value: index + 1, label: o };
     })
   );
+
+  const {optionsOpened, setOptionsOpened} = useContext(FloorViewerStateContext);
 
   useEffect(() => {
     if (option) {
@@ -28,16 +32,19 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
     let ret = null;
     switch (opt) {
       case 1:
-        ret = <FindByCode code={1}/>;
+        ret = <FindByCode code={1} />;
         break;
       case 2:
-        ret = <FindByDescription code={2}/>;
+        ret = <FindByDescription code={2} />;
         break;
       case 3:
-        ret = <FindByDepartment code={3}/>
+        ret = <FindByTrademark code={3} />;
         break;
       case 4:
-        ret = <FindByStatus code={4}/>
+        ret = <FindByStatus code={4} />;
+        break;
+      case 5:
+        ret = <FindByType code={5} />;
         break;
       default:
         break;
@@ -46,9 +53,9 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
   };
 
   return (
-    <Popover width={300} position="bottom-start" withArrow shadow="md" opened={opened}>
+    <Popover width={300} position="bottom-start" withArrow shadow="md" opened={optionsOpened}>
       <Popover.Target>
-        <Button loading={loading} disabled={disabled} size={"xs"} py={0} onClick={() => setOpened((o) => !o)}>
+        <Button loading={loading} disabled={disabled} size={"xs"} py={0} onClick={() => setOptionsOpened((o) => !o)}>
           {t("view.floorViewer.menu.label")}
         </Button>
       </Popover.Target>

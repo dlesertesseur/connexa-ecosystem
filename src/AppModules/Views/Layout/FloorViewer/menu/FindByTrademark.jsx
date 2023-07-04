@@ -1,13 +1,13 @@
-import { Stack, Button, Group, HueSlider, Select, ColorPicker } from "@mantine/core";
+import { Stack, Button, Group, Select, ColorPicker } from "@mantine/core";
 import React from "react";
 import { useContext } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FloorViewerStateContext } from "../Context";
 
-const FindByDepartment = ({ code }) => {
+const FindByTrademark = ({ code }) => {
   const { t } = useTranslation();
-  const { showData } = useContext(FloorViewerStateContext);
+  const { showData, trademarks } = useContext(FloorViewerStateContext);
 
   const [color, onChange] = useState("#ff0000");
   const [department, setDepartment] = useState(null);
@@ -15,16 +15,9 @@ const FindByDepartment = ({ code }) => {
   return (
     <Stack>
       <Select
-        label={t("view.floorViewer.option.itemByDepartament.label")}
+        label={t("view.floorViewer.option.itemByTrademark.label")}
         placeholder={t("view.floorViewer.option.itemByDepartament.placeholder")}
-        data={[
-          { value: "AL", label: "ALMACEN" },
-          { value: "BE", label: "BEBIDAS CON ALCHOOL" },
-          { value: "BS", label: "BEBIDAS SIN ALCHOOL" },
-          { value: "LI", label: "LIMPIEZA" },
-          { value: "PF", label: "PERFUMERIA" },
-          { value: "EL", label: "ELECTRO" },
-        ]}
+        data={trademarks.map(t => {return({value:t.id, label:t.id})})}
         value={department}
         onChange={setDepartment}
       />
@@ -46,4 +39,4 @@ const FindByDepartment = ({ code }) => {
   );
 };
 
-export default FindByDepartment;
+export default FindByTrademark;

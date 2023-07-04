@@ -35,7 +35,7 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
   const stageRef = useRef(null);
   const matches = useMediaQuery("(min-width: 768px)");
   const wSize = useWindowSize();
-  const { setPartsDictionary } = useContext(FloorViewerStateContext);
+  const { setPartsDictionary, route } = useContext(FloorViewerStateContext);
 
   let lastCenter = null;
   let lastDist = 0;
@@ -46,7 +46,7 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
       const obj = evt.target;
 
       selectPartWithId(ref, obj, onDblClick);
-      onSelect(obj.id());
+      onSelect(obj.id(), obj.name());
     },
     [onSelect]
   );
@@ -55,7 +55,7 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
     (evt) => {
       const obj = evt.target;
       const group = obj.getParent();
-      if(group){
+      if (group) {
         onDblClick(evt, group.attrs);
       }
     },
@@ -85,6 +85,51 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layouts, pixelMeterRelation, racks, markers]);
+
+  useEffect(() => {
+    if (route) {
+      const ref = stageRef.current;
+      const layers = ref.find("#selection-layer");
+      const layer = layers[0];
+
+      if (layer) {
+        let routeGroup = null;
+        const group = layer.find("#route-group");
+        if (group.length > 0) {
+          routeGroup = group[0];
+          routeGroup.destroyChildren();
+        } else {
+          routeGroup = new Konva.Group({ name: "route-group" });
+          layer.add(routeGroup);
+        }
+
+        const points = [];
+        if (route) {
+          route.forEach((n) => {
+            points.push(n.x);
+            points.push(n.y);
+          });
+        }
+
+        const line = new Konva.Arrow({
+          points: points,
+          stroke: "red",
+          pointerLength: 6,
+          pointerWidth: 4,
+          //dash: [4, 6],
+        });
+
+        const circle = new Konva.Circle({
+          x: points[0],
+          y: points[1],
+          radius: 5,
+          fill: "red",
+        });
+
+        routeGroup.add(line, circle);
+      }
+    }
+  }, [route]);
 
   function zoomStage(event) {
     event.evt.preventDefault();

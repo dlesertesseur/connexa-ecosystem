@@ -5,23 +5,21 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { FloorViewerStateContext } from "../Context";
 
-const FindByStatus = ({ code }) => {
+const FindByType = ({code}) => {
   const { t } = useTranslation();
-  const { showData, locationStatus } = useContext(FloorViewerStateContext);
+  const { showData, locationTypes } = useContext(FloorViewerStateContext);
 
   const [color, onChange] = useState("#ff0000");
-  const [status, setStatus] = useState(null);
+  const [type, setType] = useState(null);
 
   return (
     <Stack>
       <Select
-        label={t("view.floorViewer.option.findByStatus.label")}
-        placeholder={t("view.floorViewer.option.findByStatus.placeholder")}
-        data={locationStatus.map((l) => {
-          return { value: l.id, label: l.id };
-        })}
-        value={status}
-        onChange={setStatus}
+        label={t("view.floorViewer.option.itemByType.label")}
+        placeholder={t("view.floorViewer.option.itemByType.placeholder")}
+        data={locationTypes.map(l => {return({value:l.id, label:l.id})})}
+        value={type}
+        onChange={setType}
       />
 
       <ColorPicker format="hex" value={color} onChange={onChange} fullWidth withPicker={true} />
@@ -29,9 +27,9 @@ const FindByStatus = ({ code }) => {
       <Group position="right">
         <Button
           size="xs"
-          disabled={!status}
+          disabled={!type}
           onClick={(evt) => {
-            showData(code, status, color);
+            showData(code, type, color);
           }}
         >
           {t("button.accept")}
@@ -41,4 +39,4 @@ const FindByStatus = ({ code }) => {
   );
 };
 
-export default FindByStatus;
+export default FindByType;

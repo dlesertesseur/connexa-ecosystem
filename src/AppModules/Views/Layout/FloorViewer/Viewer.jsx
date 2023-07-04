@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Toolbar from "./Toolbar";
 import ViewHeader from "../../ViewHeader";
 import FloorPlanView2d from "./FloorPlanView2d";
+import ModuleInspector from "./modal/ModuleInspector";
 import { useSelector } from "react-redux";
 import { PIXEL_METER_RELATION } from "../../../../Constants";
 import { Stack } from "@mantine/core";
@@ -10,27 +11,49 @@ import { FilterControl } from "../Controls/FilterControl";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 import { FloorViewerStateContext } from "./Context";
 import { showParts } from "../../../../Components/Builder2d";
-import ModuleInspector from "./modal/ModuleInspector";
 import { findAllGraphsHeaders, findGraphById } from "../../../../DataAccess/Graph";
-import { GraphRouter } from "./graphRouter";
+import { GraphRouter } from "../../../../Helpers/graphRouter";
+import { hideNotification, showNotification } from "@mantine/notifications";
+import { useTranslation } from "react-i18next";
+import {
+  authenticate,
+  getLocationStatus,
+  getLocationTypes,
+  getLocations,
+  getTrademarks,
+} from "../../../../DataAccess/Wms";
+import { findAllVariables } from "../../../../DataAccess/Variables";
+import ResponceNotification from "../../../../Modal/ResponceNotification";
 
 const Viewer = ({ app }) => {
   const [actorId, setActorId] = useState(null);
+  const [actorName, setActorName] = useState(null);
   const [siteId, setSiteId] = useState(null);
   const [floorId, setFloorId] = useState(null);
   const [layouts, setLayouts] = useState(null);
   const [racks, setRacks] = useState(null);
   const [loading, setLoading] = useState(false);
   const [markers, setMarkers] = useState([]);
+  const [route, setRoute] = useState(null);
   const [pixelmeterrelation, setPixelmeterrelation] = useState(null);
   const [partsMap, setPartsMap] = useState(null);
   const [stageRef, setStageRef] = useState(null);
   const [moduleInspectorOpen, setModuleInspectorOpen] = useState(false);
 
+  const [optionsOpened, setOptionsOpened] = useState(false);
+
   const [graphRoute, setGraphRoute] = useState(null);
 
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [wmsApiToken, setWmsApiToken] = useState(null);
+
+  const [locationStatus, setLocationStatus] = useState(null);
+  const [locationTypes, setLocationTypes] = useState(null);
+  const [trademarks, setTrademarks] = useState(null);
+
   const { user } = useSelector((state) => state.auth.value);
-  // const wSize = useWindowSize();
+
+  const { t } = useTranslation();
 
   const setPartsDictionary = (stageRef, partsMap) => {
     setPartsMap(partsMap);
@@ -42,9 +65,10 @@ const Viewer = ({ app }) => {
     setModuleInspectorOpen(true);
   };
 
-  const onSelectActor = (id) => {
-    console.log("### Viewer ### onSelectActor -> id:" + id);
+  const onSelectActor = (id, name) => {
+    console.log("### Viewer ### onSelectActor -> name:", name, " id:", id);
     setActorId(id);
+    setActorName(name);
   };
 
   const getPartsFromPositions = (positions) => {
@@ -60,48 +84,106 @@ const Viewer = ({ app }) => {
     return parts;
   };
 
-  const getDummyPositions = (items, amount = 1) => {
-    const ret = [];
-
-    for (let index = 0; index < amount; index++) {
-      const item = items[Math.floor(Math.random() * items.length)];
-      ret.push(item);
-    }
-    return ret;
-  };
-
   const showData = async (filter, data, color) => {
     let parts = null;
     let positions = null;
+    let filterData = null;
 
-    let keys = Array.from(partsMap.keys());
+    const options = t("view.floorViewer.menu.options", { returnObjects: true });
 
     if (partsMap) {
       switch (filter) {
         case 1:
-          positions = getDummyPositions(keys);
+          filterData = "sku_equals=" + data;
           break;
 
         case 2:
-          positions = getDummyPositions(keys, 10);
+          filterData = "code_like=" + data;
           break;
 
         case 3:
-          positions = getDummyPositions(keys, 100);
+          filterData = "trademark_equals=" + data;
           break;
 
         case 4:
-          positions = getDummyPositions(keys, 200);
+          filterData = "status_equals=" + data;
+          break;
+
+        case 5:
+          filterData = "type_equals=" + data;
           break;
 
         default:
           break;
       }
 
-      parts = getPartsFromPositions(positions);
+      setOptionsOpened(false);
+
+      const subTitle = options[filter];
+      showInfo(subTitle);
+
+      positions = await getLocations({ token: wmsApiToken, filter: filterData });
+
+      console.log("showData filterData ->", filterData);
+      console.log("showData positions ->", positions);
+
+      const positionsNames = positions.map((p) => {
+        const arr = p.code.split("-");
+        const ret =  `${arr[0]}-${arr[1]}`;
+        return ret;
+      });
+
+      parts = getPartsFromPositions(positionsNames);
       if (parts) {
         showParts(stageRef, parts, color, onSelectActor, onActorDblClick);
       }
+
+      hideInfo();
+    }
+  };
+
+  const showInfo = (message) => {
+    showNotification({
+      id: "loadind-data-notification",
+      disallowClose: true,
+      title: t("message.loadingData"),
+      message: message,
+      loading: true,
+    });
+  };
+
+  const hideInfo = () => {
+    hideNotification("loadind-data-notification");
+  };
+
+  const authenticateWms = async () => {
+    const params = {
+      token: user.token,
+    };
+    try {
+      const variables = await findAllVariables(params);
+      if (variables) {
+        const wmsApiUser = variables.find((v) => v.name === "WMS_API_USER");
+        const wmsApiPass = variables.find((v) => v.name === "WMS_API_PASS");
+
+        const ret = await authenticate({
+          email: wmsApiUser.value,
+          password: wmsApiPass.value,
+        });
+
+        setWmsApiToken(ret.token);
+
+        const locationStatus = await getLocationStatus(params);
+        const locationTypes = await getLocationTypes(params);
+        const trademarks = await getTrademarks(params);
+
+        setLocationStatus(locationStatus);
+        setLocationTypes(locationTypes);
+        setTrademarks(trademarks);
+      }
+    } catch (error) {
+      setErrorMessage(error);
+      console.log("authenticate ERROR -> ", error);
     }
   };
 
@@ -115,18 +197,22 @@ const Viewer = ({ app }) => {
 
     setLoading(true);
 
+    showInfo(t("label.layouts"));
     const layouts = await findLayoutByFloorId(params);
 
     const n = (1.0 / layouts[0].pixelmeterrelation) * PIXEL_METER_RELATION;
     setPixelmeterrelation(n);
     setLayouts(layouts);
 
+    showInfo(t("label.racks"));
     const racks = await findRacksByZoneId(params);
     setRacks(racks);
 
+    showInfo(t("label.markers"));
     const markerts = await findAllLayoutMarkersById(params);
     setMarkers(markerts);
 
+    showInfo(t("label.graph"));
     const graphs = await findAllGraphsHeaders(params);
     if (graphs) {
       const graphHeader = graphs[0];
@@ -144,18 +230,38 @@ const Viewer = ({ app }) => {
       setGraphRoute(gr);
     }
 
+    showInfo(t("label.wmsApiAuth"));
+    authenticateWms();
     setLoading(false);
+    hideInfo();
   };
 
   const onFind = (startPos, endPos) => {
-    console.log("onFind graphRoute -> ", graphRoute);
     const route = graphRoute.getPath(startPos, endPos);
-    console.log(route);
+    setRoute(route);
   };
 
   return (
     <FloorViewerStateContext.Provider
-      value={{ siteId, floorId, layouts, racks, markers, actorId, pixelmeterrelation, showData, setPartsDictionary }}
+      value={{
+        siteId,
+        floorId,
+        layouts,
+        racks,
+        markers,
+        actorId,
+        pixelmeterrelation,
+        actorName,
+        route,
+        wmsApiToken,
+        locationStatus,
+        locationTypes,
+        trademarks,
+        showData,
+        setPartsDictionary,
+        optionsOpened,
+        setOptionsOpened,
+      }}
     >
       <Stack>
         <ViewHeader app={app} />
@@ -194,6 +300,16 @@ const Viewer = ({ app }) => {
               setModuleInspectorOpen(false);
             }}
             actorId={actorId}
+          />
+
+          <ResponceNotification
+            opened={errorMessage ? true : false}
+            onClose={() => {
+              setErrorMessage(null);
+            }}
+            code={errorMessage}
+            title={t("status.error")}
+            text={errorMessage}
           />
         </Stack>
       </Stack>

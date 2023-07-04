@@ -172,7 +172,13 @@
     "rotationZ": "Rotation Z",
     "dimensionX": "Dimension X",
     "dimensionY": "Dimension Y",
-    "dimensionZ": "Dimension Z"
+    "dimensionZ": "Dimension Z",
+    "layouts":"Layouts",
+    "racks":"racks",
+    "markers":"Markers",
+    "graph":"Graph",
+    "wmsApiAuth":"Authenticating with wms api",
+    "wmsApiData":"Getting data from wms api"
   },
 
   "placeholder": {
@@ -910,14 +916,14 @@
     },
     "floorViewer": {
       "findRouteNenu": {
-        "button": "find route",
+        "button": "Find route",
         "label": { "startPosition": "Start position", "endPosition": "End position", "find": "Find" }
       },
       "menu": {
         "label": "Options",
         "title": "Search options",
         "subTitle": "Select a group of information",
-        "options": ["Item by code", "Items by description", "Items by department", "Items  by status"]
+        "options": ["Item by code", "Items by description", "Items by trademark", "Items by status", "Items by type"]
       },
       "option": {
         "itemByCode": {
@@ -937,6 +943,14 @@
         "findByStatus": {
           "placeholder": "a status",
           "label": "Select a status"
+        },
+        "itemByType": {
+          "placeholder": "a type",
+          "label": "Select a type"
+        },
+        "itemByTrademark": {
+          "placeholder": "a trademark",
+          "label": "Select a trademark"
         }
       }
     }

@@ -172,7 +172,13 @@
     "rotationZ": "Rotación Z",
     "dimensionX": "Dimension X",
     "dimensionY": "Dimension Y",
-    "dimensionZ": "Dimension Z"
+    "dimensionZ": "Dimension Z",
+    "layouts":"Layouts",
+    "racks":"racks",
+    "markers":"Marcas",
+    "graph":"Grafo de ruteo",
+    "wmsApiAuth":"Autenticando en el api WMS",
+    "wmsApiData":"Obteniendo datos de la API de WMS"
   },
 
   "placeholder": {
@@ -905,7 +911,7 @@
         "label": "Items",
         "title": "Opciones de busqueda",
         "subTitle": "Seleccionar un grupo de informacion",
-        "options": ["Items por codigo", "Items por descripcion", "Items por departamento", "Items por estado"]
+        "options": ["Items por codigo", "Items por descripcion", "Items por marca", "Items por estado", "Items por tipo"]
       },
       "option": {
         "itemByCode": {
@@ -925,6 +931,14 @@
         "findByStatus": {
           "placeholder": "un estado",
           "label": "Seleccione un estado"
+        },
+        "itemByType": {
+          "placeholder": "un tipo",
+          "label": "Seleccione un tipo"
+        },
+        "itemByTrademark": {
+          "placeholder": "a marca",
+          "label": "Seleccione una marca"
         }
       }
     }

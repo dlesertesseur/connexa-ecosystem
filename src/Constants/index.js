@@ -310,6 +310,14 @@ export const API = {
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
   },
 
+  wms: {
+    authenticate: config.SERVER + ":" + config.PORT + config.WMS_API_BASE + "/authentication",
+    getLocationStatus: config.SERVER + ":" + config.PORT + config.WMS_API_BASE + "/locationStatus",
+    getLocationTypes: config.SERVER + ":" + config.PORT + config.WMS_API_BASE + "/locationTypes",
+    getTrademarks: config.SERVER + ":" + config.PORT + config.WMS_API_BASE + "/trademarks",
+    getLocations: config.SERVER + ":" + config.PORT + config.WMS_API_BASE + "/locations?",
+  },
+
 };
 
 export const ERRORS = {
