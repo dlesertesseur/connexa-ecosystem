@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { TransformControls, MapControls } from "@react-three/drei";
 import { useEffect, useRef } from "react";
-import { buildEnvironmentLOD } from "../../../Components/Builder3d";
+import { buildEnvironmentLOD } from "../../../../Components/Builder3d";
 import { Group, Stack } from "@mantine/core";
 import { useContext } from "react";
 import { EditorStateContext } from "./Context";
@@ -13,6 +13,7 @@ const Editor = () => {
   const [model, setModel] = useState(null);
   const { racks, markers, selectedPart, setSelectedPart } = useContext(EditorStateContext);
   const controlRef = useRef(null);
+  
   const onSelect = (event) => {
     if (event.intersections && event.intersections.length > 0) {
       const obj = event.intersections[0].object;

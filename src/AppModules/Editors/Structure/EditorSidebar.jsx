@@ -1,11 +1,12 @@
 import * as THREE from "three";
 import React from "react";
-import { ColorPicker, Dialog, Paper, ScrollArea, Stack, TextInput } from "@mantine/core";
+import { Dialog, Paper, ScrollArea, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../Hook";
 import { useState } from "react";
 import { useEffect } from "react";
 import NumberProperty from "../../../Components/NumberProperty";
+import CustomColorPicker from "../../../Components/CustomColorPicker";
 
 const EditorSidebar = ({ open, part }) => {
   const { t } = useTranslation();
@@ -123,7 +124,7 @@ const EditorSidebar = ({ open, part }) => {
 
         <Paper withBorder p={"xs"} bg={panelBaseColor}>
           <Stack spacing={"xs"}>
-            <ColorPicker format="rgb" value={color} onChange={setColor} fullWidth withPicker={true} />
+            <CustomColorPicker value={color} onChange={setColor} />
           </Stack>
         </Paper>
       </ScrollArea>

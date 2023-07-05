@@ -178,7 +178,8 @@
     "markers":"Markers",
     "graph":"Graph",
     "wmsApiAuth":"Authenticating with wms api",
-    "wmsApiData":"Getting data from wms api"
+    "wmsApiData":"Getting data from wms api",
+    "color":"Color"
   },
 
   "placeholder": {
@@ -213,7 +214,8 @@
     "1002": "Registration error",
     "404": "Invalid username or password",
     "listCheckValidation": "You must check at least one row",
-    "jsonData": "Invalid json format"
+    "jsonData": "Invalid json format",
+    "wmsApiTokenNotFound": "WMS Api key not found"
   },
 
   "notification": {
@@ -951,6 +953,25 @@
         "itemByTrademark": {
           "placeholder": "a trademark",
           "label": "Select a trademark"
+        }
+      },
+      "moduleInspector":{
+        "tabs":{
+          "information":"Information",
+          "view3d":"View 3D"
+        },
+        "label":{
+          "rackLevel":"Rack level",
+          "height":"Height",
+          "width":"Width",
+          "depth":"Depth",
+          "rackType":"Type",
+          "status":"Status",
+          "pallets":"Pallets",
+          "palletDimension":"Dimension",
+          "palletType":"Type",
+          "palletStatus":"Status",
+          "palletCreationDate":"Creation date"
         }
       }
     }

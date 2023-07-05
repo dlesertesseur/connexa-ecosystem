@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { Button, Group, SegmentedControl, TextInput } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import React from "react";
+import { Group } from "@mantine/core";
 import { FilterControl } from "./FilterControl";
 
 const EditorToolbar = () => {

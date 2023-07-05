@@ -178,7 +178,8 @@
     "markers":"Marcas",
     "graph":"Grafo de ruteo",
     "wmsApiAuth":"Autenticando en el api WMS",
-    "wmsApiData":"Obteniendo datos de la API de WMS"
+    "wmsApiData":"Obteniendo datos de la API de WMS"    ,
+    "color":"Color"
   },
 
   "placeholder": {
@@ -213,7 +214,8 @@
     "1002": "Error al registrarse",
     "404": "Usuario o clave invalida",
     "listCheckValidation": "Debe marcar al menos una fila",
-    "jsonData": "Formato json inválido"
+    "jsonData": "Formato json inválido",
+    "wmsApiTokenNotFound": "WMS Api key no encontrado"
   },
 
   "notification": {
@@ -939,6 +941,25 @@
         "itemByTrademark": {
           "placeholder": "a marca",
           "label": "Seleccione una marca"
+        }
+      },
+      "moduleInspector":{
+        "tabs":{
+          "information":"Informacion",
+          "view3d":"Vista 3D"
+        },
+        "label":{
+          "rackLevel":"Nivel en el rack",
+          "height":"Alto",
+          "width":"Ancho",
+          "depth":"Profundidad",
+          "rackType":"Tipo",
+          "status":"Estado",
+          "pallets":"Pallets",
+          "palletDimension":"Dimension",
+          "palletType":"Tipo",
+          "palletStatus":"Estado",
+          "palletCreationDate":"Fecha de creacion"
         }
       }
     }

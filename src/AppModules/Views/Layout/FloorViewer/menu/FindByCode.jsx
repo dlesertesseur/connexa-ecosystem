@@ -1,11 +1,12 @@
-import { Button, ColorPicker, Group, HueSlider, Stack, TextInput } from "@mantine/core";
+import CustomColorPicker from "../../../../../Components/CustomColorPicker";
 import React from "react";
+import { Button, Group, Stack, TextInput } from "@mantine/core";
 import { useContext } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FloorViewerStateContext } from "../Context";
 
-const FindByCode = ({code}) => {
+const FindByCode = ({ code }) => {
   const { t } = useTranslation();
 
   const [color, onChange] = useState("#ff0000");
@@ -23,7 +24,7 @@ const FindByCode = ({code}) => {
         onChange={(event) => setTextValue(event.currentTarget.value)}
       />
 
-      <ColorPicker format="hex" value={color} onChange={onChange} fullWidth withPicker={true} />
+      <CustomColorPicker value={color} onChange={onChange} />
 
       <Group position="right">
         <Button

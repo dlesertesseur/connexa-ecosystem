@@ -24,6 +24,7 @@ import {
 } from "../../../../DataAccess/Wms";
 import { findAllVariables } from "../../../../DataAccess/Variables";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
+import { useEffect } from "react";
 
 const Viewer = ({ app }) => {
   const [actorId, setActorId] = useState(null);
@@ -38,8 +39,7 @@ const Viewer = ({ app }) => {
   const [pixelmeterrelation, setPixelmeterrelation] = useState(null);
   const [partsMap, setPartsMap] = useState(null);
   const [stageRef, setStageRef] = useState(null);
-  const [moduleInspectorOpen, setModuleInspectorOpen] = useState(false);
-
+  const [positionsFound, setPositionsFound] = useState(null);
   const [optionsOpened, setOptionsOpened] = useState(false);
 
   const [graphRoute, setGraphRoute] = useState(null);
@@ -50,7 +50,8 @@ const Viewer = ({ app }) => {
   const [locationStatus, setLocationStatus] = useState(null);
   const [locationTypes, setLocationTypes] = useState(null);
   const [trademarks, setTrademarks] = useState(null);
-
+  const [positions, setPositions] = useState(null);
+  
   const { user } = useSelector((state) => state.auth.value);
 
   const { t } = useTranslation();
@@ -60,15 +61,24 @@ const Viewer = ({ app }) => {
     setStageRef(stageRef);
   };
 
+  const getPositionInformation = async (actorName) => {
+    if (wmsApiToken) {
+      const filterData = `code_like=${actorName}`;
+      const positions = await getLocations({ token: wmsApiToken, filter: filterData });
+      setPositions(positions);
+    } else {
+      setErrorMessage(t("errors.wmsApiTokenNotFound"));
+    }
+  };
+
   const onActorDblClick = (attrs) => {
-    console.log("### Viewer ### onActorDblClick -> attrs:", attrs);
-    setModuleInspectorOpen(true);
+    getPositionInformation(attrs.name);
   };
 
   const onSelectActor = (id, name) => {
-    console.log("### Viewer ### onSelectActor -> name:", name, " id:", id);
     setActorId(id);
     setActorName(name);
+    console.log("onSelectActor -> ", id, name);
   };
 
   const getPartsFromPositions = (positions) => {
@@ -123,13 +133,11 @@ const Viewer = ({ app }) => {
       showInfo(subTitle);
 
       positions = await getLocations({ token: wmsApiToken, filter: filterData });
-
-      console.log("showData filterData ->", filterData);
-      console.log("showData positions ->", positions);
+      setPositionsFound(positions);
 
       const positionsNames = positions.map((p) => {
         const arr = p.code.split("-");
-        const ret =  `${arr[0]}-${arr[1]}`;
+        const ret = `${arr[0]}-${arr[1]}`;
         return ret;
       });
 
@@ -163,15 +171,15 @@ const Viewer = ({ app }) => {
     try {
       const variables = await findAllVariables(params);
       if (variables) {
-        const wmsApiUser = variables.find((v) => v.name === "WMS_API_USER");
-        const wmsApiPass = variables.find((v) => v.name === "WMS_API_PASS");
+        // const wmsApiUser = variables.find((v) => v.name === "WMS_API_USER");
+        // const wmsApiPass = variables.find((v) => v.name === "WMS_API_PASS");
 
-        const ret = await authenticate({
-          email: wmsApiUser.value,
-          password: wmsApiPass.value,
-        });
+        // const ret = await authenticate({
+        //   email: wmsApiUser.value,
+        //   password: wmsApiPass.value,
+        // });
 
-        setWmsApiToken(ret.token);
+        // setWmsApiToken(ret.token);
 
         const locationStatus = await getLocationStatus(params);
         const locationTypes = await getLocationTypes(params);
@@ -180,6 +188,8 @@ const Viewer = ({ app }) => {
         setLocationStatus(locationStatus);
         setLocationTypes(locationTypes);
         setTrademarks(trademarks);
+
+        setWmsApiToken(user.token);
       }
     } catch (error) {
       setErrorMessage(error);
@@ -196,6 +206,9 @@ const Viewer = ({ app }) => {
     };
 
     setLoading(true);
+
+    showInfo(t("label.wmsApiAuth"));
+    await authenticateWms();
 
     showInfo(t("label.layouts"));
     const layouts = await findLayoutByFloorId(params);
@@ -230,15 +243,17 @@ const Viewer = ({ app }) => {
       setGraphRoute(gr);
     }
 
-    showInfo(t("label.wmsApiAuth"));
-    authenticateWms();
     setLoading(false);
     hideInfo();
   };
 
   const onFind = (startPos, endPos) => {
     const route = graphRoute.getPath(startPos, endPos);
-    setRoute(route);
+    const totalDistance = graphRoute.getDistance(route, PIXEL_METER_RELATION);
+
+    // setRouteHistory([...routeHistory, { startPos: startPos, endPos: endPos, distance: totalDistance, route: route }]);
+    // console.log("onFind route ->", route, totalDistance);
+    setRoute({route:route, distance:totalDistance});
   };
 
   return (
@@ -261,6 +276,7 @@ const Viewer = ({ app }) => {
         setPartsDictionary,
         optionsOpened,
         setOptionsOpened,
+        positionsFound,
       }}
     >
       <Stack>
@@ -295,11 +311,12 @@ const Viewer = ({ app }) => {
           />
 
           <ModuleInspector
-            opened={moduleInspectorOpen}
+            actorName={actorName}
+            positions={positions}
+            opened={positions && positions.length > 0 ? true : false}
             close={() => {
-              setModuleInspectorOpen(false);
+              setPositions(null);
             }}
-            actorId={actorId}
           />
 
           <ResponceNotification

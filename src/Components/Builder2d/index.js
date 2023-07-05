@@ -801,7 +801,7 @@ function showParts(stageRef, bases, color, onSelect, onDblClick) {
       selector.on("mousedown touchstart", (e) => {
         selectDataInformation(stageRef, gr.clone(), base);
         if (onSelect) {
-          onSelect(base.attrs.id);
+          onSelect(base.attrs.id, base.attrs.name);
         }
       });
 

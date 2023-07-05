@@ -27,9 +27,9 @@ class GraphRouter {
 
     this.modeByIdMap = new Map();
     this.modeByNameMap = new Map();
-    nodes.forEach(n => {
-      this.modeByIdMap.set(n.id, n)
-      this.modeByNameMap.set(n.name, n)
+    nodes.forEach((n) => {
+      this.modeByIdMap.set(n.id, n);
+      this.modeByNameMap.set(n.name, n);
     });
 
     edges.forEach((edge) => {
@@ -48,9 +48,8 @@ class GraphRouter {
     const pathNodeNames = this.graph.Dijkstra(origin, target);
 
     const path = pathNodeNames.map((n) => {
-
       const node = this.modeByNameMap.get(n);
-      
+
       const ret = {
         name: node.name,
         x: node.locationx,
@@ -59,7 +58,23 @@ class GraphRouter {
       return ret;
     });
 
-    return(path);
+    return path;
+  }
+
+  getDistance(route, relation) {
+    let distance = 0;
+    let previous = null;
+
+    if (route && route.length > 0) {
+      route.forEach((node) => {
+        if (previous) {
+          distance += this.canculateDistance(previous.x, previous.y, node.x, node.y);
+        }
+        previous = node;
+      });
+    }
+
+    return distance / relation;
   }
 }
 

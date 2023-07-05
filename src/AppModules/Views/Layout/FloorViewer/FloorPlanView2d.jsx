@@ -105,7 +105,7 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
 
         const points = [];
         if (route) {
-          route.forEach((n) => {
+          route.route.forEach((n) => {
             points.push(n.x);
             points.push(n.y);
           });
@@ -126,7 +126,27 @@ function FloorPlanView2d({ pixelMeterRelation, layouts, racks, markers, onSelect
           fill: "red",
         });
 
-        routeGroup.add(line, circle);
+        /*CARTEL*/
+        const label = new Konva.Label({ x: points[points.length-2], y: points[points.length-1] });
+        const tag = new Konva.Tag({
+          cornerRadius: 2,
+          pointerDirection: "up",
+          pointerWidth: 6,
+          pointerHeight: 6,
+          fill: "#fff",
+          stroke: "#00f",
+          strokeWidth: 0.5,
+        });
+
+        const text = new Konva.Text({
+          padding: 2,
+          text: `${route.distance.toFixed(2)} m`,
+          align: "center",
+        });
+
+        label.add(tag, text);
+
+        routeGroup.add(line, circle, label);
       }
     }
   }, [route]);

@@ -1,9 +1,10 @@
-import { Stack, Button, Group, Select, ColorPicker } from "@mantine/core";
+import { Stack, Button, Group, Select } from "@mantine/core";
 import React from "react";
 import { useContext } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FloorViewerStateContext } from "../Context";
+import CustomColorPicker from "../../../../../Components/CustomColorPicker";
 
 const FindByTrademark = ({ code }) => {
   const { t } = useTranslation();
@@ -17,12 +18,14 @@ const FindByTrademark = ({ code }) => {
       <Select
         label={t("view.floorViewer.option.itemByTrademark.label")}
         placeholder={t("view.floorViewer.option.itemByDepartament.placeholder")}
-        data={trademarks.map(t => {return({value:t.id, label:t.id})})}
+        data={trademarks.map((t) => {
+          return { value: t.id, label: t.name };
+        })}
         value={department}
         onChange={setDepartment}
       />
 
-      <ColorPicker format="hex" value={color} onChange={onChange} fullWidth withPicker={true} />
+      <CustomColorPicker value={color} onChange={onChange} />
 
       <Group position="right">
         <Button

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import ResponceNotification from "../../../Modal/ResponceNotification";
+import ResponceNotification from "../../../../Modal/ResponceNotification";
 import Editor from "./Editor";
 import EditorHeader from "./EditorHeader";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { EditorStateContext } from "./Context";
 import { Button, Group, LoadingOverlay, Stack } from "@mantine/core";
-import { useWindowSize } from "../../../Hook";
-import { HEADER_HIGHT, PIXEL_METER_RELATION } from "../../../Constants";
-import { findAllLayoutMarkersById } from "../../../DataAccess/LayoutsMarkers";
-import { findLayoutByFloorId, findRacksByZoneId } from "../../../DataAccess/Surfaces";
+import { useWindowSize } from "../../../../Hook";
+import { HEADER_HIGHT, PIXEL_METER_RELATION } from "../../../../Constants";
+import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
+import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/Surfaces";
 import { useNavigate } from "react-router-dom";
 
 const DynamicApp = ({ app }) => {
@@ -120,24 +120,6 @@ const DynamicApp = ({ app }) => {
         <Group position="center" spacing={0} h={wSize.height - (HEADER_HIGHT -50)}>
           <Editor />
         </Group>
-
-        {/* <Group position="right" mt="xs" mb="xs" width="100%">
-          <Button
-            onClick={() => {
-              onSave();
-            }}
-          >
-            {t("button.accept")}
-          </Button>
-          <Button
-            onClick={(event) => {
-              initilizeContext();
-              navigate(-1);
-            }}
-          >
-            {t("button.cancel")}
-          </Button>
-        </Group> */}
       </Stack>
     </EditorStateContext.Provider>
   );

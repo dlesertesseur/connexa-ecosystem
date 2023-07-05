@@ -316,6 +316,7 @@ export const API = {
     getLocationTypes: config.SERVER + ":" + config.PORT + config.WMS_API_BASE + "/locationTypes",
     getTrademarks: config.SERVER + ":" + config.PORT + config.WMS_API_BASE + "/trademarks",
     getLocations: config.SERVER + ":" + config.PORT + config.WMS_API_BASE + "/locations?",
+    getBaseUrlImage: config.SERVER + ":" + config.PORT + config.WMS_IMAGE_URL,
   },
 
 };

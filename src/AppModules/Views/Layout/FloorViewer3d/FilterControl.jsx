@@ -2,8 +2,8 @@ import { Popover, Button, Select, Space, Group } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { findAllFloorsBySiteId } from "../../../DataAccess/Floors";
-import { findAllSites } from "../../../DataAccess/Sites";
+import { findAllFloorsBySiteId } from "../../../../DataAccess/Floors";
+import { findAllSites } from "../../../../DataAccess/Sites";
 import { useContext } from "react";
 import { EditorStateContext } from "./Context";
 
@@ -69,7 +69,10 @@ function FilterControl() {
             return { value: s.id, label: s.name };
           })}
           value={site}
-          onChange={setSite}
+          onChange={(e) => {
+            setFloor(null);
+            setSite(e);
+          }}
         />
         <Space my={"md"} />
         <Select

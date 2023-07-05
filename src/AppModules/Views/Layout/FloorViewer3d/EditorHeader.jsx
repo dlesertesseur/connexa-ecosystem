@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, Stack, Text } from "@mantine/core";
-import { findTranslatedField } from "../../../Util";
+import { findTranslatedField } from "../../../../Util";
 import { useTranslation } from "react-i18next";
 
 const EditorHeader = ({app}) => {

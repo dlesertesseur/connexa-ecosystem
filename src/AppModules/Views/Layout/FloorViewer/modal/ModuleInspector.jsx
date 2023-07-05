@@ -1,83 +1,70 @@
-import React, { useEffect } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import React from "react";
+import { Canvas} from "@react-three/fiber";
 import { Grid, OrbitControls, Select } from "@react-three/drei";
-import { Drawer, Group, Stack, Title } from "@mantine/core";
+import { Drawer, Group, Stack, Tabs, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useWindowSize } from "../../../../../Hook";
 import { SelectebleBox } from "../../../../../Components/Builder3d";
 import { useSelector } from "react-redux";
-import { findRackById } from "../../../../../DataAccess/Racks";
+import { IconInfoCircle, IconView360 } from "@tabler/icons-react";
+import ModuleInformationPanel from "../panel/ModuleInformationPanel";
 
-const ModuleInspector = ({ opened, close, actorId }) => {
+const ModuleInspector = ({ opened, close, positions, actorName }) => {
   const { t } = useTranslation();
-  const [title, setTitle] = useState(null);
   const { user, siteId, floorId } = useSelector((state) => state.auth.value);
+  const [title, setTitle] = useState(null);
   const [rack, setRack] = useState(null);
   const [working, setWorking] = useState(false);
   const wSize = useWindowSize();
 
-  const getData = async () => {
-    const params = {
-      token: user.token,
-      siteId: siteId,
-      floorId: floorId,
-      rackId: actorId,
-    };
-
-    setWorking(true);
-
-    const ret = await findRackById(params);
-    console.log("ModuleInspector getData -> ", actorId);
-
-    setWorking(false);
-  };
-
-  useEffect(() => {
-    if (opened && actorId) {
-      // getData();
-    }
-  }, [opened, actorId]);
-
-  function Foo() {
-    const { size, scene } = useThree();
-    console.log("Foo scene -> ", scene);
-    scene.visible = true;
-    //setSize()
-  }
-
   return (
     <Drawer
-      size={600}
+      size={400}
       position="right"
       opened={opened}
       onClose={close}
       withCloseButton={false}
       overlayProps={{ opacity: 0.5, blur: 4 }}
     >
-      <Stack p={"xs"}>
-        <Title order={5}>{t("editor.modelStructure.title.partInspector")}</Title>
+      <Tabs mt={"xs"} variant="outline" defaultValue="information">
+        <Tabs.List>
+          <Tabs.Tab value="information" icon={<IconInfoCircle size="0.8rem" />}>
+            {t("view.floorViewer.moduleInspector.tabs.information")}
+          </Tabs.Tab>
+          <Tabs.Tab value="view3d" icon={<IconView360 size="0.8rem" />}>
+          {t("view.floorViewer.moduleInspector.tabs.view3d")}
+          </Tabs.Tab>
+        </Tabs.List>
 
-        <Group h={wSize.height - 70}>
-          <Canvas camera={{ position: [0, 15, 20], fov: 25 }}>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} />
+        <Tabs.Panel value="information" pt="xs">
+          <ModuleInformationPanel positions={positions} actorName={actorName}/>
+        </Tabs.Panel>
 
-            <Select box multiple onChange={console.log}>
-              <SelectebleBox
-                position={[0, 0.5, 0]}
-                dimension={[1, 1, 1]}
-                rotations={[0, 0, 0]}
-                userData={{ id: "cadorna" }}
-              />
-            </Select>
+        <Tabs.Panel value="view3d" pt="xs">
+          <Stack p={"xs"} mr={"xs"}>
+            <Title order={5}>{t("editor.modelStructure.title.partInspector")}</Title>
 
-            <Grid infiniteGrid position={[0, 0, 0]} />
-            <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault />
-          </Canvas>
-        </Group>
+            <Group h={wSize.height - 70}>
+              <Canvas camera={{ position: [0, 15, 20], fov: 25 }}>
+                <ambientLight intensity={0.5} />
+                <directionalLight position={[10, 10, 5]} />
 
-        {/* <Group position="right">
+                <Select box multiple onChange={console.log}>
+                  <SelectebleBox
+                    position={[0, 0.5, 0]}
+                    dimension={[1, 1, 1]}
+                    rotations={[0, 0, 0]}
+                    userData={{ id: "cadorna" }}
+                  />
+                </Select>
+
+                <Grid infiniteGrid position={[0, 0, 0]} />
+                <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault />
+              </Canvas>
+            </Group>
+
+            {/* <Group position="right">
           <Button type="submit">{t("button.accept")}</Button>
           <Button
             onClick={() => {
@@ -87,7 +74,9 @@ const ModuleInspector = ({ opened, close, actorId }) => {
             {t("button.close")}
           </Button>
         </Group> */}
-      </Stack>
+          </Stack>
+        </Tabs.Panel>
+      </Tabs>
     </Drawer>
   );
 };

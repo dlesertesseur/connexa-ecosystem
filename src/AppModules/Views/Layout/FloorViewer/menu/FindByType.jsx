@@ -1,11 +1,12 @@
 import React from "react";
-import { Stack, Button, Group, Select, ColorPicker } from "@mantine/core";
+import { Stack, Button, Group, Select } from "@mantine/core";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { FloorViewerStateContext } from "../Context";
+import CustomColorPicker from "../../../../../Components/CustomColorPicker";
 
-const FindByType = ({code}) => {
+const FindByType = ({ code }) => {
   const { t } = useTranslation();
   const { showData, locationTypes } = useContext(FloorViewerStateContext);
 
@@ -17,12 +18,14 @@ const FindByType = ({code}) => {
       <Select
         label={t("view.floorViewer.option.itemByType.label")}
         placeholder={t("view.floorViewer.option.itemByType.placeholder")}
-        data={locationTypes.map(l => {return({value:l.id, label:l.id})})}
+        data={locationTypes.map((l) => {
+          return { value: l.id, label: l.id };
+        })}
         value={type}
         onChange={setType}
       />
 
-      <ColorPicker format="hex" value={color} onChange={onChange} fullWidth withPicker={true} />
+      <CustomColorPicker value={color} onChange={onChange} />
 
       <Group position="right">
         <Button
