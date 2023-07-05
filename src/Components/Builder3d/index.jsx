@@ -177,7 +177,7 @@ function buildModelStructure(structure, setSelectedPart, onDlbClick) {
   );
 }
 
-function buildStructure(structure, setSelectedPart) {
+function buildStructure(structure, withFrames, setSelectedPart) {
   const modules = structure.modules;
   const frames = structure.frames;
 
@@ -194,7 +194,7 @@ function buildStructure(structure, setSelectedPart) {
         )
       }
     >
-      {frames?.map((frame) => {
+      {withFrames && frames?.map((frame) => {
         const matColor = getColor(frame);
         const box = (
           <Box
@@ -386,13 +386,12 @@ const buildLowLevel = (structure, setSelectedPart) => {
 //   );
 // };
 
-const buildEnvironmentLOD = (racks, setSelectedPart) => {
+const buildStructures = (racks, withFrames = true, setSelectedPart) => {
   const env = [];
 
   for (let index = 0; index < racks.length; index++) {
     const rack = racks[index];
-    env.push(buildStructure(rack, setSelectedPart));
-    //env.push(buildStructureLOD(rack, setSelectedPart));
+    env.push(buildStructure(rack, withFrames, setSelectedPart));
   }
 
   return env;
@@ -418,4 +417,4 @@ function buildParts(parts, onSelect, selectedId) {
   });
 }
 
-export { buildModelStructure, buildEnvironmentLOD, SelectebleBox, buildParts };
+export { buildModelStructure, buildStructures, SelectebleBox, buildParts };

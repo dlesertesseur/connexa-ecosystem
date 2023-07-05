@@ -1,5 +1,5 @@
 import { createContext } from "react";
 
-const EditorStateContext = createContext(null);
+const FloorView3dContext = createContext(null);
 
-export {EditorStateContext}
+export {FloorView3dContext}

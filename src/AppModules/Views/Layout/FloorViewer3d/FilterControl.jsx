@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { findAllFloorsBySiteId } from "../../../../DataAccess/Floors";
 import { findAllSites } from "../../../../DataAccess/Sites";
 import { useContext } from "react";
-import { EditorStateContext } from "./Context";
+import { FloorView3dContext } from "./Context";
 
 function FilterControl() {
   const { t } = useTranslation();
@@ -13,7 +13,7 @@ function FilterControl() {
   const [sites, setSites] = useState([]);
   const [floors, setFloors] = useState([]);
   const [opened, setOpened] = useState(false);
-  const { site, setSite, floor, setFloor, refresh } = useContext(EditorStateContext);
+  const { site, setSite, floor, setFloor, refresh } = useContext(FloorView3dContext);
 
   const getData = async () => {
     const params = {
