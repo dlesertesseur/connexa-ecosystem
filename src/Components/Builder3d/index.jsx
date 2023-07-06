@@ -45,10 +45,7 @@ function SelectebleBox({
 
   return (
     <group name={"gPos"} position={position}>
-      <group
-        name={"gRot"}
-        rotation={rotations.map(r => THREE.MathUtils.degToRad(r))}
-      >
+      <group name={"gRot"} rotation={rotations.map((r) => THREE.MathUtils.degToRad(r))}>
         <mesh
           name={name}
           ref={ref}
@@ -194,20 +191,21 @@ function buildStructure(structure, withFrames, setSelectedPart) {
         )
       }
     >
-      {withFrames && frames?.map((frame) => {
-        const matColor = getColor(frame);
-        const box = (
-          <Box
-            key={frame.id ? frame.id : frame.key}
-            position={[frame.positionx, frame.positiony, frame.positionz]}
-            dimension={[frame.dimensionx, frame.dimensiony, frame.dimensionz]}
-            rotations={[frame.rotationx, frame.rotationy, frame.rotationz]}
-            color={matColor}
-            userData={frame}
-          />
-        );
-        return box;
-      })}
+      {withFrames &&
+        frames?.map((frame) => {
+          const matColor = getColor(frame);
+          const box = (
+            <Box
+              key={frame.id ? frame.id : frame.key}
+              position={[frame.positionx, frame.positiony, frame.positionz]}
+              dimension={[frame.dimensionx, frame.dimensiony, frame.dimensionz]}
+              rotations={[frame.rotationx, frame.rotationy, frame.rotationz]}
+              color={matColor}
+              userData={frame}
+            />
+          );
+          return box;
+        })}
 
       {modules?.map((module) => {
         return (
@@ -417,4 +415,21 @@ function buildParts(parts, onSelect, selectedId) {
   });
 }
 
-export { buildModelStructure, buildStructures, SelectebleBox, buildParts };
+function buildPosition(id, name, position, dimension, color, selectedId) {
+  const box = (
+    <SelectebleBox
+      id={id}
+      key={id}
+      position={[position.x, position.y + (dimension.y / 2), position.z]}
+      dimension={[dimension.x, dimension.y, dimension.z]}
+      rotations={[0, 0, 0]}
+      color={color}
+      // onClick={onSelect}
+      // userData={part}
+      selectedId={selectedId}
+    />
+  );
+  return box;
+}
+
+export { buildModelStructure, buildStructures, SelectebleBox, buildParts, buildPosition };

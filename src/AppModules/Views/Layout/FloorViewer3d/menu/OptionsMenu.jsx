@@ -34,17 +34,17 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
       case 1:
         ret = <FindByCode code={1} />;
         break;
-      // case 2:
-      //   ret = <FindByDescription code={2} />;
-      //   break;
-      // case 3:
-      //   ret = <FindByTrademark code={3} />;
-      //   break;
-      // case 4:
-      //   ret = <FindByStatus code={4} />;
-      //   break;
-      // case 5:
-      //   ret = <FindByType code={5} />;
+      case 2:
+        ret = <FindByDescription code={2} />;
+        break;
+      case 3:
+        ret = <FindByTrademark code={3} />;
+        break;
+      case 4:
+        ret = <FindByStatus code={4} />;
+        break;
+      case 5:
+        ret = <FindByType code={5} />;
         break;
       default:
         break;

@@ -1,4 +1,8 @@
 import * as THREE from "three";
+import ViewHeader from "../../ViewHeader";
+import ResponceNotification from "../../../../Modal/ResponceNotification";
+import Toolbar from "./Toolbar";
+import FloorPlanView3d from "./FloorPlanView3d";
 import { useEffect, useRef } from "react";
 import { buildStructures } from "../../../../Components/Builder3d";
 import { Stack } from "@mantine/core";
@@ -10,10 +14,10 @@ import { useWindowSize } from "../../../../Hook";
 import { PIXEL_METER_RELATION } from "../../../../Constants";
 import { findAllLayoutMarkersById } from "../../../../DataAccess/LayoutsMarkers";
 import { findLayoutByFloorId, findRacksByZoneId } from "../../../../DataAccess/Surfaces";
-import ViewHeader from "../../ViewHeader";
-import ResponceNotification from "../../../../Modal/ResponceNotification";
-import Toolbar from "./Toolbar";
-import FloorPlanView3d from "./FloorPlanView3d";
+import { FilterControl } from "../Controls/FilterControl";
+import { hideNotification, showNotification } from "@mantine/notifications";
+import { getLocationStatus, getLocationTypes, getLocations, getTrademarks } from "../../../../DataAccess/Wms";
+import { findAllVariables } from "../../../../DataAccess/Variables";
 
 const Viewer = ({ app }) => {
   const controlRef = useRef(null);
@@ -22,40 +26,58 @@ const Viewer = ({ app }) => {
   const { t } = useTranslation();
   const [reload, setReload] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [site, setSite] = useState(null);
-  const [floor, setFloor] = useState(null);
+  const [siteId, setSiteId] = useState(null);
+  const [floorId, setFloorId] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [Layouts, setLayouts] = useState(null);
   const [racks, setRacks] = useState(null);
   const [markers, setMarkers] = useState(null);
   const [selectedPart, setSelectedPart] = useState(null);
   const [pixelmeterrelation, setPixelmeterrelation] = useState(null);
+  const [wmsApiToken, setWmsApiToken] = useState(null);
+
+  const [positionsFound, setPositionsFound] = useState(null);
+  const [optionsOpened, setOptionsOpened] = useState(false);
+
+  const [graphRoute, setGraphRoute] = useState(null);
+  const [locationStatus, setLocationStatus] = useState(null);
+  const [locationTypes, setLocationTypes] = useState(null);
+  const [trademarks, setTrademarks] = useState(null);
+  const [positions, setPositions] = useState(null);
+  const [action, setAction] = useState(null);
 
   const wSize = useWindowSize();
 
   const initilizeContext = () => {
-    console.log("initilizeContext -> ");
+    //console.log("initilizeContext -> ");
   };
 
-  const getData = async () => {
+  const getData = async (site, floor) => {
     const params = {
       token: user.token,
-      siteId: site,
-      floorId: floor,
+      siteId: site.id,
+      floorId: floor.id,
       types: "2,10",
     };
 
     initilizeContext();
     setLoading(true);
+
+    showInfo(t("label.wmsApiAuth"));
+    await authenticateWms();
+
     try {
+      showInfo(t("label.layouts"));
       const layouts = await findLayoutByFloorId(params);
       const n = (1.0 / layouts[0].pixelmeterrelation) * PIXEL_METER_RELATION;
       setPixelmeterrelation(n);
       setLayouts(layouts);
 
+      showInfo(t("label.racks"));
       const racks = await findRacksByZoneId(params);
       setRacks(racks);
 
+      showInfo(t("label.markers"));
       const markers = await findAllLayoutMarkersById(params);
       setMarkers(markers);
 
@@ -64,20 +86,95 @@ const Viewer = ({ app }) => {
       setErrorMessage(error.message);
     }
     setLoading(false);
+    hideInfo();
   };
 
-  useEffect(() => {
-    if (site && floor) {
-      getData();
+  const authenticateWms = async () => {
+    const params = {
+      token: user.token,
+    };
+    try {
+      const variables = await findAllVariables(params);
+      if (variables) {
+        // const wmsApiUser = variables.find((v) => v.name === "WMS_API_USER");
+        // const wmsApiPass = variables.find((v) => v.name === "WMS_API_PASS");
+
+        // const ret = await authenticate({
+        //   email: wmsApiUser.value,
+        //   password: wmsApiPass.value,
+        // });
+
+        // setWmsApiToken(ret.token);
+
+        const locationStatus = await getLocationStatus(params);
+        const locationTypes = await getLocationTypes(params);
+        const trademarks = await getTrademarks(params);
+
+        setLocationStatus(locationStatus);
+        setLocationTypes(locationTypes);
+        setTrademarks(trademarks);
+
+        setWmsApiToken(user.token);
+      }
+    } catch (error) {
+      setErrorMessage(error);
+      console.log("authenticate ERROR -> ", error);
     }
-  }, [user, reload]);
+  };
 
   const refresh = () => {
     setReload(Date.now());
   };
 
-  const showData = (e) => {
-    console.log("showData ->", e);
+  const showData = async (filter, data, color) => {
+    let positions = null;
+    let filterData = null;
+
+    const options = t("view.floorViewer.menu.options", { returnObjects: true });
+
+    switch (filter) {
+      case 1:
+        filterData = "sku_equals=" + data;
+        break;
+
+      case 2:
+        filterData = "code_like=" + data;
+        break;
+
+      case 3:
+        filterData = "trademark_equals=" + data;
+        break;
+
+      case 4:
+        filterData = "status_equals=" + data;
+        break;
+
+      case 5:
+        filterData = "type_equals=" + data;
+        break;
+
+      default:
+        break;
+    }
+
+    setOptionsOpened(false);
+
+    const subTitle = options[filter];
+    showInfo(subTitle);
+
+    positions = await getLocations({ token: wmsApiToken, filter: filterData });
+    setPositionsFound(positions);
+
+    const positionsNames = positions.map((p) => {
+      const arr = p.code.split("-");
+      const ret = `${arr[0]}-${arr[1]}`;
+      return ret;
+    });
+
+    const action = { positionsNames: positionsNames, color: color, dimension: {x:1, y:1, z:1} };
+    setAction(action);
+
+    hideInfo();
   };
 
   const onSelect = (event) => {
@@ -87,53 +184,32 @@ const Viewer = ({ app }) => {
     }
   };
 
-  useEffect(() => {
-    if (racks) {
-      const ret = buildStructures(racks, false, onSelect);
-      setSelectedPart(null);
-      setModel(ret);
-    }
-  }, [racks]);
-
-  const onUpdateData = (event) => {
-    const userData = selectedPart.userData;
-    const positions = selectedPart.position;
-    const rotations = [
-      THREE.MathUtils.radToDeg(selectedPart.rotation.x),
-      THREE.MathUtils.radToDeg(selectedPart.rotation.y),
-      THREE.MathUtils.radToDeg(selectedPart.rotation.z),
-    ];
-    const dimensions = [
-      selectedPart.geometry.parameters.width * selectedPart.scale.x,
-      selectedPart.geometry.parameters.height * selectedPart.scale.y,
-      selectedPart.geometry.parameters.depth * selectedPart.scale.z,
-    ];
-
-    userData.positionx = positions.x;
-    userData.positiony = -positions.y;
-    userData.positionz = positions.z;
-
-    userData.rotationx = rotations[0];
-    userData.rotationy = rotations[1];
-    userData.rotationz = rotations[2];
-
-    userData.dimensionx = dimensions[0];
-    userData.dimensiony = dimensions[1];
-    userData.dimensionz = dimensions[2];
-  };
-
   const onFind = (e) => {
     console.log("onFind ->", e);
+  };
+
+  const showInfo = (message) => {
+    showNotification({
+      id: "loadind-data3d-notification",
+      disallowClose: true,
+      title: t("message.loadingData"),
+      message: message,
+      loading: true,
+    });
+  };
+
+  const hideInfo = () => {
+    hideNotification("loadind-data3d-notification");
   };
 
   return (
     <FloorView3dContext.Provider
       value={{
         refresh,
-        site,
-        setSite,
-        floor,
-        setFloor,
+        siteId,
+        setSiteId,
+        floorId,
+        setFloorId,
         initilizeContext,
         racks,
         Layouts,
@@ -141,6 +217,13 @@ const Viewer = ({ app }) => {
         selectedPart,
         setSelectedPart,
         showData,
+        wmsApiToken,
+        locationStatus,
+        locationTypes,
+        trademarks,
+        optionsOpened,
+        setOptionsOpened,
+        positionsFound,
       }}
     >
       <Stack>
@@ -154,9 +237,18 @@ const Viewer = ({ app }) => {
             border: "solid 1px" + theme.colors.gray[3],
           })}
         >
-          <Toolbar onFind={onFind}></Toolbar>
+          <Toolbar onFind={onFind}>
+            <FilterControl
+              siteId={siteId}
+              setSiteId={setSiteId}
+              floorId={floorId}
+              setFloorId={setFloorId}
+              onFilter={getData}
+              loading={loading}
+            />
+          </Toolbar>
 
-          <FloorPlanView3d />
+          <FloorPlanView3d racks={racks} action={action} />
 
           <ResponceNotification
             opened={errorMessage ? true : false}

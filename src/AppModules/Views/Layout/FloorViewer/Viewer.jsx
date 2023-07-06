@@ -250,9 +250,6 @@ const Viewer = ({ app }) => {
   const onFind = (startPos, endPos) => {
     const route = graphRoute.getPath(startPos, endPos);
     const totalDistance = graphRoute.getDistance(route, PIXEL_METER_RELATION);
-
-    // setRouteHistory([...routeHistory, { startPos: startPos, endPos: endPos, distance: totalDistance, route: route }]);
-    // console.log("onFind route ->", route, totalDistance);
     setRoute({route:route, distance:totalDistance});
   };
 

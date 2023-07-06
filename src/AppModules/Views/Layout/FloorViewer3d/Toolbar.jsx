@@ -1,13 +1,13 @@
 import React from "react";
 import { Group } from "@mantine/core";
-import { FilterControl } from "./FilterControl";
 import { useContext } from "react";
 import { FloorView3dContext } from "./Context";
 import { TOOLBAR_HIGHT } from "../../../../Constants";
 import OptionsMenu from "./menu/OptionsMenu";
 
-const Toolbar = () => {
+const Toolbar = ({children}) => {
   const { racks, wmsApiToken } = useContext(FloorView3dContext);
+
   return (
     <Group
       px={"xs"}
@@ -23,9 +23,7 @@ const Toolbar = () => {
           <OptionsMenu disabled={racks && wmsApiToken ? false : true} />
         </Group>
       </Group>
-      <Group>
-        <FilterControl />
-      </Group>
+      <Group>{children}</Group>
     </Group>
   );
 };
