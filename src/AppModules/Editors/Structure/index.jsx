@@ -24,6 +24,7 @@ const DynamicApp = ({ app }) => {
   const [enableCreateButton, setEnableCreateButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [parts, setParts] = useState([]);
+  const [updateEditedPart, setUpdateEditedPart] = useState(null);
 
   const initilizeContext = () => {
     console.log("initilizeContext -> ");
@@ -85,7 +86,7 @@ const DynamicApp = ({ app }) => {
         break;
     }
 
-    if(model){
+    if (model) {
       setParts([...parts, model]);
     }
   };
@@ -102,6 +103,8 @@ const DynamicApp = ({ app }) => {
         onCreate,
         parts,
         setParts,
+        updateEditedPart,
+        setUpdateEditedPart,
         initilizeContext,
       }}
     >

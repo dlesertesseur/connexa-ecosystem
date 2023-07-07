@@ -12,7 +12,7 @@ const Editor = () => {
   const [model, setModel] = useState(null);
   const [selectedPart, setSelectedPart] = useState(null);
   const [transformOption] = useState("translate");
-  const { parts, setParts } = useContext(AbmStateContext);
+  const { parts, setUpdateEditedPart } = useContext(AbmStateContext);
   const canvasRef = useRef();
 
   const onSelect = (event, ref) => {
@@ -65,6 +65,8 @@ const Editor = () => {
     userData.dimensionx = dimensions[0];
     userData.dimensiony = dimensions[1];
     userData.dimensionz = dimensions[2];
+
+    setUpdateEditedPart({...userData});
   };
 
   return (

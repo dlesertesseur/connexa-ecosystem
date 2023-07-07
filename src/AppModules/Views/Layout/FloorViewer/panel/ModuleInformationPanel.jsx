@@ -43,12 +43,6 @@ const ModuleInformationPanel = ({ positions, actorName }) => {
     getData();
   }, [positions]);
 
-  useEffect(() => {
-    if (pallets) {
-      console.log(pallets);
-    }
-  }, [pallets]);
-
   return (
     <ScrollArea h={wSize.height - 64}>
       <Stack spacing={"xs"} m={"xs"} pr={"xs"} w={380}>
@@ -86,7 +80,7 @@ const ModuleInformationPanel = ({ positions, actorName }) => {
           <LabelProperty label={t("view.floorViewer.moduleInspector.label.status")} value={position?.status} />
         </Group>
 
-        {pallets ? (
+        {pallets && pallets.length > 0? (
           <CardsProperty title={t("view.floorViewer.moduleInspector.label.pallets")} pallets={pallets} />
         ) : null}
       </Stack>

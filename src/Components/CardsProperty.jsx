@@ -9,6 +9,7 @@ import { convertMilisegToYYYYMMDDHHMISS } from "../Util";
 const CardsProperty = ({ title, p = 6, pallets, h = 200 }) => {
   const [data, setData] = useState([]);
   const [palletIdx, setPalletIdx] = useState(null);
+  const [pallet, setPallet] = useState(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -18,6 +19,7 @@ const CardsProperty = ({ title, p = 6, pallets, h = 200 }) => {
 
     setData(data);
     setPalletIdx(0);
+
   }, [pallets]);
 
   return (
@@ -26,11 +28,6 @@ const CardsProperty = ({ title, p = 6, pallets, h = 200 }) => {
 
       {pallets && palletIdx !== null ? (
         <>
-          {/* <LabelProperty
-            label={t("view.floorViewer.moduleInspector.label.palletDimension")}
-            value={`${pallets[palletIdx].width} x ${pallets[palletIdx].height} x ${pallets[palletIdx].depth}`}
-          /> */}
-
           <Group grow spacing={"xs"}>
             <LabelProperty
               label={t("view.floorViewer.moduleInspector.label.width")}

@@ -3,8 +3,7 @@ import ViewHeader from "../../ViewHeader";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import Toolbar from "./Toolbar";
 import FloorPlanView3d from "./FloorPlanView3d";
-import { useEffect, useRef } from "react";
-import { buildStructures } from "../../../../Components/Builder3d";
+import { useRef } from "react";
 import { Stack } from "@mantine/core";
 import { FloorView3dContext } from "./Context";
 import { useState } from "react";
@@ -20,8 +19,6 @@ import { getLocationStatus, getLocationTypes, getLocations, getTrademarks } from
 import { findAllVariables } from "../../../../DataAccess/Variables";
 
 const Viewer = ({ app }) => {
-  const controlRef = useRef(null);
-  const [model, setModel] = useState(null);
   const { user } = useSelector((state) => state.auth.value);
   const { t } = useTranslation();
   const [reload, setReload] = useState(null);
@@ -165,13 +162,13 @@ const Viewer = ({ app }) => {
     positions = await getLocations({ token: wmsApiToken, filter: filterData });
     setPositionsFound(positions);
 
-    const positionsNames = positions.map((p) => {
-      const arr = p.code.split("-");
-      const ret = `${arr[0]}-${arr[1]}`;
-      return ret;
-    });
+    // const positionsNames = positions.map((p) => {
+    //   const arr = p.code.split("-");
+    //   const ret = `${arr[0]}-${arr[1]}`;
+    //   return ret;
+    // });
 
-    const action = { positionsNames: positionsNames, color: color, dimension: {x:1, y:1, z:1} };
+    const action = { positionsNames: positions, color: color, dimension: {x:1, y:1, z:1} };
     setAction(action);
 
     hideInfo();

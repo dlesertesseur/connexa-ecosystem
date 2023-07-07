@@ -63,13 +63,15 @@ function FilterControl() {
           label={t("label.site")}
           placeholder={t("label.select")}
           description={t("label.siteDesc")}
-          //searchable
           nothingFound={t("label.noData")}
           data={sites?.map((s) => {
             return { value: s.id, label: s.name };
           })}
           value={site}
-          onChange={setSite}
+          onChange={(e) => {
+            setSite(e);
+            setFloor(null);
+          }}
         />
         <Space my={"md"} />
         <Select

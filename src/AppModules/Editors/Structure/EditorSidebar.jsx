@@ -2,15 +2,16 @@ import * as THREE from "three";
 import React from "react";
 import { Dialog, Paper, ScrollArea, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { useWindowSize } from "../../../Hook";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
 import NumberProperty from "../../../Components/NumberProperty";
 import CustomColorPicker from "../../../Components/CustomColorPicker";
 
 const EditorSidebar = ({ open, part }) => {
   const { t } = useTranslation();
-  const wSize = useWindowSize();
+  const { updateEditedPart } = useContext(AbmStateContext);
 
   const [posX, setPosX] = useState();
   const [posY, setPosY] = useState();
@@ -56,7 +57,7 @@ const EditorSidebar = ({ open, part }) => {
     }
   }, [part]);
 
-  const updateUserData = () => {
+  const updateUserDataFromObject = () => {
     const ud = part.userData;
     const gRot = part.parent;
     const gPos = gRot.parent;
@@ -85,11 +86,32 @@ const EditorSidebar = ({ open, part }) => {
     gPos.position.set(posX, posY, posZ);
   };
 
+  const updateUserDataFromMetadata = (ud) => {
+    if (ud) {
+      setPosX(ud.positionx * 2.0);
+      setPosY(ud.positiony * 2.0);
+      setPosZ(ud.positionz * 2.0);
+
+      setRotX(ud.rotationx);
+      setRotY(ud.rotationy);
+      setRotZ(ud.rotationz);
+
+      setDimX(ud.dimensionx);
+      setDimY(ud.dimensiony);
+      setDimZ(ud.dimensionz);
+    }
+  };
+
   useEffect(() => {
     if (part) {
-      updateUserData();
+      updateUserDataFromObject();
     }
   }, [name, posX, posY, posZ, rotX, rotY, rotZ, dimX, dimY, dimZ, color]);
+
+  useEffect(() => {
+    console.log(updateEditedPart);
+    updateUserDataFromMetadata(updateEditedPart);
+  }, [updateEditedPart]);
 
   return (
     <Dialog position={{ top: 185, right: 20 }} opened={open} size="mb">

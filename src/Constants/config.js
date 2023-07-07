@@ -25,6 +25,8 @@ const config = {
     "#fab005",
     "#fd7e14",
   ],
+
+  PALLET_VERTICAL_SEPARATION : 0.25
 };
 
 export { config };
