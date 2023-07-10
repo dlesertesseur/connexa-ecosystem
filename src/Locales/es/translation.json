@@ -961,6 +961,10 @@
           "palletStatus":"Estado",
           "palletCreationDate":"Fecha de creacion"
         }
+      },
+      "layer":{
+        "label":"Capas",
+        "frames":"Soportes"
       }
     }
   },

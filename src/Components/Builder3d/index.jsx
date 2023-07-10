@@ -36,12 +36,16 @@ function SelectebleBox({
   userData,
 }) {
   const ref = useRef();
-
+  const [objSel, setObjSel] = useState(false);
   const list = useSelect();
+
   const selected = list.map((sel) => {
     return sel.userData.id;
   });
-  const isSelected = !!selected.find((sel) => sel === userData.id);
+
+  const found = selected.find((sel) => sel === userData.id);
+  const isSelected = !!found;
+  //setObjSel()
 
   return (
     <group name={"gPos"} position={position}>
@@ -415,7 +419,7 @@ function buildParts(parts, onSelect, selectedId) {
   });
 }
 
-function buildPosition(id, name, position, dimension, color, selectedId) {
+function buildPosition(id, name, position, dimension, color, userData, onSelect, onDblclick) {
   const box = (
     <SelectebleBox
       id={id}
@@ -424,9 +428,9 @@ function buildPosition(id, name, position, dimension, color, selectedId) {
       dimension={[dimension.x, dimension.y, dimension.z]}
       rotations={[0, 0, 0]}
       color={color}
-      // onClick={onSelect}
-      // userData={part}
-      selectedId={selectedId}
+      onClick={onSelect}
+      onDlbClick={onDblclick}
+      userData={userData}
     />
   );
   return box;

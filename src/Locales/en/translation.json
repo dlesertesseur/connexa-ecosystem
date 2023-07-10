@@ -973,6 +973,10 @@
           "palletStatus":"Status",
           "palletCreationDate":"Creation date"
         }
+      },
+      "layer":{
+        "label":"Layers",
+        "frames":"Frames"
       }
     }
   },

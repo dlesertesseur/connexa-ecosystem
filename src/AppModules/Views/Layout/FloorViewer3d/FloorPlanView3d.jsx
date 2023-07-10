@@ -1,23 +1,24 @@
 import * as THREE from "three";
 import React, { useEffect } from "react";
+import uuid from "react-uuid";
 import { useWindowSize } from "../../../../Hook";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { Canvas } from "@react-three/fiber";
-import { TransformControls, MapControls, Grid } from "@react-three/drei";
+import { MapControls, Select } from "@react-three/drei";
 import { Stack } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useRef } from "react";
 import { buildPosition, buildStructures } from "../../../../Components/Builder3d";
-import uuid from "react-uuid";
 import { useState } from "react";
 import { config } from "../../../../Constants/config";
 
-const FloorPlanView3d = ({ racks, action = null }) => {
+const FloorPlanView3d = ({ racks, action = null, drawFrames }) => {
   const wSize = useWindowSize();
   const matches = useMediaQuery("(min-width: 768px)");
   const controlRef = useRef(null);
   const sceneRef = useRef(null);
   const [foundParts, setFoundParts] = useState(null);
+  const [selectedPart, setSelectedPart] = useState(null);
 
   const groupParts = (arrObjPos) => {
     const ret = new Map();
@@ -41,6 +42,19 @@ const FloorPlanView3d = ({ racks, action = null }) => {
     return ret;
   };
 
+  const onSelect = (event, ref) => {
+    if (event.object) {
+      setSelectedPart(event.object);
+      //console.log("onSelect -> ", event.object);
+    } else {
+      setSelectedPart(null);
+    }
+  };
+
+  const onDblclick = (event) => {
+    console.log("onDoubleClick -> ", event.object.userData);
+  };
+  
   useEffect(() => {
     if (action) {
       const parts = action.positionsNames;
@@ -63,14 +77,16 @@ const FloorPlanView3d = ({ racks, action = null }) => {
           obj.getWorldPosition(position);
 
           holes.forEach((p, index) => {
-            deltaY = (dimension.y + config.PALLET_VERTICAL_SEPARATION) * index
+            deltaY = (dimension.y + config.PALLET_VERTICAL_SEPARATION) * index;
             const newPos = {
               x: position.x,
               y: position.y + deltaY,
               z: position.z,
             };
 
-            const posObj = buildPosition(uuid(), p.code, newPos, dimension, color, null);
+            const id = uuid();
+            const userData = { id: id, name: p.code };
+            const posObj = buildPosition(id, p.code, newPos, dimension, color, userData, onSelect, onDblclick);
             arrObjPos.push(posObj);
           });
         });
@@ -83,7 +99,12 @@ const FloorPlanView3d = ({ racks, action = null }) => {
   return (
     <Stack w={wSize.width - (matches ? 316 : 32)} h={wSize.height - HEADER_HIGHT}>
       <Canvas camera={{ position: [5, 5, 5], fov: 25 }}>
-        <scene ref={sceneRef}>
+        <scene
+          ref={sceneRef}
+          onPointerMissed={() => {
+            setSelectedPart(null);
+          }}
+        >
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} />
           {/* <Grid infiniteGrid position={[0, 0, 0]} /> */}
@@ -94,18 +115,11 @@ const FloorPlanView3d = ({ racks, action = null }) => {
             maxPolarAngle={Math.PI / 2.1}
             makeDefault
           />
-          {racks ? buildStructures(racks, false) : null}
-          {foundParts ? foundParts : null}
+          {racks ? buildStructures(racks, drawFrames) : null}
 
-          {/* {selectedPart ? (
-          <TransformControls
-            object={selectedPart}
-            onObjectChange={(event) => {
-              onUpdateData(event);
-            }}
-            mode={"rotation"}
-          />
-        ) : null} */}
+          <Select box multiple>
+            {foundParts ? foundParts : null}
+          </Select>
         </scene>
       </Canvas>
     </Stack>

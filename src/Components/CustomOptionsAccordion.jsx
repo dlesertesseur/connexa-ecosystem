@@ -1,5 +1,5 @@
 import { Accordion, Group, Loader, ScrollArea, Stack, Text, UnstyledButton } from "@mantine/core";
-import { IconApps, IconChevronRight, IconPhoto } from "@tabler/icons-react";
+import { IconApps, IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -16,10 +16,9 @@ const CustomOptionsAccordion = () => {
 
   const createMenuGroup = (role, item) => {
     const ret = (
-      <Accordion.Item key={role.id} value={role.name}>
+      <Accordion.Item key={role.id} value={role.name} sx={{borderWidth:1, borderColor:"#d5d5d5"}}>
         <Accordion.Control icon={<IconApps size={22} color={"grey"} stroke={1.5}/>}>
-          
-          <Text weight={600}>{role.name}</Text></Accordion.Control>
+          <Text weight={700}>{role.name}</Text></Accordion.Control>
         <Accordion.Panel>
           {item?.links.map((link) => {
             const lnk = (
@@ -33,6 +32,7 @@ const CustomOptionsAccordion = () => {
                   borderRadius: 6,
                 }}
                 mr={5}
+                mb={10}
                 p={5}
                 key={link.id}
                 onClick={(event) => navigate("/menu" + link.link)}
@@ -102,7 +102,7 @@ const CustomOptionsAccordion = () => {
   const draw = links ? (
     <ScrollArea px={"xs"} h={"100%"}>
       <Stack justify="center" h={"100%"} m={0} spacing={"xs"}>
-        <Accordion variant="separated">{links}</Accordion>
+        <Accordion variant="separated" >{links}</Accordion>
       </Stack>
     </ScrollArea>
   ) : (

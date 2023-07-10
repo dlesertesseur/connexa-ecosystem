@@ -3,7 +3,6 @@ import ViewHeader from "../../ViewHeader";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import Toolbar from "./Toolbar";
 import FloorPlanView3d from "./FloorPlanView3d";
-import { useRef } from "react";
 import { Stack } from "@mantine/core";
 import { FloorView3dContext } from "./Context";
 import { useState } from "react";
@@ -17,6 +16,8 @@ import { FilterControl } from "../Controls/FilterControl";
 import { hideNotification, showNotification } from "@mantine/notifications";
 import { getLocationStatus, getLocationTypes, getLocations, getTrademarks } from "../../../../DataAccess/Wms";
 import { findAllVariables } from "../../../../DataAccess/Variables";
+import { config } from "../../../../Constants/config";
+import { useEffect } from "react";
 
 const Viewer = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -35,7 +36,9 @@ const Viewer = ({ app }) => {
 
   const [positionsFound, setPositionsFound] = useState(null);
   const [optionsOpened, setOptionsOpened] = useState(false);
+  const [layersOpened, setLayersOpened] = useState(false);
 
+  const [drawFrames, setDrawFrames] = useState(false);
   const [graphRoute, setGraphRoute] = useState(null);
   const [locationStatus, setLocationStatus] = useState(null);
   const [locationTypes, setLocationTypes] = useState(null);
@@ -168,7 +171,7 @@ const Viewer = ({ app }) => {
     //   return ret;
     // });
 
-    const action = { positionsNames: positions, color: color, dimension: {x:1, y:1, z:1} };
+    const action = { positionsNames: positions, color: color, dimension: { x: 1, y: 1, z: 1 } };
     setAction(action);
 
     hideInfo();
@@ -199,6 +202,10 @@ const Viewer = ({ app }) => {
     hideNotification("loadind-data3d-notification");
   };
 
+  useEffect(() => {
+    console.log("useEffect drawFrames ->", drawFrames);
+  }, [drawFrames]);
+
   return (
     <FloorView3dContext.Provider
       value={{
@@ -221,6 +228,10 @@ const Viewer = ({ app }) => {
         optionsOpened,
         setOptionsOpened,
         positionsFound,
+        layersOpened,
+        setLayersOpened,
+        drawFrames,
+        setDrawFrames,
       }}
     >
       <Stack>
@@ -234,7 +245,7 @@ const Viewer = ({ app }) => {
             border: "solid 1px" + theme.colors.gray[3],
           })}
         >
-          <Toolbar onFind={onFind}>
+          <Toolbar onFind={onFind} on>
             <FilterControl
               siteId={siteId}
               setSiteId={setSiteId}
@@ -245,7 +256,7 @@ const Viewer = ({ app }) => {
             />
           </Toolbar>
 
-          <FloorPlanView3d racks={racks} action={action} />
+          <FloorPlanView3d racks={racks} action={action} drawFrames={drawFrames}/>
 
           <ResponceNotification
             opened={errorMessage ? true : false}
