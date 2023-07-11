@@ -1,5 +1,5 @@
 import React from "react";
-import { Canvas} from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Grid, OrbitControls, Select } from "@react-three/drei";
 import { Drawer, Group, Stack, Tabs, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { IconInfoCircle, IconView360 } from "@tabler/icons-react";
 import ModuleInformationPanel from "../panel/ModuleInformationPanel";
 
-const ModuleInspector = ({ opened, close, positions, actorName }) => {
+const ModuleInspector = ({ opened, close, positionName }) => {
   const { t } = useTranslation();
   const { user, siteId, floorId } = useSelector((state) => state.auth.value);
   const [title, setTitle] = useState(null);
@@ -19,25 +19,19 @@ const ModuleInspector = ({ opened, close, positions, actorName }) => {
   const wSize = useWindowSize();
 
   return (
-    <Drawer
-      size={400}
-      position="right"
-      opened={opened}
-      onClose={close}
-      withCloseButton={false}
-    >
+    <Drawer size={400} position="right" opened={opened} onClose={close} withCloseButton={false}>
       <Tabs mt={"xs"} variant="outline" defaultValue="information">
         <Tabs.List>
           <Tabs.Tab value="information" icon={<IconInfoCircle size="0.8rem" />}>
             {t("view.floorViewer.moduleInspector.tabs.information")}
           </Tabs.Tab>
           <Tabs.Tab value="view3d" icon={<IconView360 size="0.8rem" />}>
-          {t("view.floorViewer.moduleInspector.tabs.view3d")}
+            {t("view.floorViewer.moduleInspector.tabs.view3d")}
           </Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="information" pt="xs">
-          <ModuleInformationPanel positions={positions} actorName={actorName}/>
+          <ModuleInformationPanel positionName={positionName} />
         </Tabs.Panel>
 
         <Tabs.Panel value="view3d" pt="xs">
@@ -62,17 +56,6 @@ const ModuleInspector = ({ opened, close, positions, actorName }) => {
                 <OrbitControls minPolarAngle={0} maxPolarAngle={Math.PI / 2.1} makeDefault />
               </Canvas>
             </Group>
-
-            {/* <Group position="right">
-          <Button type="submit">{t("button.accept")}</Button>
-          <Button
-            onClick={() => {
-              close();
-            }}
-          >
-            {t("button.close")}
-          </Button>
-        </Group> */}
           </Stack>
         </Tabs.Panel>
       </Tabs>

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Edges, useSelect } from "@react-three/drei";
 
 const materialsMap = new Map();
@@ -33,20 +33,20 @@ function SelectebleBox({
   transparent = false,
   onClick,
   onDlbClick,
-  userData,
+  userData
 }) {
   const ref = useRef();
-  const [objSel, setObjSel] = useState(false);
-  const list = useSelect();
+  //const list = useSelect();
 
-  const selected = list.map((sel) => {
-    return sel.userData.id;
-  });
+  // const selected = list.map((sel) => {
+  //   return sel.userData.id;
+  // });
 
-  const found = selected.find((sel) => sel === userData.id);
-  const isSelected = !!found;
-  //setObjSel()
+  // const found = selected.find((sel) => sel === userData.id);
+  // const isSelected = !!found;
 
+  const isSelected = userData.selected ? userData.selected : false;
+  
   return (
     <group name={"gPos"} position={position}>
       <group name={"gRot"} rotation={rotations.map((r) => THREE.MathUtils.degToRad(r))}>
@@ -64,7 +64,7 @@ function SelectebleBox({
           <boxGeometry args={[dimension[0], dimension[1], dimension[2]]} />
           <meshLambertMaterial color={color} opacity={opacity} transparent={transparent} />
 
-          <Edges visible={isSelected} scale={1} renderOrder={1000} color="#ff0000" />
+          <Edges visible={isSelected} scale={1} color="#ff0000" userData={userData} />
         </mesh>
       </group>
     </group>
@@ -424,13 +424,15 @@ function buildPosition(id, name, position, dimension, color, userData, onSelect,
     <SelectebleBox
       id={id}
       key={id}
-      position={[position.x, position.y + (dimension.y / 2), position.z]}
+      name={name}
+      position={[position.x, position.y + dimension.y / 2, position.z]}
       dimension={[dimension.x, dimension.y, dimension.z]}
       rotations={[0, 0, 0]}
       color={color}
       onClick={onSelect}
       onDlbClick={onDblclick}
       userData={userData}
+      selected={userData.selected}
     />
   );
   return box;

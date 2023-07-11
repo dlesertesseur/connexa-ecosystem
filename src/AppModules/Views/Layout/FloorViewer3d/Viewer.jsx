@@ -16,8 +16,8 @@ import { FilterControl } from "../Controls/FilterControl";
 import { hideNotification, showNotification } from "@mantine/notifications";
 import { getLocationStatus, getLocationTypes, getLocations, getTrademarks } from "../../../../DataAccess/Wms";
 import { findAllVariables } from "../../../../DataAccess/Variables";
-import { config } from "../../../../Constants/config";
 import { useEffect } from "react";
+import ModuleInspector from "./modal/ModuleInspector";
 
 const Viewer = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -37,6 +37,7 @@ const Viewer = ({ app }) => {
   const [positionsFound, setPositionsFound] = useState(null);
   const [optionsOpened, setOptionsOpened] = useState(false);
   const [layersOpened, setLayersOpened] = useState(false);
+  const [openModuleInfoPanel, setOpenModuleInfoPanel] = useState(false);
 
   const [drawFrames, setDrawFrames] = useState(false);
   const [graphRoute, setGraphRoute] = useState(null);
@@ -177,13 +178,6 @@ const Viewer = ({ app }) => {
     hideInfo();
   };
 
-  const onSelect = (event) => {
-    if (event.intersections && event.intersections.length > 0) {
-      const obj = event.intersections[0].object;
-      //setSelectedPart(obj);
-    }
-  };
-
   const onFind = (e) => {
     console.log("onFind ->", e);
   };
@@ -256,7 +250,22 @@ const Viewer = ({ app }) => {
             />
           </Toolbar>
 
-          <FloorPlanView3d racks={racks} action={action} drawFrames={drawFrames}/>
+          <FloorPlanView3d
+            racks={racks}
+            action={action}
+            drawFrames={drawFrames}
+            selectedPart={selectedPart}
+            setSelectedPart={setSelectedPart}
+            setOpenModuleInfoPanel={setOpenModuleInfoPanel}
+          />
+
+          <ModuleInspector
+            positionName={selectedPart?.userData.name}
+            opened={openModuleInfoPanel}
+            close={() => {
+              setOpenModuleInfoPanel(false);
+            }}
+          />
 
           <ResponceNotification
             opened={errorMessage ? true : false}

@@ -12,13 +12,19 @@ import { buildPosition, buildStructures } from "../../../../Components/Builder3d
 import { useState } from "react";
 import { config } from "../../../../Constants/config";
 
-const FloorPlanView3d = ({ racks, action = null, drawFrames }) => {
+const FloorPlanView3d = ({
+  racks,
+  action = null,
+  drawFrames,
+  selectedPart,
+  setSelectedPart,
+  setOpenModuleInfoPanel,
+}) => {
   const wSize = useWindowSize();
   const matches = useMediaQuery("(min-width: 768px)");
   const controlRef = useRef(null);
   const sceneRef = useRef(null);
   const [foundParts, setFoundParts] = useState(null);
-  const [selectedPart, setSelectedPart] = useState(null);
 
   const groupParts = (arrObjPos) => {
     const ret = new Map();
@@ -45,16 +51,20 @@ const FloorPlanView3d = ({ racks, action = null, drawFrames }) => {
   const onSelect = (event, ref) => {
     if (event.object) {
       setSelectedPart(event.object);
-      //console.log("onSelect -> ", event.object);
     } else {
       setSelectedPart(null);
     }
   };
 
   const onDblclick = (event) => {
-    console.log("onDoubleClick -> ", event.object.userData);
+    if (event.intersections && event.intersections.length > 0) {
+      const obj = event.intersections[0].object;
+      if (obj) {
+        setOpenModuleInfoPanel(true);
+      }
+    }
   };
-  
+
   useEffect(() => {
     if (action) {
       const parts = action.positionsNames;
@@ -85,7 +95,7 @@ const FloorPlanView3d = ({ racks, action = null, drawFrames }) => {
             };
 
             const id = uuid();
-            const userData = { id: id, name: p.code };
+            const userData = { id: id, name: p.code, color: color, selected: false };
             const posObj = buildPosition(id, p.code, newPos, dimension, color, userData, onSelect, onDblclick);
             arrObjPos.push(posObj);
           });
@@ -96,12 +106,35 @@ const FloorPlanView3d = ({ racks, action = null, drawFrames }) => {
     }
   }, [action]);
 
+  useEffect(() => {
+    const ref = sceneRef.current;
+
+    foundParts?.forEach((p) => {
+      const obj = ref.getObjectByName(p.props.userData.name);
+      if (obj) {
+        if (selectedPart) {
+          if (p.props.userData.id === selectedPart.userData.id) {
+            obj.material.color.set("#0000ff");
+          } else {
+            obj.material.color.set(obj.userData.color);
+          }
+        } else {
+          obj.material.color.set(obj.userData.color);
+        }
+      }
+    });
+  }, [selectedPart]);
+
   return (
     <Stack w={wSize.width - (matches ? 316 : 32)} h={wSize.height - HEADER_HIGHT}>
       <Canvas camera={{ position: [5, 5, 5], fov: 25 }}>
         <scene
           ref={sceneRef}
           onPointerMissed={() => {
+            // if (selectedPart) {
+            //   const color = selectedPart.userData.color;
+            //   selectedPart.material.color.set(color);
+            // }
             setSelectedPart(null);
           }}
         >
