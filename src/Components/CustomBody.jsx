@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import DynamicLauncherApp from "./DynamicLauncherApp";
 import { Stack } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useResizeObserver } from "@mantine/hooks";
 import { setBodyContainerSize } from "../Features/App";
+import DynamicLauncherApp from "../AppModules/DynamicLauncherApp";
 
 const CustomBody = () => {
   const { siteSelected } = useSelector((state) => state.auth.value);

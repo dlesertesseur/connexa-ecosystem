@@ -28,7 +28,7 @@ const CardsProperty = ({ title, p = 6, pallets, h = 200 }) => {
 
       {pallets && palletIdx !== null ? (
         <>
-          <Group grow spacing={"xs"}>
+          <Group key={palletIdx} grow spacing={"xs"}>
             <LabelProperty
               label={t("view.floorViewer.moduleInspector.label.width")}
               value={`${pallets[palletIdx].width}`}
@@ -58,9 +58,9 @@ const CardsProperty = ({ title, p = 6, pallets, h = 200 }) => {
             value={convertMilisegToYYYYMMDDHHMISS(pallets[palletIdx].creationDate)}
           />
           <Carousel slideGap="xs" withControls={false} withIndicators={true}>
-            {pallets[palletIdx].details?.map((a) => {
+            {pallets[palletIdx].details?.map((a,index) => {
               return (
-                <Carousel.Slide>
+                <Carousel.Slide key={index}>
                   <PalletCard detail={a} />
                 </Carousel.Slide>
               );

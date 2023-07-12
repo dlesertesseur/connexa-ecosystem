@@ -28,7 +28,8 @@ const config = {
     "#fd7e14",
   ],
   PALLET_VERTICAL_SEPARATION : 0.25,
-  FRAMES_LAYER : 1
+  FRAMES_LAYER : 1,
+  BASE_URL:import.meta.env.BASE_URL
 };
 
 export { config };

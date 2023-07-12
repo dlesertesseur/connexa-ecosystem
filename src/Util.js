@@ -285,7 +285,6 @@ const lpad = function (s, width, char) {
   return s.length >= width ? s : (new Array(width).join(char) + s).slice(-width);
 };
 
-
 function convertMilisegToYYYYMMDDHHMISS(milisegundos) {
   const fecha = new Date(milisegundos);
   const year = fecha.getFullYear();

@@ -10,7 +10,7 @@
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  "homepage": "connexa/platform",
+
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.13",
     "@emotion/react": "^11.10.4",

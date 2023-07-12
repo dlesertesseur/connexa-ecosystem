@@ -196,10 +196,6 @@ const Viewer = ({ app }) => {
     hideNotification("loadind-data3d-notification");
   };
 
-  useEffect(() => {
-    console.log("useEffect drawFrames ->", drawFrames);
-  }, [drawFrames]);
-
   return (
     <FloorView3dContext.Provider
       value={{

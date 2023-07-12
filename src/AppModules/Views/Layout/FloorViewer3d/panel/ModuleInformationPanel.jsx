@@ -42,25 +42,29 @@ const ModuleInformationPanel = ({ positionName }) => {
       <Stack spacing={"xs"} m={"xs"} pr={"xs"} w={380}>
         <Title order={4}>{title}</Title>
 
-        <Group grow spacing={"xs"}>
-          <LabelProperty
-            label={t("view.floorViewer.moduleInspector.label.width")}
-            value={`${position?.width} ${position?.unit}`}
-          />
-          <LabelProperty
-            label={t("view.floorViewer.moduleInspector.label.height")}
-            value={`${position?.height} ${position?.unit}`}
-          />
-          <LabelProperty
-            label={t("view.floorViewer.moduleInspector.label.depth")}
-            value={`${position?.depth} ${position?.unit}`}
-          />
-        </Group>
+        {position ? (
+          <Group grow spacing={"xs"}>
+            <LabelProperty
+              label={t("view.floorViewer.moduleInspector.label.width")}
+              value={`${position?.width} ${position?.unit}`}
+            />
+            <LabelProperty
+              label={t("view.floorViewer.moduleInspector.label.height")}
+              value={`${position?.height} ${position?.unit}`}
+            />
+            <LabelProperty
+              label={t("view.floorViewer.moduleInspector.label.depth")}
+              value={`${position?.depth} ${position?.unit}`}
+            />
+          </Group>
+        ) : null}
 
-        <Group grow spacing={"xs"}>
-          <LabelProperty label={t("view.floorViewer.moduleInspector.label.rackType")} value={position?.kind} />
-          <LabelProperty label={t("view.floorViewer.moduleInspector.label.status")} value={position?.status} />
-        </Group>
+        {position ? (
+          <Group grow spacing={"xs"}>
+            <LabelProperty label={t("view.floorViewer.moduleInspector.label.rackType")} value={position?.kind} />
+            <LabelProperty label={t("view.floorViewer.moduleInspector.label.status")} value={position?.status} />
+          </Group>
+        ) : null}
 
         {pallets && pallets.length > 0 ? (
           <CardsProperty title={t("view.floorViewer.moduleInspector.label.pallets")} pallets={pallets} />

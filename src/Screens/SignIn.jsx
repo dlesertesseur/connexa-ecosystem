@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { IconAlertCircle } from "@tabler/icons-react";
 import Logo from "../Components/Logo";
 import LanguageSelector from "../Components/LanguageSelector";
+import { config } from "../Constants/config";
 
 export function SignIn() {
   const { t } = useTranslation();
@@ -133,7 +134,7 @@ export function SignIn() {
 
           <Group position="apart" mt={"xl"}>
             <Image
-              src="/connexa/zeetrex.png"
+              src={config.PUBLIC_URL+"/logos/zeetrex.png"}
               alt="logo"
               width={100}
               component="a"

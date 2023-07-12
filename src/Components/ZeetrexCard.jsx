@@ -1,6 +1,7 @@
 import { Group, Image, Paper, Stack, Text, useMantineTheme } from "@mantine/core";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { config } from "../Constants/config";
 
 const ZeetrexCard = () => {
   const { t } = useTranslation();
@@ -11,7 +12,7 @@ const ZeetrexCard = () => {
       <Paper withBorder bg={bgColor} p={"xs"}>
         <Group position="apart">
           <Image
-            src="/connexa/zeetrex.png"
+            src={config.PUBLIC_URL+"/logos/zeetrex.png"}
             alt="logo"
             width={100}
             component="a"

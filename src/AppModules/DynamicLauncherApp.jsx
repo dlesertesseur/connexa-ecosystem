@@ -6,18 +6,22 @@ const DynamicLauncherApp = ({ app }) => {
   const [component, setComponent] = useState(null);
   const [error, setError] = useState(null);
 
+  const importModule = async (app) => {
+    const url = "." + app.path;
+    console.log("DynamicLauncherApp url -> ", url);
+
+    try {
+      const comp = await import(/* @vite-ignore */ url);
+      const { default: DynamicApp } = comp;
+      setComponent(<DynamicApp app={app} />);
+    } catch (error) {
+      console.log("DynamicLauncherApp error ->", error);
+      setError(error);
+    }
+  };
+
   useEffect(() => {
-
-    import(/* @vite-ignore */ "../AppModules" + app.path)
-      .then((comp) => {
-        const { default: DynamicApp } = comp;
-        setComponent(<DynamicApp app={app} />);
-      })
-      .catch((error) => {
-        console.log("DynamicLauncherApp error ->", error);
-
-        setError(error);
-      });
+    importModule(app);
   }, [app]);
 
   const errorComp = (
