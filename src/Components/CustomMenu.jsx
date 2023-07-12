@@ -10,10 +10,17 @@ const CustomMenu = () => {
   const wSize = useWindowSize();
 
   return (
-    <Stack justify="space-between" spacing="xs" h={"100%"}>
+    <Stack
+      justify="space-between"
+      spacing="xs"
+      h={"100%"}
+      onContextMenu={(e) => {
+        e.preventDefault();
+      }}
+    >
       <OrganizationCard />
       {/* <CustomOptions /> */}
-      <CustomOptionsAccordion/>
+      <CustomOptionsAccordion />
       <ZeetrexCard />
     </Stack>
   );

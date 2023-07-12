@@ -227,7 +227,11 @@ export function UpdateSitePage({ user, back, siteId, onLoadGrid, contexts }) {
     navigate(back);
   };
 
-  useEffect(() => {
+  const validateFiled = (value) => {
+    return value ? value : "";
+  }
+
+  const getData = async () => {
     setWorking(true);
 
     const params = {
@@ -235,47 +239,61 @@ export function UpdateSitePage({ user, back, siteId, onLoadGrid, contexts }) {
       siteId: siteId,
     };
 
-    findSiteById(params).then((ret) => {
-      setWorking(false);
+    try {
+      const ret = await findSiteById(params);
       setSite(ret);
 
-      console.log("UpdateSitePage useEffect -> ", ret.monday);
+      form.setFieldValue("name", validateFiled(ret.name));
+      form.setFieldValue("address", validateFiled(ret.address));
+      form.setFieldValue("phones", validateFiled(ret.phones));
+      form.setFieldValue("contextId", validateFiled(ret.context.id));
+      form.setFieldValue("city", validateFiled(ret.city));
+      form.setFieldValue("country", validateFiled(ret.country));
+      form.setFieldValue("province", validateFiled(ret.province));
+      form.setFieldValue("type", validateFiled(ret.type));
+      form.setFieldValue("latitude", validateFiled(ret.latitude));
+      form.setFieldValue("longitude", validateFiled(ret.longitude));
+      form.setFieldValue("radius_in_meters", validateFiled(ret.radius_in_meters));
+      form.setFieldValue("status", validateFiled(ret.status));
+      form.setFieldValue("monday", validateFiled(ret.monday));
+      form.setFieldValue("tuesday", validateFiled(ret.tuesday));
+      form.setFieldValue("wednesday", validateFiled(ret.wednesday));
+      form.setFieldValue("thursday", validateFiled(ret.thursday));
+      form.setFieldValue("friday", validateFiled(ret.friday));
+      form.setFieldValue("saturday", validateFiled(ret.saturday));
+      form.setFieldValue("sunday", validateFiled(ret.sunday));
 
-      form.setFieldValue("name", ret.name);
-      form.setFieldValue("address", ret.address);
-      form.setFieldValue("phones", ret.phones);
-      form.setFieldValue("contextId", ret.context.id);
-      form.setFieldValue("city", ret.city);
-      form.setFieldValue("country", ret.country);
-      form.setFieldValue("province", ret.province);
-      form.setFieldValue("type", ret.type);
-      form.setFieldValue("latitude", ret.latitude);
-      form.setFieldValue("longitude", ret.longitude);
-      form.setFieldValue("radius_in_meters", ret.radius_in_meters);
-      form.setFieldValue("status", ret.status);
-      form.setFieldValue("monday", ret.monday);
-      form.setFieldValue("tuesday", ret.tuesday);
-      form.setFieldValue("wednesday", ret.wednesday);
-      form.setFieldValue("thursday", ret.thursday);
-      form.setFieldValue("friday", ret.friday);
-      form.setFieldValue("saturday", ret.saturday);
-      form.setFieldValue("sunday", ret.sunday);
+      if (ret.country) {
+        selectCountry(ret.country);
+      }
+      if (ret.province) {
+        selectProvince(ret.province);
+      }
+      if (ret.context) {
+        selectContext(ret.context.id);
+      }
 
-      selectCountry(ret.country);
-      selectProvince(ret.province);
-      selectContext(ret.context.id);
-
+      const defaultTime = "06:00-20:30";
       const m = new Map();
-      m.set("monday", ret.monday.split("-"));
-      m.set("tuesday", ret.tuesday.split("-"));
-      m.set("wednesday", ret.wednesday.split("-"));
-      m.set("thursday", ret.thursday.split("-"));
-      m.set("friday", ret.friday.split("-"));
-      m.set("saturday", ret.saturday.split("-"));
-      m.set("sunday", ret.sunday.split("-"));
+      m.set("monday", ret.monday ? ret.monday.split("-") : defaultTime);
+      m.set("tuesday", ret.tuesday ? ret.tuesday.split("-") : defaultTime);
+      m.set("wednesday", ret.wednesday ? ret.wednesday.split("-") : defaultTime);
+      m.set("thursday", ret.thursday ? ret.thursday.split("-") : defaultTime);
+      m.set("friday", ret.friday ? ret.friday.split("-") : defaultTime);
+      m.set("saturday", ret.saturday ? ret.saturday.split("-") : defaultTime);
+      m.set("sunday", ret.sunday ? ret.sunday.split("-") : defaultTime);
+
       setMTimes(m);
-    });
+    } catch (error) {
+      setResponse({ code: error.status, title: t("status.error"), text: error.message });
+      setResponseModalOpen(true);
+    }
+
+    setWorking(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  };
+  useEffect(() => {
+    getData();
   }, [siteId, user]);
 
   return (

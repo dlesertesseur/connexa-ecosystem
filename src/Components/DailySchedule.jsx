@@ -33,9 +33,9 @@ const DailySchedule = ({
 
   return (
     <Group grow align="center" spacing={"xs"} position="apart">
-      <Text>{dayName}</Text>
+      <Text size={"sm"} weight={500} >{dayName}</Text>
       <Group grow>
-        <Text align="right">{openingTimeTitle}</Text>
+        <Text size={"sm"} weight={500} align="right">{openingTimeTitle}</Text>
         <Select
           data={openingTimeList}
           value={open}
@@ -45,7 +45,7 @@ const DailySchedule = ({
         />
       </Group>
       <Group grow>
-        <Text align="right">{closingTimeTitle}</Text>
+        <Text size={"sm"} weight={500} align="right">{closingTimeTitle}</Text>
         <Select
           data={closingTimeList}
           value={close}

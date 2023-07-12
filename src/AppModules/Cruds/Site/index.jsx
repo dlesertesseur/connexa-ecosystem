@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import CrudFrame from "../../../Components/Crud/CrudFrame";
+import CrudFrame from "../../../Components/Crud/CrudFrame.jsx";
 import { useSelector } from "react-redux";
-import { findAllSites } from "../../../DataAccess/Sites";
-import { findAllContext } from "../../../DataAccess/Context";
+import { findAllSites } from "../../../DataAccess/Sites.js";
+import { findAllContext } from "../../../DataAccess/Context.js";
 import { useTranslation } from "react-i18next";
-import { CreateSitePage } from "./CreateSitePage";
-import { UpdateSitePage } from "./UpdateSitePage";
-import { DeleteSitePage } from "./DeleteSitePage";
+import { CreateSitePage } from "./CreateSitePage.jsx";
+import { UpdateSitePage } from "./UpdateSitePage.jsx";
+import { DeleteSitePage } from "./DeleteSitePage.jsx";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);

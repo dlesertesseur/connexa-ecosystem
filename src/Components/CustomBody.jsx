@@ -36,9 +36,12 @@ const CustomBody = () => {
       justify="flex-start"
       spacing="0"
       sx={(theme) => ({
-        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] :theme.colors.gray[0],
+        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
         height: "100%",
       })}
+      onContextMenu={(e) => {
+        e.preventDefault();
+      }}
     >
       <Routes>{routes}</Routes>
     </Stack>
