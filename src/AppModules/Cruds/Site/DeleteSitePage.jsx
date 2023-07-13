@@ -335,7 +335,7 @@ export function DeleteSitePage({ user, back, siteId, onLoadGrid, contexts }) {
             fontWeight: 700,
           })}
         >
-          {t("crud.site.title.update")}
+          {t("crud.site.title.delete")}
         </Title>
 
         <ScrollArea h={wSize.height - HEADER_HIGHT} pr={"md"}>
