@@ -25,6 +25,7 @@ const FloorPlanView3d = ({
   const controlRef = useRef(null);
   const sceneRef = useRef(null);
   const [foundParts, setFoundParts] = useState(null);
+  const [lastPosSelectedName, setLastPosSelectedName] = useState(null);
 
   const groupParts = (arrObjPos) => {
     const ret = new Map();
@@ -108,21 +109,16 @@ const FloorPlanView3d = ({
 
   useEffect(() => {
     const ref = sceneRef.current;
+    if (lastPosSelectedName) {
+      const lastSelObj = ref.getObjectByName(lastPosSelectedName);
+      lastSelObj.material.color.set(lastSelObj.userData.color)
+    }
 
-    foundParts?.forEach((p) => {
-      const obj = ref.getObjectByName(p.props.userData.name);
-      if (obj) {
-        if (selectedPart) {
-          if (p.props.userData.id === selectedPart.userData.id) {
-            obj.material.color.set("#0000ff");
-          } else {
-            obj.material.color.set(obj.userData.color);
-          }
-        } else {
-          obj.material.color.set(obj.userData.color);
-        }
-      }
-    });
+    if (selectedPart) {
+      const obj = ref.getObjectByName(selectedPart.name);
+      obj.material.color.set("#0000ff");
+      setLastPosSelectedName(selectedPart.name);
+    }
   }, [selectedPart]);
 
   return (
@@ -131,10 +127,6 @@ const FloorPlanView3d = ({
         <scene
           ref={sceneRef}
           onPointerMissed={() => {
-            // if (selectedPart) {
-            //   const color = selectedPart.userData.color;
-            //   selectedPart.material.color.set(color);
-            // }
             setSelectedPart(null);
           }}
         >
