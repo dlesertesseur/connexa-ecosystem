@@ -925,7 +925,7 @@
         "label": "Options",
         "title": "Search options",
         "subTitle": "Select a group of information",
-        "options": ["Item by code", "Items by description", "Items by trademark", "Items by status", "Items by type"]
+        "options": ["Item by code", "Items by description", "Items by trademark", "Items by status", "Items by type", "Items in similar positions"]
       },
       "option": {
         "itemByCode": {
@@ -953,6 +953,11 @@
         "itemByTrademark": {
           "placeholder": "a trademark",
           "label": "Select a trademark"
+        },
+        "itemByPosition": {
+          "label":"Position name",
+          "description": "Search items in similar position",
+          "placeholder": "a position name"
         }
       },
       "moduleInspector":{

@@ -103,6 +103,7 @@ const FloorPlanView3d = ({
         });
 
         setFoundParts(arrObjPos);
+        setLastPosSelectedName(null);
       }
     }
   }, [action]);

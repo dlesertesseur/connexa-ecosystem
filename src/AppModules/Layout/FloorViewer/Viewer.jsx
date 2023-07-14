@@ -50,7 +50,7 @@ const Viewer = ({ app }) => {
   const [locationTypes, setLocationTypes] = useState(null);
   const [trademarks, setTrademarks] = useState(null);
   const [positions, setPositions] = useState(null);
-  
+
   const { user } = useSelector((state) => state.auth.value);
 
   const { t } = useTranslation();
@@ -107,11 +107,11 @@ const Viewer = ({ app }) => {
           break;
 
         case 2:
-          filterData = "code_like=" + data;
+          filterData = "product_name_like=" + data;
           break;
 
         case 3:
-          filterData = "trademark_equals=" + data;
+          filterData = "product_name_like=" + data;
           break;
 
         case 4:
@@ -120,6 +120,10 @@ const Viewer = ({ app }) => {
 
         case 5:
           filterData = "type_equals=" + data;
+          break;
+
+        case 6:
+          filterData = "code_like=" + data.toUpperCase();
           break;
 
         default:
@@ -249,7 +253,7 @@ const Viewer = ({ app }) => {
   const onFind = (startPos, endPos) => {
     const route = graphRoute.getPath(startPos, endPos);
     const totalDistance = graphRoute.getDistance(route, PIXEL_METER_RELATION);
-    setRoute({route:route, distance:totalDistance});
+    setRoute({ route: route, distance: totalDistance });
   };
 
   return (
