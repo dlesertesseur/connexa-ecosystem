@@ -2,16 +2,18 @@ import { Accordion, Group, Loader, ScrollArea, Stack, Text, UnstyledButton } fro
 import { IconApps, IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { findTranslatedField } from "../Util";
 import { useNavigate } from "react-router";
 import React from "react";
+import { logOut } from "../Features/Auth";
 
 const CustomOptionsAccordion = () => {
   const [links, setLinks] = useState(null);
   const { i18n, t } = useTranslation();
 
   const { siteSelected } = useSelector((state) => state.auth.value);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const createMenuGroup = (role, item) => {

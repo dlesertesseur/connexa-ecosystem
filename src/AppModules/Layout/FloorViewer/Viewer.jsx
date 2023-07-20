@@ -50,7 +50,7 @@ const Viewer = ({ app }) => {
   const [locationTypes, setLocationTypes] = useState(null);
   const [trademarks, setTrademarks] = useState(null);
   const [positions, setPositions] = useState(null);
-  
+
   const { user } = useSelector((state) => state.auth.value);
 
   const { t } = useTranslation();
@@ -212,9 +212,11 @@ const Viewer = ({ app }) => {
     showInfo(t("label.layouts"));
     const layouts = await findLayoutByFloorId(params);
 
-    const n = (1.0 / layouts[0].pixelmeterrelation) * PIXEL_METER_RELATION;
-    setPixelmeterrelation(n);
-    setLayouts(layouts);
+    if (layouts && layouts.length > 0) {
+      const n = (1.0 / layouts[0].pixelmeterrelation) * PIXEL_METER_RELATION;
+      setPixelmeterrelation(n);
+      setLayouts(layouts);
+    }
 
     showInfo(t("label.racks"));
     const racks = await findRacksByZoneId(params);
@@ -226,7 +228,7 @@ const Viewer = ({ app }) => {
 
     showInfo(t("label.graph"));
     const graphs = await findAllGraphsHeaders(params);
-    if (graphs) {
+    if (graphs && graphs.length > 0) {
       const graphHeader = graphs[0];
 
       const params = {
@@ -249,7 +251,7 @@ const Viewer = ({ app }) => {
   const onFind = (startPos, endPos) => {
     const route = graphRoute.getPath(startPos, endPos);
     const totalDistance = graphRoute.getDistance(route, PIXEL_METER_RELATION);
-    setRoute({route:route, distance:totalDistance});
+    setRoute({ route: route, distance: totalDistance });
   };
 
   return (

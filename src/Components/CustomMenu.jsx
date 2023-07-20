@@ -1,5 +1,4 @@
 import React from "react";
-import CustomOptions from "./CustomOptions";
 import ZeetrexCard from "./ZeetrexCard";
 import OrganizationCard from "./OrganizationCard";
 import { Stack } from "@mantine/core";

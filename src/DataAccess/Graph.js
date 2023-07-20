@@ -36,6 +36,7 @@ const findAllGraphsHeaders = async (parameters) => {
       },
     };
     const url = API.graph.findAllHeaders + "/" + parameters.siteId + "/floors/" + parameters.floorId +"/graphs";
+
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
