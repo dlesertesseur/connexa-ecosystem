@@ -9,6 +9,7 @@ import FindByDescription from "./FindByDescription";
 import FindByTrademark from "./FindByTrademark";
 import FindByStatus from "./FindByStatus";
 import FindByType from "./FindByType";
+import FindByPosition from "./FindByPosition";
 
 const OptionsMenu = ({ loading = false, disabled = false }) => {
   const { t } = useTranslation();
@@ -20,7 +21,7 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
     })
   );
 
-  const {optionsOpened, setOptionsOpened} = useContext(FloorView3dContext);
+  const { optionsOpened, setOptionsOpened } = useContext(FloorView3dContext);
 
   useEffect(() => {
     if (option) {
@@ -45,6 +46,9 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
         break;
       case 5:
         ret = <FindByType code={5} />;
+        break;
+      case 6:
+        ret = <FindByPosition code={6} />;
         break;
       default:
         break;

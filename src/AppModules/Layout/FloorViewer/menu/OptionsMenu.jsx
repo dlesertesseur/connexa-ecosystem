@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Button, Popover, Select, Stack } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
+import { useContext } from "react";
+import { FloorViewerStateContext } from "../Context";
 import FindByCode from "./FindByCode";
 import FindByDescription from "./FindByDescription";
 import FindByTrademark from "./FindByTrademark";
 import FindByStatus from "./FindByStatus";
 import FindByType from "./FindByType";
-import { useContext } from "react";
-import { FloorViewerStateContext } from "../Context";
+import FindByPosition from "./FindByPosition";
 
 const OptionsMenu = ({ loading = false, disabled = false }) => {
   const { t } = useTranslation();
@@ -20,7 +21,7 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
     })
   );
 
-  const {optionsOpened, setOptionsOpened} = useContext(FloorViewerStateContext);
+  const { optionsOpened, setOptionsOpened } = useContext(FloorViewerStateContext);
 
   useEffect(() => {
     if (option) {
@@ -45,6 +46,9 @@ const OptionsMenu = ({ loading = false, disabled = false }) => {
         break;
       case 5:
         ret = <FindByType code={5} />;
+        break;
+      case 6:
+        ret = <FindByPosition code={6} />;
         break;
       default:
         break;

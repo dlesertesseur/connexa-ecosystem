@@ -913,7 +913,7 @@
         "label": "Items",
         "title": "Opciones de busqueda",
         "subTitle": "Seleccionar un grupo de informacion",
-        "options": ["Items por codigo", "Items por descripcion", "Items por marca", "Items por estado", "Items por tipo"]
+        "options": ["Items por codigo", "Items por descripcion", "Items por marca", "Items por estado", "Items por tipo", "Items en posiciones similares"]
       },
       "option": {
         "itemByCode": {
@@ -939,8 +939,13 @@
           "label": "Seleccione un tipo"
         },
         "itemByTrademark": {
-          "placeholder": "a marca",
+          "placeholder": "una marca",
           "label": "Seleccione una marca"
+        },
+        "itemByPosition": {
+          "label":"Nombre de posicion",
+          "description": "Buscar items de posiciones con nombres similares",
+          "placeholder": "una position"
         }
       },
       "moduleInspector":{

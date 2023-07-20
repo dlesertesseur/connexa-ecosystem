@@ -107,11 +107,11 @@ const Viewer = ({ app }) => {
           break;
 
         case 2:
-          filterData = "code_like=" + data;
+          filterData = "product_name_like=" + data;
           break;
 
         case 3:
-          filterData = "trademark_equals=" + data;
+          filterData = "product_name_like=" + data;
           break;
 
         case 4:
@@ -120,6 +120,10 @@ const Viewer = ({ app }) => {
 
         case 5:
           filterData = "type_equals=" + data;
+          break;
+
+        case 6:
+          filterData = "code_like=" + data.toUpperCase();
           break;
 
         default:

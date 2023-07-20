@@ -11,18 +11,18 @@ const FindByTrademark = ({ code }) => {
   const { showData, trademarks } = useContext(FloorView3dContext);
 
   const [color, onChange] = useState("#ff0000");
-  const [department, setDepartment] = useState(null);
+  const [trademark, setTrademark] = useState(null);
 
   return (
     <Stack>
       <Select
         label={t("view.floorViewer.option.itemByTrademark.label")}
-        placeholder={t("view.floorViewer.option.itemByDepartament.placeholder")}
+        placeholder={t("view.floorViewer.option.itemByTrademark.placeholder")}
         data={trademarks.map((t) => {
-          return { value: t.id, label: t.name };
+          return { value: t.name, label: t.name };
         })}
-        value={department}
-        onChange={setDepartment}
+        value={trademark}
+        onChange={setTrademark}
       />
 
       <CustomColorPicker value={color} onChange={onChange} />
@@ -30,9 +30,9 @@ const FindByTrademark = ({ code }) => {
       <Group position="right">
         <Button
           size="xs"
-          disabled={!department}
+          disabled={!trademark}
           onClick={(evt) => {
-            showData(code, department, color);
+            showData(code, trademark, color);
           }}
         >
           {t("button.accept")}
