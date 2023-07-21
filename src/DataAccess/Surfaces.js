@@ -36,7 +36,6 @@ export const findRacksByZoneId = async (parameters) => {
 
 console.log("findRacksByZoneId ->", url)
 
-
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
@@ -190,7 +189,6 @@ export const findLayoutByFloorId = async (parameters) => {
     };
 
     const url = API.surface.findLayoutByFloorId + "/" + parameters.siteId + "/floors/" + parameters.floorId + "/layouts";
-
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
