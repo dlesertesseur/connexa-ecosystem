@@ -16,6 +16,18 @@ const ModuleInformationPanel = ({ positions, actorName }) => {
   const [pallets, setPallets] = useState(null);
   const wSize = useWindowSize();
 
+  function createName(arr) {
+    if (!Array.isArray(arr)) {
+      throw new Error("Se espera un array como argumento.");
+    }
+
+    if (arr.length === 0) {
+      return "";
+    }
+
+    return arr.slice(0, -1).join("-");
+  }
+
   const getData = () => {
     if (positions && positions.length > 0 && actorName) {
       let title = null;
@@ -26,7 +38,7 @@ const ModuleInformationPanel = ({ positions, actorName }) => {
           const level = arr[arr.length - 1];
           levels.push({ value: index, label: level });
           if (title === null) {
-            title = `${arr[0]}-${arr[1]}`;
+            title = createName(arr);
           }
         }
       });
@@ -63,24 +75,24 @@ const ModuleInformationPanel = ({ positions, actorName }) => {
         <Group grow spacing={"xs"}>
           <LabelProperty
             label={t("view.floorViewer.moduleInspector.label.width")}
-            value={`${position?.width} ${position?.unit}`}
+            value={`${position?.width?.toFixed(0)} ${position?.unit}`}
           />
           <LabelProperty
             label={t("view.floorViewer.moduleInspector.label.height")}
-            value={`${position?.height} ${position?.unit}`}
+            value={`${position?.height?.toFixed(0)} ${position?.unit}`}
           />
           <LabelProperty
             label={t("view.floorViewer.moduleInspector.label.depth")}
-            value={`${position?.depth} ${position?.unit}`}
+            value={`${position?.depth?.toFixed(0)} ${position?.unit}`}
           />
         </Group>
-  
+
         <Group grow spacing={"xs"}>
           <LabelProperty label={t("view.floorViewer.moduleInspector.label.rackType")} value={position?.kind} />
           <LabelProperty label={t("view.floorViewer.moduleInspector.label.status")} value={position?.status} />
         </Group>
 
-        {pallets && pallets.length > 0? (
+        {pallets && pallets.length > 0 ? (
           <CardsProperty title={t("view.floorViewer.moduleInspector.label.pallets")} pallets={pallets} />
         ) : null}
       </Stack>

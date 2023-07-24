@@ -140,7 +140,7 @@ const Viewer = ({ app }) => {
 
       const positionsNames = positions.map((p) => {
         const arr = p.code.split("-");
-        const ret = `${arr[0]}-${arr[1]}`;
+        const ret = createName(arr);
         return ret;
       });
 
@@ -152,6 +152,18 @@ const Viewer = ({ app }) => {
       hideInfo();
     }
   };
+
+  function createName(arr) {
+    if (!Array.isArray(arr)) {
+      throw new Error("Se espera un array como argumento.");
+    }
+  
+    if (arr.length === 0) {
+      return "";
+    }
+  
+    return arr.slice(0, -1).join("-");
+  }
 
   const showInfo = (message) => {
     showNotification({

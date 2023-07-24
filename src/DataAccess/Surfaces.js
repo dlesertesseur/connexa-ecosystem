@@ -33,10 +33,6 @@ export const findRacksByZoneId = async (parameters) => {
     
     const types = parameters.types ? "?types="+parameters.types : "";
     const url = API.surface.findRacksByZoneId + "/" + parameters.siteId + "/floors/" + parameters.floorId +"/racks" + types;
-
-console.log("findRacksByZoneId ->", url)
-
-
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 

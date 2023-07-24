@@ -48,7 +48,8 @@ const DynamicLauncherApp = ({ app }) => {
   const process = error ? errorComp : waiting;
 
   return (
-    <Center style={{ width: "100%", height: "100%" }}>{component ? <Suspense>{component}</Suspense> : process}</Center>
+    // <Center style={{ width: "100%", height: "100%" }}>{component ? <Suspense>{component}</Suspense> : process}</Center>
+    component ? <Suspense>{component}</Suspense> : process
   );
 };
 

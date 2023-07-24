@@ -28,10 +28,10 @@ const ModuleInspector = ({ opened, close, positions, actorName }) => {
     >
       <Tabs mt={"xs"} variant="outline" defaultValue="information">
         <Tabs.List>
-          <Tabs.Tab value="information" icon={<IconInfoCircle size="0.8rem" />}>
+          <Tabs.Tab value="information" icon={<IconInfoCircle size={16} />}>
             {t("view.floorViewer.moduleInspector.tabs.information")}
           </Tabs.Tab>
-          <Tabs.Tab value="view3d" icon={<IconView360 size="0.8rem" />}>
+          <Tabs.Tab value="view3d" icon={<IconView360 size={16} />}>
           {t("view.floorViewer.moduleInspector.tabs.view3d")}
           </Tabs.Tab>
         </Tabs.List>
