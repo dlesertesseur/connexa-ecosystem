@@ -11,7 +11,6 @@ const findAllLayoutMarkersById = async (parameters) => {
       },
     };
     const url = API.layoutMarkers.findAllById + "/" + parameters.siteId + "/floors/" + parameters.floorId + "/markers/all";
-
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
