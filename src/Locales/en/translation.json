@@ -972,7 +972,7 @@
           "depth":"Depth",
           "rackType":"Type",
           "status":"Status",
-          "pallets":"Pallets",
+          "pallets":"Content",
           "palletDimension":"Dimension",
           "palletType":"Type",
           "palletStatus":"Status",

@@ -30,6 +30,11 @@ const ModuleInformationPanel = ({ positions, actorName }) => {
 
   const getData = () => {
     if (positions && positions.length > 0 && actorName) {
+
+      positions.sort((a, b) => {
+        return a.code.localeCompare(b.code);
+      });
+
       let title = null;
       const levels = [];
       positions.forEach((position, index) => {
