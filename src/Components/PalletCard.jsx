@@ -6,8 +6,8 @@ const PalletCard = ({ detail }) => {
   return (
     <Card shadow="sm" padding="xs" radius="xs" withBorder>
       <Card.Section>
-        <Center>
-          <Image src={`${API.wms.getBaseUrlImage}${detail.image}`} width={160} alt="art-img" />
+        <Center h={300}>
+          <Image src={`${API.wms.getBaseUrlImage}${detail.image}`} fit="contain" width={160} alt="art-img" />
         </Center>
       </Card.Section>
 
