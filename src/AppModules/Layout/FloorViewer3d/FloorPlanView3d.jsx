@@ -34,7 +34,7 @@ const FloorPlanView3d = ({
     if (arrObjPos) {
       arrObjPos.forEach((pos) => {
         const arr = pos.code.split("-");
-        const name = `${arr[0]}-${arr[1]}`;
+        const name = createName(arr);
 
         group = ret.get(name);
         if (group === undefined) {
@@ -70,10 +70,8 @@ const FloorPlanView3d = ({
     if (action) {
       const parts = action.positionsNames;
       const arrObjPos = [];
-
       if (parts) {
         const color = action.color;
-        const dimension = action.dimension;
         const ref = sceneRef.current;
 
         const gPart = groupParts(parts);
@@ -83,23 +81,80 @@ const FloorPlanView3d = ({
           const holes = gPart.get(base);
           let deltaY = 0;
           const obj = ref.getObjectByName(base);
-          const position = new THREE.Vector3();
 
-          obj.getWorldPosition(position);
+          /*Get structure*/
+          const arr = base.split("-");
+          const structureName = createName(arr);
+          const structure = ref.getObjectByName(structureName);
 
-          holes.forEach((p, index) => {
-            deltaY = (dimension.y + config.PALLET_VERTICAL_SEPARATION) * index;
-            const newPos = {
-              x: position.x,
-              y: position.y + deltaY,
-              z: position.z,
-            };
+          let rotation = null;
+          if (structure) {
+            rotation = { x: 0, y: THREE.MathUtils.radToDeg(structure.rotation.y), z: 0 };
+          } else {
+            rotation = { x: 0, y: 0, z: 0 };
+          }
 
-            const id = uuid();
-            const userData = { id: id, name: p.code, color: color, selected: false };
-            const posObj = buildPosition(id, p.code, newPos, dimension, color, userData, onSelect, onDblclick);
-            arrObjPos.push(posObj);
-          });
+          deltaY = 0;
+          if (obj) {
+            const position = new THREE.Vector3();
+            obj.getWorldPosition(position);
+
+            holes.forEach((h, index) => {
+              const newPos = {
+                x: position.x,
+                y: position.y + deltaY,
+                z: position.z,
+              };
+
+              const id = uuid();
+              const dimension = { x: h.width / 100.0, y: h.height / 100.0 / 2.0, z: h.depth / 100.0 };
+              const userData = { id: id, name: h.code, color: color, selected: false };
+              const posObj = buildPosition(
+                id,
+                h.code,
+                newPos,
+                dimension,
+                rotation,
+                color,
+                userData,
+                onSelect,
+                onDblclick
+              );
+              arrObjPos.push(posObj);
+              deltaY += h.height / 2.0 / 100.0 + config.PALLET_VERTICAL_SEPARATION;
+
+              // let posX = newPos.x;
+              // const pallets = h.pallets;
+              // pallets.forEach((p) => {
+              //   if (p.details && p.details.length > 0) {
+              //     const id = uuid();
+
+              //     const dimension = { x: p.width / 100.0, y: h.height / 100.0, z: p.depth / 100.0 };
+              //     const detailPos = {
+              //       x: posX,
+              //       y: newPos.y, //+ (p.height / 100.0),
+              //       z: newPos.z, //+ ((p.depth / 100.0) / 2.0)
+              //     };
+
+              //     const userData = { id: id, name: h.code, color: color, selected: false };
+              //     const posObj = buildPosition(
+              //       id,
+              //       h.code,
+              //       detailPos,
+              //       dimension,
+              //       rotation,
+              //       color,
+              //       userData,
+              //       onSelect,
+              //       onDblclick
+              //     );
+              //     arrObjPos.push(posObj);
+
+              //     posX += p.width / 100.0;
+              //   }
+              // });
+            });
+          }
         });
 
         setFoundParts(arrObjPos);
@@ -112,7 +167,7 @@ const FloorPlanView3d = ({
     const ref = sceneRef.current;
     if (lastPosSelectedName) {
       const lastSelObj = ref.getObjectByName(lastPosSelectedName);
-      lastSelObj.material.color.set(lastSelObj.userData.color)
+      lastSelObj.material.color.set(lastSelObj.userData.color);
     }
 
     if (selectedPart) {
@@ -151,5 +206,17 @@ const FloorPlanView3d = ({
     </Stack>
   );
 };
+
+function createName(arr) {
+  if (!Array.isArray(arr)) {
+    throw new Error("Se espera un array como argumento.");
+  }
+
+  if (arr.length === 0) {
+    return "";
+  }
+
+  return arr.slice(0, -1).join("-");
+}
 
 export default FloorPlanView3d;

@@ -33,7 +33,7 @@ function SelectebleBox({
   transparent = false,
   onClick,
   onDlbClick,
-  userData
+  userData,
 }) {
   const ref = useRef();
   //const list = useSelect();
@@ -46,7 +46,7 @@ function SelectebleBox({
   // const isSelected = !!found;
 
   const isSelected = userData.selected ? userData.selected : false;
-  
+
   return (
     <group name={"gPos"} position={position}>
       <group name={"gRot"} rotation={rotations.map((r) => THREE.MathUtils.degToRad(r))}>
@@ -419,15 +419,15 @@ function buildParts(parts, onSelect, selectedId) {
   });
 }
 
-function buildPosition(id, name, position, dimension, color, userData, onSelect, onDblclick) {
+function buildPosition(id, name, position, dimension, rotation, color, userData, onSelect, onDblclick) {
   const box = (
     <SelectebleBox
       id={id}
       key={id}
       name={name}
-      position={[position.x, position.y + dimension.y / 2, position.z]}
       dimension={[dimension.x, dimension.y, dimension.z]}
-      rotations={[0, 0, 0]}
+      position={[position.x, position.y + dimension.y / 2, position.z]}
+      rotations={[rotation.x, rotation.y, rotation.z]}
       color={color}
       onClick={onSelect}
       onDlbClick={onDblclick}

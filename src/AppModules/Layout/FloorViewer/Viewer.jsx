@@ -103,7 +103,7 @@ const Viewer = ({ app }) => {
     if (partsMap) {
       switch (filter) {
         case 1:
-          filterData = "sku_equals=" + data;
+          filterData = "sku_like=" + data;
           break;
 
         case 2:

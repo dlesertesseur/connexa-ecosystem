@@ -133,7 +133,7 @@ const Viewer = ({ app }) => {
 
     switch (filter) {
       case 1:
-        filterData = "sku_equals=" + data;
+        filterData = "sku_like=" + data;
         break;
 
       case 2:
@@ -167,12 +167,6 @@ const Viewer = ({ app }) => {
 
     positions = await getLocations({ token: wmsApiToken, filter: filterData });
     setPositionsFound(positions);
-
-    // const positionsNames = positions.map((p) => {
-    //   const arr = p.code.split("-");
-    //   const ret = `${arr[0]}-${arr[1]}`;
-    //   return ret;
-    // });
 
     const action = { positionsNames: positions, color: color, dimension: { x: 1, y: 1, z: 1 } };
     setAction(action);
