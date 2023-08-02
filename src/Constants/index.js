@@ -319,6 +319,13 @@ export const API = {
     getBaseUrlImage: config.SERVER + ":" + config.WMS_API_PORT + config.WMS_IMAGE_URL,
   },
 
+  comexrecap: {
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
+    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
+  },
 };
 
 export const ERRORS = {

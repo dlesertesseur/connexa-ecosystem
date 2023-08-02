@@ -841,6 +841,26 @@
     }
   },
 
+  "comex":{
+    "recap": {
+      "title": {
+        "create": "Create a new RECAP",
+        "update": "Update RECAP",
+        "delete": "Delete RECAP"
+      },
+      "label": {
+        "creationDate": "Creation date",
+        "description": "Description",
+        "event": "Event",
+        "supplier": "Supplier",
+        "country": "Country"
+      },
+      "placeholder": {
+      },
+      "columns": ["ID", "Creation date", "Description", "Event", "Supplier", "Country"]
+    }
+  },
+
   "wizard": {
     "registration": {
       "name": "REGISTRATION",

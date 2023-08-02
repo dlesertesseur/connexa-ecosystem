@@ -838,6 +838,27 @@
     }
   },
 
+  "comex":{
+    "recap": {
+      "title": {
+        "create": "Crear un nuevo RECAP",
+        "update": "Modificar RECAP",
+        "delete": "Eliminar RECAP"
+      },
+      "label": {
+        "creationDate": "Fecha de creacion",
+        "description": "Descripcion",
+        "event": "Evento",
+        "supplier": "Proveedor",
+        "country": "Pais"
+      },
+      "placeholder": {
+      },
+      "columns": ["ID", "Fecha de creacion", "Descripcion", "Evento", "Proveedor", "Pais"]
+    }
+  },
+
+
   "wizard": {
     "registration": {
       "name": "REGISRACION",
