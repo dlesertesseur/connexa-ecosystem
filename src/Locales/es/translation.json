@@ -850,9 +850,31 @@
         "description": "Descripcion",
         "event": "Evento",
         "supplier": "Proveedor",
-        "country": "Pais"
+        "country": "Pais",
+        "department":"Departamento",
+        "creditOffice":"Oficina de credito",
+        "factory":"Fabrica",
+        "vendorHost":"Vendor host",
+        "paymentTerms":"Terminos de pago",
+        "shippingPort":"Puerto",
+        "productionTime":"Tiempo de produccion",
+        "campaign":"Campaña",
+        "addProducts":"Productos",
+        "addDocuments":"Documentos"
       },
       "placeholder": {
+        "description": "descripcio del RECAP",
+        "event": "nombre del evento",
+        "supplier": "seleccione un proveedor",
+        "country": "seleccione un pais",
+        "department":"seleccione un departamento",
+        "creditOffice":"seleccione una oficina de credito",
+        "factory":"seleccione un fabrica",
+        "vendorHost":"seleccione un vendor host",
+        "paymentTerms":"seleccione un termino de pago",
+        "shippingPort":"seleccione un puerto",
+        "productionTime":"seleccione un tiempo de produccion",
+        "campaign":"seleccione una campaña"
       },
       "columns": ["ID", "Fecha de creacion", "Descripcion", "Evento", "Proveedor", "Pais"]
     }

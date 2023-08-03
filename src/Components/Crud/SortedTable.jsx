@@ -346,7 +346,9 @@ export default function SortedTable({
                       : false
                   }
                 >
-                  {t(r.key)}
+                  {r.icon ? 
+                  <Group position="apart" spacing={"xs"}>{r.icon} {t(r.key)}</Group> : 
+                  t(r.key)}
                 </Button>
               ))}
 

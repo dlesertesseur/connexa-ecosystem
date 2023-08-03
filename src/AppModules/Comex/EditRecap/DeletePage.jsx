@@ -1,135 +1,121 @@
-import ResponceNotification from "../../../Modal/ResponceNotification";
-import moment from "moment/moment";
-import {
-  Title,
-  Container,
-  Button,
-  Group,
-  Select,
-  LoadingOverlay,
-  Timeline,
-  Text,
-  Grid,
-  ScrollArea,
-} from "@mantine/core";
-import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
+import { Title, Container, Button, Group, Select, LoadingOverlay, ScrollArea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
-import { hours, shiftDurations, pauseDurations, jobType, pauseType, radius } from "../../../Constants/DATA";
 import { useContext, useEffect, useState } from "react";
-import { IconClock, IconToolsKitchen2, IconToolsKitchen2Off } from "@tabler/icons-react";
-import { formatDateToDDMMYYYY } from "../../../Util";
-import { findAllWorkersByOrganization } from "../../../DataAccess/Worker";
-import { deleteShift, findShiftById } from "../../../DataAccess/Shift";
 import { AbmStateContext } from "./Context";
-import "dayjs/locale/es";
-import "dayjs/locale/en";
+import { HEADER_HIGHT } from "../../../Constants";
+import { deleteComexRecap, findComexRecapById } from "../../../DataAccess/ComexRecap";
+import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
 
 export function DeletePage() {
   const { t } = useTranslation();
-  const { user, organizationSelected } = useSelector((state) => state.auth.value);
+  const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
 
-  const [error, setError] = useState(null);
-  const [working, setWoking] = useState(false);
-  const [workers, setWorkers] = useState([]);
-  const [shift, setShift] = useState();
+  const [working, setWorking] = useState(false);
+
+  const [countriesList, setCountriesList] = useState(null);
+  const [suppliersList, setSuppliersList] = useState(null);
+  const [campaignList, setCampaignList] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const [recap, setRecap] = useState(null);
+
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   const navigate = useNavigate();
 
-  const { setReload, selectedDate, store, selectedRowId } = useContext(AbmStateContext);
+  const { setReload, campaigns, countries, selectedRowId } = useContext(AbmStateContext);
 
-  useEffect(() => {
+  const getData = async () => {
+    let ret = countries.map((c) => {
+      const obj = { value: c.code, label: c.country };
+      return obj;
+    });
+    setCountriesList(ret);
+
+    ret = campaigns.map((c) => {
+      const obj = { value: c.id, label: c.event };
+      return obj;
+    });
+    setCampaignList(ret);
+
     const params = {
       token: user.token,
-      organizationId: organizationSelected.id,
+      id: selectedRowId,
     };
-
-    findAllWorkersByOrganization(params)
-      .then((ret) => {
-        setWorkers(ret);
-        console.log("delete findAllWorkersByOrganization ->", ret);
-      })
-      .catch((error) => {
-        setError(error);
-      });
-  }, [organizationSelected, user]);
+    ret = await findComexRecapById(params);
+    setRecap(ret);
+  };
 
   useEffect(() => {
-    const params = {
-      token: user.token,
-      storeId: store.id,
-      shiftId: selectedRowId,
-    };
-
-    findShiftById(params)
-      .then((ret) => {
-        setShift(ret);
-        console.log("update findShiftById ->", ret);
-      })
-      .catch((error) => {
-        setError(error);
-      });
-  }, [selectedRowId, store, user]);
+    getData();
+  }, [countries, campaigns, selectedRowId]);
 
   useEffect(() => {
-    if (shift) {
-      const shiftStart = moment(shift.startDateAndTime);
-      const shiftEnd = moment(shift.endDateAndTime);
-      const shiftDurationsInMinutes = shiftEnd.diff(shiftStart);
+    const country = countries.find((c) => c.code === selectedCountry);
+    if (country) {
+      const ret = country.providers.map((p) => {
+        const obj = { value: p.code, label: p.name };
+        return obj;
+      });
+      setSuppliersList(ret);
+    }
+  }, [selectedCountry]);
 
-      const pauseStart = moment(shift.pauseStartDateAndTime);
-      const pauseEnd = moment(shift.pauseEndDateAndTime);
-      const pauseDurationsInMinutes = pauseEnd.diff(pauseStart);
+  useEffect(() => {
+    if (recap) {
 
-      form.setFieldValue("startTime", shift.startDateAndTime.substring(11, 16));
-      form.setFieldValue("durationsInHours", shiftDurationsInMinutes / 1000 / 60 / 60);
-      form.setFieldValue("pauseType", shift.pauseName);
-      form.setFieldValue("pauseStartTime", shift.pauseStartDateAndTime.substring(11, 16));
-      form.setFieldValue("pauseDurationsInMinutes", pauseDurationsInMinutes / 1000 / 60);
-      form.setFieldValue("worker", shift.workerId);
-      form.setFieldValue("radius", shift.siteRadiusInMeters);
-      form.setFieldValue("jobType", shift.job);
+      form.setFieldValue("description", recap.description);
+      form.setFieldValue("campaign", recap.campaign.id);
+      form.setFieldValue("country", recap.country.code);
+      form.setFieldValue("supplier", recap.supplier.code);
+
+      setSelectedCountry(recap.country.code);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shift]);
+  }, [recap]);
 
   const form = useForm({
     initialValues: {
-      startTime: null,
-      durationsInHours: null,
-      pauseType: null,
-      pauseStartTime: null,
-      pauseDurationsInMinutes: null,
-      worker: null,
-      radius: null,
+      description: "",
+      campaign: "",
+      supplier: null,
+      country: null,
     },
 
-    validate: {
-      startTime: (val) => (val ? null : t("validation.required")),
-      durationsInHours: (val) => (val ? null : t("validation.required")),
-      pauseType: (val) => (val ? null : t("validation.required")),
-      pauseStartTime: (val) => (val ? null : t("validation.required")),
-      pauseDurationsInMinutes: (val) => (val ? null : t("validation.required")),
-      jobType: (val) => (val ? null : t("validation.required")),
-      worker: (val) => (val ? null : t("validation.required")),
-    },
+    validate: {},
   });
 
-  const createSelectHours = (field) => {
+  const createSelectCountry = (field, disabled, data) => {
     const ret = (
       <Select
-        disabled
-        label={t("crud.shift.label." + field)}
-        data={hours}
+        label={t("comex.recap.label." + field)}
+        data={data ? data : []}
+        disabled={disabled}
+        placeholder={t("comex.recap.placeholder." + field)}
         {...form.getInputProps(field)}
-        placeholder={
-          t("crud.shift.placeholder." + field).startsWith("crud.") ? "" : t("crud.shift.placeholder." + field)
-        }
+        onChange={(env) => {
+          form.setFieldValue(field, env);
+          form.setFieldValue("supplier", null);
+          setSelectedCountry(env);
+        }}
+      />
+    );
+
+    return ret;
+  };
+
+  const createSelect = (field, disabled, data) => {
+    const ret = (
+      <Select
+        label={t("comex.recap.label." + field)}
+        data={data ? data : []}
+        disabled={disabled}
+        placeholder={t("comex.recap.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -137,181 +123,40 @@ export function DeletePage() {
     return ret;
   };
 
-  const createSelectShiftDuration = (field) => {
+  const createTextField = (field, disabled) => {
     const ret = (
-      <Select
-        disabled
-        label={t("crud.shift.label." + field)}
-        data={shiftDurations}
-        {...form.getInputProps(field)}
-        placeholder={
-          t("crud.shift.placeholder." + field).startsWith("crud.") ? "" : t("crud.shift.placeholder." + field)
-        }
+      <TextInput
+        w={"100%"}
+        disabled={disabled}
+        label={t("comex.recap.label." + field)}
+        placeholder={t("comex.recap.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
 
     return ret;
-  };
-
-  const createSelectWorker = (field) => {
-    const list = workers.map((r) => {
-      const obj = {
-        value: r.worker.id,
-        label: r.worker.lastname + ", " + r.worker.firstname + " (" + r.worker.nid + ")",
-      };
-      return obj;
-    });
-    const ret = (
-      <Select
-        disabled
-        label={t("crud.shift.label." + field)}
-        data={list}
-        {...form.getInputProps(field)}
-        placeholder={
-          t("crud.shift.placeholder." + field).startsWith("crud.") ? "" : t("crud.shift.placeholder." + field)
-        }
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
-
-  const createSelectPauseDuration = (field) => {
-    const ret = (
-      <Select
-        disabled
-        label={t("crud.shift.label." + field)}
-        data={pauseDurations}
-        {...form.getInputProps(field)}
-        placeholder={
-          t("crud.shift.placeholder." + field).startsWith("crud.") ? "" : t("crud.shift.placeholder." + field)
-        }
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
-
-  const createSelectRadius = (field) => {
-    const ret = (
-      <Select
-        disabled
-        label={t("crud.shift.label." + field)}
-        data={radius}
-        {...form.getInputProps(field)}
-        placeholder={
-          t("crud.shift.placeholder." + field).startsWith("crud.") ? "" : t("crud.shift.placeholder." + field)
-        }
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
-
-  const createSelectJobType = (field) => {
-    const ret = (
-      <Select
-        disabled
-        label={t("crud.shift.label." + field)}
-        data={jobType}
-        {...form.getInputProps(field)}
-        placeholder={
-          t("crud.shift.placeholder." + field).startsWith("crud.") ? "" : t("crud.shift.placeholder." + field)
-        }
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
-
-  const createSelectPauseType = (field) => {
-    const ret = (
-      <Select
-        disabled
-        label={t("crud.shift.label." + field)}
-        data={pauseType}
-        {...form.getInputProps(field)}
-        placeholder={
-          t("crud.shift.placeholder." + field).startsWith("crud.") ? "" : t("crud.shift.placeholder." + field)
-        }
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
-
-  const onDelete = (values) => {
-    const params = {
-      token: user.token,
-      storeId: store.id,
-      shiftId: shift.id,
-    };
-    setWoking(true);
-    deleteShift(params)
-      .then((ret) => {
-        console.log("deleteShift ->", ret);
-        setWoking(false);
-        setReload(Date.now());
-        navigate("../");
-      })
-      .catch((error) => {
-        setError(error);
-        setWoking(false);
-      });
   };
 
   const onClose = () => {
     navigate("../");
   };
 
-  const calculateEndPause = () => {
-    const start = form.getInputProps("pauseStartTime").value;
-    const startShift = form.getInputProps("startTime").value;
-    const duration = form.getInputProps("pauseDurationsInMinutes").value;
-    let sd = null;
+  const onDelete = async (values) => {
+    const params = {
+      token: user.token,
+      body: { ...values },
+    };
 
-    if (startShift > start) {
-      //Next day
-      const day = moment(selectedDate).add(1, "d");
-      sd = moment(day.format("DDMMYYYY") + " " + start, "DDMMYYYY HH:mm").add(duration, "m");
-    } else {
-      sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm").add(duration, "m");
+    setWorking(true);
+    try {
+      await deleteComexRecap(params);
+      setWorking(false);
+      setReload(Date.now());
+      navigate("../");
+    } catch (error) {
+      setWorking(false);
+      setError(error);
     }
-
-    return sd.format("YYYY-MM-DD HH:mm");
-  };
-
-  const calculateStartPause = () => {
-    const start = form.getInputProps("pauseStartTime").value;
-    const startShift = form.getInputProps("startTime").value;
-    let sd = null;
-    if (startShift > start) {
-      //Next day
-      const day = moment(selectedDate).add(1, "d");
-      sd = moment(day.format("DDMMYYYY") + " " + start, "DDMMYYYY HH:mm");
-    } else {
-      sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm");
-    }
-    return sd.format("YYYY-MM-DD HH:mm");
-  };
-
-  const calculateEndShift = () => {
-    const start = form.getInputProps("startTime").value;
-    const duration = form.getInputProps("durationsInHours").value;
-    let sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm").add(duration, "h");
-    return sd.format("YYYY-MM-DD HH:mm");
-  };
-
-  const calculateStartShift = () => {
-    const start = form.getInputProps("startTime").value;
-    let sd = moment(formatDateToDDMMYYYY(selectedDate) + " " + start, "DDMMYYYY HH:mm");
-    return sd.format("YYYY-MM-DD HH:mm");
   };
 
   const onConfirm = () => {
@@ -320,8 +165,6 @@ export function DeletePage() {
 
   return (
     <Container size={"xl"} sx={{ width: "100%" }}>
-      {error ? <ResponceNotification opened={error} onClose={onClose} title={error} text={error} /> : null}
-
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
       <DeleteConfirmation
@@ -342,79 +185,29 @@ export function DeletePage() {
             fontWeight: 700,
           })}
         >
-          {t("crud.shift.title.delete")}
+          {t("comex.recap.title.delete")}
         </Title>
 
-        <ScrollArea type="scroll" style={{ width: "100%", height: height - 250 }}>
+        <ScrollArea type="scroll" style={{ width: "100%", height: height - HEADER_HIGHT }}>
           <form
             onSubmit={form.onSubmit((values) => {
               setConfirmModalOpen(true);
             })}
           >
-            <Grid>
-              <Grid.Col span={6}>
-                <Group position="left" sx={{ alignItems: "flex-start" }}>
-                  <Group mb={"md"}>{createSelectHours("startTime")}</Group>
-                  <Group mb={"md"}>{createSelectShiftDuration("durationsInHours")}</Group>
-                  <Group mb={"md"}>{createSelectJobType("jobType")}</Group>
-                  <Group mb={"md"}>{createSelectHours("pauseStartTime")}</Group>
-                  <Group mb={"md"}>{createSelectPauseDuration("pauseDurationsInMinutes")}</Group>
-                  <Group mb={"md"}>{createSelectPauseType("pauseType")}</Group>
-                  <Group mb={"xl"}>{createSelectRadius("radius")}</Group>
-                </Group>
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <Group position="center">
-                  <Timeline bulletSize={28} lineWidth={2} mt={"md"}>
-                    <Timeline.Item bullet={<IconClock size={20} />} title={calculateStartShift()}>
-                      <Text color="dimmed" size="sm"></Text>
-                      <Text size="xs" mt={4}>
-                        {t("crud.shift.label.timeline1")}
-                      </Text>
-                    </Timeline.Item>
-
-                    <Timeline.Item bullet={<IconToolsKitchen2 size={20} />} title={calculateStartPause()}>
-                      <Text color="dimmed" size="sm"></Text>
-                      <Text size="xs" mt={4}>
-                        {t("crud.shift.label.timeline2")}{" "}
-                        {form.getInputProps("pauseType").value
-                          ? form.getInputProps("pauseType").value
-                          : t("crud.shift.label.pause")}
-                      </Text>
-                    </Timeline.Item>
-
-                    <Timeline.Item bullet={<IconToolsKitchen2Off size={20} />} title={calculateEndPause()}>
-                      <Text color="dimmed" size="sm"></Text>
-                      <Text size="xs" mt={4}>
-                        {t("crud.shift.label.timeline3")}{" "}
-                        {form.getInputProps("pauseType").value
-                          ? form.getInputProps("pauseType").value
-                          : t("crud.shift.label.pause")}
-                      </Text>
-                    </Timeline.Item>
-
-                    <Timeline.Item bullet={<IconClock size={20} />} title={calculateEndShift()}>
-                      <Text color="dimmed" size="sm"></Text>
-                      <Text size="xs" mt={4}>
-                        {t("crud.shift.label.timeline4")}
-                      </Text>
-                    </Timeline.Item>
-                  </Timeline>
-                </Group>
-              </Grid.Col>
-            </Grid>
-            <Group grow mb={"md"}>
-              {createSelectWorker("worker")}
+            <Group mb={"md"} grow>
+              {createSelect("campaign", true, campaignList)}
             </Group>
+            <Group mb={"md"} grow>
+              {createTextField("description", true)}
+            </Group>
+            <Group mb={"md"} grow>
+              {createSelectCountry("country", true, countriesList)}
+              {createSelect("supplier", true, suppliersList)}
+            </Group>
+
             <Group position="right" mt="xl" mb="xs">
-              <Button
-                onClick={(event) => {
-                  navigate("../");
-                }}
-              >
-                {t("button.cancel")}
-              </Button>
               <Button type="submit">{t("button.accept")}</Button>
+              <Button onClick={onClose}>{t("button.cancel")}</Button>
             </Group>
           </form>
         </ScrollArea>

@@ -853,9 +853,31 @@
         "description": "Description",
         "event": "Event",
         "supplier": "Supplier",
-        "country": "Country"
+        "country": "Country",
+        "department":"Department",
+        "creditOffice":"Credit office",
+        "factory":"Factory",
+        "vendorHost":"Vendor host",
+        "paymentTerms":"Payment terms",
+        "shippingPort":"Shipping port",
+        "productionTime":"Production time",
+        "campaign":"Campaign",
+        "addProducts":"Products",
+        "addDocuments":"Documents"
       },
       "placeholder": {
+        "description": "description RECAP",
+        "event": "event name",
+        "supplier": "select a supplier",
+        "country": "select a country",
+        "department":"select a department",
+        "creditOffice":"select a credit office",
+        "factory":"select a factory",
+        "vendorHost":"select a vendor host",
+        "paymentTerms":"select a payment terms",
+        "shippingPort":"select a shipping port",
+        "productionTime":"select a production time",
+        "campaign":"select a campaign"
       },
       "columns": ["ID", "Creation date", "Description", "Event", "Supplier", "Country"]
     }

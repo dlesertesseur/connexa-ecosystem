@@ -6,14 +6,19 @@ import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
-import { findAllComexRecaps } from "../../../DataAccess/ComexRecap";
-import { ComexType } from "../../../Constants/ComexType";
+import { findAllComexCampaigns, findAllComexCountries, findAllComexRecaps } from "../../../DataAccess/ComexRecap";
+import { COMEX } from "../../../Constants/COMEX";
+import { IconCirclePlus} from "@tabler/icons-react";
+import ResponceNotification from "../../../Modal/ResponceNotification";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
 
   const { t } = useTranslation();
   const [rows, setRows] = useState([]);
+  const [error, setError] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [reload, setReload] = useState(null);
@@ -21,14 +26,31 @@ const DynamicApp = ({ app }) => {
   const getData = async () => {
     const params = {
       token: user.token,
-      type: ComexType.RECAP_CREATED
+      type: COMEX.types.RECAP_CREATED,
     };
 
     try {
+      let ret = null;
       const list = await findAllComexRecaps(params);
-      setRows(list);
-    } catch (error) {
+      ret = list.map((r) => {
+        return {
+          id: r.id,
+          creationDate: r.creationDate,
+          description: r.description,
+          campaign: r.campaign.event,
+          supplier: r.supplier.name,
+          country: r.country.country,
+        };
+      });
+      setRows(ret);
 
+      const campaigns = await findAllComexCampaigns(params);
+      setCampaigns(campaigns);
+
+      const countries = await findAllComexCountries(params);
+      setCountries(countries);
+    } catch (error) {
+      setError(error);
     }
     setLoading(false);
   };
@@ -43,13 +65,13 @@ const DynamicApp = ({ app }) => {
     { headerName: cols[col++], fieldName: "id", align: "right" },
     { headerName: cols[col++], fieldName: "creationDate", align: "center" },
     { headerName: cols[col++], fieldName: "description", align: "center" },
-    { headerName: cols[col++], fieldName: "event", align: "left" },
+    { headerName: cols[col++], fieldName: "campaign", align: "left" },
     { headerName: cols[col++], fieldName: "supplier", align: "left" },
     { headerName: cols[col++], fieldName: "country", align: "left" },
   ];
 
   const ret = rows ? (
-    <AbmStateContext.Provider value={{ reload, setReload, selectedRowId }}>
+    <AbmStateContext.Provider value={{ reload, setReload, selectedRowId, countries, campaigns, setError }}>
       <CrudFrame
         app={app}
         columns={columns}
@@ -62,6 +84,30 @@ const DynamicApp = ({ app }) => {
         createPage={<CreatePage />}
         updatePage={<UpdatePage />}
         deletePage={<DeletePage />}
+        relationshipPages={[
+          {
+            path: "/addProduct",
+            icon: <IconCirclePlus size={20}/>,
+            key: "comex.recap.label.addProducts",
+            //onPress: () => changeRoot(),
+          },
+          {
+            path: "/addDocument",
+            icon: <IconCirclePlus size={20}/>,
+            key: "comex.recap.label.addDocuments",
+            //onPress: () => changeRoot(),
+          },
+        ]}
+      />
+
+      <ResponceNotification
+        opened={error ? true : false}
+        onClose={() => {
+          setError(null);
+        }}
+        code={error}
+        title={t("status.error")}
+        text={error}
       />
     </AbmStateContext.Provider>
   ) : null;
