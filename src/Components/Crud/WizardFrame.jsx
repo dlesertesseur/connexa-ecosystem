@@ -1,5 +1,4 @@
 import React from "react";
-import uuid from "react-uuid";
 import SortedTable from "./SortedTable";
 import { Breadcrumbs, Divider, Stack, Text } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";

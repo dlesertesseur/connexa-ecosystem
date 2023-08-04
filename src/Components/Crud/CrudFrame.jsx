@@ -21,7 +21,7 @@ const CrudFrame = ({
   filterSelection = null,
   loading = false,
   breadcrumbs = null,
-  headerHeight= 230
+  headerHeight = 230,
 }) => {
   const { i18n } = useTranslation();
 
@@ -58,7 +58,7 @@ const CrudFrame = ({
           backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
         })}
       >
-        { breadcrumbs ? <Breadcrumbs>{breadcrumbs}</Breadcrumbs> : null}
+        {breadcrumbs ? <Breadcrumbs>{breadcrumbs}</Breadcrumbs> : null}
         <Routes>
           <Route
             path="/"
@@ -82,7 +82,10 @@ const CrudFrame = ({
           <Route path="/delete" element={deletePage} />
 
           {relationshipPages?.map((r) => {
-            const ret = r.element ? <Route key={uuid()} path={r.path} element={r.element} /> : null;
+            const ret = r.element ? (
+              <Route key={uuid()} path={r.path} element={r.element}></Route>
+            ) : null;
+
             return ret;
           })}
         </Routes>

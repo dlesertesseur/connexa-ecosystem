@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import CrudFrame from "../../../Components/Crud/CrudFrame";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
@@ -8,8 +7,11 @@ import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { findAllComexCampaigns, findAllComexCountries, findAllComexRecaps } from "../../../DataAccess/ComexRecap";
 import { COMEX } from "../../../Constants/COMEX";
-import { IconCirclePlus} from "@tabler/icons-react";
+import { IconFileUpload, IconList } from "@tabler/icons-react";
 import ResponceNotification from "../../../Modal/ResponceNotification";
+import CrudFrame from "../../../Components/Crud/CrudFrame";
+import ProductsList from "./products/ProductsList";
+import UploadData from "./products/UploadData";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -86,16 +88,16 @@ const DynamicApp = ({ app }) => {
         deletePage={<DeletePage />}
         relationshipPages={[
           {
-            path: "/addProduct",
-            icon: <IconCirclePlus size={20}/>,
+            path: "/products",
+            icon: <IconList size={20} />,
             key: "comex.recap.label.addProducts",
-            //onPress: () => changeRoot(),
+            element: <ProductsList back={"../"} />,
           },
           {
-            path: "/addDocument",
-            icon: <IconCirclePlus size={20}/>,
+            path: "/uploadData",
+            icon: <IconFileUpload size={20} />,
             key: "comex.recap.label.addDocuments",
-            //onPress: () => changeRoot(),
+            element: <UploadData back={"../"} />,
           },
         ]}
       />

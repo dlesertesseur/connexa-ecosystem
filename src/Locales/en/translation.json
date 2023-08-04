@@ -173,13 +173,13 @@
     "dimensionX": "Dimension X",
     "dimensionY": "Dimension Y",
     "dimensionZ": "Dimension Z",
-    "layouts":"Layouts",
-    "racks":"Racks",
-    "markers":"Markers",
-    "graph":"Graph",
-    "wmsApiAuth":"Authenticating with wms api",
-    "wmsApiData":"Getting data from wms api",
-    "color":"Color"
+    "layouts": "Layouts",
+    "racks": "Racks",
+    "markers": "Markers",
+    "graph": "Graph",
+    "wmsApiAuth": "Authenticating with wms api",
+    "wmsApiData": "Getting data from wms api",
+    "color": "Color"
   },
 
   "placeholder": {
@@ -841,7 +841,7 @@
     }
   },
 
-  "comex":{
+  "comex": {
     "recap": {
       "title": {
         "create": "Create a new RECAP",
@@ -854,32 +854,48 @@
         "event": "Event",
         "supplier": "Supplier",
         "country": "Country",
-        "department":"Department",
-        "creditOffice":"Credit office",
-        "factory":"Factory",
-        "vendorHost":"Vendor host",
-        "paymentTerms":"Payment terms",
-        "shippingPort":"Shipping port",
-        "productionTime":"Production time",
-        "campaign":"Campaign",
-        "addProducts":"Products",
-        "addDocuments":"Documents"
+        "department": "Department",
+        "creditOffice": "Credit office",
+        "factory": "Factory",
+        "vendorHost": "Vendor host",
+        "paymentTerms": "Payment terms",
+        "shippingPort": "Shipping port",
+        "productionTime": "Production time",
+        "campaign": "Campaign",
+        "addProducts": "Products",
+        "addDocuments": "Documents"
       },
       "placeholder": {
         "description": "description RECAP",
         "event": "event name",
         "supplier": "select a supplier",
         "country": "select a country",
-        "department":"select a department",
-        "creditOffice":"select a credit office",
-        "factory":"select a factory",
-        "vendorHost":"select a vendor host",
-        "paymentTerms":"select a payment terms",
-        "shippingPort":"select a shipping port",
-        "productionTime":"select a production time",
-        "campaign":"select a campaign"
+        "department": "select a department",
+        "creditOffice": "select a credit office",
+        "factory": "select a factory",
+        "vendorHost": "select a vendor host",
+        "paymentTerms": "select a payment terms",
+        "shippingPort": "select a shipping port",
+        "productionTime": "select a production time",
+        "campaign": "select a campaign"
       },
-      "columns": ["ID", "Creation date", "Description", "Event", "Supplier", "Country"]
+      "columns": ["ID", "Creation date", "Description", "Event", "Supplier", "Country"],
+      "products": {
+        "title": {
+          "add": "Add product",
+          "update": "Update product",
+          "delete": "Delete product"
+        },
+        "label": {
+          "sku": "Code",
+          "description": "Description"
+        },
+        "placeholder": {
+          "sku": "a sku code",
+          "description": "sku description"
+        },
+        "columns": ["SKU", "Description", "Department", "Factory", "Vendor host", "Shipping port", "Manufacturing time"]
+      }
     }
   },
 
@@ -967,7 +983,14 @@
         "label": "Options",
         "title": "Search options",
         "subTitle": "Select a group of information",
-        "options": ["Item by code", "Items by description", "Items by trademark", "Items by status", "Items by type", "Items in similar positions"]
+        "options": [
+          "Item by code",
+          "Items by description",
+          "Items by trademark",
+          "Items by status",
+          "Items by type",
+          "Items in similar positions"
+        ]
       },
       "option": {
         "itemByCode": {
@@ -997,33 +1020,33 @@
           "label": "Select a trademark"
         },
         "itemByPosition": {
-          "label":"Position name",
+          "label": "Position name",
           "description": "Search items in similar position",
           "placeholder": "a position name"
         }
       },
-      "moduleInspector":{
-        "tabs":{
-          "information":"Information",
-          "view3d":"View 3D"
+      "moduleInspector": {
+        "tabs": {
+          "information": "Information",
+          "view3d": "View 3D"
         },
-        "label":{
-          "rackLevel":"Rack level",
-          "height":"Height",
-          "width":"Width",
-          "depth":"Depth",
-          "rackType":"Type",
-          "status":"Status",
-          "pallets":"Content",
-          "palletDimension":"Dimension",
-          "palletType":"Type",
-          "palletStatus":"Status",
-          "palletCreationDate":"Creation date"
+        "label": {
+          "rackLevel": "Rack level",
+          "height": "Height",
+          "width": "Width",
+          "depth": "Depth",
+          "rackType": "Type",
+          "status": "Status",
+          "pallets": "Content",
+          "palletDimension": "Dimension",
+          "palletType": "Type",
+          "palletStatus": "Status",
+          "palletCreationDate": "Creation date"
         }
       },
-      "layer":{
-        "label":"Layers",
-        "frames":"Frames"
+      "layer": {
+        "label": "Layers",
+        "frames": "Frames"
       }
     }
   },
