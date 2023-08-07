@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Button, Center, Group, Stack, Text } from "@mantine/core";
-import { Route, Routes, useNavigate, useRoutes } from "react-router-dom";
-import { HEADER_HIGHT } from "../../../../Constants";
+import { Stack } from "@mantine/core";
+import { Route, Routes } from "react-router-dom";
+import { CRUD_PAGE_MODE, HEADER_HIGHT } from "../../../../Constants";
 import { useContext } from "react";
 import { AbmStateContext } from "../Context";
 import { findComexRecapById } from "../../../../DataAccess/ComexRecap";
+import { ProductPage } from "./ProductPage";
 import RecapHeader from "../RecapHeader";
 import SortedTable from "../../../../Components/Crud/SortedTable";
-import DummyPage from "./DummyPage";
-import { AddProductPage } from "./AddProductPage";
 
 const RACAP_HEADER = 120;
 
@@ -25,7 +24,6 @@ const ProductsList = () => {
   const [recap, setRecap] = useState(null);
 
   const { selectedRowId } = useContext(AbmStateContext);
-  const navigate = useNavigate();
 
   const getData = async () => {
     const params = {
@@ -77,9 +75,9 @@ const ProductsList = () => {
               />
             }
           ></Route>
-          <Route path="create" element={<AddProductPage />} />
-          <Route path="update" element={<DummyPage title={"UPDATE PRODUCT"} />} />
-          <Route path="delete" element={<DummyPage title={"DELETE PRODUCT"} />} />
+          <Route path="create" element={<ProductPage mode={CRUD_PAGE_MODE.new}/>} />
+          <Route path="update" element={<ProductPage mode={CRUD_PAGE_MODE.update}/>} />
+          <Route path="delete" element={<ProductPage mode={CRUD_PAGE_MODE.delete}/>} />
         </Routes>
       </Stack>
     </Stack>

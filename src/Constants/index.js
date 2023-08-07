@@ -6,16 +6,18 @@ export const VIEW_HEADER_HIGHT = 48;
 export const DIVIDER_HIGHT = 20;
 export const PIXEL_METER_RELATION = 25.0;
 export const BLOCK_SNAP_SIZE = 1.0;
-export const CONNECTOR_TWO_WAY = "two_way"
-export const CONNECTOR_ONE_WAY = "one_way"
-export const NODE_RADIO = 6
+export const CONNECTOR_TWO_WAY = "two_way";
+export const CONNECTOR_ONE_WAY = "one_way";
+export const NODE_RADIO = 6;
 
-export const RACK_ORIENTATION_Y = "rack_orientation_y_axis"
-export const RACK_ORIENTATION_X = "rack_orientation_x_axis"
+export const RACK_ORIENTATION_Y = "rack_orientation_y_axis";
+export const RACK_ORIENTATION_X = "rack_orientation_x_axis";
 
 export const GUIDELINE_OFFSET = 5;
 
-const LOCAL_SERVER = "http://localhost"
+const LOCAL_SERVER = "http://localhost";
+
+export const CRUD_PAGE_MODE = { new: 1, update: 2, delete: 3 };
 
 export const API = {
   auth: {
@@ -25,7 +27,12 @@ export const API = {
     authorizations: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations/",
     findByEmail: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations/organizations/",
     byUserId: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations/",
-    findRolesByEmail: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations/organizations/{email}/organizations/{organizationId}/roles",
+    findRolesByEmail:
+      config.SERVER +
+      ":" +
+      config.PORT +
+      config.API_BASE +
+      "/authorizations/organizations/{email}/organizations/{organizationId}/roles",
     findAllRolesByUserId: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations/",
     unassignRole: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations/",
     assignRole: config.SERVER + ":" + config.PORT + config.API_BASE + "/authorizations",
@@ -81,13 +88,19 @@ export const API = {
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/organizations/",
     findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/organizations",
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/organizations/",
-    findRolesByEmailAndOrganization: config.SERVER + ":" + config.PORT + config.API_BASE + "/organizations/{email}/organizations/{organizationId}/roles",
+    findRolesByEmailAndOrganization:
+      config.SERVER +
+      ":" +
+      config.PORT +
+      config.API_BASE +
+      "/organizations/{email}/organizations/{organizationId}/roles",
   },
 
   organizationRole: {
     asignRol: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-role-relations/organizations/",
     unasignRol: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-role-relations/roles/",
-    findAllByOrganizationId: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-role-relations/organizations/",
+    findAllByOrganizationId:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-role-relations/organizations/",
   },
 
   project: {
@@ -106,7 +119,8 @@ export const API = {
     findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/roles",
     findByName: config.SERVER + ":" + config.PORT + config.API_BASE + "/roles",
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/roles/",
-    findAllApplicationsByRole: config.SERVER + ":" + config.PORT + config.API_BASE + "/application-role-relations/role/",
+    findAllApplicationsByRole:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/application-role-relations/role/",
     findAllRolesInContext: config.SERVER + ":" + config.PORT + config.API_BASE + "/roles/context/",
   },
 
@@ -172,9 +186,12 @@ export const API = {
   },
 
   category_product_relation: {
-    findAllProductsByCategoryIdPage: config.SERVER + ":" + config.PORT + config.API_BASE + "/category-product-relation/",
-    categorizeProductsByProjectIdCategortyId: config.SERVER + ":" + config.PORT + config.API_BASE + "/category-product-relation/",
-    uncategorizeProductsByProjectId: config.SERVER + ":" + config.PORT + config.API_BASE + "/category-product-relation/",
+    findAllProductsByCategoryIdPage:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/category-product-relation/",
+    categorizeProductsByProjectIdCategortyId:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/category-product-relation/",
+    uncategorizeProductsByProjectId:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/category-product-relation/",
   },
 
   country: {
@@ -205,27 +222,27 @@ export const API = {
     findByName: config.SERVER + ":" + config.PORT + config.API_BASE + "/contexts",
   },
 
-  graphic: { 
+  graphic: {
     findStructure: LOCAL_SERVER + ":" + config.PORT + config.API_BASE + "/structure",
-    findScene: LOCAL_SERVER + ":" + config.PORT + config.API_BASE + "/scene", 
-    findActors: LOCAL_SERVER + ":" + config.PORT + config.API_BASE + "/actors", 
+    findScene: LOCAL_SERVER + ":" + config.PORT + config.API_BASE + "/scene",
+    findActors: LOCAL_SERVER + ":" + config.PORT + config.API_BASE + "/actors",
     findTarget: LOCAL_SERVER + ":" + config.PORT + config.API_BASE + "/target",
     findPath: LOCAL_SERVER + ":" + config.PORT + config.API_BASE + "/findPath",
     findOperator: LOCAL_SERVER + ":" + config.PORT + config.API_BASE + "/work-orders",
   },
 
-  surface: { 
-    findZone: config.SERVER + ":" + config.PORT + config.API_BASE + "/storage-zones", 
-    findRacksByZoneId: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
-    findRackId: config.SERVER + ":" + config.PORT + config.API_BASE + "/racks", 
-    findLayout: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings", 
-    findFloor: config.SERVER + ":" + config.PORT + config.API_BASE + "/floors", 
-    savePosAndRot: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
-    saveLayout: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings/", 
-    findLayoutByFloorId: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings", 
+  surface: {
+    findZone: config.SERVER + ":" + config.PORT + config.API_BASE + "/storage-zones",
+    findRacksByZoneId: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites",
+    findRackId: config.SERVER + ":" + config.PORT + config.API_BASE + "/racks",
+    findLayout: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings",
+    findFloor: config.SERVER + ":" + config.PORT + config.API_BASE + "/floors",
+    savePosAndRot: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites",
+    saveLayout: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings/",
+    findLayoutByFloorId: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings",
   },
 
-  floor: { 
+  floor: {
     findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/floors/all",
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/floors",
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/floors/",
@@ -239,11 +256,11 @@ export const API = {
   rack: {
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites/",
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites/",
-    findAllHeaders: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
-    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
+    findAllHeaders: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites",
   },
 
-  layout: { 
+  layout: {
     findAllById: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings",
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings",
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings/",
@@ -251,7 +268,7 @@ export const API = {
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/site-drawings/",
   },
 
-  layoutMarkers: { 
+  layoutMarkers: {
     findAllById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites",
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites",
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites/",
@@ -268,12 +285,16 @@ export const API = {
   },
 
   worker: {
-    findAllWorkersByOrganization: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/organizations/",
-    findAllWorkerByIdentification: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/",
-    findAllOrganizationsByWorker: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/workers/",
+    findAllWorkersByOrganization:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/organizations/",
+    findAllWorkerByIdentification:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/",
+    findAllOrganizationsByWorker:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/workers/",
     findAllCountries: config.SERVER + ":" + config.PORT + config.API_BASE + "/countries-provinces-cities/",
     findWorkerById: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/workers/",
-    addRelationWorkerOrganization: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/organizations/",
+    addRelationWorkerOrganization:
+      config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/organizations/",
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations",
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations",
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/organization-worker-relations/workers/",
@@ -306,8 +327,8 @@ export const API = {
   graph: {
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites/",
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites/",
-    findAllHeaders: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
-    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites", 
+    findAllHeaders: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sites",
   },
 
   wms: {
@@ -354,5 +375,5 @@ export const actions = {
 };
 
 export const currency = {
-  pesos: "PESOS"
+  pesos: "PESOS",
 };

@@ -5,10 +5,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
-import { HEADER_HIGHT } from "../../../../Constants";
+import { CRUD_PAGE_MODE, HEADER_HIGHT } from "../../../../Constants";
 import { AbmStateContext } from "../Context";
 
-export function AddProductPage() {
+export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
@@ -21,12 +21,14 @@ export function AddProductPage() {
   const [paymentTermsList, setPaymentTermsList] = useState(null);
   const [shippingPortList, setShippingPortList] = useState(null);
   const [productionTimesList, setProductionTimesList] = useState(null);
+  const [recap, setRecap] = useState(null);
 
   const [List, setList] = useState(null);
 
   const navigate = useNavigate();
 
-  const { setReload, departments, modalities, factories, paymentTerms, shippingPorts, productionTimes } = useContext(AbmStateContext);
+  const { setReload, departments, modalities, factories, paymentTerms, shippingPorts, productionTimes, selectedRowId } =
+    useContext(AbmStateContext);
 
   useEffect(() => {
     let ret = departments.map((c) => {
@@ -65,19 +67,31 @@ export function AddProductPage() {
     });
     setProductionTimesList(ret);
 
+    if (mode === CRUD_PAGE_MODE.update || mode === CRUD_PAGE_MODE.delete) {
+      getData();
+    }
   }, [departments, modalities]);
+
+  const getData = async () => {
+    const params = {
+      token: user.token,
+      id: selectedRowId,
+    };
+    ret = await findComexRecapById(params);
+    setRecap(ret);
+  };
 
   const form = useForm({
     initialValues: {
-      modality:null,
-      sku: null,
-      description: null,
-      factory:null,
-      department:null,
-      vendorHost:"", 
-      paymentTerms:null,
-      shippingPort:null,
-      productionTimes:null
+      modality: null,
+      sku: "",
+      description: "",
+      factory: null,
+      department: null,
+      vendorHost: "",
+      paymentTerms: null,
+      shippingPort: null,
+      productionTimes: null,
     },
 
     validate: {
@@ -89,30 +103,32 @@ export function AddProductPage() {
       vendorHost: (val) => (val ? null : t("validation.required")),
       paymentTerms: (val) => (val ? null : t("validation.required")),
       shippingPort: (val) => (val ? null : t("validation.required")),
-      productionTimes: (val) => (val ? null : t("validation.required"))
+      productionTimes: (val) => (val ? null : t("validation.required")),
     },
   });
 
-  const createSelectCountry = (field, disabled, data) => {
-    const ret = (
-      <Select
-        label={t("comex.recap.label." + field)}
-        data={data ? data : []}
-        disabled={disabled}
-        placeholder={t("comex.recap.placeholder." + field)}
-        {...form.getInputProps(field)}
-        onChange={(env) => {
-          form.setFieldValue(field, env);
-          form.setFieldValue("supplier", null);
-          setSelectedCountry(env);
-        }}
-      />
-    );
+  useEffect(() => {
+    if (mode === CRUD_PAGE_MODE.update || mode === CRUD_PAGE_MODE.delete) {
+      if (recap) {
+        // form.setFieldValue("description", recap.description);
+        // form.setFieldValue("campaign", recap.campaign.id);
+        // form.setFieldValue("country", recap.country.code);
+        // form.setFieldValue("supplier", recap.supplier.code);
+        // setSelectedCountry(recap.country.code);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recap]);
 
-    return ret;
-  };
+  const createSelect = (field, data) => {
+    let disabled = null;
 
-  const createSelect = (field, disabled, data) => {
+    if (mode === CRUD_PAGE_MODE.delete) {
+      disabled = true;
+    } else {
+      disabled = data ? false : true;
+    }
+
     const ret = (
       <Select
         label={t("comex.recap.products.label." + field)}
@@ -127,8 +143,11 @@ export function AddProductPage() {
   };
 
   const createTextField = (field) => {
+    const disabled = mode === CRUD_PAGE_MODE.delete ? true : false;
+
     const ret = (
       <TextInput
+        disabled={disabled}
         label={t("comex.recap.products.label." + field)}
         placeholder={t("comex.recap.products.placeholder." + field)}
         {...form.getInputProps(field)}
@@ -179,37 +198,29 @@ export function AddProductPage() {
           {t("comex.recap.products.title.add")}
         </Title>
 
-        <ScrollArea type="scroll" style={{ width: "100%", height: height - HEADER_HIGHT - 140 }}>
+        <ScrollArea type="scroll" px={"md"} style={{ width: "100%", height: height - HEADER_HIGHT - 140 }}>
           <form
             onSubmit={form.onSubmit((values) => {
               onCreate(values);
             })}
           >
-            <Group mb={"md"}>
-              {createSelect("modality", modalitiesList ? false : true, modalitiesList)}
-            </Group>
-            <Group mb={"md"}>
-              {createTextField("sku")}
-            </Group>
+            <Group mb={"md"}>{createSelect("modality", modalitiesList)}</Group>
+            <Group mb={"md"}>{createTextField("sku")}</Group>
             <Group mb={"md"} grow>
               {createTextField("description")}
             </Group>
-            <Group mb={"md"}>
-              {createSelect("department", departmentsList ? false : true, departmentsList)}
-            </Group>
+            <Group mb={"md"}>{createSelect("department", departmentsList)}</Group>
             <Group mb={"md"} grow>
-              {createSelect("factory", factoryList ? false : true, factoryList)}
+              {createSelect("factory", factoryList)}
             </Group>
             <Group mb={"md"} grow>
               {createTextField("vendorHost")}
-              {createSelect("paymentTerms", paymentTermsList ? false : true, paymentTermsList)}
+              {createSelect("paymentTerms", paymentTermsList)}
             </Group>
             <Group mb={"md"} grow>
-              {createSelect("shippingPort", shippingPortList ? false : true, shippingPortList)}
+              {createSelect("shippingPort", shippingPortList)}
             </Group>
-            <Group mb={"md"}>
-              {createSelect("productionTimes", productionTimesList ? false : true, productionTimesList)}
-            </Group>
+            <Group mb={"md"}>{createSelect("productionTimes", productionTimesList)}</Group>
 
             <Group position="right" mt="xl" mb="xs">
               <Button type="submit">{t("button.accept")}</Button>
