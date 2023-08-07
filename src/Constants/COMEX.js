@@ -27,6 +27,61 @@ const COMEX = {
     { id: 14, code: "OTR", name: "Otros" },
   ],
 
+  modalities: [
+    { id: 1, code: "OC", name: "Oficina de credito" },
+    { id: 2, code: "ID", name: "Importacion directa" },
+  ],
+
+  factories: [
+    { ID: 1, code: 'FOXCONN', name: 'Foxconn Technology Group' },
+    { ID: 2, code: 'HUAWEI', name: 'Huawei Technologies Co., Ltd.' },
+    { ID: 3, code: 'WINGTECH', name: 'Wingtech Technology Co., Ltd.' },
+    { ID: 4, code: 'HONHAI', name: 'Hon Hai Precision Industry Co., Ltd. (Foxconn)' },
+    { ID: 5, code: 'BYD', name: 'BYD Company Limited' },
+    { ID: 6, code: 'LENOVO', name: 'Lenovo Group Limited' },
+    { ID: 7, code: 'ZTE', name: 'ZTE Corporation' },
+    { ID: 8, code: 'XIAOMI', name: 'Xiaomi Corporation' },
+    { ID: 9, code: 'OPPO', name: 'Guangdong Oppo Mobile Telecommunications Corp., Ltd.' },
+    { ID: 10, code: 'VIVO', name: 'Vivo Communication Technology Co., Ltd.' },
+  ],
+
+  paymentTerms: [
+    { ID: 1, code: 'LC', name: 'Carta de Crédito' },
+    { ID: 2, code: 'TT', name: 'Transferencia Telegráfica' },
+    { ID: 3, code: 'CAD', name: 'Contra Reembolso' },
+    { ID: 4, code: 'DA', name: 'Aceptación Diferida' },
+    { ID: 5, code: 'OA', name: 'Órdenes de Pago' },
+    { ID: 6, code: 'CH', name: 'Cheque' },
+    { ID: 7, code: 'R/A', name: 'Remesa Aceptada' },
+    { ID: 8, code: 'Otro', name: 'Otro' },
+  ],
+
+  shippingPorts: [
+    { ID: 1, code: 'SHANGHAI', name: 'Puerto de Shanghái' },
+    { ID: 2, code: 'NINGBO', name: 'Puerto de Ningbo-Zhoushan' },
+    { ID: 3, code: 'SHENZHEN', name: 'Puerto de Shenzhen' },
+    { ID: 4, code: 'QINGDAO', name: 'Puerto de Qingdao' },
+    { ID: 5, code: 'GUANGZHOU', name: 'Puerto de Guangzhou' },
+    { ID: 6, code: 'TIANJIN', name: 'Puerto de Tianjin' },
+    { ID: 7, code: 'DALIAN', name: 'Puerto de Dalian' },
+    { ID: 8, code: 'XIAMEN', name: 'Puerto de Xiamen' },
+    { ID: 9, code: 'HONGKONG', name: 'Puerto de Hong Kong' },
+    { ID: 10, code: 'WUHAN', name: 'Puerto de Wuhan' },
+  ],
+
+  productionTimes : [
+    { ID: 1, code: 'ELEC', name: 'Electrónica', value: '3-4 semanas' },
+    { ID: 2, code: 'TEXT', name: 'Textiles', value: '2-3 semanas' },
+    { ID: 3, code: 'MOB', name: 'Mobiliario', value: '4-6 semanas' },
+    { ID: 4, code: 'AUTOP', name: 'Autopartes', value: '2-3 semanas' },
+    { ID: 5, code: 'JUG', name: 'Juguetes', value: '2 semanas' },
+    { ID: 6, code: 'EQUIP', name: 'Equipo médico', value: '6-8 semanas' },
+    { ID: 7, code: 'CALZ', name: 'Calzado', value: '1-2 semanas' },
+    { ID: 8, code: 'ACC', name: 'Accesorios de moda', value: '2-3 semanas' },
+    { ID: 9, code: 'HOG', name: 'Artículos para el hogar', value: '3-4 semanas' },
+    { ID: 10, code: 'JOY', name: 'Joyas', value: '3-4 semanas' },
+  ],
+
   countries: [
     {
       code: "US",
@@ -75,7 +130,7 @@ const COMEX = {
       creationDate: "2023/07/20",
       description: "BEBES",
       campaign: { id: 1, event: "Navidad 2024", description: "" },
-      supplier: { code: "K-C", name: "Kimberly-Clark Corporation"},
+      supplier: { code: "K-C", name: "Kimberly-Clark Corporation" },
       country: { code: "US", country: "Estados Unidos" },
     },
   ],

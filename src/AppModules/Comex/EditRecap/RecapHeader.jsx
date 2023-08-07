@@ -1,7 +1,12 @@
 import React from "react";
-import { Badge, Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
+import { Badge, Button, Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const RecapHeader = ({ recap, h=120 }) => {
+const RecapHeader = ({ recap, h = 120 }) => {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
   return (
     <Stack spacing={"xs"} h={h}>
       {recap ? (
@@ -18,13 +23,26 @@ const RecapHeader = ({ recap, h=120 }) => {
                 {recap.description}
               </Text>
             </Group>
-            <Group spacing={"xs"} mt={"sm"}>
-              <Text size={"sm"} weight={700}>
-                {recap.supplier.name}
-              </Text>
-              <Badge color="green" variant="dot">
-                {recap.country.country}
-              </Badge>
+
+            <Group spacing={"xs"} position="apart">
+              <Group spacing={"xs"} mt={"sm"}>
+                <Text size={"sm"} weight={700}>
+                  {recap.supplier.name}
+                </Text>
+                <Badge color="green" variant="dot">
+                  {recap.country.country}
+                </Badge>
+              </Group>
+
+              <Group spacing={"xs"} position="right">
+                <Button
+                  onClick={() => {
+                    navigate("../");
+                  }}
+                >
+                  <Text>{t("button.back")}</Text>
+                </Button>
+              </Group>
             </Group>
           </Stack>
         </Paper>

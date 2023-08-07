@@ -875,8 +875,6 @@
         "factory": "select a factory",
         "vendorHost": "select a vendor host",
         "paymentTerms": "select a payment terms",
-        "shippingPort": "select a shipping port",
-        "productionTime": "select a production time",
         "campaign": "select a campaign"
       },
       "columns": ["ID", "Creation date", "Description", "Event", "Supplier", "Country"],
@@ -888,11 +886,25 @@
         },
         "label": {
           "sku": "Code",
-          "description": "Description"
+          "description": "Description",
+          "department": "Department",
+          "modality":"Modality",
+          "factory":"Factory",
+          "vendorHost":"Vendor Host",
+          "paymentTerms":"Payment terms",
+          "shippingPort": "Shipping port",
+          "productionTimes": "Production time"
         },
         "placeholder": {
           "sku": "a sku code",
-          "description": "sku description"
+          "description": "sku description",
+          "department": "select a department",
+          "modality":"select option",
+          "factory":"select a factory",
+          "vendorHost":"vendor host number",
+          "paymentTerms":"select a payment terms",
+          "shippingPort": "select a shipping port",
+          "productionTimes": "select a production time"
         },
         "columns": ["SKU", "Description", "Department", "Factory", "Vendor host", "Shipping port", "Manufacturing time"]
       }

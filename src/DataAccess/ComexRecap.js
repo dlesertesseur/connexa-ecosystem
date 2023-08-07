@@ -112,6 +112,126 @@ async function findAllComexCountries(parameters) {
   }
 }
 
+async function findAllComexDepartments(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", token: parameters.token },
+    };
+
+    // const url = API.comexrecap.findAll;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = COMEX.departments;
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexModalities(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", token: parameters.token },
+    };
+
+    // const url = API.comexrecap.findAll;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = COMEX.modalities;
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexFactories(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", token: parameters.token },
+    };
+
+    // const url = API.comexrecap.findAll;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = COMEX.factories;
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexShippingPorts(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", token: parameters.token },
+    };
+
+    // const url = API.comexrecap.findAll;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = COMEX.shippingPorts;
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexProductionTimes(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", token: parameters.token },
+    };
+
+    // const url = API.comexrecap.findAll;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = COMEX.productionTimes;
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexAllPaymentTerms(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", token: parameters.token },
+    };
+
+    // const url = API.comexrecap.findAll;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = COMEX.paymentTerms;
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
 async function findAllComexCampaigns(parameters) {
   try {
     const requestOptions = {
@@ -158,4 +278,10 @@ export {
   findComexRecapById,
   findAllComexCountries,
   findAllComexCampaigns,
+  findAllComexDepartments,
+  findAllComexModalities,
+  findAllComexFactories,
+  findAllComexShippingPorts,
+  findAllComexAllPaymentTerms,
+  findAllComexProductionTimes
 };

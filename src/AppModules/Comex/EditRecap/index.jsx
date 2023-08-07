@@ -5,7 +5,17 @@ import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
-import { findAllComexCampaigns, findAllComexCountries, findAllComexRecaps } from "../../../DataAccess/ComexRecap";
+import {
+  findAllComexAllPaymentTerms,
+  findAllComexCampaigns,
+  findAllComexCountries,
+  findAllComexDepartments,
+  findAllComexFactories,
+  findAllComexModalities,
+  findAllComexProductionTimes,
+  findAllComexRecaps,
+  findAllComexShippingPorts,
+} from "../../../DataAccess/ComexRecap";
 import { COMEX } from "../../../Constants/COMEX";
 import { IconFileUpload, IconList } from "@tabler/icons-react";
 import ResponceNotification from "../../../Modal/ResponceNotification";
@@ -21,6 +31,13 @@ const DynamicApp = ({ app }) => {
   const [error, setError] = useState(null);
   const [countries, setCountries] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [modalities, setModalities] = useState([]);
+  const [productionTimes, setProductionTimes] = useState([]);
+
+  const [factories, setFactories] = useState([]);
+  const [paymentTerms, setPaymentTerms] = useState([]);
+  const [shippingPorts, setShippingPorts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [reload, setReload] = useState(null);
@@ -51,6 +68,24 @@ const DynamicApp = ({ app }) => {
 
       const countries = await findAllComexCountries(params);
       setCountries(countries);
+
+      const departments = await findAllComexDepartments(params);
+      setDepartments(departments);
+
+      const modalities = await findAllComexModalities(params);
+      setModalities(modalities);
+
+      const factories = await findAllComexFactories(params);
+      setFactories(factories);
+
+      const shippingPort = await findAllComexShippingPorts(params);
+      setShippingPorts(shippingPort);
+
+      const paymentTerms = await findAllComexAllPaymentTerms(params);
+      setPaymentTerms(paymentTerms);
+
+      const productionTimes = await findAllComexProductionTimes(params);
+      setProductionTimes(productionTimes);
     } catch (error) {
       setError(error);
     }
@@ -73,7 +108,22 @@ const DynamicApp = ({ app }) => {
   ];
 
   const ret = rows ? (
-    <AbmStateContext.Provider value={{ reload, setReload, selectedRowId, countries, campaigns, setError }}>
+    <AbmStateContext.Provider
+      value={{
+        reload,
+        setReload,
+        selectedRowId,
+        countries,
+        campaigns,
+        departments,
+        modalities,
+        shippingPorts,
+        factories,
+        paymentTerms,
+        productionTimes,
+        setError,
+      }}
+    >
       <CrudFrame
         app={app}
         columns={columns}
@@ -88,13 +138,13 @@ const DynamicApp = ({ app }) => {
         deletePage={<DeletePage />}
         relationshipPages={[
           {
-            path: "/products",
+            path: "products",
             icon: <IconList size={20} />,
             key: "comex.recap.label.addProducts",
             element: <ProductsList back={"../"} />,
           },
           {
-            path: "/uploadData",
+            path: "uploadData",
             icon: <IconFileUpload size={20} />,
             key: "comex.recap.label.addDocuments",
             element: <UploadData back={"../"} />,

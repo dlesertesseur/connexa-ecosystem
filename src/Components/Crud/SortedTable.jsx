@@ -336,7 +336,8 @@ export default function SortedTable({
                 <Button
                   key={r.path}
                   onClick={() => {
-                    r.onPress ? r.onPress(r) : navigate("." + r.path);
+                    //r.onPress ? r.onPress(r) : navigate("." + r.path);
+                    r.onPress ? r.onPress(r) : navigate(r.path);
                   }}
                   disabled={
                     r.customState

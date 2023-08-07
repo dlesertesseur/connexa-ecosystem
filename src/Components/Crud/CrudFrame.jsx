@@ -83,7 +83,7 @@ const CrudFrame = ({
 
           {relationshipPages?.map((r) => {
             const ret = r.element ? (
-              <Route key={uuid()} path={r.path} element={r.element}></Route>
+              <Route key={uuid()} path={r.path + "/*"} element={r.element}></Route>
             ) : null;
 
             return ret;

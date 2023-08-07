@@ -10,6 +10,7 @@ import { findComexRecapById } from "../../../../DataAccess/ComexRecap";
 import RecapHeader from "../RecapHeader";
 import SortedTable from "../../../../Components/Crud/SortedTable";
 import DummyPage from "./DummyPage";
+import { AddProductPage } from "./AddProductPage";
 
 const RACAP_HEADER = 120;
 
@@ -76,21 +77,11 @@ const ProductsList = () => {
               />
             }
           ></Route>
-          <Route path="/create" element={<DummyPage title={"NEW PRODUCT"} />} />
+          <Route path="create" element={<AddProductPage />} />
           <Route path="update" element={<DummyPage title={"UPDATE PRODUCT"} />} />
           <Route path="delete" element={<DummyPage title={"DELETE PRODUCT"} />} />
         </Routes>
       </Stack>
-
-      <Group spacing={"xs"} position="right">
-        <Button
-          onClick={() => {
-            navigate("../");
-          }}
-        >
-          <Text>{t("button.back")}</Text>
-        </Button>
-      </Group>
     </Stack>
   );
 };
