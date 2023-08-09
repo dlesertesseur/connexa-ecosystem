@@ -6,7 +6,7 @@ import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import {
-  findAllComexAllPaymentTerms,
+  findAllComexPaymentTerms,
   findAllComexCampaigns,
   findAllComexCountries,
   findAllComexDepartments,
@@ -45,6 +45,7 @@ const DynamicApp = ({ app }) => {
   const getData = async () => {
     const params = {
       token: user.token,
+      apikey: user.token,
       type: COMEX.types.RECAP_CREATED,
     };
 
@@ -81,7 +82,7 @@ const DynamicApp = ({ app }) => {
       const shippingPort = await findAllComexShippingPorts(params);
       setShippingPorts(shippingPort);
 
-      const paymentTerms = await findAllComexAllPaymentTerms(params);
+      const paymentTerms = await findAllComexPaymentTerms(params);
       setPaymentTerms(paymentTerms);
 
       const productionTimes = await findAllComexProductionTimes(params);

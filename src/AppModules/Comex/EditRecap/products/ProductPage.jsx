@@ -37,8 +37,8 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
     });
     setDepartmentsList(ret);
 
-    ret = modalities.map((c) => {
-      const obj = { value: c.code, label: c.name };
+    ret = modalities?.map((c) => {
+      const obj = { value: c.id, label: c.name };
       return obj;
     });
     setModalitiesList(ret);
@@ -50,7 +50,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
     setFactoryList(ret);
 
     ret = paymentTerms.map((c) => {
-      const obj = { value: c.code, label: c.name };
+      const obj = { value: c.id, label: c.name };
       return obj;
     });
     setPaymentTermsList(ret);
@@ -128,7 +128,6 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
     } else {
       disabled = data ? false : true;
     }
-
     const ret = (
       <Select
         label={t("comex.recap.products.label." + field)}

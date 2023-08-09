@@ -137,14 +137,12 @@ async function findAllComexModalities(parameters) {
     const requestOptions = {
       method: "GET",
       mode: "cors",
-      headers: { "Content-Type": "application/json", token: parameters.token },
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
     };
 
-    // const url = API.comexrecap.findAll;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
-
-    const data = COMEX.modalities;
+    const url = API.comexrecap.findAllComeximportationTypes;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -212,19 +210,17 @@ async function findAllComexProductionTimes(parameters) {
   }
 }
 
-async function findAllComexAllPaymentTerms(parameters) {
+async function findAllComexPaymentTerms(parameters) {
   try {
     const requestOptions = {
       method: "GET",
       mode: "cors",
-      headers: { "Content-Type": "application/json", token: parameters.token },
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
     };
 
-    // const url = API.comexrecap.findAll;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
-
-    const data = COMEX.paymentTerms;
+    const url = API.comexrecap.findAllComexPaymentTerms;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -237,14 +233,12 @@ async function findAllComexCampaigns(parameters) {
     const requestOptions = {
       method: "GET",
       mode: "cors",
-      headers: { "Content-Type": "application/json", token: parameters.token },
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
     };
 
-    // const url = API.comexrecap.findAll;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
-
-    const data = COMEX.campaigns;
+    const url = API.comexrecap.findAllComexCampaigns;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -282,6 +276,6 @@ export {
   findAllComexModalities,
   findAllComexFactories,
   findAllComexShippingPorts,
-  findAllComexAllPaymentTerms,
+  findAllComexPaymentTerms,
   findAllComexProductionTimes
 };

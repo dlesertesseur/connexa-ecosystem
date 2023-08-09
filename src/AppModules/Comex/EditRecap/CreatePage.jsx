@@ -33,8 +33,8 @@ export function CreatePage() {
     });
     setCountriesList(ret);
 
-    ret = campaigns.map((c) => {
-      const obj = { value: c.id, label: c.event };
+    ret = campaigns?.map((c) => {
+      const obj = { value: c.id, label: c.name };
       return obj;
     });
     setCampaignList(ret);

@@ -346,6 +346,9 @@ export const API = {
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
     findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap",
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
+    findAllComexCampaigns: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/campaigns",
+    findAllComexPaymentTerms: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/paymentTerms",
+    findAllComeximportationTypes: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importationTypes",
   },
 };
 
