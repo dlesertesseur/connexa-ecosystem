@@ -863,7 +863,7 @@
         "addDocuments":"Documentos"
       },
       "placeholder": {
-        "description": "descripcio del RECAP",
+        "description": "una descripcion para el RECAP",
         "event": "nombre del evento",
         "supplier": "seleccione un proveedor",
         "country": "seleccione un pais",

@@ -866,7 +866,7 @@
         "addDocuments": "Documents"
       },
       "placeholder": {
-        "description": "description RECAP",
+        "description": "a RECAP description",
         "event": "event name",
         "supplier": "select a supplier",
         "country": "select a country",
