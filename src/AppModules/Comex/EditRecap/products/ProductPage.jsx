@@ -27,7 +27,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
 
   const navigate = useNavigate();
 
-  const { setReload, departments, modalities, factories, paymentTerms, shippingPorts, productionTimes, selectedRowId } =
+  const { setReload, departments, modalities, factories, paymentTerms, productionTimes, selectedRowId } =
     useContext(AbmStateContext);
 
   useEffect(() => {
@@ -54,12 +54,6 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
       return obj;
     });
     setPaymentTermsList(ret);
-
-    ret = shippingPorts.map((c) => {
-      const obj = { value: c.code, label: c.name };
-      return obj;
-    });
-    setShippingPortList(ret);
 
     ret = productionTimes.map((c) => {
       const obj = { value: c.code, label: c.value };

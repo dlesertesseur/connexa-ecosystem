@@ -341,14 +341,20 @@ export const API = {
   },
 
   comexrecap: {
-    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
-    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
-    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
-    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap",
-    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/comexrecap/",
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations/",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations/",
+    findAllByUserId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations/",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/importations/",
+    findAllComexCountries: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/countries",
     findAllComexCampaigns: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/campaigns",
     findAllComexPaymentTerms: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/paymentTerms",
-    findAllComeximportationTypes: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importationTypes",
+    findAllComexImportationTypes: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importationTypes",
+    findAllComexPorts: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/ports",
+    findAllComexSuppliers: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/suppliers",
+    findAllComexIncoterms: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/incoterms",
+    findAllComexCurrencies: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/currencies",
+    findAllComexCategories: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/categories",
   },
 };
 

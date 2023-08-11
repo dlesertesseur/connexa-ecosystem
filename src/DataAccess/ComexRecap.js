@@ -4,8 +4,23 @@ import { COMEX } from "../Constants/COMEX";
 async function createComexRecap(parameters) {
   try {
     const body = JSON.stringify({
-      name: parameters.data.name,
-      description: parameters.data.name,
+      campaignId: parameters.values.campaign,
+      description: parameters.values.description,
+      originCountryId: parameters.values.originCountry,
+      destinationCountryId: parameters.values.destinationCountry,
+      importationTypeId: parameters.values.importationType,
+      supplierId: parameters.values.supplier,
+      originPortId: parameters.values.originShippingPort,
+      destinationPortId: parameters.values.destinationShippingPort,
+      totalManufacturingTimeInDays: parameters.values.productionTime,
+      status: parameters.values.status,
+      creatorId: parameters.userId,
+      creatorName: parameters.creatorName,
+      paymentTermId: parameters.values.paymentTerms,
+      incotermId: parameters.values.incoterm,
+      currencyId: parameters.values.currency,
+      department: parameters.values.department,
+      transportType: parameters.values.transportType,
     });
 
     const requestOptions = {
@@ -13,7 +28,7 @@ async function createComexRecap(parameters) {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        token: parameters.token,
+        apikey: parameters.apikey,
       },
       body: body,
     };
@@ -21,6 +36,7 @@ async function createComexRecap(parameters) {
     const url = API.comexrecap.create;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
+
     return data;
   } catch (error) {
     return error;
@@ -72,19 +88,17 @@ async function deleteComexRecap(parameters) {
   }
 }
 
-async function findAllComexRecaps(parameters) {
+async function findAllComexRecapsByUserId(parameters) {
   try {
     const requestOptions = {
       method: "GET",
       mode: "cors",
-      headers: { "Content-Type": "application/json", token: parameters.token },
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
     };
 
-    // const url = API.comexrecap.findAll;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
-
-    const data = COMEX.dummyTask;
+    const url = API.comexrecap.findAllByUserId + parameters.userId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -97,14 +111,30 @@ async function findAllComexCountries(parameters) {
     const requestOptions = {
       method: "GET",
       mode: "cors",
-      headers: { "Content-Type": "application/json", token: parameters.token },
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
     };
 
-    // const url = API.comexrecap.findAll;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
+    const url = API.comexrecap.findAllComexCountries;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
-    const data = COMEX.countries;
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexCountryPorts(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    const url = API.comexrecap.findAllComexPorts + "/" + parameters.countryId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -132,7 +162,7 @@ async function findAllComexDepartments(parameters) {
   }
 }
 
-async function findAllComexModalities(parameters) {
+async function findAllComexImportationTypes(parameters) {
   try {
     const requestOptions = {
       method: "GET",
@@ -140,7 +170,7 @@ async function findAllComexModalities(parameters) {
       headers: { "Content-Type": "application/json", apikey: parameters.apikey },
     };
 
-    const url = API.comexrecap.findAllComeximportationTypes;
+    const url = API.comexrecap.findAllComexImportationTypes;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
@@ -170,26 +200,6 @@ async function findAllComexFactories(parameters) {
   }
 }
 
-async function findAllComexShippingPorts(parameters) {
-  try {
-    const requestOptions = {
-      method: "GET",
-      mode: "cors",
-      headers: { "Content-Type": "application/json", token: parameters.token },
-    };
-
-    // const url = API.comexrecap.findAll;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
-
-    const data = COMEX.shippingPorts;
-
-    return data;
-  } catch (error) {
-    return error;
-  }
-}
-
 async function findAllComexProductionTimes(parameters) {
   try {
     const requestOptions = {
@@ -203,6 +213,135 @@ async function findAllComexProductionTimes(parameters) {
     // const data = await res.json();
 
     const data = COMEX.productionTimes;
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexCurrencies(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    const url = API.comexrecap.findAllComexCurrencies;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexStatus(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    // const url = API.comexrecap.findAll;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = COMEX.status;
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexTransportType(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    // const url = API.comexrecap.findAll;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = COMEX.transportType;
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+async function findAllComexCountrySuppliers(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    const url = API.comexrecap.findAllComexSuppliers + "/" + parameters.countryId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexIncoterms(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    const url = API.comexrecap.findAllComexIncoterms;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexCategoriesRoot(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    const url = API.comexrecap.findAllComexCategories;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllComexCategories(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    const url = API.comexrecap.findAllComexCategories + "/" + parameters.categoryId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -245,6 +384,7 @@ async function findAllComexCampaigns(parameters) {
     return error;
   }
 }
+
 async function findComexRecapById(parameters) {
   try {
     const requestOptions = {
@@ -268,14 +408,21 @@ export {
   createComexRecap,
   updateComexRecap,
   deleteComexRecap,
-  findAllComexRecaps,
+  findAllComexRecapsByUserId,
   findComexRecapById,
   findAllComexCountries,
   findAllComexCampaigns,
   findAllComexDepartments,
-  findAllComexModalities,
+  findAllComexImportationTypes,
   findAllComexFactories,
-  findAllComexShippingPorts,
   findAllComexPaymentTerms,
-  findAllComexProductionTimes
+  findAllComexProductionTimes,
+  findAllComexCountryPorts,
+  findAllComexCountrySuppliers,
+  findAllComexIncoterms,
+  findAllComexCurrencies,
+  findAllComexStatus,
+  findAllComexCategoriesRoot,
+  findAllComexCategories,
+  findAllComexTransportType
 };

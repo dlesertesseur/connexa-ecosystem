@@ -9,15 +9,18 @@ import {
   findAllComexPaymentTerms,
   findAllComexCampaigns,
   findAllComexCountries,
-  findAllComexDepartments,
   findAllComexFactories,
-  findAllComexModalities,
-  findAllComexProductionTimes,
-  findAllComexRecaps,
-  findAllComexShippingPorts,
+  findAllComexImportationTypes,
+  findAllComexRecapsByUserId,
+  findAllComexIncoterms,
+  findAllComexCurrencies,
+  findAllComexStatus,
+  findAllComexCategoriesRoot,
+  findAllComexCategories,
+  findAllComexTransportType,
 } from "../../../DataAccess/ComexRecap";
-import { COMEX } from "../../../Constants/COMEX";
 import { IconFileUpload, IconList } from "@tabler/icons-react";
+import { convertMilisegToYYYYMMDDHHMISS } from "../../../Util";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import ProductsList from "./products/ProductsList";
@@ -32,12 +35,15 @@ const DynamicApp = ({ app }) => {
   const [countries, setCountries] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [modalities, setModalities] = useState([]);
-  const [productionTimes, setProductionTimes] = useState([]);
+  const [importationTypes, setImportationTypes] = useState([]);
+  const [categoryRoot, setCategoryRoot] = useState(null);
+  const [incoterms, setIncoterms] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+  const [transportationType, setTransportationType] = useState([]);
+  const [status, setStatus] = useState([]);
 
   const [factories, setFactories] = useState([]);
   const [paymentTerms, setPaymentTerms] = useState([]);
-  const [shippingPorts, setShippingPorts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [reload, setReload] = useState(null);
@@ -46,20 +52,20 @@ const DynamicApp = ({ app }) => {
     const params = {
       token: user.token,
       apikey: user.token,
-      type: COMEX.types.RECAP_CREATED,
+      userId: user.id,
     };
 
     try {
       let ret = null;
-      const list = await findAllComexRecaps(params);
+      const list = await findAllComexRecapsByUserId(params);
+
       ret = list.map((r) => {
         return {
           id: r.id,
-          creationDate: r.creationDate,
           description: r.description,
-          campaign: r.campaign.event,
-          supplier: r.supplier.name,
-          country: r.country.country,
+          status: r.status,
+          totalManufacturingTimeInDays: r.totalManufacturingTimeInDays,
+          lastModification: convertMilisegToYYYYMMDDHHMISS(r.timestamp),
         };
       });
       setRows(ret);
@@ -70,23 +76,33 @@ const DynamicApp = ({ app }) => {
       const countries = await findAllComexCountries(params);
       setCountries(countries);
 
-      const departments = await findAllComexDepartments(params);
-      setDepartments(departments);
-
-      const modalities = await findAllComexModalities(params);
-      setModalities(modalities);
+      const importationTypes = await findAllComexImportationTypes(params);
+      setImportationTypes(importationTypes);
 
       const factories = await findAllComexFactories(params);
       setFactories(factories);
 
-      const shippingPort = await findAllComexShippingPorts(params);
-      setShippingPorts(shippingPort);
-
       const paymentTerms = await findAllComexPaymentTerms(params);
       setPaymentTerms(paymentTerms);
 
-      const productionTimes = await findAllComexProductionTimes(params);
-      setProductionTimes(productionTimes);
+      const categoryRoot = await findAllComexCategoriesRoot(params);
+      setCategoryRoot(categoryRoot);
+
+      const departments = await findAllComexCategories({...params, categoryId:categoryRoot.id});
+      setDepartments(departments);
+
+      const incoterms = await findAllComexIncoterms(params);
+      setIncoterms(incoterms);
+
+      const currencies = await findAllComexCurrencies(params);
+      setCurrencies(currencies);
+
+      const status = await findAllComexStatus(params);
+      setStatus(status);
+
+      const transportType = await findAllComexTransportType(params);
+      setTransportationType(transportType);
+
     } catch (error) {
       setError(error);
     }
@@ -100,12 +116,11 @@ const DynamicApp = ({ app }) => {
   let col = 0;
   const cols = t("comex.recap.columns", { returnObjects: true });
   const columns = [
-    { headerName: cols[col++], fieldName: "id", align: "right" },
-    { headerName: cols[col++], fieldName: "creationDate", align: "center" },
-    { headerName: cols[col++], fieldName: "description", align: "center" },
-    { headerName: cols[col++], fieldName: "campaign", align: "left" },
-    { headerName: cols[col++], fieldName: "supplier", align: "left" },
-    { headerName: cols[col++], fieldName: "country", align: "left" },
+    { headerName: cols[col++], fieldName: "id", align: "left" },
+    { headerName: cols[col++], fieldName: "description", align: "left" },
+    { headerName: cols[col++], fieldName: "lastModification", align: "center" },
+    { headerName: cols[col++], fieldName: "totalManufacturingTimeInDays", align: "right" },
+    { headerName: cols[col++], fieldName: "status", align: "left" },
   ];
 
   const ret = rows ? (
@@ -117,11 +132,13 @@ const DynamicApp = ({ app }) => {
         countries,
         campaigns,
         departments,
-        modalities,
-        shippingPorts,
+        importationTypes,
         factories,
+        incoterms,
+        currencies,
+        status,
+        transportationType,
         paymentTerms,
-        productionTimes,
         setError,
       }}
     >
