@@ -3,7 +3,7 @@ import { COMEX } from "../Constants/COMEX";
 
 async function createComexRecap(parameters) {
   try {
-    const body = JSON.stringify({
+    const obj = {
       campaignId: parameters.values.campaign,
       description: parameters.values.description,
       originCountryId: parameters.values.originCountry,
@@ -19,9 +19,13 @@ async function createComexRecap(parameters) {
       paymentTermId: parameters.values.paymentTerms,
       incotermId: parameters.values.incoterm,
       currencyId: parameters.values.currency,
-      department: parameters.values.department,
-      transportType: parameters.values.transportType,
-    });
+      departmentId: parameters.values.department,
+      transportationModeId: parameters.values.transportType,
+    }
+
+    console.log("createComexRecap ->", obj);
+
+    const body = JSON.stringify(obj);
 
     const requestOptions = {
       method: "POST",
@@ -265,17 +269,15 @@ async function findAllComexTransportType(parameters) {
       headers: { "Content-Type": "application/json", apikey: parameters.apikey },
     };
 
-    // const url = API.comexrecap.findAll;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
+    const url = API.comexrecap.findAllComexTransportationMode;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
-    const data = COMEX.transportType;
     return data;
   } catch (error) {
     return error;
   }
 }
-
 
 async function findAllComexCountrySuppliers(parameters) {
   try {
@@ -390,14 +392,13 @@ async function findComexRecapById(parameters) {
     const requestOptions = {
       method: "GET",
       mode: "cors",
-      headers: { "Content-Type": "application/json", token: parameters.token },
+      headers: { "Content-Type": "application/json", apikey : parameters.apikey},
     };
 
-    // const url = API.comexrecap.findById + parameters.brandId;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
+    const url = API.comexrecap.findById + parameters.id;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
-    const data = COMEX.dummyTask.find((r) => r.id === parameters.id);
     return data;
   } catch (error) {
     return error;

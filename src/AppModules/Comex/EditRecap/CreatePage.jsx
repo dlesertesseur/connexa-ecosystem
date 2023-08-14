@@ -22,7 +22,6 @@ import {
   findAllComexCountryPorts,
   findAllComexCountrySuppliers,
 } from "../../../DataAccess/ComexRecap";
-import uuid from "react-uuid";
 
 export function CreatePage() {
   const { t } = useTranslation();
@@ -90,7 +89,7 @@ export function CreatePage() {
     setCurrencyList(ret);
 
     ret = status?.map((c) => {
-      const obj = { value: uuid(), label: c.name };
+      const obj = { value: c.id, label: c.name };
       return obj;
     });
     setStatusList(ret);
@@ -113,7 +112,7 @@ export function CreatePage() {
     });
     setTransportTypeList(ret);
 
-    console.log("***INITIALIZE LISTS***");
+    console.log("*** INITIALIZE LIST CREATE ***");
   }, [campaigns, countries, importationTypes, incoterms, currencies, paymentTerms, status, departments, transportationType]);
 
   const selectOriginCountry = async (country) => {

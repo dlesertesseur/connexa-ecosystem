@@ -16,55 +16,66 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
   const [working, setWorking] = useState(false);
 
   const [departmentsList, setDepartmentsList] = useState(null);
-  const [modalitiesList, setModalitiesList] = useState(null);
-  const [factoryList, setFactoryList] = useState(null);
-  const [paymentTermsList, setPaymentTermsList] = useState(null);
-  const [shippingPortList, setShippingPortList] = useState(null);
-  const [productionTimesList, setProductionTimesList] = useState(null);
+  const [categoriesList, setCategoriesList] = useState(null);
+  const [subcategoriesList, setSubcategoriesList] = useState(null);
   const [recap, setRecap] = useState(null);
 
   const [List, setList] = useState(null);
 
   const navigate = useNavigate();
 
-  const { setReload, departments, modalities, factories, paymentTerms, productionTimes, selectedRowId } =
+  const { setReload, departments, selectedRowId } =
     useContext(AbmStateContext);
 
-  useEffect(() => {
-    let ret = departments.map((c) => {
-      const obj = { value: c.code, label: c.name };
-      return obj;
-    });
-    setDepartmentsList(ret);
+  // useEffect(() => {
+  //   let ret = departments.map((c) => {
+  //     const obj = { value: c.code, label: c.name };
+  //     return obj;
+  //   });
+  //   setDepartmentsList(ret);
 
-    ret = modalities?.map((c) => {
-      const obj = { value: c.id, label: c.name };
-      return obj;
-    });
-    setModalitiesList(ret);
+  //   ret = modalities?.map((c) => {
+  //     const obj = { value: c.id, label: c.name };
+  //     return obj;
+  //   });
+  //   setModalitiesList(ret);
 
-    ret = factories.map((c) => {
-      const obj = { value: c.code, label: c.name };
-      return obj;
-    });
-    setFactoryList(ret);
+  //   ret = factories.map((c) => {
+  //     const obj = { value: c.code, label: c.name };
+  //     return obj;
+  //   });
+  //   setFactoryList(ret);
 
-    ret = paymentTerms.map((c) => {
-      const obj = { value: c.id, label: c.name };
-      return obj;
-    });
-    setPaymentTermsList(ret);
+  //   ret = paymentTerms.map((c) => {
+  //     const obj = { value: c.id, label: c.name };
+  //     return obj;
+  //   });
+  //   setPaymentTermsList(ret);
 
-    ret = productionTimes.map((c) => {
-      const obj = { value: c.code, label: c.value };
-      return obj;
-    });
-    setProductionTimesList(ret);
+  //   ret = productionTimes.map((c) => {
+  //     const obj = { value: c.code, label: c.value };
+  //     return obj;
+  //   });
+  //   setProductionTimesList(ret);
 
-    if (mode === CRUD_PAGE_MODE.update || mode === CRUD_PAGE_MODE.delete) {
-      getData();
-    }
-  }, [departments, modalities]);
+  //   if (mode === CRUD_PAGE_MODE.update || mode === CRUD_PAGE_MODE.delete) {
+  //     getData();
+  //   }
+  // }, [departments, modalities]);
+
+  const selectCategory = async (category) => {
+    // const params = {
+    //   token: user.token,
+    //   apikey: user.token,
+    //   categoryId: category,
+    // };
+    // const ports = await findAllde(params);
+    // let ret = ports.map((p) => {
+    //   const obj = { value: p.id, label: p.name };
+    //   return obj;
+    // });
+    // setCategoriesList(ret);
+  };
 
   const getData = async () => {
     const params = {
@@ -150,6 +161,25 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
     return ret;
   };
 
+  const createSelectCategory = (field, disabled, data) => {
+    const ret = (
+      <Select
+        label={t("comex.recap.label." + field)}
+        data={data ? data : []}
+        disabled={disabled}
+        placeholder={t("comex.recap.placeholder." + field)}
+        {...form.getInputProps(field)}
+        onChange={(env) => {
+          form.setFieldValue(field, env);
+          categoriesList(env);
+        }}
+      />
+    );
+
+    return ret;
+  };
+
+
   const onClose = () => {
     navigate("../");
   };
@@ -194,10 +224,10 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
         <ScrollArea type="scroll" px={"md"} style={{ width: "100%", height: height - HEADER_HIGHT - 140 }}>
           <form
             onSubmit={form.onSubmit((values) => {
-              onCreate(values);
+              //onCreate(values);
             })}
           >
-            <Group mb={"md"}>{createSelect("modality", modalitiesList)}</Group>
+            <Group mb={"md"}>{createSelectCategory("department", categoryList ? false : true, categoryList)}</Group>
             <Group mb={"md"}>{createTextField("sku")}</Group>
             <Group mb={"md"} grow>
               {createTextField("description")}

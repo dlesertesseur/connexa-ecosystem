@@ -30,8 +30,10 @@ const ProductsList = () => {
       token: user.token,
       id: selectedRowId,
     };
-    const ret = await findComexRecapById(params);
-    setRecap(ret);
+    const recaps = await findComexRecapById(params);
+    if (recaps && recaps.length > 0) {
+      setRecap(recaps[0]);
+    }
   };
 
   useEffect(() => {

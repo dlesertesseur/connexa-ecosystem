@@ -1,4 +1,14 @@
-import { Title, Container, Button, Group, Select, LoadingOverlay, ScrollArea, TextInput } from "@mantine/core";
+import {
+  Title,
+  Container,
+  Button,
+  Group,
+  Select,
+  LoadingOverlay,
+  ScrollArea,
+  TextInput,
+  NumberInput,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -7,7 +17,12 @@ import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
 import { AbmStateContext } from "./Context";
 import { HEADER_HIGHT } from "../../../Constants";
-import { deleteComexRecap, findComexRecapById } from "../../../DataAccess/ComexRecap";
+import {
+  deleteComexRecap,
+  findAllComexCountryPorts,
+  findAllComexCountrySuppliers,
+  findComexRecapById,
+} from "../../../DataAccess/ComexRecap";
 import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
 
 export function DeletePage() {
@@ -20,19 +35,49 @@ export function DeletePage() {
   const [countriesList, setCountriesList] = useState(null);
   const [suppliersList, setSuppliersList] = useState(null);
   const [campaignList, setCampaignList] = useState(null);
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-
+  const [originShippingPortList, setOriginShippingPortList] = useState(null);
+  const [destinationShippingPortList, setDestinationShippingPortList] = useState(null);
+  const [importationTypesList, setImportationTypesList] = useState(null);
+  const [incotermsList, setIncotermsList] = useState(null);
+  const [currencyList, setCurrencyList] = useState(null);
+  const [paymentTermsList, setPaymentTermsList] = useState(null);
+  const [statusList, setStatusList] = useState(null);
+  const [departmentList, setDepartmentList] = useState(null);
+  const [transportTypeList, setTransportTypeList] = useState(null);
   const [recap, setRecap] = useState(null);
-
-  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
-  const { setReload, campaigns, countries, selectedRowId } = useContext(AbmStateContext);
+  const {
+    setReload,
+    campaigns,
+    countries,
+    importationTypes,
+    incoterms,
+    currencies,
+    paymentTerms,
+    status,
+    departments,
+    transportationType,
+    selectedRowId,
+  } = useContext(AbmStateContext);
 
   const getData = async () => {
+    const params = {
+      token: user.token,
+      apikey: user.token,
+      id: selectedRowId,
+    };
+    const recaps = await findComexRecapById(params);
+    if (recaps && recaps.length > 0) {
+      setRecap(recaps[0]);
+    }
+  };
+
+  useEffect(() => {
     let ret = countries.map((c) => {
-      const obj = { value: c.code, label: c.country };
+      const obj = { value: c.id, label: c.name };
       return obj;
     });
     setCountriesList(ret);
@@ -43,54 +88,150 @@ export function DeletePage() {
     });
     setCampaignList(ret);
 
+    ret = importationTypes?.map((c) => {
+      const obj = { value: c.id, label: c.name };
+      return obj;
+    });
+    setImportationTypesList(ret);
+
+    ret = incoterms?.map((c) => {
+      const obj = { value: c.id, label: c.name };
+      return obj;
+    });
+    setIncotermsList(ret);
+
+    ret = currencies?.map((c) => {
+      const obj = { value: c.id, label: `${c.name} (${c.abbreviation})` };
+      return obj;
+    });
+    setCurrencyList(ret);
+
+    ret = status?.map((c) => {
+      const obj = { value: c.id, label: c.name };
+      return obj;
+    });
+    setStatusList(ret);
+
+    ret = paymentTerms?.map((c) => {
+      const obj = { value: c.id, label: c.name };
+      return obj;
+    });
+    setPaymentTermsList(ret);
+
+    ret = departments?.map((c) => {
+      const obj = { value: c.id, label: c.name };
+      return obj;
+    });
+    setDepartmentList(ret);
+
+    ret = transportationType?.map((c) => {
+      const obj = { value: c.id, label: c.name };
+      return obj;
+    });
+    setTransportTypeList(ret);
+
+    console.log("*** INITIALIZE LIST DELETE ***");
+    getData();
+  }, [
+    campaigns,
+    countries,
+    importationTypes,
+    incoterms,
+    currencies,
+    paymentTerms,
+    status,
+    departments,
+    transportationType,
+    selectedRowId,
+  ]);
+
+  const selectOriginCountry = async (country) => {
     const params = {
       token: user.token,
-      id: selectedRowId,
+      apikey: user.token,
+      countryId: country,
     };
-    ret = await findComexRecapById(params);
-    setRecap(ret);
+    const ports = await findAllComexCountryPorts(params);
+    let ret = ports.map((p) => {
+      const obj = { value: p.id, label: p.name };
+      return obj;
+    });
+    setOriginShippingPortList(ret);
+
+    const suppliers = await findAllComexCountrySuppliers(params);
+    ret = suppliers.map((s) => {
+      const obj = { value: s.id, label: s.name };
+      return obj;
+    });
+    setSuppliersList(ret);
   };
 
-  useEffect(() => {
-    getData();
-  }, [countries, campaigns, selectedRowId]);
+  const selectDestinationCountry = async (country) => {
+    const params = {
+      token: user.token,
+      apikey: user.token,
+      countryId: country,
+    };
+    const ports = await findAllComexCountryPorts(params);
 
-  useEffect(() => {
-    const country = countries.find((c) => c.code === selectedCountry);
-    if (country) {
-      const ret = country.providers.map((p) => {
-        const obj = { value: p.code, label: p.name };
-        return obj;
-      });
-      setSuppliersList(ret);
-    }
-  }, [selectedCountry]);
-
-  useEffect(() => {
-    if (recap) {
-
-      form.setFieldValue("description", recap.description);
-      form.setFieldValue("campaign", recap.campaign.id);
-      form.setFieldValue("country", recap.country.code);
-      form.setFieldValue("supplier", recap.supplier.code);
-
-      setSelectedCountry(recap.country.code);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recap]);
+    let ret = ports.map((p) => {
+      const obj = { value: p.id, label: p.name };
+      return obj;
+    });
+    setDestinationShippingPortList(ret);
+  };
 
   const form = useForm({
     initialValues: {
       description: "",
-      campaign: "",
+      campaign: null,
       supplier: null,
-      country: null,
+      originCountry: null,
+      destinationCountry: null,
+      originShippingPort: null,
+      destinationShippingPort: null,
+      importationType: null,
+      productionTime: null,
+      incoterm: null,
+      currency: null,
+      status: null,
+      paymentTerms: null,
+      department: null,
+      transportType: null,
     },
 
     validate: {},
   });
 
-  const createSelectCountry = (field, disabled, data) => {
+  useEffect(() => {
+    const f = async () => {
+      if (recap) {
+        form.setFieldValue("description", recap.description);
+        form.setFieldValue("campaign", recap.campaign.id);
+        form.setFieldValue("originCountry", recap.originCountry.id);
+        form.setFieldValue("destinationCountry", recap.destinationCountry.id);
+        form.setFieldValue("importationType", recap.importationType.id);
+        form.setFieldValue("productionTime", recap.totalManufacturingTimeInDays);
+        form.setFieldValue("incoterm", recap.incoterm.id);
+        form.setFieldValue("currency", recap.currency.id);
+        form.setFieldValue("status", recap.status);
+        form.setFieldValue("paymentTerms", recap.paymentTerm.id);
+        form.setFieldValue("department", recap.department.id);
+        form.setFieldValue("transportType", recap.transportationMode.id);
+
+        await selectDestinationCountry(recap.destinationCountry.id);
+        await selectOriginCountry(recap.originCountry.id);
+
+        form.setFieldValue("supplier", recap.supplier.id);
+        form.setFieldValue("originShippingPort", recap.originPort.id);
+        form.setFieldValue("destinationShippingPort", recap.destinationPort.id);
+      }
+    };
+    f();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recap]);
+
+  const createSelectOriginCountry = (field, disabled, data) => {
     const ret = (
       <Select
         label={t("comex.recap.label." + field)}
@@ -100,8 +241,25 @@ export function DeletePage() {
         {...form.getInputProps(field)}
         onChange={(env) => {
           form.setFieldValue(field, env);
-          form.setFieldValue("supplier", null);
-          setSelectedCountry(env);
+          selectOriginCountry(env);
+        }}
+      />
+    );
+
+    return ret;
+  };
+
+  const createSelectDestinationCountry = (field, disabled, data) => {
+    const ret = (
+      <Select
+        label={t("comex.recap.label." + field)}
+        data={data ? data : []}
+        disabled={disabled}
+        placeholder={t("comex.recap.placeholder." + field)}
+        {...form.getInputProps(field)}
+        onChange={(env) => {
+          form.setFieldValue(field, env);
+          selectDestinationCountry(env);
         }}
       />
     );
@@ -123,11 +281,11 @@ export function DeletePage() {
     return ret;
   };
 
-  const createTextField = (field, disabled) => {
+  const createTextField = (field, disabled = false) => {
     const ret = (
       <TextInput
-        w={"100%"}
         disabled={disabled}
+        w={"100%"}
         label={t("comex.recap.label." + field)}
         placeholder={t("comex.recap.placeholder." + field)}
         {...form.getInputProps(field)}
@@ -137,6 +295,19 @@ export function DeletePage() {
     return ret;
   };
 
+  const createNumberField = (field, disabled = false) => {
+    const ret = (
+      <NumberInput
+        disabled={disabled}
+        w={"100%"}
+        label={t("comex.recap.label." + field)}
+        placeholder={t("comex.recap.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
   const onClose = () => {
     navigate("../");
   };
@@ -144,7 +315,7 @@ export function DeletePage() {
   const onDelete = async (values) => {
     const params = {
       token: user.token,
-      body: { ...values },
+      id: selectedRowId,
     };
 
     setWorking(true);
@@ -196,13 +367,39 @@ export function DeletePage() {
           >
             <Group mb={"md"} grow>
               {createSelect("campaign", true, campaignList)}
+              {createSelect("department", true, departmentList)}
             </Group>
             <Group mb={"md"} grow>
               {createTextField("description", true)}
             </Group>
             <Group mb={"md"} grow>
-              {createSelectCountry("country", true, countriesList)}
+              {createSelectOriginCountry("originCountry", true, countriesList)}
+              {createSelectDestinationCountry("destinationCountry", true, countriesList)}
+            </Group>
+
+            <Group mb={"md"} grow>
+              {createSelect("originShippingPort", true, originShippingPortList)}
+              {createSelect("destinationShippingPort", true, destinationShippingPortList)}
+            </Group>
+
+            <Group mb={"md"} grow>
               {createSelect("supplier", true, suppliersList)}
+              {createSelect("transportType", true, transportTypeList)}
+            </Group>
+
+            <Group mb={"md"} grow>
+              {createSelect("incoterm", true, incotermsList)}
+              {createSelect("currency", true, currencyList)}
+            </Group>
+
+            <Group mb={"md"} grow>
+              {createSelect("importationType", true, importationTypesList)}
+              {createNumberField("productionTime", true)}
+            </Group>
+
+            <Group mb={"md"} grow>
+              {createSelect("status", true, statusList)}
+              {createSelect("paymentTerms", true, paymentTermsList)}
             </Group>
 
             <Group position="right" mt="xl" mb="xs">

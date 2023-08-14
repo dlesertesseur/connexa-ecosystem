@@ -9,28 +9,27 @@ const RecapHeader = ({ recap, h = 120 }) => {
 
   return (
     <Stack spacing={"xs"} h={h}>
-      {recap ? (
-        <Paper withBorder p={"xs"} h={"100%"}>
-          <Stack spacing={"xs"} h={"100%"} align="stretch">
+      <Paper withBorder p={6} h={"100%"}>
+        {recap ? (
+          <Stack spacing={"xs"} h={"100%"} align="stretch" justify="space-between">
             <Group position="apart" spacing={"xs"}>
               <Text size={"lg"} weight={700}>
-                {recap.campaign.event}
+                {recap.campaign.name}
               </Text>
-              <Text size={"xs"}>{recap.creationDate}</Text>
+              {/* <Text size={"xs"}>{recap.creationDate}</Text> */}
             </Group>
             <Group spacing={"xs"}>
-              <Text size={"xs"} weight={300}>
+              <Text size={"xs"} weight={400}>
                 {recap.description}
               </Text>
             </Group>
-
             <Group spacing={"xs"} position="apart">
               <Group spacing={"xs"} mt={"sm"}>
                 <Text size={"sm"} weight={700}>
                   {recap.supplier.name}
                 </Text>
                 <Badge color="green" variant="dot">
-                  {recap.country.country}
+                  {recap.originCountry.name}
                 </Badge>
               </Group>
 
@@ -45,10 +44,10 @@ const RecapHeader = ({ recap, h = 120 }) => {
               </Group>
             </Group>
           </Stack>
-        </Paper>
-      ) : (
-        <Skeleton visible={true}></Skeleton>
-      )}
+        ) : (
+          <Skeleton visible={true}></Skeleton>
+        )}
+      </Paper>
     </Stack>
   );
 };
