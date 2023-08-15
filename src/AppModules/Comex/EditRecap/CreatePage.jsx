@@ -22,6 +22,7 @@ import {
   findAllComexCountryPorts,
   findAllComexCountrySuppliers,
 } from "../../../DataAccess/ComexRecap";
+import { config } from "../../../Constants/config";
 
 export function CreatePage() {
   const { t } = useTranslation();
@@ -117,8 +118,7 @@ export function CreatePage() {
 
   const selectOriginCountry = async (country) => {
     const params = {
-      token: user.token,
-      apikey: user.token,
+      apikey: config.COMEX_API_KEY,
       countryId: country,
     };
     const ports = await findAllComexCountryPorts(params);
@@ -138,8 +138,7 @@ export function CreatePage() {
 
   const selectDestinationCountry = async (country) => {
     const params = {
-      token: user.token,
-      apikey: user.token,
+      apikey: config.COMEX_API_KEY,
       countryId: country,
     };
     const ports = await findAllComexCountryPorts(params);
@@ -271,8 +270,7 @@ export function CreatePage() {
 
   const onCreate = async (values) => {
     const params = {
-      token: user.token,
-      apikey: user.token,
+      apikey: config.COMEX_API_KEY,
       userId: user.id,
       creatorName: user.firstName + " " + user.lastName,
       values: { ...values },

@@ -405,6 +405,85 @@ async function findComexRecapById(parameters) {
   }
 }
 
+async function findComexRecapBarcodeTypes(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey : parameters.apikey},
+    };
+
+    const url = API.comexrecap.findAllComexBarcodeTypes;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findComexRecapMeasureUnits(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey : parameters.apikey},
+    };
+
+    // const url = API.comexrecap.findAllComexBarcodeTypes;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+    const data = COMEX.measureUnits;
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findComexRecapItems(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey : parameters.apikey},
+    };
+
+    const url = API.comexrecap.findComexRecapItems + parameters.id;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function comexRecapAddItem(parameters) {
+  try {
+    const body = JSON.stringify(parameters.body);
+
+    const requestOptions = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: parameters.apikey,
+      },
+      body: body,
+    };
+
+    const url = API.comexrecap.comexRecapAddItem + parameters.id;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
 export {
   createComexRecap,
   updateComexRecap,
@@ -425,5 +504,9 @@ export {
   findAllComexStatus,
   findAllComexCategoriesRoot,
   findAllComexCategories,
-  findAllComexTransportType
+  findAllComexTransportType,
+  findComexRecapBarcodeTypes,
+  findComexRecapMeasureUnits,
+  findComexRecapItems,
+  comexRecapAddItem
 };

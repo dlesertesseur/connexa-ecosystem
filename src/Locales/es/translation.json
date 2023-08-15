@@ -868,7 +868,8 @@
         "incoterm":"Incoterm",
         "currency":"Moneda",
         "status":"Estado",
-        "transportType": "Tipo de transporte"
+        "transportType": "Tipo de transporte",
+        "category": "Categoria"
       },
       "placeholder": {
         "description": "una descripcion para el RECAP",
@@ -889,9 +890,49 @@
         "campaign":"seleccione una campaña",
         "currency":"seleccione una moneda",
         "status":"seleccione una estado",
-        "transportType": "seleccione un tipo de transporte"
+        "transportType": "seleccione un tipo de transporte",
+        "category": "seleccione una categoria",
+        "subcategory": "seleccione una subcategoria",
+        "barcodeType": "seleccione un tipo de codigo de barras",
+        "barcode": "un codigo de barras"
       },
-      "columns": ["ID", "Descripcion", "Modificado", "Tiempo de fabricacion", "Estado"]
+      "columns": ["Codigo", "Descripcion", "Modificado", "Tiempo de fabricacion", "Estado"],
+      "products": {
+        "title": {
+          "add": "Agregar priducto",
+          "update": "Modificar producto",
+          "delete": "Eliminar producto"
+        },
+        "label": {
+          "sku": "Codigo",
+          "description": "Descripcion",
+          "category": "Categoria",
+          "subcategory": "Subcategoria",
+          "barcodeType": "Tipo de codigo de barra",
+          "barcode": "Codigo de barra",
+          "pdq":"PDQ",
+          "amount":"Cantidad",
+          "unitOfMeasurement":"Unidad de medida",
+          "priceByUnit":"Precio por unidad",
+          "totalPrice":"Precio total",
+          "boxes":"Cantidad de cajas",
+          "image":"Suelte imágenes o haga clic aquí"
+        },
+        "placeholder": {
+          "sku": "un codigo",
+          "description": "una descripcion",
+          "category": "seleccione una categoria",
+          "subcategory": "seleccione una subcategoria",
+          "barcodeType": "seleccion un tipo de codigo de barra",
+          "barcode": "un codigo de barra",
+          "amount":"una cantidad",
+          "unitOfMeasurement":"una unidad de medida",
+          "priceByUnit":"un precio por unidad",
+          "totalPrice":"un precio total",
+          "boxes":"una cantidad de cajas"
+        },
+        "columns": ["Codigo de barras", "Descripcion", "Precio", "Precio por unidad", "Cantidad", "Cajas"]
+      }
     }
   },
 

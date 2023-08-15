@@ -23,6 +23,7 @@ import {
   findAllComexCountrySuppliers,
   findComexRecapById,
 } from "../../../DataAccess/ComexRecap";
+import { config } from "../../../Constants/config";
 
 export function UpdatePage() {
   const { t } = useTranslation();
@@ -63,7 +64,7 @@ export function UpdatePage() {
   const getData = async () => {
     const params = {
       token: user.token,
-      apikey: user.token,
+      apikey : config.COMEX_API_KEY,
       id: selectedRowId,
     };
     const recaps = await findComexRecapById(params);
@@ -146,7 +147,7 @@ export function UpdatePage() {
   const selectOriginCountry = async (country) => {
     const params = {
       token: user.token,
-      apikey: user.token,
+      apikey : config.COMEX_API_KEY,
       countryId: country,
     };
     const ports = await findAllComexCountryPorts(params);
@@ -167,7 +168,7 @@ export function UpdatePage() {
   const selectDestinationCountry = async (country) => {
     const params = {
       token: user.token,
-      apikey: user.token,
+      apikey : config.COMEX_API_KEY,
       countryId: country,
     };
     const ports = await findAllComexCountryPorts(params);
@@ -300,7 +301,7 @@ export function UpdatePage() {
   const assignData = async () => {
     const params = {
       token: user.token,
-      apikey: user.token,
+      apikey : config.COMEX_API_KEY,
       id: selectedRowId,
     };
     const recaps = await findComexRecapById(params);

@@ -356,6 +356,10 @@ export const API = {
     findAllComexCurrencies: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/currencies",
     findAllComexCategories: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/categories",
     findAllComexTransportationMode: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/transportation-mode",
+    findAllComexBarcodeTypes: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/barcodes",
+    findAllComexMeasureUnits: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/measureUnits",
+    findComexRecapItems: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
+    comexRecapAddItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/"
   },
 };
 

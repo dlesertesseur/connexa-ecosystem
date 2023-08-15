@@ -872,7 +872,11 @@
         "incoterm":"Incoterm",
         "currency":"Currency",
         "status":"Status",
-        "transportType": "Transport type"
+        "transportType": "Transport type",
+        "category": "Category",
+        "subcategory": "Subcategory",
+        "barcodeType": "Barcode type",
+        "barcode": "Barcode"
       },
       "placeholder": {
         "description": "a RECAP description",
@@ -896,7 +900,7 @@
         "status":"select a status",
         "transportType": "select a transport type"
       },
-      "columns": ["ID", "Description", "Modified", "Manufacturing time", "Status"],
+      "columns": ["Code", "Description", "Modified", "Manufacturing time", "Status"],
       "products": {
         "title": {
           "add": "Add product",
@@ -906,26 +910,32 @@
         "label": {
           "sku": "Code",
           "description": "Description",
-          "department": "Department",
-          "modality":"Modality",
-          "factory":"Factory",
-          "vendorHost":"Vendor Host",
-          "paymentTerms":"Payment terms",
-          "shippingPort": "Shipping port",
-          "productionTimes": "Production time"
+          "category": "Category",
+          "subcategory": "Subcategory",
+          "barcodeType": "Barcode type",
+          "barcode": "Barcode",
+          "pdq":"PDQ",
+          "amount":"Amount",
+          "unitOfMeasurement":"Unit of measurement",
+          "priceByUnit":"Price by unit",
+          "totalPrice":"Total price",
+          "boxes": "Boxes",
+          "image":"Drop images or click here"
         },
         "placeholder": {
           "sku": "a sku code",
           "description": "sku description",
-          "department": "select a department",
-          "modality":"select option",
-          "factory":"select a factory",
-          "vendorHost":"vendor host number",
-          "paymentTerms":"select a payment terms",
-          "shippingPort": "select a shipping port",
-          "productionTimes": "select a production time"
+          "category": "select a category",
+          "subcategory": "select a subcategory",
+          "barcodeType": "select a barcode type",
+          "barcode": "a barcode",
+          "amount":"an amount",
+          "unitOfMeasurement":"select a unit of measure",
+          "priceByUnit":"a price by unit",
+          "totalPrice":"a total price",
+          "boxes":"a boxes number"
         },
-        "columns": ["SKU", "Description", "Department", "Factory", "Vendor host", "Shipping port", "Manufacturing time"]
+        "columns": ["Barcode", "Description", "Price", "Price per unit", "Quantity", "Boxes"]
       }
     }
   },

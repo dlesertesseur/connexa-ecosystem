@@ -30,7 +30,8 @@ const config = {
   ],
   PALLET_VERTICAL_SEPARATION : 0.25,
   FRAMES_LAYER : 1,
-  BASE_URL:import.meta.env.BASE_URL
+  BASE_URL:import.meta.env.BASE_URL,
+  COMEX_API_KEY: import.meta.env.VITE_APP_COMEX_API_KEY
 };
 
 export { config };

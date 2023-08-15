@@ -15,6 +15,12 @@ const COMEX = {
     { id: 2, name: "YUAN", code: "YUA" },
   ],
 
+  measureUnits: [
+    { id: "unidas", name: "Unidad", code: "UNIT" },
+    { id: "kilos", name: "Kilogramo", code: "Kg" },
+    { id: "toneladas", name: "Tonelada", code: "T" },
+  ],
+
   status: [
     { id: "EDITING", name: "EN_EDICION" },
     { id: "FINISHED", name: "TERMINADA" },

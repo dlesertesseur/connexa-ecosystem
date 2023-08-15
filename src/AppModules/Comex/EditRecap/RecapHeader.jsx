@@ -1,54 +1,36 @@
 import React from "react";
-import { Badge, Button, Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
 
-const RecapHeader = ({ recap, h = 120 }) => {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-
+const RecapHeader = ({ recap, h }) => {
   return (
-    <Stack spacing={"xs"} h={h}>
-      <Paper withBorder p={6} h={"100%"}>
+    <Paper withBorder p={6} >
+      <Group position="apart" w={"100%"} h={h}>
         {recap ? (
-          <Stack spacing={"xs"} h={"100%"} align="stretch" justify="space-between">
-            <Group position="apart" spacing={"xs"}>
-              <Text size={"lg"} weight={700}>
-                {recap.campaign.name}
-              </Text>
-              {/* <Text size={"xs"}>{recap.creationDate}</Text> */}
-            </Group>
-            <Group spacing={"xs"}>
-              <Text size={"xs"} weight={400}>
-                {recap.description}
-              </Text>
-            </Group>
-            <Group spacing={"xs"} position="apart">
-              <Group spacing={"xs"} mt={"sm"}>
-                <Text size={"sm"} weight={700}>
+          <Group align="flex-start">
+            <Stack spacing={0} h={"100%"} align="stretch" justify="flex-start">
+              <Group>
+                <Text size={"lg"} weight={700}>
+                  {recap.campaign.name}
+                </Text>
+                <Text size={"lg"} weight={600} color="dark">
+                  {recap.description}
+                </Text>
+              </Group>
+              <Group spacing={"xs"}>
+                <Text size={"xs"} weight={700}>
                   {recap.supplier.name}
                 </Text>
-                <Badge color="green" variant="dot">
+                <Text size={"xs"} weight={700} color="dark">
                   {recap.originCountry.name}
-                </Badge>
+                </Text>
               </Group>
-
-              <Group spacing={"xs"} position="right">
-                <Button
-                  onClick={() => {
-                    navigate("../");
-                  }}
-                >
-                  <Text>{t("button.back")}</Text>
-                </Button>
-              </Group>
-            </Group>
-          </Stack>
+            </Stack>
+          </Group>
         ) : (
-          <Skeleton visible={true}></Skeleton>
+          <Skeleton visible={true} h={h}></Skeleton>
         )}
-      </Paper>
-    </Stack>
+      </Group>
+    </Paper>
   );
 };
 

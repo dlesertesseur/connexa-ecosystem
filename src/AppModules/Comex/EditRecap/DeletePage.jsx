@@ -24,6 +24,7 @@ import {
   findComexRecapById,
 } from "../../../DataAccess/ComexRecap";
 import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
+import { config } from "../../../Constants/config";
 
 export function DeletePage() {
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ export function DeletePage() {
   const getData = async () => {
     const params = {
       token: user.token,
-      apikey: user.token,
+      apikey: config.COMEX_API_KEY,
       id: selectedRowId,
     };
     const recaps = await findComexRecapById(params);
@@ -148,7 +149,7 @@ export function DeletePage() {
   const selectOriginCountry = async (country) => {
     const params = {
       token: user.token,
-      apikey: user.token,
+      apikey: config.COMEX_API_KEY,
       countryId: country,
     };
     const ports = await findAllComexCountryPorts(params);
@@ -169,7 +170,7 @@ export function DeletePage() {
   const selectDestinationCountry = async (country) => {
     const params = {
       token: user.token,
-      apikey: user.token,
+      apikey: config.COMEX_API_KEY,
       countryId: country,
     };
     const ports = await findAllComexCountryPorts(params);

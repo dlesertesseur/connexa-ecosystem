@@ -25,6 +25,7 @@ import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import ProductsList from "./products/ProductsList";
 import UploadData from "./products/UploadData";
+import { config } from "../../../Constants/config";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -47,11 +48,12 @@ const DynamicApp = ({ app }) => {
   const [loading, setLoading] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [reload, setReload] = useState(null);
+  const [reloadItems, setReloadItems] = useState(null);
 
   const getData = async () => {
     const params = {
       token: user.token,
-      apikey: user.token,
+      apikey: config.COMEX_API_KEY,
       userId: user.id,
     };
 
@@ -62,6 +64,7 @@ const DynamicApp = ({ app }) => {
       ret = list.map((r) => {
         return {
           id: r.id,
+          code: r.code,
           description: r.description,
           status: r.status,
           totalManufacturingTimeInDays: r.totalManufacturingTimeInDays,
@@ -88,7 +91,7 @@ const DynamicApp = ({ app }) => {
       const categoryRoot = await findAllComexCategoriesRoot(params);
       setCategoryRoot(categoryRoot);
 
-      const departments = await findAllComexCategories({...params, categoryId:categoryRoot.id});
+      const departments = await findAllComexCategories({ ...params, categoryId: categoryRoot.id });
       setDepartments(departments);
 
       const incoterms = await findAllComexIncoterms(params);
@@ -102,7 +105,6 @@ const DynamicApp = ({ app }) => {
 
       const transportType = await findAllComexTransportType(params);
       setTransportationType(transportType);
-
     } catch (error) {
       setError(error);
     }
@@ -116,7 +118,7 @@ const DynamicApp = ({ app }) => {
   let col = 0;
   const cols = t("comex.recap.columns", { returnObjects: true });
   const columns = [
-    { headerName: cols[col++], fieldName: "id", align: "left" },
+    { headerName: cols[col++], fieldName: "code", align: "left" },
     { headerName: cols[col++], fieldName: "description", align: "left" },
     { headerName: cols[col++], fieldName: "lastModification", align: "center" },
     { headerName: cols[col++], fieldName: "totalManufacturingTimeInDays", align: "right" },
@@ -140,6 +142,8 @@ const DynamicApp = ({ app }) => {
         transportationType,
         paymentTerms,
         setError,
+        reloadItems,
+        setReloadItems,
       }}
     >
       <CrudFrame
