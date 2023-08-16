@@ -9,6 +9,7 @@ import {
   TextInput,
   Checkbox,
   NumberInput,
+  Stack,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
@@ -20,16 +21,18 @@ import { CRUD_PAGE_MODE, HEADER_HIGHT } from "../../../../Constants";
 import { AbmStateContext } from "../Context";
 import {
   comexRecapAddItem,
+  comexRecapUpdateItem,
   findAllComexCategories,
   findComexRecapBarcodeTypes,
-  findComexRecapById,
+  findComexRecapItemById,
   findComexRecapMeasureUnits,
+  uploadItemImage,
 } from "../../../../DataAccess/ComexRecap";
 import { IconBox, IconCoin, IconPackage } from "@tabler/icons-react";
 import { config } from "../../../../Constants/config";
 import ProductImage from "../ProductImage";
 
-export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
+export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
@@ -40,7 +43,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
   const [subcategoriesList, setSubcategoriesList] = useState(null);
   const [barcodeTypeList, setBarcodeTypeList] = useState([]);
   const [unitsList, setUnitsList] = useState([]);
-  const [recap, setRecap] = useState(null);
+  const [item, setItem] = useState(null);
 
   const [img1, setImg1] = useState(null);
   const [img2, setImg2] = useState(null);
@@ -51,15 +54,40 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
 
   const navigate = useNavigate();
 
-  const { setReloadItems, selectedRowId, setError } = useContext(AbmStateContext);
+  const iconCoin = <IconCoin size={16} />;
+  const iconAmount = <IconBox size={16} />;
+  const iconBoxes = <IconPackage size={16} />;
+  const currency = recap?.currency.abbreviation;
+
+  const { setReloadItems, selectedRowId, selectedItem, setError } = useContext(AbmStateContext);
 
   useEffect(() => {
-    getData();
-  }, [selectedRowId]);
+    getContentData();
+  }, [recap]);
 
   useEffect(() => {
     form.setFieldValue("totalPrice", amountVal * price);
   }, [amountVal, price]);
+
+  useEffect(() => {
+    if ((mode === CRUD_PAGE_MODE.update || mode === CRUD_PAGE_MODE.delete) && item) {
+      selectCategory(item.category.id);
+
+      form.setFieldValue("category", item.category.id);
+      form.setFieldValue("subcategory", item.subcategory.id);
+      form.setFieldValue("description", item.description);
+      form.setFieldValue("barcodeType", item.barcodeType.id);
+      form.setFieldValue("barcode", item.barcode);
+      form.setFieldValue("pdq", item.productDisplayQuickly);
+      form.setFieldValue("amount", item.quantity);
+      form.setFieldValue("unitOfMeasurement", item.unitOfMeasurement);
+      form.setFieldValue("priceByUnit", item.pricePerUnit);
+      form.setFieldValue("totalPrice", item.price);
+      form.setFieldValue("boxes", item.boxes);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item]);
 
   const selectCategory = async (category) => {
     const params = {
@@ -75,27 +103,14 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
     setSubcategoriesList(ret);
   };
 
-  const getData = async () => {
-    const params = {
-      apikey: config.COMEX_API_KEY,
-      id: selectedRowId,
-    };
-    const recaps = await findComexRecapById(params);
-    if (recaps) {
-      setRecap(recaps[0]);
-    }
-  };
-
-  useEffect(() => {
-    getContentData();
-  }, [recap]);
-
   const getContentData = async () => {
     let ret = null;
     if (recap) {
+      setWorking(true);
       const params = {
         apikey: config.COMEX_API_KEY,
         categoryId: recap.department.id,
+        id: selectedItem,
       };
 
       const categories = await findAllComexCategories(params);
@@ -118,6 +133,12 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
         return obj;
       });
       setUnitsList(ret);
+
+      const rowItems = await findComexRecapItemById(params);
+      if (rowItems) {
+        setItem(rowItems[0]);
+      }
+      setWorking(false);
     }
   };
 
@@ -149,18 +170,6 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
       boxes: (val) => (val ? null : t("validation.required")),
     },
   });
-
-  // useEffect(() => {
-  //   if (mode === CRUD_PAGE_MODE.update || mode === CRUD_PAGE_MODE.delete) {
-  //     // form.setFieldValue("description", recap.description);
-  //     // form.setFieldValue("campaign", recap.campaign.id);
-  //     // form.setFieldValue("country", recap.country.code);
-  //     // form.setFieldValue("supplier", recap.supplier.code);
-  //     // setSelectedCountry(recap.country.code);
-  //   }
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const createSelect = (field, data) => {
     let localDisabled = null;
@@ -332,7 +341,8 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
     navigate("../");
   };
 
-  const onCreate = async (values) => {
+  const onSave = async (values) => {
+    const ret = null;
     const data = {
       categoryId: values.category,
       subCategoryId: values.subcategory,
@@ -350,30 +360,89 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
     const params = {
       apikey: config.COMEX_API_KEY,
       id: selectedRowId,
+      itemId: item.id,
       body: data,
     };
 
     setWorking(true);
     try {
-      const ret = await comexRecapAddItem(params);
-      setWorking(false);
+      switch (mode) {
+        case CRUD_PAGE_MODE.new:
+          ret = await comexRecapAddItem(params);
+          console.log("onSave comexRecapAddItem ret -> ", ret);
+          break;
+          
+        case CRUD_PAGE_MODE.update:
+          ret = await comexRecapUpdateItem(params);
+          console.log("onSave comexRecapUpdateItem ret -> ", ret);
+          break;
+      }
+
+      // if (img1) {
+      //   ret = uploadFile(img1);
+      //   console.log("onSave uploadFile ret -> ", ret);
+      // }
+
       setReloadItems(Date.now());
       navigate("../");
     } catch (error) {
-      setWorking(false);
       setError(error);
+    }
+    setWorking(false);
+  };
+
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", file.type);
+
+    const params = {
+      apikey: config.COMEX_API_KEY,
+      itemId: item.id,
+      data: formData,
+    };
+
+    const ret = await uploadItemImage(params);
+    return ret;
+  };
+
+  const determinateTitle = () => {
+    let ret = null;
+    switch (mode) {
+      case CRUD_PAGE_MODE.new:
+        ret = t("comex.recap.products.title.add");
+        break;
+
+      case CRUD_PAGE_MODE.update:
+        ret = t("comex.recap.products.title.update");
+        break;
+
+      case CRUD_PAGE_MODE.delete:
+        ret = t("comex.recap.products.title.delete");
+        break;
+    }
+
+    return(ret)
+  };
+
+  const onAccept = (values) => {
+    switch (mode) {
+      case CRUD_PAGE_MODE.new:
+      case CRUD_PAGE_MODE.update:
+        onSave(values);
+        break;
+
+      case CRUD_PAGE_MODE.delete:
+        //onDelete(values);
+        break;
     }
   };
 
-  const iconCoin = <IconCoin size={16} />;
-  const iconAmount = <IconBox size={16} />;
-  const iconBoxes = <IconPackage size={16} />;
-  const currency = recap?.currency.abbreviation;
   return (
-    <Container size={"xl"} sx={{ width: "100%" }}>
+    <Container size={"sm"} sx={{ width: "100%" }}>
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
-      <Container size={"sm"}>
+      <Stack spacing={"xs"}>
         <Title
           mb={"lg"}
           order={2}
@@ -383,15 +452,15 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
             fontWeight: 700,
           })}
         >
-          {t("comex.recap.products.title.add")}
+          {determinateTitle()}
         </Title>
 
-        <ScrollArea type="scroll" px={"md"} style={{ width: "100%", height: height - HEADER_HIGHT - 140 }}>
-          <form
-            onSubmit={form.onSubmit((values) => {
-              onCreate(values);
-            })}
-          >
+        <form
+          onSubmit={form.onSubmit((values) => {
+            onAccept(values);
+          })}
+        >
+          <ScrollArea type="scroll" px={"md"} style={{ width: "100%", height: height - HEADER_HIGHT - 160 }}>
             <Group mb={"md"} grow>
               {createSelectCategory("category", categoriesList)}
               {createSelectSubcategory("subcategory", subcategoriesList)}
@@ -418,18 +487,18 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new }) {
             </Group>
 
             <Group mb={"md"} position="apart" grow align="flex-start">
-              <ProductImage imageUrl={img1} setImageUrl={setImg1}/>
-              <ProductImage imageUrl={img2} setImageUrl={setImg2}/>
-              <ProductImage imageUrl={img3} setImageUrl={setImg3}/>
+              <ProductImage imageUrl={img1} setImageUrl={setImg1} />
+              <ProductImage imageUrl={img2} setImageUrl={setImg2} />
+              <ProductImage imageUrl={img3} setImageUrl={setImg3} />
             </Group>
+          </ScrollArea>
 
-            <Group position="right" mt="xl" mb="xs">
-              <Button type="submit">{t("button.accept")}</Button>
-              <Button onClick={onClose}>{t("button.cancel")}</Button>
-            </Group>
-          </form>
-        </ScrollArea>
-      </Container>
+          <Group position="right" mt="xl" mb="xs" mx={"md"}>
+            <Button type="submit">{t("button.accept")}</Button>
+            <Button onClick={onClose}>{t("button.cancel")}</Button>
+          </Group>
+        </form>
+      </Stack>
     </Container>
   );
 }

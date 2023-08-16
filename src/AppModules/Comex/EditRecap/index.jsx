@@ -49,6 +49,7 @@ const DynamicApp = ({ app }) => {
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [reload, setReload] = useState(null);
   const [reloadItems, setReloadItems] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const getData = async () => {
     const params = {
@@ -144,6 +145,8 @@ const DynamicApp = ({ app }) => {
         setError,
         reloadItems,
         setReloadItems,
+        selectedItem,
+        setSelectedItem,
       }}
     >
       <CrudFrame

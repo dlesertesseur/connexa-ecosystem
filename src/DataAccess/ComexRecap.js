@@ -484,6 +484,75 @@ async function comexRecapAddItem(parameters) {
   }
 }
 
+async function findComexRecapItemById(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey : parameters.apikey},
+    };
+
+    const url = API.comexrecap.findComexRecapItemById + parameters.id;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function comexRecapUpdateItem(parameters) {
+  try {
+    const body = JSON.stringify(parameters.body);
+
+    const requestOptions = {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: parameters.apikey,
+      },
+      body: body,
+    };
+
+    const url = API.comexrecap.comexRecapUpdateItem + parameters.itemId;
+    console.log("comexRecapUpdateItem url ->", url);
+
+    const res = await fetch(url, requestOptions);
+    console.log("comexRecapUpdateItem res ->", res);
+
+    const data = await res.json();
+    console.log("comexRecapUpdateItem data ->", data);
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const uploadItemImage = async (parameters) => {
+  try {
+    const requestOptions = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        apikey: parameters.apikey,
+      },
+      body: parameters.data,
+    };
+
+    const url = API.comexrecap.uploadImage + parameters.id
+
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export {
   createComexRecap,
   updateComexRecap,
@@ -508,5 +577,8 @@ export {
   findComexRecapBarcodeTypes,
   findComexRecapMeasureUnits,
   findComexRecapItems,
-  comexRecapAddItem
+  findComexRecapItemById,
+  comexRecapAddItem,
+  comexRecapUpdateItem,
+  uploadItemImage
 };

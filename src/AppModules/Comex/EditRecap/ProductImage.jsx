@@ -8,7 +8,14 @@ import uuid from "react-uuid";
 const ProductImage = ({ imageUrl, setImageUrl }) => {
   const { t } = useTranslation();
   const [files, setFiles] = useState([]);
-  const [image, setImage] = useState(imageUrl);
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    if (imageUrl) {
+      const url = URL.createObjectURL(imageUrl);
+      setImage(url);
+    }
+  }, [imageUrl]);
 
   useEffect(() => {
     if (files && files.length) {
@@ -19,7 +26,7 @@ const ProductImage = ({ imageUrl, setImageUrl }) => {
   }, [files]);
 
   const preview = () => {
-    return <Image key={uuid()} src={image} imageProps={{ onLoad: () => URL.revokeObjectURL(image) }} />;
+    return <Image key={uuid()} src={image} />;//imageProps={{ onLoad: () => URL.revokeObjectURL(image) }}
   };
 
   return (

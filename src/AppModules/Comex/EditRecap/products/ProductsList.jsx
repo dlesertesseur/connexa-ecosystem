@@ -15,16 +15,15 @@ import SortedTable from "../../../../Components/Crud/SortedTable";
 const RACAP_HEADER = 48;
 
 const ProductsList = () => {
-  const { user } = useSelector((state) => state.auth.value);
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
   const [recap, setRecap] = useState(null);
+  const [item, setItem] = useState(null);
 
-  const { selectedRowId, reloadItems } = useContext(AbmStateContext);
+  const { selectedRowId, reloadItems, selectedItem, setSelectedItem } = useContext(AbmStateContext);
 
   const getData = async () => {
     const params = {
@@ -46,7 +45,6 @@ const ProductsList = () => {
     const rows = await findComexRecapItems(params);
     if (rows) {
       setRows(rows);
-      console.log("getRows findComexRecapItems ->", rows)
     }
   };
 
@@ -69,6 +67,12 @@ const ProductsList = () => {
     { headerName: cols[col++], fieldName: "boxes", align: "right" },
   ];
 
+  const onSelectItem = (env) => {
+    const item = rows.find(r => r.id === env);
+    setItem(item);
+    setSelectedItem(env);
+  }
+
   return (
     <Stack spacing={"xs"}>
       <Stack
@@ -88,18 +92,18 @@ const ProductsList = () => {
                 columns={columns}
                 loading={loading}
                 enableCreateButton={true}
-                rowSelected={selectedRow}
-                setRowSelected={setSelectedRow}
-                headerHeight={HEADER_HIGHT + RACAP_HEADER + 64}
+                rowSelected={selectedItem}
+                setRowSelected={onSelectItem}
+                headerHeight={HEADER_HIGHT + RACAP_HEADER + 32}
                 backButton={() => {
                   navigate("../");
                 }}
               />
             }
           ></Route>
-          <Route path="create" element={<ProductPage mode={CRUD_PAGE_MODE.new} />} />
-          <Route path="update" element={<ProductPage mode={CRUD_PAGE_MODE.update} />} />
-          <Route path="delete" element={<ProductPage mode={CRUD_PAGE_MODE.delete} />} />
+          <Route path="create" element={<ProductPage mode={CRUD_PAGE_MODE.new} recap={recap}/>} />
+          <Route path="update" element={<ProductPage mode={CRUD_PAGE_MODE.update} recap={recap} rowItem={item}/>} />
+          <Route path="delete" element={<ProductPage mode={CRUD_PAGE_MODE.delete} recap={recap} rowItem={item}/>} />
         </Routes>
       </Stack>
     </Stack>

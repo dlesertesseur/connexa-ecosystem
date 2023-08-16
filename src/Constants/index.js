@@ -358,8 +358,10 @@ export const API = {
     findAllComexTransportationMode: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/transportation-mode",
     findAllComexBarcodeTypes: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/barcodes",
     findAllComexMeasureUnits: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/measureUnits",
-    findComexRecapItems: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
-    comexRecapAddItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/"
+    findComexRecapItems: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items?importationId=",
+    findComexRecapItemById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items?itemId=",
+    comexRecapAddItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
+    comexRecapUpdateItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/"
   },
 };
 
