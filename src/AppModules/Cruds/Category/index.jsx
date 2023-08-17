@@ -91,7 +91,7 @@ const DynamicApp = ({ app }) => {
       deletePage={<DeletePage />}
       relationshipPages={[
         {
-          path: "/inspect",
+          path: "inspect",
           key: "crud.category.label.toChildren",
           onPress: () => changeRoot(),
         },

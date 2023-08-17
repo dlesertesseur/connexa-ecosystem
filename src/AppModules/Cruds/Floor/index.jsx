@@ -70,7 +70,7 @@ const DynamicApp = ({ app }) => {
       filterControl={showFilterControl ? <FilterControl site={site} setSite={setSite} onFilter={onFilter} /> : null}
       relationshipPages={[
         {
-          path: "/images",
+          path: "images",
           key: "label.crud.images",
           element: <ImagesByFloorPage user={user} siteId={site} floorId={floorId} back={"../"} onFilter={onFilter} />,
         },

@@ -862,16 +862,16 @@
         "vendorHost": "Vendor host",
         "paymentTerms": "Payment terms",
         "shippingPort": "Shipping port",
-        "originShippingPort":"Origen shipping port",
-        "destinationShippingPort":"Destination shipping port",
+        "originShippingPort": "Origen shipping port",
+        "destinationShippingPort": "Destination shipping port",
         "productionTime": "Production times (in days)",
         "campaign": "Campaign",
         "addProducts": "Products",
         "addDocuments": "Documents",
-        "importationType":"Importation type",
-        "incoterm":"Incoterm",
-        "currency":"Currency",
-        "status":"Status",
+        "importationType": "Importation type",
+        "incoterm": "Incoterm",
+        "currency": "Currency",
+        "status": "Status",
         "transportType": "Transport type",
         "category": "Category",
         "subcategory": "Subcategory",
@@ -890,14 +890,14 @@
         "factory": "select a factory",
         "vendorHost": "select a vendor host",
         "paymentTerms": "select a payment terms",
-        "originShippingPort":"select a shipping port",
-        "destinationShippingPort":"select a shipping port",
+        "originShippingPort": "select a shipping port",
+        "destinationShippingPort": "select a shipping port",
         "campaign": "select a campaign",
-        "importationType":"select a importation type",
+        "importationType": "select a importation type",
         "productionTime": "a production time in days",
-        "incoterm":"select a incoterm",
-        "currency":"select a currency",
-        "status":"select a status",
+        "incoterm": "select a incoterm",
+        "currency": "select a currency",
+        "status": "select a status",
         "transportType": "select a transport type"
       },
       "columns": ["Code", "Description", "Modified", "Manufacturing time", "Status"],
@@ -914,13 +914,13 @@
           "subcategory": "Subcategory",
           "barcodeType": "Barcode type",
           "barcode": "Barcode",
-          "pdq":"PDQ",
-          "amount":"Amount",
-          "unitOfMeasurement":"Unit of measurement",
-          "priceByUnit":"Price by unit",
-          "totalPrice":"Total price",
+          "pdq": "PDQ",
+          "quantity": "Quantity",
+          "unitOfMeasurement": "Unit of measurement",
+          "priceByUnit": "Price by unit",
+          "totalPrice": "Total price",
           "boxes": "Boxes",
-          "image":"Drop images or click here"
+          "image": "Drop images or click here"
         },
         "placeholder": {
           "sku": "a sku code",
@@ -929,11 +929,11 @@
           "subcategory": "select a subcategory",
           "barcodeType": "select a barcode type",
           "barcode": "a barcode",
-          "amount":"an amount",
-          "unitOfMeasurement":"select a unit of measure",
-          "priceByUnit":"a price by unit",
-          "totalPrice":"a total price",
-          "boxes":"a boxes number"
+          "quantity": "an quantity",
+          "unitOfMeasurement": "select a unit of measure",
+          "priceByUnit": "a price by unit",
+          "totalPrice": "a total price",
+          "boxes": "a boxes number"
         },
         "columns": ["Barcode", "Description", "Price", "Price per unit", "Quantity", "Boxes"]
       }
@@ -1194,5 +1194,25 @@
     "friday": "Friday",
     "saturday": "Saturday",
     "sunday": "Sunday"
+  },
+
+  "businessProcess": {
+    "title": {
+      "create": "New business project",
+      "update": "Update a business project",
+      "delete": "Delete a business project"
+    },
+    "label": {
+      "name": "Name",
+      "description": "Description"
+    },
+    "placeholder": {
+      "name": "a name",
+      "description": "a description"
+    },
+    "buttons": {
+      "design": "Design"
+    },
+    "columns": ["Name", "Description", "Status"]
   }
 }

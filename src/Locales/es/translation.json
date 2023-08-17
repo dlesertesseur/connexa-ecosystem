@@ -911,7 +911,7 @@
           "barcodeType": "Tipo de codigo de barra",
           "barcode": "Codigo de barra",
           "pdq":"PDQ",
-          "amount":"Cantidad",
+          "quantity":"Cantidad",
           "unitOfMeasurement":"Unidad de medida",
           "priceByUnit":"Precio por unidad",
           "totalPrice":"Precio total",
@@ -925,7 +925,7 @@
           "subcategory": "seleccione una subcategoria",
           "barcodeType": "seleccion un tipo de codigo de barra",
           "barcode": "un codigo de barra",
-          "amount":"una cantidad",
+          "quantity":"una cantidad",
           "unitOfMeasurement":"una unidad de medida",
           "priceByUnit":"un precio por unidad",
           "totalPrice":"un precio total",
@@ -1175,5 +1175,20 @@
     "friday": "Viernes",
     "saturday": "Sábado",
     "sunday": "Domingo"
+  },
+
+  "businessProcess":{
+    "label":{
+      "name":"Nombre",
+      "description":"Descripcion"
+    },
+    "placeholder": {
+      "name": "un nombre",
+      "description": "una descripcion"
+    },
+    "buttons":{
+      "design":"Diseñar"
+    },
+    "columns": ["Nombre", "Descripcion", "Estado"]
   }
 }

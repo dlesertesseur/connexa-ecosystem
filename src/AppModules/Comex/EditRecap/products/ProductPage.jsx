@@ -79,11 +79,12 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       form.setFieldValue("barcodeType", item.barcodeType.id);
       form.setFieldValue("barcode", item.barcode);
       form.setFieldValue("pdq", item.productDisplayQuickly);
-      form.setFieldValue("amount", item.quantity);
+      form.setFieldValue("quantity", item.quantity);
       form.setFieldValue("unitOfMeasurement", item.unitOfMeasurement);
       form.setFieldValue("priceByUnit", item.pricePerUnit);
       form.setFieldValue("totalPrice", item.price);
       form.setFieldValue("boxes", item.boxes);
+      // setImg1(item.image);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,7 +111,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       const params = {
         apikey: config.COMEX_API_KEY,
         categoryId: recap.department.id,
-        id: selectedItem,
+        itemId: selectedItem,
       };
 
       const categories = await findAllComexCategories(params);
@@ -134,10 +135,13 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       });
       setUnitsList(ret);
 
-      const rowItems = await findComexRecapItemById(params);
-      if (rowItems) {
-        setItem(rowItems[0]);
+      if(mode !== CRUD_PAGE_MODE.new){
+        const rowItems = await findComexRecapItemById(params);
+        if (rowItems) {
+          setItem(rowItems[0]);
+        }
       }
+
       setWorking(false);
     }
   };
@@ -150,7 +154,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       barcodeType: null,
       barcode: "",
       pdq: false,
-      amount: null,
+      quantity: null,
       unitOfMeasurement: null,
       priceByUnit: null,
       totalPrice: null,
@@ -163,7 +167,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       description: (val) => (val ? null : t("validation.required")),
       barcodeType: (val) => (val ? null : t("validation.required")),
       barcode: (val) => (val ? null : t("validation.required")),
-      amount: (val) => (val ? null : t("validation.required")),
+      quantity: (val) => (val ? null : t("validation.required")),
       unitOfMeasurement: (val) => (val ? null : t("validation.required")),
       priceByUnit: (val) => (val ? null : t("validation.required")),
       totalPrice: (val) => (val ? null : t("validation.required")),
@@ -278,6 +282,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
 
     return ret;
   };
+
   const createCheckField = (field, disabled) => {
     const localDisabled = mode === CRUD_PAGE_MODE.delete ? true : false;
     const ret = (
@@ -309,6 +314,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
         {...form.getInputProps(field)}
         onChange={(env) => {
           form.setFieldValue(field, env);
+          form.setFieldValue("subcategory", null);
           selectCategory(env);
         }}
       />
@@ -342,7 +348,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
   };
 
   const onSave = async (values) => {
-    const ret = null;
+    let ret = null;
     const data = {
       categoryId: values.category,
       subCategoryId: values.subcategory,
@@ -350,9 +356,9 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       barcodeTypeId: values.barcodeType,
       barcode: values.barcode,
       productDisplayQuickly: values.pdq,
-      quantity: values.amount,
+      quantity: values.quantity,
       boxes: values.boxes,
-      image: img1,
+      image: null,
       pricePerUnit: values.priceByUnit,
       price: values.totalPrice,
     };
@@ -360,7 +366,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
     const params = {
       apikey: config.COMEX_API_KEY,
       id: selectedRowId,
-      itemId: item.id,
+      itemId: item?.id,
       body: data,
     };
 
@@ -369,19 +375,19 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       switch (mode) {
         case CRUD_PAGE_MODE.new:
           ret = await comexRecapAddItem(params);
-          console.log("onSave comexRecapAddItem ret -> ", ret);
           break;
           
         case CRUD_PAGE_MODE.update:
           ret = await comexRecapUpdateItem(params);
-          console.log("onSave comexRecapUpdateItem ret -> ", ret);
           break;
       }
 
-      // if (img1) {
-      //   ret = uploadFile(img1);
-      //   console.log("onSave uploadFile ret -> ", ret);
-      // }
+      console.log("onSave ret -> ", ret);
+
+      if (img1) {
+        ret = await uploadFile(img1, ret.id);
+        console.log("onSave uploadFile ret -> ", ret);
+      }
 
       setReloadItems(Date.now());
       navigate("../");
@@ -391,14 +397,14 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
     setWorking(false);
   };
 
-  const uploadFile = async (file) => {
+  const uploadFile = async (file, itemId) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", file.type);
 
     const params = {
       apikey: config.COMEX_API_KEY,
-      itemId: item.id,
+      itemId: itemId,
       data: formData,
     };
 
@@ -476,7 +482,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
               {createCheckField("pdq")}
             </Group>
             <Group mb={"md"} grow>
-              {createAmountField("amount", iconAmount)}
+              {createAmountField("quantity", iconAmount)}
               {createBoxesField("boxes", iconBoxes)}
               {createSelect("unitOfMeasurement", unitsList)}
             </Group>

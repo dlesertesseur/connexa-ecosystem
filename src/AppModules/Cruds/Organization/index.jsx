@@ -69,7 +69,7 @@ const DynamicApp = ({ app }) => {
         deletePage={<DeletePage />}
         relationshipPages={[
           {
-            path: "/roles",
+            path: "roles",
             key: "crud.organization.label.roles",
             element: <RolePage />,
           },

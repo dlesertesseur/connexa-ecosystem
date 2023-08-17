@@ -492,7 +492,7 @@ async function findComexRecapItemById(parameters) {
       headers: { "Content-Type": "application/json", apikey : parameters.apikey},
     };
 
-    const url = API.comexrecap.findComexRecapItemById + parameters.id;
+    const url = API.comexrecap.findComexRecapItemById + parameters.itemId;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
@@ -517,13 +517,8 @@ async function comexRecapUpdateItem(parameters) {
     };
 
     const url = API.comexrecap.comexRecapUpdateItem + parameters.itemId;
-    console.log("comexRecapUpdateItem url ->", url);
-
     const res = await fetch(url, requestOptions);
-    console.log("comexRecapUpdateItem res ->", res);
-
     const data = await res.json();
-    console.log("comexRecapUpdateItem data ->", data);
 
     return data;
   } catch (error) {
@@ -542,7 +537,7 @@ const uploadItemImage = async (parameters) => {
       body: parameters.data,
     };
 
-    const url = API.comexrecap.uploadImage + parameters.id
+    const url = API.comexrecap.comexRecapAddItemImage + parameters.itemId
 
     const res = await fetch(url, requestOptions);
     const data = await res.json();

@@ -361,7 +361,15 @@ export const API = {
     findComexRecapItems: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items?importationId=",
     findComexRecapItemById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items?itemId=",
     comexRecapAddItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
-    comexRecapUpdateItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/"
+    comexRecapUpdateItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
+    comexRecapAddItemImage: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items-images/"
+  },
+
+  businessProject: {
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-project",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-project/",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-project/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-project/",
   },
 };
 

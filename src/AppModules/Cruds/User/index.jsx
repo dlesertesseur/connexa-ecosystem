@@ -83,7 +83,7 @@ const DynamicApp = ({ app }) => {
         deletePage={<DeletePage />}
         relationshipPages={[
           {
-            path: "/images",
+            path: "images",
             key: "button.photos",
             element: <UserPhotosPage user={user} back={"../"} />,
           },
