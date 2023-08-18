@@ -1,7 +1,6 @@
 import React from "react";
 import { Box } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import Sprint from "./models/Sprint";
 
 const Designer = () => {

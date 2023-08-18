@@ -21,6 +21,7 @@ import { CRUD_PAGE_MODE, HEADER_HIGHT } from "../../../../Constants";
 import { AbmStateContext } from "../Context";
 import {
   comexRecapAddItem,
+  comexRecapDeleteItem,
   comexRecapUpdateItem,
   findAllComexCategories,
   findComexRecapBarcodeTypes,
@@ -31,6 +32,7 @@ import {
 import { IconBox, IconCoin, IconPackage } from "@tabler/icons-react";
 import { config } from "../../../../Constants/config";
 import ProductImage from "../ProductImage";
+import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
 
 export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
   const { t } = useTranslation();
@@ -49,8 +51,12 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
   const [img2, setImg2] = useState(null);
   const [img3, setImg3] = useState(null);
 
+  const [file1, setFile1] = useState(null);
+
   const [price, setPrice] = useState(null);
   const [amountVal, setAmountVal] = useState(null);
+
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -84,7 +90,9 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       form.setFieldValue("priceByUnit", item.pricePerUnit);
       form.setFieldValue("totalPrice", item.price);
       form.setFieldValue("boxes", item.boxes);
-      // setImg1(item.image);
+
+      const url = config.SERVER + item.image;
+      setImg1(url);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,7 +143,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       });
       setUnitsList(ret);
 
-      if(mode !== CRUD_PAGE_MODE.new){
+      if (mode !== CRUD_PAGE_MODE.new) {
         const rowItems = await findComexRecapItemById(params);
         if (rowItems) {
           setItem(rowItems[0]);
@@ -161,18 +169,21 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
       boxes: null,
     },
 
-    validate: {
-      category: (val) => (val ? null : t("validation.required")),
-      subcategory: (val) => (val ? null : t("validation.required")),
-      description: (val) => (val ? null : t("validation.required")),
-      barcodeType: (val) => (val ? null : t("validation.required")),
-      barcode: (val) => (val ? null : t("validation.required")),
-      quantity: (val) => (val ? null : t("validation.required")),
-      unitOfMeasurement: (val) => (val ? null : t("validation.required")),
-      priceByUnit: (val) => (val ? null : t("validation.required")),
-      totalPrice: (val) => (val ? null : t("validation.required")),
-      boxes: (val) => (val ? null : t("validation.required")),
-    },
+    validate:
+      mode !== CRUD_PAGE_MODE.delete
+        ? {
+            category: (val) => (val ? null : t("validation.required")),
+            subcategory: (val) => (val ? null : t("validation.required")),
+            description: (val) => (val ? null : t("validation.required")),
+            barcodeType: (val) => (val ? null : t("validation.required")),
+            barcode: (val) => (val ? null : t("validation.required")),
+            quantity: (val) => (val ? null : t("validation.required")),
+            unitOfMeasurement: (val) => (val ? null : t("validation.required")),
+            priceByUnit: (val) => (val ? null : t("validation.required")),
+            totalPrice: (val) => (val ? null : t("validation.required")),
+            boxes: (val) => (val ? null : t("validation.required")),
+          }
+        : null,
   });
 
   const createSelect = (field, data) => {
@@ -376,18 +387,37 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
         case CRUD_PAGE_MODE.new:
           ret = await comexRecapAddItem(params);
           break;
-          
+
         case CRUD_PAGE_MODE.update:
           ret = await comexRecapUpdateItem(params);
           break;
       }
 
-      console.log("onSave ret -> ", ret);
-
-      if (img1) {
-        ret = await uploadFile(img1, ret.id);
-        console.log("onSave uploadFile ret -> ", ret);
+      if (file1) {
+        ret = await uploadFile(file1, ret.id);
       }
+
+      setReloadItems(Date.now());
+      navigate("../");
+    } catch (error) {
+      setError(error);
+    }
+    setWorking(false);
+  };
+
+  const onDelete = async () => {
+    let ret = null;
+
+    const params = {
+      apikey: config.COMEX_API_KEY,
+      itemId: item?.id,
+    };
+
+    setWorking(true);
+    try {
+      ret = await comexRecapDeleteItem(params);
+
+      //DELETE IMAGES
 
       setReloadItems(Date.now());
       navigate("../");
@@ -428,7 +458,11 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
         break;
     }
 
-    return(ret)
+    return ret;
+  };
+
+  const onConfirm = () => {
+    onDelete();
   };
 
   const onAccept = (values) => {
@@ -439,7 +473,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
         break;
 
       case CRUD_PAGE_MODE.delete:
-        //onDelete(values);
+        setConfirmModalOpen(true);
         break;
     }
   };
@@ -447,6 +481,14 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
   return (
     <Container size={"sm"} sx={{ width: "100%" }}>
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
+
+      <DeleteConfirmation
+        opened={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={onConfirm}
+        title={t("notification.title")}
+        text={t("notification.delete")}
+      />
 
       <Stack spacing={"xs"}>
         <Title
@@ -493,7 +535,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
             </Group>
 
             <Group mb={"md"} position="apart" grow align="flex-start">
-              <ProductImage imageUrl={img1} setImageUrl={setImg1} />
+              <ProductImage imageUrl={img1} setImageUrl={setImg1} setFileImage={setFile1} />
               <ProductImage imageUrl={img2} setImageUrl={setImg2} />
               <ProductImage imageUrl={img3} setImageUrl={setImg3} />
             </Group>

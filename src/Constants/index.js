@@ -362,6 +362,7 @@ export const API = {
     findComexRecapItemById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items?itemId=",
     comexRecapAddItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
     comexRecapUpdateItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
+    comexRecapDeleteItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
     comexRecapAddItemImage: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items-images/"
   },
 

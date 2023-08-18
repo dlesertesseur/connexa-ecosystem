@@ -526,6 +526,26 @@ async function comexRecapUpdateItem(parameters) {
   }
 }
 
+async function comexRecapDeleteItem(parameters) {
+  try {
+    const requestOptions = {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: parameters.apikey,
+      },
+    };
+
+    const url = API.comexrecap.comexRecapDeleteItem + parameters.itemId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
 const uploadItemImage = async (parameters) => {
   try {
     const requestOptions = {
@@ -575,5 +595,6 @@ export {
   findComexRecapItemById,
   comexRecapAddItem,
   comexRecapUpdateItem,
+  comexRecapDeleteItem,
   uploadItemImage
 };
