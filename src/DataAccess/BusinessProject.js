@@ -1,3 +1,4 @@
+import uuid from "react-uuid";
 import { API } from "../Constants";
 import { BUSINESS } from "../Constants/BUSINESS";
 
@@ -115,10 +116,165 @@ async function findBusinessProjectsById(parameters) {
   }
 }
 
+async function createBusinessProjectParameter(parameters) {
+  try {
+    const obj = {
+      name: parameters.values.name,
+      description: parameters.values.description,
+      type: parameters.values.type,
+    };
+
+    const body = JSON.stringify(obj);
+
+    const requestOptions = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: parameters.apikey,
+      },
+      body: body,
+    };
+
+    // const url = API.businessProjectParameter.create;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    const data = BUSINESS.list.find((r) => (r.id = parameters.projectId));
+    if(data){
+      data.parameters.push({...obj, id:uuid()});
+    }
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function updateBusinessProjectParameter(parameters) {
+  try {
+    const body = JSON.stringify({
+      id: parameters.paramId,
+      name: parameters.values.name,
+      description: parameters.values.description,
+      type: parameters.values.type,
+    });
+
+
+    const requestOptions = {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+      body: body,
+    };
+
+    // const res = await fetch(API.businessProject.update, requestOptions);
+    // const data = await res.json();
+    
+    const data = BUSINESS.list.find((r) => (r.id = parameters.projectId));
+    if (data) {
+      const param = data.parameters.find((r) => (r.id = parameters.paramId));
+      if (param) {
+        param.name = parameters.values.name;
+        param.description = parameters.values.description;
+        param.type = parameters.values.type;
+      }
+    }
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function deleteBusinessProjectParameter(parameters) {
+  try {
+    const requestOptions = {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+    };
+
+    // const url = API.businessProject.delete + parameters.id;
+    // await fetch(url, requestOptions).then((response) => {
+    //   return response;
+    // });
+
+    const data = BUSINESS.list.find((r) => (r.id = parameters.projectId));
+    if (data) {
+      const params = data.parameters.filter((r) => r.id !== parameters.paramId);
+      if (params) {
+        data.parameters = params;
+      }
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findAllBusinessProjectParameters(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+    };
+
+    // const url = API.businessProject.findAllByUserId + parameters.userId;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    let params = null;
+    const data = BUSINESS.list.find((r) => (r.id = parameters.id));
+    if (data) {
+      params = data.parameters.filter((r) => r.id !== parameters.paramId);
+    }
+
+    return params;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function findBusinessProjectParameterById(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: { "Content-Type": "application/json", apikey: parameters.token },
+    };
+
+    // const url = API.businessProject.findAllByUserId + parameters.userId;
+    // const res = await fetch(url, requestOptions);
+    // const data = await res.json();
+
+    let param = null;
+    const data = BUSINESS.list.find((r) => (r.id = parameters.projectId));
+    if (data) {
+      param = data.parameters.find((r) => r.id === parameters.paramId);
+    }
+
+    return param;
+  } catch (error) {
+    return error;
+  }
+}
+
 export {
   createBusinessProject,
   updateBusinessProject,
   deleteBusinessProject,
   findAllBusinessProjects,
   findBusinessProjectsById,
+  createBusinessProjectParameter,
+  updateBusinessProjectParameter,
+  deleteBusinessProjectParameter,
+  findAllBusinessProjectParameters,
+  findBusinessProjectParameterById
 };

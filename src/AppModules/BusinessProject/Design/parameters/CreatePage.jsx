@@ -1,36 +1,61 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput } from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
-import { HEADER_HIGHT } from "../../../Constants";
+import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
+import { createBusinessProjectParameter } from "../../../../DataAccess/BusinessProject";
+import { useContext } from "react";
+import { AbmParametersStateContext } from "../Context";
 
-export function CreatePage() {
+export function CreatePage({projectId}) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
   const [working, setWorking] = useState(false);
+  const {setReloadParameters} = useContext(AbmParametersStateContext)
+
+  const [parametersType] = useState(
+    PARAMETERS_TYPE.map((p) => {
+      return { value: p.id, label: p.name };
+    })
+  );
   const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
       description: "",
       name: "",
+      type: "",
     },
 
     validate: {
       description: (val) => (val ? null : t("validation.required")),
       name: (val) => (val ? null : t("validation.required")),
+      type: (val) => (val ? null : t("validation.required")),
     },
   });
 
   const createTextField = (field) => {
     const ret = (
       <TextInput
-        label={t("businessProcess.label." + field)}
-        placeholder={t("businessProcess.placeholder." + field)}
+        label={t("businessProcess.parameters.label." + field)}
+        placeholder={t("businessProcess.parameters.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
+  const createSelect = (field, data) => {
+    const ret = (
+      <Select
+        label={t("businessProcess.parameters.label." + field)}
+        data={data ? data : []}
+        placeholder={t("businessProcess.parameters.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -45,19 +70,13 @@ export function CreatePage() {
   const onCreate = async (values) => {
     const params = {
       userId: user.id,
-      creatorName: user.firstName + " " + user.lastName,
+      projectId: projectId,
       values: { ...values },
     };
-    // setWorking(true);
-    // try {
-    //   await createComexRecap(params);
-    //   setWorking(false);
-    //   setReload(Date.now());
-    //   navigate("../");
-    // } catch (error) {
-    //   setWorking(false);
-    //   setError(error);
-    // }
+
+    await createBusinessProjectParameter(params);
+    setReloadParameters(new Date());
+    onClose();
   };
 
   return (
@@ -74,7 +93,7 @@ export function CreatePage() {
             fontWeight: 700,
           })}
         >
-          {t("businessProcess.title.create")}
+          {t("businessProcess.parameters.title.create")}
         </Title>
 
         <form
@@ -84,12 +103,15 @@ export function CreatePage() {
         >
           {height ? (
             <>
-              <ScrollArea type="scroll" style={{ width: "100%", height: height - HEADER_HIGHT - 72 }}>
+              <ScrollArea type="scroll" style={{ width: "100%" }}>
                 <Group mb={"md"} grow>
                   {createTextField("name")}
                 </Group>
                 <Group mb={"md"} grow>
                   {createTextField("description")}
+                </Group>
+                <Group mb={"md"}>
+                  {createSelect("type", parametersType)}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

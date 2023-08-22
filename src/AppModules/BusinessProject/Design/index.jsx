@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
-import Design from "./Design";
+import Design from "./definition/Design";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
-import { IconBoxMultiple, IconBoxMultiple1, IconPoint, IconProgress, IconProgressBolt, IconProgressX, IconScribble, IconScript } from "@tabler/icons-react";
+import { IconBoxMultiple, IconVariable } from "@tabler/icons-react";
 import { findAllBusinessProjects } from "../../../DataAccess/BusinessProject";
+import Parameters from "./parameters/Parameters";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -76,6 +77,12 @@ const DynamicApp = ({ app }) => {
             icon: <IconBoxMultiple size={20} />,
             key: "businessProcess.buttons.design",
             element: <Design back={"../"} />,
+          },
+          {
+            path: "parameters",
+            icon: <IconVariable size={20} />,
+            key: "businessProcess.buttons.parameters",
+            element: <Parameters back={"../"} />,
           },
         ]}
       />

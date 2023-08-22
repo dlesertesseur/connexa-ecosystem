@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Stack } from "@mantine/core";
 import { Route, Routes, useNavigate } from "react-router-dom";

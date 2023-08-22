@@ -1,52 +1,64 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput } from "@mantine/core";
+import {
+  Title,
+  Container,
+  Button,
+  Group,
+  LoadingOverlay,
+  ScrollArea,
+  TextInput,
+  Select,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
-import { HEADER_HIGHT } from "../../../Constants";
+import { HEADER_HIGHT } from "../../../../Constants";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { findBusinessProjectsById } from "../../../DataAccess/BusinessProject";
+import {
+  findBusinessProjectParameterById,
+  updateBusinessProjectParameter,
+} from "../../../../DataAccess/BusinessProject";
+import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
+import { AbmParametersStateContext } from "../Context";
 
-export function UpdatePage() {
+export function UpdatePage({ projectId }) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
   const [working, setWorking] = useState(false);
-  const [project, setProject] = useState(false);
-  const navigate = useNavigate();
+  const [projectParameter, setProjectParameter] = useState();
+  const { setReloadParameters, selectedParameterId } = useContext(AbmParametersStateContext);
 
-  const { selectedRowId, setReload, setError } = useContext(AbmParametersStateContext);
+  const [parametersType] = useState(
+    PARAMETERS_TYPE.map((p) => {
+      return { value: p.id, label: p.name };
+    })
+  );
+  
+  const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
       description: "",
       name: "",
+      type: "",
     },
 
     validate: {
       description: (val) => (val ? null : t("validation.required")),
       name: (val) => (val ? null : t("validation.required")),
+      type: (val) => (val ? null : t("validation.required")),
     },
   });
-
-  const getData = async () => {
-    const params = { token: user.token, id: selectedRowId };
-    const ret = await findBusinessProjectsById(params);
-    setProject(ret);
-  };
-
-  useEffect(() => {
-    getData();
-  }, [selectedRowId]);
 
   const createTextField = (field) => {
     const ret = (
       <TextInput
-        label={t("businessProcess.label." + field)}
-        placeholder={t("businessProcess.placeholder." + field)}
+        label={t("businessProcess.parameters.label." + field)}
+        placeholder={t("businessProcess.parameters.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -54,32 +66,55 @@ export function UpdatePage() {
     return ret;
   };
 
+  const createSelect = (field, data) => {
+    const ret = (
+      <Select
+        label={t("businessProcess.parameters.label." + field)}
+        data={data ? data : []}
+        placeholder={t("businessProcess.parameters.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
+  const getData = async () => {
+    const params = { token: user.token, projectId: projectId, paramId: selectedParameterId };
+    const ret = await findBusinessProjectParameterById(params);
+    setProjectParameter(ret);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [selectedParameterId]);
+
   const onClose = () => {
     navigate("../");
   };
 
   useEffect(() => {
-    const f = async () => {
-      if (project) {
-        form.setFieldValue("name", project.name);
-        form.setFieldValue("description", project.description);
-        //form.setFieldValue("status", project.status);
-      }
-    };
-    f();
+    if (projectParameter) {
+      form.setFieldValue("name", projectParameter.name);
+      form.setFieldValue("description", projectParameter.description);
+      form.setFieldValue("type", projectParameter.type);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [project]);
+  }, [projectParameter]);
 
   const onUpdate = async (values) => {
-    // const params = {
-    //   token: user.token,
-    //   body: { ...values },
-    // };
-    // setWorking(true);
+    const params = {
+      token: user.token,
+      projectId: projectId,
+      paramId: selectedParameterId,
+      values: values,
+    };
+
+    setWorking(true);
     try {
-      // await updateComexRecap(params);
+      await updateBusinessProjectParameter(params);
       setWorking(false);
-      setReload(Date.now());
+      setReloadParameters(Date.now());
       navigate("../");
     } catch (error) {
       setWorking(false);
@@ -101,7 +136,7 @@ export function UpdatePage() {
             fontWeight: 700,
           })}
         >
-          {t("businessProcess.title.update")}
+          {t("businessProcess.parameters.title.update")}
         </Title>
 
         <form
@@ -111,13 +146,14 @@ export function UpdatePage() {
         >
           {height ? (
             <>
-              <ScrollArea type="scroll" style={{ width: "100%", height: height - HEADER_HIGHT - 72 }}>
+              <ScrollArea type="scroll" style={{ width: "100%" }}>
                 <Group mb={"md"} grow>
                   {createTextField("name")}
                 </Group>
                 <Group mb={"md"} grow>
                   {createTextField("description")}
                 </Group>
+                <Group mb={"md"}>{createSelect("type", parametersType)}</Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">
                 <Button type="submit">{t("button.accept")}</Button>

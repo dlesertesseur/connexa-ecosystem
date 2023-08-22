@@ -1200,19 +1200,46 @@
     "title": {
       "create": "New business project",
       "update": "Update a business project",
-      "delete": "Delete a business project"
+      "delete": "Delete a business project",
+      "taskSettings": "Task settings"
     },
     "label": {
       "name": "Name",
-      "description": "Description"
+      "description": "Description",
+      "stage":"Stage",
+      "actionDefaultName":"new Action",
+      "stageDefaultName":"new Stage",
+      "taskDefaultName":"new Task",
+      "parameters":"Parameters",
+      "definition":"Definition"
     },
     "placeholder": {
       "name": "a name",
       "description": "a description"
     },
     "buttons": {
-      "design": "Design"
+      "design": "Design",
+      "parameters":"Parameters"
     },
-    "columns": ["Name", "Description", "Status"]
+    "columns": ["Name", "Description", "Status"],
+    "parameters":{
+      "title": {
+        "create": "New parameter",
+        "update": "Update parameter",
+        "delete": "Delete parameter"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "type":"Type"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description",
+        "type":"a parameter type"
+      },
+      "columns": ["Name", "Description", "Type"]
+    }
+
   }
 }

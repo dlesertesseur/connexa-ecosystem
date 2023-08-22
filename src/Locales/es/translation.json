@@ -1178,17 +1178,49 @@
   },
 
   "businessProcess":{
+    "title": {
+      "create": "Nuevo proyecto de negocio",
+      "update": "Modificar un proyecto de negocio",
+      "delete": "Eliminar un proyecto de negocio",
+      "taskSettings": "Configuracion de tarea"
+    },
     "label":{
       "name":"Nombre",
-      "description":"Descripcion"
+      "description":"Descripcion",
+      "stage":"Stage",
+      "actionDefaultName":"nueva Accion",
+      "stageDefaultName":"nuevo Stage",
+      "taskDefaultName":"nueva Tarea",
+      "parameters":"Parametros",
+      "definition":"Definición"
     },
     "placeholder": {
       "name": "un nombre",
       "description": "una descripcion"
     },
     "buttons":{
-      "design":"Diseñar"
+      "design":"Diseñar",
+      "parameters":"Parametros"
     },
-    "columns": ["Nombre", "Descripcion", "Estado"]
+    "columns": ["Nombre", "Descripcion", "Estado"],
+
+    "parameters":{
+      "title": {
+        "create": "Nuevo parametro",
+        "update": "Modificar parametro",
+        "delete": "Eliminar parametro"
+      },
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "type":"Tipo"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion",
+        "type":"un tipo de parametro"
+      },
+      "columns": ["Nombre", "Descripcion", "Tipo"]
+    }
   }
 }
