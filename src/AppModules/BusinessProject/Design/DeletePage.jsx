@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
-import { AbmParametersStateContext } from "./Context";
+import { AbmStateContext } from "./Context";
 import { HEADER_HIGHT } from "../../../Constants";
 import { findBusinessProjectsById } from "../../../DataAccess/BusinessProject";
 import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
@@ -19,7 +19,7 @@ export function DeletePage() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { selectedRowId, setReload, setError } = useContext(AbmParametersStateContext);
+  const { selectedRowId, setReload, setError } = useContext(AbmStateContext);
 
   const form = useForm({
     initialValues: {

@@ -1179,9 +1179,9 @@
 
   "businessProcess":{
     "title": {
-      "create": "Nuevo proyecto de negocio",
-      "update": "Modificar un proyecto de negocio",
-      "delete": "Eliminar un proyecto de negocio",
+      "create": "Nuevo proceso de negocio",
+      "update": "Modificar un proceso de negocio",
+      "delete": "Eliminar un proceso de negocio",
       "taskSettings": "Configuracion de tarea"
     },
     "label":{
@@ -1192,11 +1192,13 @@
       "stageDefaultName":"nuevo Stage",
       "taskDefaultName":"nueva Tarea",
       "parameters":"Parametros",
-      "definition":"Definición"
+      "definition":"Definición",
+      "code":"Codido"
     },
     "placeholder": {
       "name": "un nombre",
-      "description": "una descripcion"
+      "description": "una descripcion",
+      "code":"un codido"
     },
     "buttons":{
       "design":"Diseñar",

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import Design from "./definition/Design";
+import Parameters from "./parameters/Parameters";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
@@ -10,7 +11,6 @@ import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { IconBoxMultiple, IconVariable } from "@tabler/icons-react";
 import { findAllBusinessProjects } from "../../../DataAccess/BusinessProject";
-import Parameters from "./parameters/Parameters";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);

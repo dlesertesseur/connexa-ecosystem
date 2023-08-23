@@ -1,20 +1,22 @@
 import { ActionIcon, Card, Group, ScrollArea } from "@mantine/core";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { IconTrash } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useRef } from "react";
+import { DesignerStateContext } from "../Context";
+import { HEADER_HIGHT } from "../../../../Constants";
+import { useWindowSize } from "../../../../Hook";
 import React from "react";
 import EditTextField from "./EditTextField";
 import Action from "./Action";
 import AddAction from "./AddAction";
 import uuid from "react-uuid";
 import AddStage from "./AddStage";
-import { DesignerStateContext } from "../Context";
 
 const Stage = ({ id, name }) => {
   const scrollRef = useRef(null);
+  const wSize = useWindowSize();
   const { t } = useTranslation();
-
   const { project, setProject, editing } = useContext(DesignerStateContext);
 
   let actionsList = [];
@@ -57,9 +59,9 @@ const Stage = ({ id, name }) => {
   };
 
   return (
-    <Group spacing={"xs"} noWrap>
-      <Card withBorder h={400} miw={300}>
-        <Card.Section p="xs">
+    <Group spacing={"xs"} noWrap align="flex-start">
+      <Card withBorder mih={400} miw={300}>
+        <Card.Section p={"xs"}>
           <Group align="center" position="apart" noWrap spacing={"xs"}>
             <EditTextField
               value={name}
@@ -81,8 +83,8 @@ const Stage = ({ id, name }) => {
           </Group>
         </Card.Section>
 
-        <Card.Section p="xs">
-          <ScrollArea h={330} ref={scrollRef}>
+        <Card.Section p={"xs"}>
+          <ScrollArea h={wSize.height - HEADER_HIGHT - 120} ref={scrollRef}>
             {actionsList?.map((a) => (
               <Action key={a.id} name={a.name} stageId={id} id={a.id} />
             ))}

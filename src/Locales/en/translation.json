@@ -1198,9 +1198,9 @@
 
   "businessProcess": {
     "title": {
-      "create": "New business project",
-      "update": "Update a business project",
-      "delete": "Delete a business project",
+      "create": "New business process",
+      "update": "Update a business process",
+      "delete": "Delete a business process",
       "taskSettings": "Task settings"
     },
     "label": {
@@ -1211,11 +1211,13 @@
       "stageDefaultName":"new Stage",
       "taskDefaultName":"new Task",
       "parameters":"Parameters",
-      "definition":"Definition"
+      "definition":"Definition",
+      "code":"Code"
     },
     "placeholder": {
       "name": "a name",
-      "description": "a description"
+      "description": "a description",
+      "code":"a code"
     },
     "buttons": {
       "design": "Design",

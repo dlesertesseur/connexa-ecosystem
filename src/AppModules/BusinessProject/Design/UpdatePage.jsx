@@ -9,6 +9,7 @@ import { HEADER_HIGHT } from "../../../Constants";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { findBusinessProjectsById } from "../../../DataAccess/BusinessProject";
+import { AbmStateContext } from "./Context";
 
 export function UpdatePage() {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ export function UpdatePage() {
   const [project, setProject] = useState(false);
   const navigate = useNavigate();
 
-  const { selectedRowId, setReload, setError } = useContext(AbmParametersStateContext);
+  const { selectedRowId, setReload, setError } = useContext(AbmStateContext);
 
   const form = useForm({
     initialValues: {
