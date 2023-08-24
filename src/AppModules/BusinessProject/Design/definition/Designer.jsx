@@ -1,13 +1,11 @@
 import React from "react";
-import Stage from "../models/Stage";
+import Stage from "./models/Stage";
 import { Flex, ScrollArea } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
-import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { DesignerStateContext } from "../Context";
 
 const Designer = () => {
-  const { t } = useTranslation();
   const { height } = useViewportSize();
   const { project } = useContext(DesignerStateContext);
 

@@ -7,8 +7,8 @@ import { ActionIcon, Card, Group, ScrollArea } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useRef } from "react";
 import { useContext } from "react";
-import { DesignerStateContext } from "../Context";
 import { useTranslation } from "react-i18next";
+import { DesignerStateContext } from "../../Context";
 
 const Action = ({ stageId, id, name }) => {
   const scrollRef = useRef();

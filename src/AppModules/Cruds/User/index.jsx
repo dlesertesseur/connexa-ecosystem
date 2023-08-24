@@ -88,7 +88,7 @@ const DynamicApp = ({ app }) => {
             element: <UserPhotosPage user={user} back={"../"} />,
           },
           {
-            path: "/role",
+            path: "role",
             key: "button.roles",
             element: <RolePage back={"../"} />,
           },

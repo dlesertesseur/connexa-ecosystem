@@ -1193,7 +1193,11 @@
       "taskDefaultName":"nueva Tarea",
       "parameters":"Parametros",
       "definition":"Definición",
-      "code":"Codido"
+      "code":"Codido",
+      "taskList":"Tareas",
+      "transferTask":"Transferir a",
+      "searchTask":"Buscar tarea",
+      "noDataSelected":"Sin datos seleccionados"
     },
     "placeholder": {
       "name": "un nombre",

@@ -1212,7 +1212,11 @@
       "taskDefaultName":"new Task",
       "parameters":"Parameters",
       "definition":"Definition",
-      "code":"Code"
+      "code":"Code",
+      "taskList":"Tasks",
+      "transferTask":"Transfer to",
+      "searchTask":"Search task",
+      "noDataSelected":"No data selected"
     },
     "placeholder": {
       "name": "a name",

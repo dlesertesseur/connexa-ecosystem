@@ -2,20 +2,21 @@ import React from "react";
 import DesignToolbar from "./DesignToolbar";
 import DesignHeader from "./DesignHeader";
 import Designer from "./Designer";
-import { Modal, Stack, Text } from "@mantine/core";
-import { useEffect } from "react";
-import { useContext } from "react";
+import TaskSettings from "./TaskSettings";
+import { Stack } from "@mantine/core";
+import { useEffect, useContext, useState } from "react";
 import { AbmStateContext, DesignerStateContext } from "../Context";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import { findBusinessProjectsById } from "../../../../DataAccess/BusinessProject";
-import TaskSettings from "./TaskSettings";
 
 const Design = () => {
   const { user } = useSelector((state) => state.auth.value);
   const { selectedRowId } = useContext(AbmStateContext);
   const [editing, setEditing] = useState(true);
   const [project, setProject] = useState(null);
+  const [selectedStageId, setSelectedStageId] = useState(null);
+  const [selectedActionId, setSelectedActionId] = useState(null);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [openTaskSettings, setOpenTaskSettings] = useState(false);
 
   const getData = async () => {
@@ -35,7 +36,20 @@ const Design = () => {
   return (
     <Stack spacing={"xs"}>
       <DesignerStateContext.Provider
-        value={{ project, setProject, editing, setEditing, openTaskSettings, setOpenTaskSettings }}
+        value={{
+          project,
+          setProject,
+          editing,
+          setEditing,
+          openTaskSettings,
+          setOpenTaskSettings,
+          selectedTaskId,
+          setSelectedTaskId,
+          selectedStageId,
+          setSelectedStageId,
+          selectedActionId,
+          setSelectedActionId,
+        }}
       >
         <TaskSettings
           open={openTaskSettings}

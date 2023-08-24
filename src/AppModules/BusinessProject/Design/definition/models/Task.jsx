@@ -3,10 +3,18 @@ import EditTextField from "./EditTextField";
 import { ActionIcon, Card, Group } from "@mantine/core";
 import { IconSettings, IconTrash } from "@tabler/icons-react";
 import { useContext } from "react";
-import { DesignerStateContext } from "../Context";
+import { DesignerStateContext } from "../../Context";
 
 const Task = ({ stageId, actionId, id, name }) => {
-  const { project, setProject, editing, setOpenTaskSettings } = useContext(DesignerStateContext);
+  const {
+    project,
+    setProject,
+    editing,
+    setOpenTaskSettings,
+    setSelectedTaskId,
+    setSelectedStageId,
+    setSelectedActionId,
+  } = useContext(DesignerStateContext);
 
   const deleteTask = (id) => {
     const stage = project.stages.find((s) => s.id === stageId);
@@ -48,6 +56,9 @@ const Task = ({ stageId, actionId, id, name }) => {
             <Group noWrap spacing={3}>
               <ActionIcon
                 onClick={() => {
+                  setSelectedStageId(stageId);
+                  setSelectedActionId(actionId);
+                  setSelectedTaskId(id);
                   setOpenTaskSettings(true);
                 }}
                 variant={"default"}
