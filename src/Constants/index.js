@@ -366,11 +366,13 @@ export const API = {
     comexRecapAddItemImage: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items-images/"
   },
 
-  businessProject: {
-    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-project",
-    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-project/",
-    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-project/",
-    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-project/",
+  businessProcess: {
+    save: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-processes",
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-processes",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-processes/",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-processes/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-processes",
+    getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-processes/",
   },
 };
 

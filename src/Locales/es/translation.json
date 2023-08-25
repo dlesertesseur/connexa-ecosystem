@@ -1192,6 +1192,7 @@
       "stageDefaultName":"nuevo Stage",
       "taskDefaultName":"nueva Tarea",
       "parameters":"Parametros",
+      "connections":"Conexiones",
       "definition":"Definición",
       "code":"Codido",
       "taskList":"Tareas",
@@ -1206,7 +1207,8 @@
     },
     "buttons":{
       "design":"Diseñar",
-      "parameters":"Parametros"
+      "parameters":"Parametros",
+      "connections":"Conexiones"
     },
     "columns": ["Nombre", "Descripcion", "Estado"],
 
@@ -1215,6 +1217,24 @@
         "create": "Nuevo parametro",
         "update": "Modificar parametro",
         "delete": "Eliminar parametro"
+      },
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "type":"Tipo"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion",
+        "type":"un tipo de parametro"
+      },
+      "columns": ["Nombre", "Descripcion", "Tipo"]
+    },
+    "connections":{
+      "title": {
+        "create": "Nueva conexion",
+        "update": "Modificar conexion",
+        "delete": "Eliminar conexion"
       },
       "label": {
         "name": "Nombre",

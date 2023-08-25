@@ -3,14 +3,15 @@ import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import Design from "./definition/Design";
 import Parameters from "./parameters/Parameters";
+import Connections from "./connections/Connections";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
-import { IconBoxMultiple, IconVariable } from "@tabler/icons-react";
-import { findAllBusinessProjects } from "../../../DataAccess/BusinessProject";
+import { IconRectangleVertical, IconShare, IconVariable } from "@tabler/icons-react";
+import { findAllBusinessProcess } from "../../../DataAccess/BusinessProcess";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -29,7 +30,7 @@ const DynamicApp = ({ app }) => {
     };
 
     try {
-      const list = await findAllBusinessProjects(params);
+      const list = await findAllBusinessProcess(params);
       setRows(list);
 
     } catch (error) {
@@ -74,7 +75,7 @@ const DynamicApp = ({ app }) => {
         relationshipPages={[
           {
             path: "design",
-            icon: <IconBoxMultiple size={20} />,
+            icon: <IconRectangleVertical size={20} />,
             key: "businessProcess.buttons.design",
             element: <Design back={"../"} />,
           },
@@ -84,6 +85,12 @@ const DynamicApp = ({ app }) => {
             key: "businessProcess.buttons.parameters",
             element: <Parameters back={"../"} />,
           },
+          {
+            path: "connections",
+            icon: <IconShare size={20} />,
+            key: "businessProcess.buttons.connections",
+            element: <Connections back={"../"} />,
+          }
         ]}
       />
 

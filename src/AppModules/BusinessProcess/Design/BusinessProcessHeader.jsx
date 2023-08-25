@@ -1,16 +1,14 @@
 import React from "react";
 import { Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
-import { useTranslation } from "react-i18next";
 
-const ProjectHeader = ({ project }) => {
-  const {t} = useTranslation();
+const BusinessProcessHeader = ({ businessProcess, text }) => {
   return (
     <Paper withBorder p={6}>
-      <Stack spacing={"xs"}>
-        {project ? (
-          <Group position="left">
+      <Stack spacing={"xs"} h={32} justify="center">
+        {businessProcess ? (
+          <Group position="left" >
             <Text size={"md"} weight={700}>
-              {project?.name}
+              {businessProcess?.name}
             </Text>
 
             <Text size={"md"} weight={700}>
@@ -18,7 +16,7 @@ const ProjectHeader = ({ project }) => {
             </Text>
 
             <Text size={"md"} weight={700}>
-              {t("businessProcess.label.parameters")}
+              {text}
             </Text>
           </Group>
         ) : (
@@ -29,4 +27,4 @@ const ProjectHeader = ({ project }) => {
   );
 };
 
-export default ProjectHeader;
+export default BusinessProcessHeader;

@@ -1,27 +1,43 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Select } from "@mantine/core";
+import {
+  Title,
+  Container,
+  Button,
+  Group,
+  LoadingOverlay,
+  ScrollArea,
+  TextInput,
+  Select,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
-import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
-import { createBusinessProjectParameter } from "../../../../DataAccess/BusinessProject";
+import { HEADER_HIGHT } from "../../../../Constants";
+import { useEffect } from "react";
 import { useContext } from "react";
+import {
+  findBusinessProcessParameterById,
+  updateBusinessProcessParameter,
+} from "../../../../DataAccess/BusinessProcess";
+import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
 import { AbmParametersStateContext } from "../Context";
 
-export function CreatePage({projectId}) {
+export function UpdatePage({ projectId }) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
   const [working, setWorking] = useState(false);
-  const {setReloadParameters} = useContext(AbmParametersStateContext)
+  const [projectParameter, setProjectParameter] = useState();
+  const { setReloadParameters, selectedParameterId } = useContext(AbmParametersStateContext);
 
   const [parametersType] = useState(
     PARAMETERS_TYPE.map((p) => {
       return { value: p.id, label: p.name };
     })
   );
+  
   const navigate = useNavigate();
 
   const form = useForm({
@@ -63,20 +79,47 @@ export function CreatePage({projectId}) {
     return ret;
   };
 
+  const getData = async () => {
+    const params = { token: user.token, projectId: projectId, paramId: selectedParameterId };
+    const ret = await findBusinessProcessParameterById(params);
+    setProjectParameter(ret);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [selectedParameterId]);
+
   const onClose = () => {
     navigate("../");
   };
 
-  const onCreate = async (values) => {
+  useEffect(() => {
+    if (projectParameter) {
+      form.setFieldValue("name", projectParameter.name);
+      form.setFieldValue("description", projectParameter.description);
+      form.setFieldValue("type", projectParameter.type);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectParameter]);
+
+  const onUpdate = async (values) => {
     const params = {
-      userId: user.id,
+      token: user.token,
       projectId: projectId,
-      values: { ...values },
+      paramId: selectedParameterId,
+      values: values,
     };
 
-    await createBusinessProjectParameter(params);
-    setReloadParameters(new Date());
-    onClose();
+    setWorking(true);
+    try {
+      await updateBusinessProcessParameter(params);
+      setWorking(false);
+      setReloadParameters(Date.now());
+      navigate("../");
+    } catch (error) {
+      setWorking(false);
+      setError(error);
+    }
   };
 
   return (
@@ -93,12 +136,12 @@ export function CreatePage({projectId}) {
             fontWeight: 700,
           })}
         >
-          {t("businessProcess.parameters.title.create")}
+          {t("businessProcess.parameters.title.update")}
         </Title>
 
         <form
           onSubmit={form.onSubmit((values) => {
-            onCreate(values);
+            onUpdate(values);
           })}
         >
           {height ? (
@@ -110,9 +153,7 @@ export function CreatePage({projectId}) {
                 <Group mb={"md"} grow>
                   {createTextField("description")}
                 </Group>
-                <Group mb={"md"}>
-                  {createSelect("type", parametersType)}
-                </Group>
+                <Group mb={"md"}>{createSelect("type", parametersType)}</Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">
                 <Button type="submit">{t("button.accept")}</Button>

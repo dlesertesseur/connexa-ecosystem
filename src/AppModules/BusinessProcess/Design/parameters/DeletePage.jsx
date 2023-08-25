@@ -1,43 +1,33 @@
-import {
-  Title,
-  Container,
-  Button,
-  Group,
-  LoadingOverlay,
-  ScrollArea,
-  TextInput,
-  Select,
-} from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
-import { useState } from "react";
-import { HEADER_HIGHT } from "../../../../Constants";
-import { useEffect } from "react";
-import { useContext } from "react";
-import {
-  findBusinessProjectParameterById,
-  updateBusinessProjectParameter,
-} from "../../../../DataAccess/BusinessProject";
-import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
+import { useContext, useEffect, useState } from "react";
 import { AbmParametersStateContext } from "../Context";
+import {
+  deleteBusinessProcessParameter,
+  findBusinessProcessParameterById,
+} from "../../../../DataAccess/BusinessProcess";
+import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
+import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
 
-export function UpdatePage({ projectId }) {
+export function DeletePage({projectId}) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
   const [working, setWorking] = useState(false);
   const [projectParameter, setProjectParameter] = useState();
-  const { setReloadParameters, selectedParameterId } = useContext(AbmParametersStateContext);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const { setReloadParameters, selectedParameterId, setSelectedParameterId } = useContext(AbmParametersStateContext);
 
   const [parametersType] = useState(
     PARAMETERS_TYPE.map((p) => {
       return { value: p.id, label: p.name };
     })
   );
-  
+
   const navigate = useNavigate();
 
   const form = useForm({
@@ -47,16 +37,13 @@ export function UpdatePage({ projectId }) {
       type: "",
     },
 
-    validate: {
-      description: (val) => (val ? null : t("validation.required")),
-      name: (val) => (val ? null : t("validation.required")),
-      type: (val) => (val ? null : t("validation.required")),
-    },
+    validate: {},
   });
 
   const createTextField = (field) => {
     const ret = (
       <TextInput
+        disabled={true}
         label={t("businessProcess.parameters.label." + field)}
         placeholder={t("businessProcess.parameters.placeholder." + field)}
         {...form.getInputProps(field)}
@@ -69,6 +56,7 @@ export function UpdatePage({ projectId }) {
   const createSelect = (field, data) => {
     const ret = (
       <Select
+        disabled={true}
         label={t("businessProcess.parameters.label." + field)}
         data={data ? data : []}
         placeholder={t("businessProcess.parameters.placeholder." + field)}
@@ -81,16 +69,36 @@ export function UpdatePage({ projectId }) {
 
   const getData = async () => {
     const params = { token: user.token, projectId: projectId, paramId: selectedParameterId };
-    const ret = await findBusinessProjectParameterById(params);
+    const ret = await findBusinessProcessParameterById(params);
     setProjectParameter(ret);
   };
 
   useEffect(() => {
     getData();
   }, [selectedParameterId]);
-
   const onClose = () => {
     navigate("../");
+  };
+
+  const onDelete = async (values) => {
+    const params = {
+      token: user.token,
+      projectId: projectId,
+      paramId: selectedParameterId,
+      values: values,
+    };
+
+    setWorking(true);
+    try {
+      await deleteBusinessProcessParameter(params);
+      setWorking(false);
+      setReloadParameters(Date.now());
+      setSelectedParameterId(null);
+      navigate("../");
+    } catch (error) {
+      setWorking(false);
+      setError(error);
+    }
   };
 
   useEffect(() => {
@@ -102,29 +110,21 @@ export function UpdatePage({ projectId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectParameter]);
 
-  const onUpdate = async (values) => {
-    const params = {
-      token: user.token,
-      projectId: projectId,
-      paramId: selectedParameterId,
-      values: values,
-    };
-
-    setWorking(true);
-    try {
-      await updateBusinessProjectParameter(params);
-      setWorking(false);
-      setReloadParameters(Date.now());
-      navigate("../");
-    } catch (error) {
-      setWorking(false);
-      setError(error);
-    }
+  const onConfirm = () => {
+    onDelete();
   };
 
   return (
     <Container size={"xl"} sx={{ width: "100%" }}>
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
+
+      <DeleteConfirmation
+        opened={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={onConfirm}
+        title={t("notification.title")}
+        text={t("notification.delete")}
+      />
 
       <Container size={"sm"}>
         <Title
@@ -136,12 +136,12 @@ export function UpdatePage({ projectId }) {
             fontWeight: 700,
           })}
         >
-          {t("businessProcess.parameters.title.update")}
+          {t("businessProcess.parameters.title.delete")}
         </Title>
 
         <form
           onSubmit={form.onSubmit((values) => {
-            onUpdate(values);
+            setConfirmModalOpen(true);
           })}
         >
           {height ? (

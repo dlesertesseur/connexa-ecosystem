@@ -29,7 +29,7 @@ const TaskSettings = ({ open, close }) => {
   const getData = async () => {
     const stage = project.stages.find((s) => s.id === selectedStageId);
     if (stage) {
-      const action = stage.actions.find((a) => a.id === selectedActionId);
+      const action = stage.statusses.find((a) => a.id === selectedActionId);
       if (action) {
         const task = action.tasks.find((t) => t.id === selectedTaskId);
         if (task) {

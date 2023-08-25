@@ -1,81 +1,59 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Select } from "@mantine/core";
+import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Skeleton } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
-import { AbmParametersStateContext } from "../Context";
-import {
-  deleteBusinessProjectParameter,
-  findBusinessProjectParameterById,
-} from "../../../../DataAccess/BusinessProject";
-import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
-import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
+import { AbmStateContext } from "./Context";
+import { HEADER_HIGHT } from "../../../Constants";
+import { deleteBusinessProcess, findBusinessProcessById } from "../../../DataAccess/BusinessProcess";
 
-export function DeletePage({projectId}) {
+export function DeletePage() {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
   const [working, setWorking] = useState(false);
-  const [projectParameter, setProjectParameter] = useState();
+  const [businessProcess, setBusinessProcess] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const { setReloadParameters, selectedParameterId, setSelectedParameterId } = useContext(AbmParametersStateContext);
-
-  const [parametersType] = useState(
-    PARAMETERS_TYPE.map((p) => {
-      return { value: p.id, label: p.name };
-    })
-  );
 
   const navigate = useNavigate();
+  const { selectedRowId, setReload, setError } = useContext(AbmStateContext);
 
   const form = useForm({
     initialValues: {
       description: "",
       name: "",
-      type: "",
     },
 
     validate: {},
   });
 
-  const createTextField = (field) => {
-    const ret = (
-      <TextInput
-        disabled={true}
-        label={t("businessProcess.parameters.label." + field)}
-        placeholder={t("businessProcess.parameters.placeholder." + field)}
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
-
-  const createSelect = (field, data) => {
-    const ret = (
-      <Select
-        disabled={true}
-        label={t("businessProcess.parameters.label." + field)}
-        data={data ? data : []}
-        placeholder={t("businessProcess.parameters.placeholder." + field)}
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
-
   const getData = async () => {
-    const params = { token: user.token, projectId: projectId, paramId: selectedParameterId };
-    const ret = await findBusinessProjectParameterById(params);
-    setProjectParameter(ret);
+    const params = { token: user.token, id: selectedRowId };
+    const ret = await findBusinessProcessById(params);
+    setBusinessProcess(ret);
   };
 
   useEffect(() => {
     getData();
-  }, [selectedParameterId]);
+  }, [selectedRowId]);
+
+  const createTextField = (field) => {
+    const ret = businessProcess ? (
+      <TextInput
+        disabled={true}
+        label={t("businessProcess.label." + field)}
+        placeholder={t("businessProcess.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    ) : (
+      <Skeleton visible={true} h={40}></Skeleton>
+    );
+    return ret;
+  };
+
   const onClose = () => {
     navigate("../");
   };
@@ -83,17 +61,13 @@ export function DeletePage({projectId}) {
   const onDelete = async (values) => {
     const params = {
       token: user.token,
-      projectId: projectId,
-      paramId: selectedParameterId,
-      values: values,
+      id: selectedRowId,
     };
-
     setWorking(true);
     try {
-      await deleteBusinessProjectParameter(params);
+      await deleteBusinessProcess(params);
       setWorking(false);
-      setReloadParameters(Date.now());
-      setSelectedParameterId(null);
+      setReload(Date.now());
       navigate("../");
     } catch (error) {
       setWorking(false);
@@ -102,13 +76,16 @@ export function DeletePage({projectId}) {
   };
 
   useEffect(() => {
-    if (projectParameter) {
-      form.setFieldValue("name", projectParameter.name);
-      form.setFieldValue("description", projectParameter.description);
-      form.setFieldValue("type", projectParameter.type);
-    }
+    const f = async () => {
+      if (businessProcess) {
+        form.setFieldValue("name", businessProcess.name);
+        form.setFieldValue("description", businessProcess.description);
+        //form.setFieldValue("status", row.status);
+      }
+    };
+    f();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectParameter]);
+  }, [businessProcess]);
 
   const onConfirm = () => {
     onDelete();
@@ -136,7 +113,7 @@ export function DeletePage({projectId}) {
             fontWeight: 700,
           })}
         >
-          {t("businessProcess.parameters.title.delete")}
+          {t("businessProcess.title.delete")}
         </Title>
 
         <form
@@ -146,14 +123,13 @@ export function DeletePage({projectId}) {
         >
           {height ? (
             <>
-              <ScrollArea type="scroll" style={{ width: "100%" }}>
+              <ScrollArea type="scroll" style={{ width: "100%", height: height - HEADER_HIGHT - 72 }}>
                 <Group mb={"md"} grow>
                   {createTextField("name")}
                 </Group>
                 <Group mb={"md"} grow>
                   {createTextField("description")}
                 </Group>
-                <Group mb={"md"}>{createSelect("type", parametersType)}</Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">
                 <Button type="submit">{t("button.accept")}</Button>

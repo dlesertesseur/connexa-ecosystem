@@ -2,20 +2,23 @@ import { Button, Flex } from "@mantine/core";
 import { IconCirclePlus } from "@tabler/icons-react";
 import React from "react";
 
-const AddStage = ({ add }) => {
+const AddTask = ({ add }) => {
   return (
     <Flex h={"100%"} justify={"center"} align={"center"} style={{ borderRadius: 4 }}>
       <Button
-        h={"100%"}
+        color="indigo"
+        variant="default"
+        size="xs"
+        w={"100%"}
         p={3}
         onClick={() => {
           add();
         }}
       >
-        <IconCirclePlus size={20} color="white"></IconCirclePlus>
+        <IconCirclePlus size={18} color="gray"></IconCirclePlus>
       </Button>
     </Flex>
   );
 };
 
-export default AddStage;
+export default AddTask;

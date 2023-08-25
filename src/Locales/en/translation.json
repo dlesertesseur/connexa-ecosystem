@@ -1211,6 +1211,7 @@
       "stageDefaultName":"new Stage",
       "taskDefaultName":"new Task",
       "parameters":"Parameters",
+      "connections":"Connections",
       "definition":"Definition",
       "code":"Code",
       "taskList":"Tasks",
@@ -1225,7 +1226,8 @@
     },
     "buttons": {
       "design": "Design",
-      "parameters":"Parameters"
+      "parameters":"Parameters",
+      "connections":"Connections"
     },
     "columns": ["Name", "Description", "Status"],
     "parameters":{
@@ -1245,7 +1247,24 @@
         "type":"a parameter type"
       },
       "columns": ["Name", "Description", "Type"]
+    },
+    "connections":{
+      "title": {
+        "create": "New connection",
+        "update": "Update connection",
+        "delete": "Delete connection"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "type":"Type"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description",
+        "type":"a parameter type"
+      },
+      "columns": ["Name", "Description", "Type"]
     }
-
   }
 }

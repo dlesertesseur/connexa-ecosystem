@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
-import ProjectHeader from "./ProjectHeader";
 import SortedTable from "../../../../Components/Crud/SortedTable";
+import BusinessProcessHeader from "../BusinessProcessHeader";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmParametersStateContext, AbmStateContext } from "../Context";
-import { findBusinessProjectsById } from "../../../../DataAccess/BusinessProject";
+import { findBusinessProcessById } from "../../../../DataAccess/BusinessProcess";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { Stack } from "@mantine/core";
 import { useContext } from "react";
 
-const Parameters = () => {
+const Connections = () => {
   const { user } = useSelector((state) => state.auth.value);
   const { selectedRowId } = useContext(AbmStateContext);
   const { t } = useTranslation();
@@ -23,15 +23,15 @@ const Parameters = () => {
   const [loading, setLoading] = useState(false);
   const [selectedParameterId, setSelectedParameterId] = useState(null);
   const [reloadParameters, setReloadParameters] = useState(null);
-  const [project, setProject] = useState(null);
+  const [businessProcess, setBusinessProcess] = useState(null);
   const navigate = useNavigate();
 
   const HEADER = 32;
 
   const getData = async () => {
     const params = { token: user.token, id: selectedRowId };
-    const ret = await findBusinessProjectsById(params);
-    setProject(ret);
+    const ret = await findBusinessProcessById(params);
+    setBusinessProcess(ret);
     setRows(ret.parameters);
   };
 
@@ -40,7 +40,7 @@ const Parameters = () => {
   }, [selectedRowId, reloadParameters]);
 
   let col = 0;
-  const cols = t("businessProcess.parameters.columns", { returnObjects: true });
+  const cols = t("businessProcess.connections.columns", { returnObjects: true });
   const columns = [
     { headerName: cols[col++], fieldName: "name", align: "left" },
     { headerName: cols[col++], fieldName: "description", align: "left" },
@@ -63,7 +63,7 @@ const Parameters = () => {
             backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
           })}
         >
-          <ProjectHeader project={project} h={HEADER} />
+          <BusinessProcessHeader businessProcess={businessProcess} text={t("businessProcess.label.connections")} />
 
           <Routes>
             <Route
@@ -83,9 +83,9 @@ const Parameters = () => {
                 />
               }
             ></Route>
-            <Route path="create" element={<CreatePage projectId={project?.id} />} />
-            <Route path="update" element={<UpdatePage projectId={project?.id}/>} />
-            <Route path="delete" element={<DeletePage projectId={project?.id}/>} />
+            <Route path="create" element={<CreatePage projectId={businessProcess?.id} />} />
+            <Route path="update" element={<UpdatePage projectId={businessProcess?.id}/>} />
+            <Route path="delete" element={<DeletePage projectId={businessProcess?.id}/>} />
           </Routes>
         </Stack>
       </Stack>
@@ -105,4 +105,4 @@ const Parameters = () => {
   return ret;
 };
 
-export default Parameters;
+export default Connections;
