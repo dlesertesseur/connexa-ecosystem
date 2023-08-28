@@ -208,6 +208,7 @@ async function findRoleById(parameters) {
     return error;
   }
 }
+
 export {
   createRole,
   updateRole,

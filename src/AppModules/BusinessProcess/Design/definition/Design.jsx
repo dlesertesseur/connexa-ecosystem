@@ -9,6 +9,7 @@ import { AbmStateContext, DesignerStateContext } from "../Context";
 import { useSelector } from "react-redux";
 import { findBusinessProcessById, saveBusinessProcess } from "../../../../DataAccess/BusinessProcess";
 import { useTranslation } from "react-i18next";
+import { findAllSprints } from "../../../../DataAccess/Sprints";
 
 const Design = () => {
   const { t } = useTranslation();
@@ -21,11 +22,20 @@ const Design = () => {
   const [selectedActionId, setSelectedActionId] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [openTaskSettings, setOpenTaskSettings] = useState(false);
+  const [sprints, setSprints] = useState([]);
 
   const getData = async () => {
     const params = { token: user.token, id: selectedRowId };
     const ret = await findBusinessProcessById(params);
     setBusinessProcess(ret);
+
+    const sprints = await findAllSprints(params);
+    setSprints(
+      sprints.map((s) => {
+        const ret = { value: s.id, label: s.name };
+        return ret;
+      })
+    );
   };
 
   useEffect(() => {
@@ -34,7 +44,7 @@ const Design = () => {
 
   const onSave = async () => {
     const params = {
-      id:businessProcess.id,
+      id: businessProcess.id,
       token: user.token,
       name: businessProcess.name,
       description: businessProcess.description,
@@ -53,7 +63,6 @@ const Design = () => {
         setSaving(false);
         setError(ret.error);
       }
-
     } catch (error) {
       setSaving(false);
       setError(error);
@@ -78,6 +87,7 @@ const Design = () => {
           setSelectedActionId,
           saving,
           setSaving,
+          sprints,
         }}
       >
         <TaskSettings

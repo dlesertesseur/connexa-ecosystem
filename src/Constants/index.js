@@ -374,6 +374,15 @@ export const API = {
     findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-processes",
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-processes/",
   },
+
+  sprint: {
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/sprint/",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/sprint/",
+    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/sprint/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/sprint",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sprint/",
+  },
+
 };
 
 export const ERRORS = {

@@ -1198,12 +1198,17 @@
       "taskList":"Tareas",
       "transferTask":"Transferir a",
       "searchTask":"Buscar tarea",
-      "noDataSelected":"Sin datos seleccionados"
+      "noDataSelected":"Sin datos seleccionados",
+      "sprint":"Sprint",
+      "searchRol":"Buscar rol",
+      "rolesList":"Roles",
+      "assignedRoles":"Roles asignados"
     },
     "placeholder": {
       "name": "un nombre",
       "description": "una descripcion",
-      "code":"un codido"
+      "code":"un codido",
+      "sprint":"Seleccione un sprint"
     },
     "buttons":{
       "design":"Diseñar",

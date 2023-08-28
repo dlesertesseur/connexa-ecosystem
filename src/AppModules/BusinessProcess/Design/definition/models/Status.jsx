@@ -3,17 +3,19 @@ import EditTextField from "./EditTextField";
 import AddTask from "./AddTask";
 import Task from "./Task";
 import uuid from "react-uuid";
-import { ActionIcon, Card, Group, Paper, ScrollArea } from "@mantine/core";
+import { ActionIcon, Group, Paper, ScrollArea, Select } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useRef } from "react";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { DesignerStateContext } from "../../Context";
+import { useState } from "react";
 
 const Status = ({ stageId, id, name }) => {
   const scrollRef = useRef();
   const { t } = useTranslation();
-  const { businessProcess, setBusinessProcess, editing } = useContext(DesignerStateContext);
+  const [sprint, setSprint] = useState(null);
+  const { businessProcess, setBusinessProcess, editing, sprints } = useContext(DesignerStateContext);
 
   let taskList = [];
   const stage = businessProcess?.stages.find((s) => s.id === stageId);
@@ -21,6 +23,7 @@ const Status = ({ stageId, id, name }) => {
     const action = stage.statusses.find((a) => a.id === id);
     if (action) {
       taskList = action.tasks;
+      taskList.sort((a, b) => a.place - b.place);
     }
   }
 
@@ -62,9 +65,22 @@ const Status = ({ stageId, id, name }) => {
     setBusinessProcess({ ...businessProcess });
   };
 
+  const onChangeSprint = (e) => {
+    setSprint(e);
+
+    const stage = businessProcess.stages.find((s) => s.id === stageId);
+    if (stage) {
+      const status = stage.statusses.find((a) => a.id === id);
+      if (status) {
+        status.sprint = e;
+      }
+    }
+    setBusinessProcess({ ...businessProcess });
+  };
+
   return (
-    <Paper withBorder radius={6} p={"xs"} mb={"xs"} bg={"gray.1"}>
-      <Group align="center" position="apart" noWrap spacing={"xs"} mb={"xs"}>
+    <Paper withBorder radius={6} p={6} mb={"xs"} bg={"gray.1"}>
+      <Group align="center" position="apart" noWrap spacing={"xs"}>
         <EditTextField
           value={name}
           onEnter={(text) => {
@@ -83,11 +99,27 @@ const Status = ({ stageId, id, name }) => {
           </ActionIcon>
         ) : null}
       </Group>
-      <ScrollArea ref={scrollRef}>
+
+      {editing ? (
+        <Group align="center" grow>
+          <Select
+            value={sprint}
+            onChange={onChangeSprint}
+            mb={"xs"}
+            size={"xs"}
+            label={t("businessProcess.label.sprint")}
+            placeholder={t("businessProcess.placeholder.sprint")}
+            data={sprints}
+          />
+        </Group>
+      ) : null}
+
+      <ScrollArea ref={scrollRef} >
         {taskList?.map((t) => (
           <Task key={t.id} name={t.name} stageId={stageId} actionId={id} id={t.id} />
         ))}
       </ScrollArea>
+
       {editing ? (
         <Group grow spacing={"xs"}>
           <AddTask add={addTask} />

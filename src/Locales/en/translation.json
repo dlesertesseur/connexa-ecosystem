@@ -1217,12 +1217,18 @@
       "taskList":"Tasks",
       "transferTask":"Transfer to",
       "searchTask":"Search task",
-      "noDataSelected":"No data selected"
+      "noDataSelected":"No data selected",
+      "sprint":"Sprint",
+      "searchRol":"Search",
+      "rolesList":"Roles",
+      "assignedRoles":"Assigned roles"
+
     },
     "placeholder": {
       "name": "a name",
       "description": "a description",
-      "code":"a code"
+      "code":"a code",
+      "sprint":"Select a sprint"
     },
     "buttons": {
       "design": "Design",

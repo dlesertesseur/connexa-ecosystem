@@ -191,4 +191,11 @@ const PARAMETERS_TYPE = [
   { id: 5, name: "JSON" },
 ];
 
-export { BUSINESS, PARAMETERS_TYPE };
+const SPRINTS = [
+    { id: 1, name: "Def. Surtido" },
+    { id: 2, name: "Ejec. Compra" },
+    { id: 3, name: "Recepcion" },
+    { id: 4, name: "Distribucion" },
+    { id: 5, name: "Venta" },
+  ];
+export { BUSINESS, PARAMETERS_TYPE, SPRINTS };

@@ -26,6 +26,7 @@ const Stage = ({ id, name }) => {
     if (businessProcess) {
       const stage = businessProcess.stages.find((s) => s.id === id);
       if (stage) {
+        stage.statusses.sort((a, b) => a.place - b.place);
         setStatussesList(stage.statusses);
       }
     }
@@ -79,9 +80,8 @@ const Stage = ({ id, name }) => {
 
   return (
     <Group spacing={"xs"} noWrap align="flex-start">
-      <Paper withBorder mih={400} miw={300}>
-        <Paper p={"xs"}>
-          <Group align="center" position="apart" noWrap spacing={"xs"}>
+      <Paper withBorder p={6} mih={400} miw={300}>
+          <Group align="center" position="apart" mb={6} noWrap spacing={"xs"}>
             <EditTextField
               value={name}
               onEnter={(text) => {
@@ -100,17 +100,14 @@ const Stage = ({ id, name }) => {
               </ActionIcon>
             ) : null}
           </Group>
-        </Paper>
 
-        <Paper p={"xs"}>
-          <ScrollArea h={wSize.height - HEADER_HIGHT - 140} ref={scrollRef}>
+          <ScrollArea h={wSize.height - HEADER_HIGHT - 110} ref={scrollRef}>
             {statussesList?.map((a) => (
               <Status key={a.id} name={a.name} stageId={id} id={a.id} />
             ))}
             {editing ? <AddStatus newAction={newAction} /> : null}
           </ScrollArea>
         </Paper>
-      </Paper>
       {addStage && editing ? <AddStage add={addStage} /> : null}
     </Group>
   );

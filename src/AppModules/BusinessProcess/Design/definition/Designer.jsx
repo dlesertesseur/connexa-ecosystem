@@ -23,13 +23,12 @@ const Designer = () => {
             id: uuid(),
             name: "Stage 01",
             actions: [],
-            place:0
+            place: 0,
           });
         }
+        stages.sort((a, b) => a.place - b.place);
+        setStagesList(stages);
       }
-    
-      stages.sort((a, b) => a.place - b.place);
-      setStagesList(stages);
     }
   }, [businessProcess]);
 
@@ -42,8 +41,8 @@ const Designer = () => {
   };
 
   return (
-    <ScrollArea offsetScrollbars w={"100%"} h={height - 274} style={{ borderRadius: 4 }}>
-      <LoadingOverlay visible={saving}/>
+    <ScrollArea offsetScrollbars w={"100%"} h={height - 264} style={{ borderRadius: 4 }}>
+      <LoadingOverlay visible={saving} />
       <Flex direction={"row"} gap="xs">
         {drawStages()}
       </Flex>

@@ -1,64 +1,61 @@
 import React from "react";
-import { Button, Checkbox, Group, Modal, Stack, Text, TextInput, TransferList } from "@mantine/core";
+import { Button, Group, Modal, Stack, TextInput, TransferList } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { useContext } from "react";
 import { DesignerStateContext } from "../Context";
 import { useEffect } from "react";
-import uuid from "react-uuid";
+import { useSelector } from "react-redux";
+import { findAllByOrganizationId } from "../../../../DataAccess/OrganizationRole";
 
 const TaskSettings = ({ open, close }) => {
   const { t } = useTranslation();
-  const { selectedStageId, selectedActionId, selectedTaskId, project } = useContext(DesignerStateContext);
+  const { user, organizationSelected } = useSelector((state) => state.auth.value);
+  const { selectedStageId, selectedActionId, selectedTaskId, businessProcess } = useContext(DesignerStateContext);
   const [task, setTask] = useState(null);
   const [data, setData] = useState([[], []]);
 
   const form = useForm({
     initialValues: {
       description: "",
-      name: "",
+      code: "",
     },
 
     validate: {
       description: (val) => (val ? null : t("validation.required")),
-      name: (val) => (val ? null : t("validation.required")),
+      code: (val) => (val ? null : t("validation.required")),
     },
   });
 
   const getData = async () => {
-    const stage = project.stages.find((s) => s.id === selectedStageId);
-    if (stage) {
-      const action = stage.statusses.find((a) => a.id === selectedActionId);
-      if (action) {
-        const task = action.tasks.find((t) => t.id === selectedTaskId);
-        if (task) {
-          setTask(task);
+    if (businessProcess) {
+      const stages = businessProcess.stages;
+
+      const stage = stages.find((s) => s.id === selectedStageId);
+      if (stage) {
+        const action = stage.statusses.find((a) => a.id === selectedActionId);
+        if (action) {
+          const task = action.tasks.find((t) => t.id === selectedTaskId);
+          if (task) {
+            setTask(task);
+          }
         }
       }
-    }
 
-    const stages = project.stages;
-    const tasks = [];
-    stages.forEach((s) => {
-      const actions = s.actions;
-      actions.forEach((a) => {
-        const tasks = a.tasks;
-        tasks.forEach((t) => {
-          console.log("tasks -> ", tasks)
-          const ret = {
-            key: t.id ? t.id : uuid(),
-            id:t.id,
-            label: t.name,
-            description:t.description
-          };
-          tasks.push(ret);
-        });
+      const params = { token: user.token, id: organizationSelected.id };
+      const roles = await findAllByOrganizationId(params);
+
+      const unassignedRoles = roles.map((r) => {
+        const ret = { value: `${r.role.id}`, label: `${r.role.name} (${r.role.groupName})`};
+        return ret;
       });
-    });
-    // setData([tasks, []]);
+      const assignedRoles = [];
 
-    // console.log("tasks -> ", tasks)
+      const values = [unassignedRoles, assignedRoles];
+
+      setData(values);
+    }
   };
 
   useEffect(() => {
@@ -80,31 +77,8 @@ const TaskSettings = ({ open, close }) => {
     return ret;
   };
 
-  const itemTask = (item) => {
-
-    console.log("itemTask item.data ->", item.data);
-    const data = item.data;
-    const selected = item.selected;
-
-    const ret = (
-      <Group noWrap
-        key={data.key}>
-        <div style={{ flex: 1 }}>
-          <Text size="sm" weight={500}>
-            {data.label}
-          </Text>
-          <Text size="xs" color="dimmed" weight={400}>
-            {data.description}
-          </Text>
-        </div>
-        <Checkbox checked={selected} onChange={() => {}} tabIndex={-1} sx={{ pointerEvents: "none" }} />
-      </Group>
-    );
-    return ret;
-  };
-
   return (
-    <Modal size={"xl"} opened={open} onClose={close} title={task?.name} centered>
+    <Modal size={"lg"} opened={open} onClose={close} title={task?.name} centered>
       <Stack w={"100%"} spacing={"xs"}>
         <form
           onSubmit={form.onSubmit((values) => {
@@ -115,23 +89,17 @@ const TaskSettings = ({ open, close }) => {
             {createTextField("description")}
           </Group>
           <Group mt={"xs"}>{createTextField("code")}</Group>
-          {/* <Group mt={"xs"} grow>
+
+          <Group mt={"xs"} grow>
             <TransferList
               value={data}
               onChange={setData}
-              searchPlaceholder={t("businessProcess.label.searchTask")}
+              searchPlaceholder={t("businessProcess.label.searchRol")}
               nothingFound={t("businessProcess.label.noDataSelected")}
-              titles={[t("businessProcess.label.taskList"), t("businessProcess.label.transferTask")]}
-              listHeight={200}
+              titles={[t("businessProcess.label.rolesList"), t("businessProcess.label.assignedRoles")]}
               breakpoint="sm"
-              itemComponent={itemTask}
-              filter={(query, item) =>
-                item.label.toLowerCase().includes(query.toLowerCase().trim()) ||
-                item.description.toLowerCase().includes(query.toLowerCase().trim())
-              }
             />
-          </Group> */}
-
+          </Group>
           <Group position="right" mt={"xl"}>
             <Button type="submit">{t("button.accept")}</Button>
             <Button onClick={close}>{t("button.cancel")}</Button>

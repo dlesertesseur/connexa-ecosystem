@@ -43,7 +43,7 @@ const Task = ({ stageId, actionId, id, name }) => {
   };
 
   return (
-    <Paper withBorder p={"xs"} mb={"xs"} bg={"violet.2"}>
+    <Paper withBorder p={6} mb={6} bg={"violet.2"}>
       <Group align="center" position="apart" noWrap spacing={"xs"}>
         <EditTextField
           value={name}
