@@ -10,10 +10,11 @@ import { useSelector } from "react-redux";
 import { findBusinessProcessById, saveBusinessProcess } from "../../../../DataAccess/BusinessProcess";
 import { useTranslation } from "react-i18next";
 import { findAllSprints } from "../../../../DataAccess/Sprints";
+import { findAllByOrganizationId } from "../../../../DataAccess/OrganizationRole";
 
 const Design = () => {
   const { t } = useTranslation();
-  const { user } = useSelector((state) => state.auth.value);
+  const { user, organizationSelected } = useSelector((state) => state.auth.value);
   const { selectedRowId, setError } = useContext(AbmStateContext);
   const [editing, setEditing] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -23,9 +24,11 @@ const Design = () => {
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [openTaskSettings, setOpenTaskSettings] = useState(false);
   const [sprints, setSprints] = useState([]);
+  const [rolesByTask] = useState(new Map());
+  const [roles, setRoles] = useState([]);
 
   const getData = async () => {
-    const params = { token: user.token, id: selectedRowId };
+    let params = { token: user.token, id: selectedRowId };
     const ret = await findBusinessProcessById(params);
     setBusinessProcess(ret);
 
@@ -36,6 +39,10 @@ const Design = () => {
         return ret;
       })
     );
+
+    params = { token: user.token, id: organizationSelected.id };
+    const roles = await findAllByOrganizationId(params);
+    setRoles(roles);
   };
 
   useEffect(() => {
@@ -88,15 +95,18 @@ const Design = () => {
           saving,
           setSaving,
           sprints,
+          rolesByTask,
+          roles,
         }}
       >
         <TaskSettings
+          taskId={selectedTaskId}
           open={openTaskSettings}
           close={() => {
             setOpenTaskSettings(false);
           }}
         />
-        <BusinessProcessHeader businessProcess={businessProcess} text={t("businessProcess.label.definition")} />
+        <BusinessProcessHeader text={t("businessProcess.label.definition")} businessProcess={businessProcess} />
         <DesignToolbar onSave={onSave} />
         <Designer />
       </DesignerStateContext.Provider>

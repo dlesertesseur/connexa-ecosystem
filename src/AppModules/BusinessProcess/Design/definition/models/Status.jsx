@@ -80,7 +80,7 @@ const Status = ({ stageId, id, name }) => {
 
   return (
     <Paper withBorder radius={6} p={6} mb={"xs"} bg={"gray.1"}>
-      <Group align="center" position="apart" noWrap spacing={"xs"}>
+      <Group align="center" position="apart" noWrap spacing={"xs"} mb={editing ? 0 : "xs"}>
         <EditTextField
           value={name}
           onEnter={(text) => {

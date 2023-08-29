@@ -10,7 +10,7 @@ import { createBusinessProcessParameter } from "../../../../DataAccess/BusinessP
 import { useContext } from "react";
 import { AbmParametersStateContext } from "../Context";
 
-export function CreatePage({projectId}) {
+export function CreatePage({businessProcessId}) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
@@ -70,7 +70,7 @@ export function CreatePage({projectId}) {
   const onCreate = async (values) => {
     const params = {
       userId: user.id,
-      projectId: projectId,
+      businessProcessId: businessProcessId,
       values: { ...values },
     };
 

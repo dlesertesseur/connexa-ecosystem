@@ -1239,19 +1239,21 @@
       "title": {
         "create": "Nueva conexion",
         "update": "Modificar conexion",
-        "delete": "Eliminar conexion"
+        "delete": "Eliminar conexion",
+        "connections": "Definir conexiones"
       },
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
-        "type":"Tipo"
+        "type":"Tipo",
+        "connections": "Definir conexiones"
       },
       "placeholder": {
         "name": "un nombre",
         "description": "una descripcion",
         "type":"un tipo de parametro"
       },
-      "columns": ["Nombre", "Descripcion", "Tipo"]
+      "columns": ["Stage", "Business status", "Task"]
     }
   }
 }

@@ -13,7 +13,7 @@ import {
 import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
 import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
 
-export function DeletePage({projectId}) {
+export function DeletePage({businessProcessId}) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
@@ -68,7 +68,7 @@ export function DeletePage({projectId}) {
   };
 
   const getData = async () => {
-    const params = { token: user.token, projectId: projectId, paramId: selectedParameterId };
+    const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
     const ret = await findBusinessProcessParameterById(params);
     setProjectParameter(ret);
   };
@@ -83,7 +83,7 @@ export function DeletePage({projectId}) {
   const onDelete = async (values) => {
     const params = {
       token: user.token,
-      projectId: projectId,
+      businessProcessId: businessProcessId,
       paramId: selectedParameterId,
       values: values,
     };

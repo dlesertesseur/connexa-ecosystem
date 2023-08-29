@@ -31,7 +31,7 @@ const EditTextField = ({ value, onEnter }) => {
   };
 
   return (
-    <Flex w={"100%"} onDoubleClick={onDoubleClick} onKeyDown={onKeyDown} h={30} align={"center"}>
+    <Flex w={"100%"} onDoubleClick={onDoubleClick} onKeyDown={onKeyDown} mih={20} align={"center"}>
       {editing ? (
           <TextInput
             ref={mergedRef}

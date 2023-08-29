@@ -4,10 +4,8 @@ import SortedTable from "../../../../Components/Crud/SortedTable";
 import BusinessProcessHeader from "../BusinessProcessHeader";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { CreatePage } from "./CreatePage";
-import { UpdatePage } from "./UpdatePage";
-import { DeletePage } from "./DeletePage";
-import { AbmParametersStateContext, AbmStateContext } from "../Context";
+import { ConnectTaskPage } from "./ConnectTaskPage";
+import { AbmConnectionStateContext, AbmParametersStateContext, AbmStateContext } from "../Context";
 import { findBusinessProcessById } from "../../../../DataAccess/BusinessProcess";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { HEADER_HIGHT } from "../../../../Constants";
@@ -21,39 +19,62 @@ const Connections = () => {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedParameterId, setSelectedParameterId] = useState(null);
-  const [reloadParameters, setReloadParameters] = useState(null);
+  const [selectedConnectionId, setSelectedConnectionId] = useState(null);
+  const [reloadConnections, setReloadConnections] = useState(null);
   const [businessProcess, setBusinessProcess] = useState(null);
   const navigate = useNavigate();
 
   const HEADER = 32;
 
   const getData = async () => {
+    setLoading(true);
     const params = { token: user.token, id: selectedRowId };
     const ret = await findBusinessProcessById(params);
     setBusinessProcess(ret);
-    setRows(ret.parameters);
+
+    let tasks = [];
+    ret.stages.forEach((stage) => {
+      if (stage.statusses) {
+        stage.statusses.forEach((status) => {
+          const data = status.tasks.map((t) => {
+            return {
+              id: t.id,
+              stageId: stage.id,
+              stageName: stage.name,
+              statusId: status.id,
+              statusName: status.name,
+              taskName: t.name,
+            };
+          });
+          tasks = tasks.concat(data);
+        });
+      }
+    });
+
+    setRows(tasks);
+
+    setLoading(false);
   };
 
   useEffect(() => {
     getData();
-  }, [selectedRowId, reloadParameters]);
+  }, [selectedRowId, reloadConnections]);
 
   let col = 0;
   const cols = t("businessProcess.connections.columns", { returnObjects: true });
   const columns = [
-    { headerName: cols[col++], fieldName: "name", align: "left" },
-    { headerName: cols[col++], fieldName: "description", align: "left" },
-    { headerName: cols[col++], fieldName: "type", align: "left" },
+    { headerName: cols[col++], fieldName: "stageName", align: "left" },
+    { headerName: cols[col++], fieldName: "statusName", align: "left" },
+    { headerName: cols[col++], fieldName: "taskName", align: "left" },
   ];
 
   const ret = rows ? (
-    <AbmParametersStateContext.Provider
+    <AbmConnectionStateContext.Provider
       value={{
-        reloadParameters,
-        setReloadParameters,
-        selectedParameterId,
-        setSelectedParameterId,
+        selectedConnectionId,
+        setSelectedConnectionId,
+        reloadConnections,
+        setReloadConnections,
       }}
     >
       <Stack spacing={"xs"}>
@@ -63,7 +84,7 @@ const Connections = () => {
             backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
           })}
         >
-          <BusinessProcessHeader businessProcess={businessProcess} text={t("businessProcess.label.connections")} />
+          <BusinessProcessHeader text={t("businessProcess.label.connections")} businessProcess={businessProcess} />
 
           <Routes>
             <Route
@@ -74,18 +95,23 @@ const Connections = () => {
                   columns={columns}
                   loading={loading}
                   enableCreateButton={true}
-                  rowSelected={selectedParameterId}
-                  setRowSelected={setSelectedParameterId}
+                  rowSelected={selectedConnectionId}
+                  setRowSelected={setSelectedConnectionId}
                   headerHeight={HEADER_HIGHT + HEADER + 32}
+                  createButton={false}
+                  deleteButton={false}
                   backButton={() => {
                     navigate("../");
                   }}
                 />
               }
             ></Route>
-            <Route path="create" element={<CreatePage projectId={businessProcess?.id} />} />
-            <Route path="update" element={<UpdatePage projectId={businessProcess?.id}/>} />
-            <Route path="delete" element={<DeletePage projectId={businessProcess?.id}/>} />
+            <Route
+              path="update"
+              element={
+                <ConnectTaskPage businessProcessId={businessProcess?.id} tasks={rows} taskId={selectedConnectionId} />
+              }
+            />
           </Routes>
         </Stack>
       </Stack>
@@ -99,7 +125,7 @@ const Connections = () => {
         title={t("status.error")}
         text={error}
       />
-    </AbmParametersStateContext.Provider>
+    </AbmConnectionStateContext.Provider>
   ) : null;
 
   return ret;

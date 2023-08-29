@@ -2,6 +2,7 @@ import React from "react";
 import { Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
 
 const BusinessProcessHeader = ({ businessProcess, text }) => {
+
   return (
     <Paper withBorder p={6}>
       <Stack spacing={"xs"} h={32} justify="center">

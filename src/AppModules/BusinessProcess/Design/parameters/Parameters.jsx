@@ -23,7 +23,7 @@ const Parameters = () => {
   const [loading, setLoading] = useState(false);
   const [selectedParameterId, setSelectedParameterId] = useState(null);
   const [reloadParameters, setReloadParameters] = useState(null);
-  const [project, setProject] = useState(null);
+  const [businessProcess, setBusinessProcess] = useState(null);
   const navigate = useNavigate();
 
   const HEADER = 32;
@@ -31,7 +31,7 @@ const Parameters = () => {
   const getData = async () => {
     const params = { token: user.token, id: selectedRowId };
     const ret = await findBusinessProcessById(params);
-    setProject(ret);
+    setBusinessProcess(ret);
     setRows(ret.parameters);
   };
 
@@ -63,7 +63,7 @@ const Parameters = () => {
             backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
           })}
         >
-          <BusinessProcessHeader project={project} h={HEADER} text={t("businessProcess.label.parameters")}/>
+          <BusinessProcessHeader text={t("businessProcess.label.parameters")} businessProcess={businessProcess}/>
 
           <Routes>
             <Route
@@ -83,9 +83,9 @@ const Parameters = () => {
                 />
               }
             ></Route>
-            <Route path="create" element={<CreatePage projectId={project?.id} />} />
-            <Route path="update" element={<UpdatePage projectId={project?.id}/>} />
-            <Route path="delete" element={<DeletePage projectId={project?.id}/>} />
+            <Route path="create" element={<CreatePage businessProcessId={businessProcess?.id} />} />
+            <Route path="update" element={<UpdatePage businessProcessId={businessProcess?.id}/>} />
+            <Route path="delete" element={<DeletePage businessProcessId={businessProcess?.id}/>} />
           </Routes>
         </Stack>
       </Stack>

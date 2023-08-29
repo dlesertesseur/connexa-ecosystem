@@ -1258,19 +1258,21 @@
       "title": {
         "create": "New connection",
         "update": "Update connection",
-        "delete": "Delete connection"
+        "delete": "Delete connection",
+        "connections": "Define connections"
       },
       "label": {
         "name": "Name",
         "description": "Description",
-        "type":"Type"
+        "type":"Type",
+        "connections": "Define connections"
       },
       "placeholder": {
         "name": "a name",
         "description": "a description",
         "type":"a parameter type"
       },
-      "columns": ["Name", "Description", "Type"]
+      "columns": ["Stage", "Business status", "Task"]
     }
   }
 }

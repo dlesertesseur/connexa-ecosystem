@@ -53,7 +53,7 @@ async function findAllByOrganizationId(parameters) {
     const url = API.organizationRole.findAllByOrganizationId + parameters.id;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
-    
+        
     return data;
   } catch (error) {
     return error;
