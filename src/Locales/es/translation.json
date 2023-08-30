@@ -1255,5 +1255,85 @@
       },
       "columns": ["Stage", "Business status", "Task"]
     }
+  },
+
+  "businessProcessModel":{
+    "title": {
+      "create": "Nuevo model de proceso de negocio",
+      "update": "Modificar un model de proceso de negocio",
+      "delete": "Eliminar un model de proceso de negocio",
+      "taskSettings": "Configuracion de tarea"
+    },
+    "label":{
+      "name":"Nombre",
+      "description":"Descripcion",
+      "stage":"Stage",
+      "actionDefaultName":"nueva Accion",
+      "stageDefaultName":"nuevo Stage",
+      "taskDefaultName":"nueva Tarea",
+      "parameters":"Parametros",
+      "connections":"Conexiones",
+      "definition":"Definición",
+      "code":"Codido",
+      "taskList":"Tareas",
+      "transferTask":"Transferir a",
+      "searchTask":"Buscar tarea",
+      "noDataSelected":"Sin datos seleccionados",
+      "sprint":"Sprint",
+      "searchRol":"Buscar rol",
+      "rolesList":"Roles",
+      "assignedRoles":"Roles asignados"
+    },
+    "placeholder": {
+      "name": "un nombre",
+      "description": "una descripcion",
+      "code":"un codido",
+      "sprint":"Seleccione un sprint"
+    },
+    "buttons":{
+      "design":"Editar",
+      "parameters":"Parametros",
+      "connections":"Conexiones"
+    },
+    "columns": ["Nombre", "Descripcion"],
+
+    "parameters":{
+      "title": {
+        "create": "Nuevo parametro",
+        "update": "Modificar parametro",
+        "delete": "Eliminar parametro"
+      },
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "type":"Tipo"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion",
+        "type":"un tipo de parametro"
+      },
+      "columns": ["Nombre", "Descripcion", "Tipo"]
+    },
+    "connections":{
+      "title": {
+        "create": "Nueva conexion",
+        "update": "Modificar conexion",
+        "delete": "Eliminar conexion",
+        "connections": "Definir conexiones"
+      },
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "type":"Tipo",
+        "connections": "Definir conexiones"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion",
+        "type":"un tipo de parametro"
+      },
+      "columns": ["Stage", "Business status", "Task"]
+    }
   }
 }

@@ -1,0 +1,118 @@
+import React from "react";
+import DesignToolbar from "./DesignToolbar";
+// import Designer from "./Designer";
+// import TaskSettings from "./TaskSettings";
+import BusinessProcessHeader from "../BusinessProcessHeader";
+import { Stack } from "@mantine/core";
+import { useEffect, useContext, useState } from "react";
+import { AbmStateContext, EditorStateContext } from "../Context";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { findAllSprints } from "../../../../DataAccess/Sprints";
+import { findAllByOrganizationId } from "../../../../DataAccess/OrganizationRole";
+import { findBusinessProcessModelById } from "../../../../DataAccess/BusinessProcessModel";
+import Diagram from "./Diagram";
+
+const Editor = () => {
+  const { t } = useTranslation();
+  const { user, organizationSelected } = useSelector((state) => state.auth.value);
+  const { selectedRowId, setError } = useContext(AbmStateContext);
+  const [editing, setEditing] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [businessProcessModel, setBusinessProcessModel] = useState(null);
+  const [selectedStageId, setSelectedStageId] = useState(null);
+  const [selectedActionId, setSelectedActionId] = useState(null);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [openTaskSettings, setOpenTaskSettings] = useState(false);
+  const [sprints, setSprints] = useState([]);
+  const [rolesByTask] = useState(new Map());
+  const [roles, setRoles] = useState([]);
+
+  const getData = async () => {
+    let params = { token: user.token, id: selectedRowId };
+    const ret = await findBusinessProcessModelById(params);
+    setBusinessProcessModel(ret);
+
+    const sprints = await findAllSprints(params);
+    setSprints(
+      sprints.map((s) => {
+        const ret = { value: s.id, label: s.name };
+        return ret;
+      })
+    );
+
+    params = { token: user.token, id: organizationSelected.id };
+    const roles = await findAllByOrganizationId(params);
+    setRoles(roles);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [selectedRowId]);
+
+  const onSave = async () => {
+    const params = {
+      id: businessProcessModel.id,
+      token: user.token,
+      name: businessProcessModel.name,
+      description: businessProcessModel.description,
+      stages: businessProcessModel.stages,
+      parameters: businessProcessModel.parameters,
+    };
+
+    console.log("onSave -> ", businessProcessModel);
+
+    setSaving(true);
+    try {
+      const ret = await saveBusinessProcess(params);
+      setSaving(false);
+
+      if (ret.error) {
+        setSaving(false);
+        setError(ret.error);
+      }
+    } catch (error) {
+      setSaving(false);
+      setError(error);
+    }
+  };
+
+  return (
+    <Stack spacing={"xs"}>
+      <EditorStateContext.Provider
+        value={{
+          businessProcessModel,
+          setBusinessProcessModel,
+          editing,
+          setEditing,
+          openTaskSettings,
+          setOpenTaskSettings,
+          selectedTaskId,
+          setSelectedTaskId,
+          selectedStageId,
+          setSelectedStageId,
+          selectedActionId,
+          setSelectedActionId,
+          saving,
+          setSaving,
+          sprints,
+          rolesByTask,
+          roles,
+        }}
+      >
+        {/* <TaskSettings
+          taskId={selectedTaskId}
+          open={openTaskSettings}
+          close={() => {
+            setOpenTaskSettings(false);
+          }}
+        /> */}
+        <BusinessProcessHeader text={t("businessProcess.label.definition")} businessProcess={businessProcessModel} />
+        <DesignToolbar onSave={onSave} />
+        <Diagram />
+      </EditorStateContext.Provider>
+    </Stack>
+  );
+};
+
+export default Editor;

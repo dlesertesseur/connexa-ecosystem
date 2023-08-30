@@ -383,6 +383,15 @@ export const API = {
     findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/sprint/",
   },
 
+  businessProcessModel: {
+    save: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models",
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models/",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models",
+    getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models/",
+  },
+
 };
 
 export const ERRORS = {

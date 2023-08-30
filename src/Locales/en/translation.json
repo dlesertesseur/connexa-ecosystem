@@ -1274,5 +1274,85 @@
       },
       "columns": ["Stage", "Business status", "Task"]
     }
+  },
+
+  "businessProcessModel": {
+    "title": {
+      "create": "New business process model",
+      "update": "Update a business process model",
+      "delete": "Delete a business process model",
+      "taskSettings": "Task settings"
+    },
+    "label": {
+      "name": "Name",
+      "description": "Description",
+      "stage":"Stage",
+      "actionDefaultName":"new Action",
+      "stageDefaultName":"new Stage",
+      "taskDefaultName":"new Task",
+      "parameters":"Parameters",
+      "connections":"Connections",
+      "definition":"Definition",
+      "code":"Code",
+      "taskList":"Tasks",
+      "transferTask":"Transfer to",
+      "searchTask":"Search task",
+      "noDataSelected":"No data selected",
+      "sprint":"Sprint",
+      "searchRol":"Search",
+      "rolesList":"Roles",
+      "assignedRoles":"Assigned roles"
+
+    },
+    "placeholder": {
+      "name": "a name",
+      "description": "a description",
+      "code":"a code",
+      "sprint":"Select a sprint"
+    },
+    "buttons": {
+      "editor": "Edit",
+      "parameters":"Parameters",
+      "connections":"Connections"
+    },
+    "columns": ["Name", "Description"],
+    "parameters":{
+      "title": {
+        "create": "New parameter",
+        "update": "Update parameter",
+        "delete": "Delete parameter"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "type":"Type"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description",
+        "type":"a parameter type"
+      },
+      "columns": ["Name", "Description", "Type"]
+    },
+    "connections":{
+      "title": {
+        "create": "New connection",
+        "update": "Update connection",
+        "delete": "Delete connection",
+        "connections": "Define connections"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "type":"Type",
+        "connections": "Define connections"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description",
+        "type":"a parameter type"
+      },
+      "columns": ["Stage", "Business status", "Task"]
+    }
   }
 }
