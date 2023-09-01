@@ -7,42 +7,25 @@ import { useEffect, useContext, useState } from "react";
 import { AbmStateContext, EditorStateContext } from "../Context";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { findAllSprints } from "../../../../DataAccess/Sprints";
-import { findAllByOrganizationId } from "../../../../DataAccess/OrganizationRole";
 import { findBusinessProcessModelById, saveBusinessProcessModel } from "../../../../DataAccess/BusinessProcessModel";
 import { useEdgesState, useNodesState } from "reactflow";
 import uuid from "react-uuid";
 
 const Editor = () => {
   const { t } = useTranslation();
-  const { user, organizationSelected } = useSelector((state) => state.auth.value);
+  const { user } = useSelector((state) => state.auth.value);
   const { selectedRowId, setError } = useContext(AbmStateContext);
   const [editing, setEditing] = useState(true);
   const [saving, setSaving] = useState(false);
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
   const [openTaskSettings, setOpenTaskSettings] = useState(false);
-  const [sprints, setSprints] = useState([]);
-  const [rolesByTask] = useState(new Map());
-  const [roles, setRoles] = useState([]);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
+  
   const getData = async () => {
     let params = { token: user.token, id: selectedRowId };
     const ret = await findBusinessProcessModelById(params);
     setBusinessProcessModel(ret);
-
-    const sprints = await findAllSprints(params);
-    setSprints(
-      sprints.map((s) => {
-        const ret = { value: s.id, label: s.name };
-        return ret;
-      })
-    );
-
-    params = { token: user.token, id: organizationSelected.id };
-    const roles = await findAllByOrganizationId(params);
-    setRoles(roles);
   };
 
   useEffect(() => {
@@ -114,11 +97,8 @@ const Editor = () => {
           setOpenTaskSettings,
           saving,
           setSaving,
-          sprints,
-          rolesByTask,
-          roles,
           nodes, setNodes, onNodesChange,
-          edges, setEdges, onEdgesChange
+          edges, setEdges, onEdgesChange,
         }}
       >
         <BusinessProcessHeader text={t("businessProcess.label.definition")} businessProcess={businessProcessModel} />

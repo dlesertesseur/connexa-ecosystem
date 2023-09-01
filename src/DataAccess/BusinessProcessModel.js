@@ -74,10 +74,6 @@ async function saveBusinessProcessModel(parameters) {
   };
 
   const url = API.businessProcessModel.save;
-  
-  console.log("saveBusinessProcessModel url -> ", url);
-  console.log("saveBusinessProcessModel requestOptions -> ", requestOptions);
-
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 

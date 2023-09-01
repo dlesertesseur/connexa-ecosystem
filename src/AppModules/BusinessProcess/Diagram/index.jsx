@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
+import Editor from "./editor/Editor";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
@@ -9,10 +10,11 @@ import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { findAllBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
 import { IconEditCircle } from "@tabler/icons-react";
-import Editor from "./editor/Editor";
+import { findAllSprints } from "../../../DataAccess/Sprints";
+import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 
 const DynamicApp = ({ app }) => {
-  const { user } = useSelector((state) => state.auth.value);
+  const { user, organizationSelected } = useSelector((state) => state.auth.value);
 
   const { t } = useTranslation();
   const [rows, setRows] = useState([]);
@@ -20,9 +22,11 @@ const DynamicApp = ({ app }) => {
   const [loading, setLoading] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [reload, setReload] = useState(null);
+  const [sprints, setSprints] = useState([]);
+  const [roles, setRoles] = useState([]);
 
   const getData = async () => {
-    const params = {
+    let params = {
       token: user.token,
       userId: user.id,
     };
@@ -30,6 +34,18 @@ const DynamicApp = ({ app }) => {
     try {
       const list = await findAllBusinessProcessModel(params);
       setRows(list);
+
+      const sprints = await findAllSprints(params);
+      setSprints(
+        sprints.map((s) => {
+          const ret = { value: s.id, label: s.name };
+          return ret;
+        })
+      );
+  
+      params = { token: user.token, id: organizationSelected.id };
+      const roles = await findAllByOrganizationId(params);
+      setRoles(roles);
 
     } catch (error) {
       setError(error);
@@ -55,6 +71,8 @@ const DynamicApp = ({ app }) => {
         setReload,
         selectedRowId,
         setError,
+        sprints,
+        roles
       }}
     >
       <CrudFrame

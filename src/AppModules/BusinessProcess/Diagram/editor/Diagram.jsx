@@ -4,37 +4,37 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from "re
 import TaskNode from "./model/TaskNode";
 import JoinNode from "./model/JoinNode";
 import ForkNode from "./model/ForkNode";
-import ReactFlow, {
-  Background,
-  Controls,
-  ReactFlowProvider,
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
-  useEdgesState,
-  useNodesState,
-} from "reactflow";
+import StageNode from "./model/StageNode";
+import ReactFlow, { Background, Controls, ReactFlowProvider, addEdge, getConnectedEdges, useKeyPress } from "reactflow";
 import uuid from "react-uuid";
 import TaskSettings from "./TaskSettings";
 import { useWindowSize } from "../../../../Hook";
-import { EditorStateContext } from "../Context";
+import { AbmStateContext, EditorStateContext } from "../Context";
 import { useRef } from "react";
+import { LoadingOverlay } from "@mantine/core";
+import StageSettings from "./StageSettings";
+import { useTranslation } from "react-i18next";
 
 const Diagram = () => {
   const reactFlowRef = useRef();
+  const { t } = useTranslation();
   const { width, height } = useWindowSize();
-  const { businessProcessModel, roles, nodes, setNodes, onNodesChange, edges, setEdges, onEdgesChange } =
+  const { businessProcessModel, nodes, setNodes, onNodesChange, edges, setEdges, onEdgesChange, saving } =
     useContext(EditorStateContext);
+  const { roles } = useContext(AbmStateContext);
   const [dim, setDim] = useState(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
-
-  const nodeTypes = useMemo(() => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode }), []);
+  const delPressed = useKeyPress("Delete");
+  const nodeTypes = useMemo(
+    () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode }),
+    []
+  );
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
   const onNodeClick = (evt) => {
-    console.log("onSelect -> ", evt);
+    //console.log("onSelect -> ", evt);
   };
 
   const onNodeDoubleClick = useCallback((e, node) => {
@@ -45,6 +45,26 @@ const Diagram = () => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
+
+  const getName = (type) => {
+    let defaultName = null;
+
+    switch (type) {
+      case "stageNode":
+        defaultName = t("businessProcessModel.label.stage");
+        break;
+      case "taskNode":
+        defaultName = t("businessProcessModel.label.task");
+        break;
+      case "forkNode":
+        defaultName = "forkNode";
+        break;
+      case "joinNode":
+        defaultName = "joinNode";
+        break;
+    }
+    return defaultName;
+  };
 
   const onDrop = useCallback(
     (event) => {
@@ -67,7 +87,7 @@ const Diagram = () => {
         id: uuid(),
         type,
         position,
-        data: { label: `${type} node`, roles: "", taskType: "" },
+        data: { label: getName(type), role: "", type: "" },
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -85,11 +105,30 @@ const Diagram = () => {
   const getRoleById = (id) => {
     let roleFound = null;
     let assignedRole = null;
-    roleFound = roles.find((r) => r.role.id === id);
-    if (roleFound) {
-      assignedRole = { id: roleFound.role.id, name: roleFound.role.name };
+
+    if (id) {
+      roleFound = roles.find((r) => r.role.id === parseInt(id));
+      if (roleFound) {
+        assignedRole = { id: roleFound.role.id, name: roleFound.role.name };
+      }
     }
     return assignedRole;
+  };
+
+  const getTypeNode = (task) => {
+    let ret = null;
+
+    if (task.name.startsWith("forkNode")) {
+      ret = "forkNode";
+    } else {
+      if (task.name.startsWith("joinNode")) {
+        ret = "joinNode";
+      } else {
+        ret = "taskNode";
+      }
+    }
+
+    return ret;
   };
 
   useEffect(() => {
@@ -97,21 +136,48 @@ const Diagram = () => {
       const nodes = businessProcessModel.tasks.map((t) => {
         const ret = {
           id: t.id,
-          data: { label: t.name, roles: getRoleById(t.requiredRole), taskType: "" },
-          position: { x: t.locationx, y: t.locationx },
-          type: "taskNode",
+          data: { label: t.name, role: getRoleById(t.requiredRole), taskType: "" },
+          position: { x: t.locationx, y: t.locationy },
+          type: getTypeNode(t),
         };
         return ret;
       });
 
       const edges = businessProcessModel.transitions.map((e) => {
-        const ret = { id: e.id, source: e.originNodeId, target: e.targetNodeId, label: "", type: "" };
+        const ret = { id: e.id, source: e.originNodeId, target: e.targetNodeId, label: "", type: "smoothstep" };
         return ret;
       });
       setNodes(nodes);
       setEdges(edges);
     }
   }, [businessProcessModel]);
+
+  useEffect(() => {
+    if (delPressed) {
+      let edgesToRemove = [];
+
+      const nodesToRemove = nodes.filter((n) => n.selected);
+      if (nodesToRemove.length > 0) {
+        const otherNodes = nodes.filter((n) => !n.selected);
+
+        nodesToRemove.forEach((n) => {
+          const connectedEdges = getConnectedEdges([n], edges);
+          edgesToRemove = edgesToRemove.concat(connectedEdges.map((e) => e.id));
+        });
+
+        const otherEdges = edges.filter((e) => !edgesToRemove.includes(e.id));
+
+        setNodes(otherNodes);
+        setEdges(otherEdges);
+      }
+
+      const selectedEdgesList = edges.filter((e) => e.selected);
+      if (selectedEdgesList.length > 0) {
+        const ret = edges.filter((e) => !e.selected);
+        setEdges(ret);
+      }
+    }
+  }, [delPressed]);
 
   const updateNode = (values) => {
     let roleFound = null;
@@ -143,11 +209,22 @@ const Diagram = () => {
       <TaskSettings
         node={selectedNode}
         updateNode={updateNode}
-        open={selectedNode ? true : false}
+        open={selectedNode?.type === "taskNode" ? true : false}
         close={() => {
           setSelectedNode(null);
         }}
       />
+
+      <StageSettings
+        node={selectedNode}
+        updateNode={updateNode}
+        open={selectedNode?.type === "stageNode" ? true : false}
+        close={() => {
+          setSelectedNode(null);
+        }}
+      />
+
+      <LoadingOverlay overlayOpacity={0.5} visible={saving} />
       <div
         style={{ height: `${dim.height}px`, width: `${dim.width}px`, border: "solid 1px #e5e5e5" }}
         ref={reactFlowRef}
@@ -165,7 +242,9 @@ const Diagram = () => {
           onDragOver={onDragOver}
           onConnect={onConnect}
           snapToGrid={false}
-          snapGrid={[10, 10]}
+          onNodeClick={onNodeClick}
+          elementsSelectable={true}
+          snapGrid={[1, 1]}
         >
           <Background />
           <Controls />

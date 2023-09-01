@@ -1,16 +1,11 @@
 import React from "react";
-import { Button, Grid, Group, Modal, Select, Stack, TextInput } from "@mantine/core";
+import { Button, Group, Modal, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
-import { useContext } from "react";
-import { AbmStateContext } from "../Context";
 import { useEffect } from "react";
 
-const TaskSettings = ({ open, close, updateNode, node }) => {
+const StageSettings = ({ open, close, updateNode, node }) => {
   const { t } = useTranslation();
-  const { roles } = useContext(AbmStateContext);
-  const [data, setData] = useState(null);
 
   const form = useForm({
     initialValues: {
@@ -26,17 +21,6 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
 
   const getData = async () => {
     form.setFieldValue("name", node.data.label);
-    if(node.data.role){
-      form.setFieldValue("role", node.data.role.id);
-    }else{
-      form.setFieldValue("role", null);
-    }
-
-    const ret = roles.map((r) => {
-      const reg = { value: r.role.id, label: `${r.role.name} (${r.role.groupName})` };
-      return reg;
-    });
-    setData(ret);
   };
 
   useEffect(() => {
@@ -84,16 +68,6 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
           </Group>
           {/* <Group mt={"xs"}>{createTextField("code")}</Group> */}
 
-          <Grid mt={"xs"}>
-            <Grid.Col span={6}>
-              <Select
-                label={t("businessProcessModel.label.rolesList")}
-                placeholder={t("businessProcessModel.placeholder.role")}
-                data={data}
-                {...form.getInputProps("role")}
-              />
-            </Grid.Col>
-          </Grid>
           <Group position="right" mt={"xl"}>
             <Button type="submit">{t("button.accept")}</Button>
             <Button
@@ -110,4 +84,4 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
   );
 };
 
-export default TaskSettings;
+export default StageSettings;

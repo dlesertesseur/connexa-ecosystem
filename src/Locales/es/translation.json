@@ -1285,7 +1285,8 @@
       "assignedRoles":"Roles asignados",
       "task":"Tarea",
       "fork":"Fork",
-      "join":"Join"
+      "join":"Join",
+      "status":"Status"
     },
     "placeholder": {
       "name": "un nombre",

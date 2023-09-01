@@ -1304,7 +1304,8 @@
       "assignedRoles":"Assigned roles",
       "task":"Task",
       "fork":"Fork",
-      "join":"Join"
+      "join":"Join",
+      "status":"Status"
     },
     "placeholder": {
       "name": "a name",
