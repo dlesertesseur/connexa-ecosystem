@@ -1301,14 +1301,17 @@
       "sprint":"Sprint",
       "searchRol":"Search",
       "rolesList":"Roles",
-      "assignedRoles":"Assigned roles"
-
+      "assignedRoles":"Assigned roles",
+      "task":"Task",
+      "fork":"Fork",
+      "join":"Join"
     },
     "placeholder": {
       "name": "a name",
       "description": "a description",
       "code":"a code",
-      "sprint":"Select a sprint"
+      "sprint":"Select a sprint",
+      "role":"Select a role"
     },
     "buttons": {
       "editor": "Edit",

@@ -1,8 +1,7 @@
 import React from "react";
 import DesignToolbar from "./DesignToolbar";
-// import Designer from "./Designer";
-// import TaskSettings from "./TaskSettings";
 import BusinessProcessHeader from "../BusinessProcessHeader";
+import Diagram from "./Diagram";
 import { Stack } from "@mantine/core";
 import { useEffect, useContext, useState } from "react";
 import { AbmStateContext, EditorStateContext } from "../Context";
@@ -10,8 +9,9 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { findAllSprints } from "../../../../DataAccess/Sprints";
 import { findAllByOrganizationId } from "../../../../DataAccess/OrganizationRole";
-import { findBusinessProcessModelById } from "../../../../DataAccess/BusinessProcessModel";
-import Diagram from "./Diagram";
+import { findBusinessProcessModelById, saveBusinessProcessModel } from "../../../../DataAccess/BusinessProcessModel";
+import { useEdgesState, useNodesState } from "reactflow";
+import uuid from "react-uuid";
 
 const Editor = () => {
   const { t } = useTranslation();
@@ -20,13 +20,12 @@ const Editor = () => {
   const [editing, setEditing] = useState(true);
   const [saving, setSaving] = useState(false);
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
-  const [selectedStageId, setSelectedStageId] = useState(null);
-  const [selectedActionId, setSelectedActionId] = useState(null);
-  const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [openTaskSettings, setOpenTaskSettings] = useState(false);
   const [sprints, setSprints] = useState([]);
   const [rolesByTask] = useState(new Map());
   const [roles, setRoles] = useState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const getData = async () => {
     let params = { token: user.token, id: selectedRowId };
@@ -51,20 +50,46 @@ const Editor = () => {
   }, [selectedRowId]);
 
   const onSave = async () => {
+
+    const tasks = nodes.map((n) => {
+      const ret = {
+        "id": n.id,
+        "name": n.data.label,
+        "locationx": n.position.x,
+        "locationy": n.position.y,
+        "locationz": 0,
+        "requiredRole": n.data.role ? n.data.role.id : null,
+        "backgroundColor": null,
+        "borderColor": null,
+        "border": null,
+        "fontName": null,
+        "fontColor": null,
+        "fontSize": null
+      };
+      return(ret);
+    })
+
+    const transitions = edges.map((e) => {
+      const ret = {
+        "id": uuid(),
+        "originNodeId": e.source,
+        "targetNodeId": e.target,
+      };
+      return(ret);
+    })
+
     const params = {
-      id: businessProcessModel.id,
       token: user.token,
+      id: businessProcessModel.id,
       name: businessProcessModel.name,
       description: businessProcessModel.description,
-      stages: businessProcessModel.stages,
-      parameters: businessProcessModel.parameters,
+      tasks: tasks,
+      transitions: transitions,
     };
-
-    console.log("onSave -> ", businessProcessModel);
 
     setSaving(true);
     try {
-      const ret = await saveBusinessProcess(params);
+      const ret = await saveBusinessProcessModel(params);
       setSaving(false);
 
       if (ret.error) {
@@ -87,26 +112,15 @@ const Editor = () => {
           setEditing,
           openTaskSettings,
           setOpenTaskSettings,
-          selectedTaskId,
-          setSelectedTaskId,
-          selectedStageId,
-          setSelectedStageId,
-          selectedActionId,
-          setSelectedActionId,
           saving,
           setSaving,
           sprints,
           rolesByTask,
           roles,
+          nodes, setNodes, onNodesChange,
+          edges, setEdges, onEdgesChange
         }}
       >
-        {/* <TaskSettings
-          taskId={selectedTaskId}
-          open={openTaskSettings}
-          close={() => {
-            setOpenTaskSettings(false);
-          }}
-        /> */}
         <BusinessProcessHeader text={t("businessProcess.label.definition")} businessProcess={businessProcessModel} />
         <DesignToolbar onSave={onSave} />
         <Diagram />

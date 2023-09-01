@@ -56,11 +56,11 @@ import { API } from "../Constants";
 
 async function saveBusinessProcessModel(parameters) {
   const body = JSON.stringify({
-    id: parameters?.id,
+    id: parameters.id,
     name: parameters.name,
     description: parameters.description,
-    stages: parameters.stages,
-    parameters: parameters.parameters,
+    tasks: parameters.tasks,
+    transitions: parameters.transitions,
   });
 
   const requestOptions = {
@@ -73,7 +73,12 @@ async function saveBusinessProcessModel(parameters) {
     body: body,
   };
 
-  const res = await fetch(API.businessProcessModel.save, requestOptions);
+  const url = API.businessProcessModel.save;
+  
+  console.log("saveBusinessProcessModel url -> ", url);
+  console.log("saveBusinessProcessModel requestOptions -> ", requestOptions);
+
+  const res = await fetch(url, requestOptions);
   const data = await res.json();
 
   return data;
@@ -128,7 +133,6 @@ async function findBusinessProcessModelById(parameters) {
     return error;
   }
 }
-
 
 export {
   saveBusinessProcessModel,

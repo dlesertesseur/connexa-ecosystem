@@ -1282,13 +1282,17 @@
       "sprint":"Sprint",
       "searchRol":"Buscar rol",
       "rolesList":"Roles",
-      "assignedRoles":"Roles asignados"
+      "assignedRoles":"Roles asignados",
+      "task":"Tarea",
+      "fork":"Fork",
+      "join":"Join"
     },
     "placeholder": {
       "name": "un nombre",
       "description": "una descripcion",
       "code":"un codido",
-      "sprint":"Seleccione un sprint"
+      "sprint":"Seleccione un sprint",
+      "role":"Seleccione un rol"
     },
     "buttons":{
       "design":"Editar",
