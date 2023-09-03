@@ -296,6 +296,53 @@ function convertMilisegToYYYYMMDDHHMISS(milisegundos) {
 
   return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
+
+function hexToRgba(hex, alpha) {
+  // Elimina el "#" del formato hexadecimal si está presente
+  hex = hex.replace(/^#/, '');
+
+  // Divide el valor hexadecimal en sus componentes R, G y B
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Verifica que el valor alpha esté en el rango correcto (0-1)
+  if (alpha < 0) alpha = 0;
+  if (alpha >= 1) alpha = 0.99;
+
+  // Construye el valor RGBA
+  const rgba = `rgba(${r},${g},${b},${alpha})`;
+
+  return rgba;
+}
+
+function rgbaToHexAndAlpha(rgbaString) {
+  // Utiliza una expresión regular para extraer los valores de R, G, B y A
+  const rgbaRegex = /rgba\((\d+),(\d+),(\d+),([\d.]+)\)/;
+  const match = rgbaString.match(rgbaRegex);
+
+  if (!match) {
+    throw new Error("Formato RGBA no válido.");
+  }
+
+  // Obtiene los valores de R, G, B y A desde la coincidencia
+  const r = parseInt(match[1], 10);
+  const g = parseInt(match[2], 10);
+  const b = parseInt(match[3], 10);
+  const alpha = parseFloat(match[4]);
+
+  // Convierte los valores de R, G y B a formato hexadecimal
+  const colorHex = `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+
+  // Crea y devuelve el objeto con los valores color y alpha
+  const result = {
+    color: colorHex,
+    alpha: alpha,
+  };
+
+  return result;
+}
+
 export {
   findTranslatedField,
   getFillColor,
@@ -311,5 +358,7 @@ export {
   colorList,
   formatDateToDDMMYYYY,
   lpad,
-  convertMilisegToYYYYMMDDHHMISS
+  convertMilisegToYYYYMMDDHHMISS,
+  hexToRgba,
+  rgbaToHexAndAlpha
 };

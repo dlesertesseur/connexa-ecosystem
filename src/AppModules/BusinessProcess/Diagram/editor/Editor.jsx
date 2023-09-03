@@ -21,7 +21,7 @@ const Editor = () => {
   const [openTaskSettings, setOpenTaskSettings] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  
+
   const getData = async () => {
     let params = { token: user.token, id: selectedRowId };
     const ret = await findBusinessProcessModelById(params);
@@ -33,33 +33,35 @@ const Editor = () => {
   }, [selectedRowId]);
 
   const onSave = async () => {
-
     const tasks = nodes.map((n) => {
       const ret = {
-        "id": n.id,
-        "name": n.data.label,
-        "locationx": n.position.x,
-        "locationy": n.position.y,
-        "locationz": 0,
-        "requiredRole": n.data.role ? n.data.role.id : null,
-        "backgroundColor": null,
-        "borderColor": null,
-        "border": null,
-        "fontName": null,
-        "fontColor": null,
-        "fontSize": null
+        id: n.id,
+        name: n.data.label,
+        locationx: n.position.x,
+        locationy: n.position.y,
+        locationz: 0,
+        requiredRole: n.data.role ? n.data.role.id : null,
+        backgroundColor: n.data.color,
+        borderColor: n.data.borderColor,
+        border: null,
+        fontName: null,
+        fontColor: null,
+        fontSize: null,
+        dimensionx: n.width,
+        dimensiony: n.height,
+        type: n.type,
       };
-      return(ret);
-    })
+      return ret;
+    });
 
     const transitions = edges.map((e) => {
       const ret = {
-        "id": uuid(),
-        "originNodeId": e.source,
-        "targetNodeId": e.target,
+        id: uuid(),
+        originTaskId: e.source,
+        targetTaskId: e.target,
       };
-      return(ret);
-    })
+      return ret;
+    });
 
     const params = {
       token: user.token,
@@ -69,6 +71,8 @@ const Editor = () => {
       tasks: tasks,
       transitions: transitions,
     };
+
+    console.log("onSave params -> ", params)
 
     setSaving(true);
     try {
@@ -97,8 +101,12 @@ const Editor = () => {
           setOpenTaskSettings,
           saving,
           setSaving,
-          nodes, setNodes, onNodesChange,
-          edges, setEdges, onEdgesChange,
+          nodes,
+          setNodes,
+          onNodesChange,
+          edges,
+          setEdges,
+          onEdgesChange,
         }}
       >
         <BusinessProcessHeader text={t("businessProcess.label.definition")} businessProcess={businessProcessModel} />

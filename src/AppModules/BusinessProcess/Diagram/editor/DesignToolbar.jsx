@@ -32,6 +32,7 @@ const DesignToolbar = ({ onSave }) => {
             <IconDeviceFloppy size="20" />
           </ActionIcon>
           <Divider orientation="vertical" />
+          <DragButton text={t("businessProcessModel.label.init")} onDragStart={(event) => onDragStart(event, "initNode")} />
           <DragButton text={t("businessProcessModel.label.task")} onDragStart={(event) => onDragStart(event, "taskNode")} />
           <DragButton text={t("businessProcessModel.label.fork")} onDragStart={(event) => onDragStart(event, "forkNode")} />
           <DragButton text={t("businessProcessModel.label.join")} onDragStart={(event) => onDragStart(event, "joinNode")} />

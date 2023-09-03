@@ -61,6 +61,7 @@ async function saveBusinessProcessModel(parameters) {
     description: parameters.description,
     tasks: parameters.tasks,
     transitions: parameters.transitions,
+    initialTaskId:parameters.initialTaskId
   });
 
   const requestOptions = {
@@ -72,6 +73,8 @@ async function saveBusinessProcessModel(parameters) {
     },
     body: body,
   };
+
+  console.log("saveBusinessProcessModel body -> ", body);
 
   const url = API.businessProcessModel.save;
   const res = await fetch(url, requestOptions);

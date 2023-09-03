@@ -3,7 +3,7 @@ import { Box, ColorPicker, Group, Stack, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { config } from "../Constants/config";
 
-const CustomColorPicker = ({ value, onChange }) => {
+const CustomColorPicker = ({ value, onChange, fullWidth = true, swatchesPerRow=10, format="hex" }) => {
   const { t } = useTranslation();
   return (
     <Stack spacing={0}>
@@ -20,12 +20,13 @@ const CustomColorPicker = ({ value, onChange }) => {
         />
       </Group>
       <ColorPicker
-        format="hex"
+        format={format}
         value={value}
         onChange={onChange}
-        fullWidth
+        fullWidth={fullWidth}
         withPicker={false}
         swatches={config.ARR_COLORS}
+        swatchesPerRow={swatchesPerRow}
       />
     </Stack>
   );

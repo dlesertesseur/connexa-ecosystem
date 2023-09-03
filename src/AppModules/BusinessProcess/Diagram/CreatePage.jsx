@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
 import { HEADER_HIGHT } from "../../../Constants";
-import { saveBusinessProcess } from "../../../DataAccess/BusinessProcess";
+
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
+import { saveBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
 
 export function CreatePage() {
   const { t } = useTranslation();
@@ -51,12 +52,13 @@ export function CreatePage() {
       token: user.token,
       name: values.name,
       description: values.description,
-      stages: [],
-      parameters: [],
+      tasks: [],
+      transitions: [],
+      initialTaskId:null
     };
     setWorking(true);
     try {
-      const ret = await saveBusinessProcess(params);
+      const ret = await saveBusinessProcessModel(params);
       setWorking(false);
 
       if (ret.error) {

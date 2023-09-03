@@ -1,11 +1,14 @@
 import React from "react";
-import { Button, Grid, Group, Modal, Select, Stack, TextInput } from "@mantine/core";
+import { AlphaSlider, Button, Grid, Group, Modal, Select, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { useContext } from "react";
 import { AbmStateContext } from "../Context";
 import { useEffect } from "react";
+import CustomColorPicker from "../../../../Components/CustomColorPicker";
+import { rgbaToHexAndAlpha } from "../../../../Util";
+import { config } from "../../../../Constants/config";
 
 const TaskSettings = ({ open, close, updateNode, node }) => {
   const { t } = useTranslation();
@@ -15,7 +18,9 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
   const form = useForm({
     initialValues: {
       name: "",
-      role:""
+      role: "",
+      color: "",
+      alpha: "",
     },
 
     validate: {
@@ -25,10 +30,11 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
   });
 
   const getData = async () => {
+
     form.setFieldValue("name", node.data.label);
-    if(node.data.role){
+    if (node.data.role) {
       form.setFieldValue("role", node.data.role.id);
-    }else{
+    } else {
       form.setFieldValue("role", null);
     }
 
@@ -36,6 +42,21 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       const reg = { value: r.role.id, label: `${r.role.name} (${r.role.groupName})` };
       return reg;
     });
+
+    if (node.data.color) {
+      const colorInfo = rgbaToHexAndAlpha(node.data.color);
+      if (colorInfo) {
+        form.setFieldValue("color", colorInfo.color);
+        form.setFieldValue("alpha", colorInfo.alpha);
+      } else {
+        form.setFieldValue("color", config.ARR_COLORS[0]);
+        form.setFieldValue("alpha", 0.2);
+      }
+    }else {
+      form.setFieldValue("color", config.ARR_COLORS[0]);
+      form.setFieldValue("alpha", 0.2);
+    }
+
     setData(ret);
   };
 
@@ -94,6 +115,16 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
               />
             </Grid.Col>
           </Grid>
+
+          <Stack mt={"xs"} spacing={"xs"}>
+            <CustomColorPicker {...form.getInputProps("color")} swatchesPerRow={18} format={"rgba"} />
+            <AlphaSlider
+              color={form.getInputProps("color").value}
+              {...form.getInputProps("alpha")}
+              onChangeEnd={(evt) => {}}
+            />
+          </Stack>
+
           <Group position="right" mt={"xl"}>
             <Button type="submit">{t("button.accept")}</Button>
             <Button

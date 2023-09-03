@@ -5,15 +5,25 @@ import TaskNode from "./model/TaskNode";
 import JoinNode from "./model/JoinNode";
 import ForkNode from "./model/ForkNode";
 import StageNode from "./model/StageNode";
-import ReactFlow, { Background, Controls, ReactFlowProvider, addEdge, getConnectedEdges, useKeyPress } from "reactflow";
+import InitNode from "./model/InitNode";
+import ReactFlow, {
+  Background,
+  Controls,
+  MarkerType,
+  ReactFlowProvider,
+  addEdge,
+  getConnectedEdges,
+  useKeyPress,
+} from "reactflow";
 import uuid from "react-uuid";
 import TaskSettings from "./TaskSettings";
+import StageSettings from "./StageSettings";
 import { useWindowSize } from "../../../../Hook";
 import { AbmStateContext, EditorStateContext } from "../Context";
 import { useRef } from "react";
 import { LoadingOverlay } from "@mantine/core";
-import StageSettings from "./StageSettings";
 import { useTranslation } from "react-i18next";
+import { hexToRgba } from "../../../../Util";
 
 const Diagram = () => {
   const reactFlowRef = useRef();
@@ -27,11 +37,24 @@ const Diagram = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const delPressed = useKeyPress("Delete");
   const nodeTypes = useMemo(
-    () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode }),
+    () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode, initNode: InitNode }),
     []
   );
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback(
+    (params) =>
+      setEdges((eds) => {
+        const newParams = {
+          ...params,
+          type: "smoothstep",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
+        };
+        return addEdge(newParams, eds);
+      }),
+    []
+  );
 
   const onNodeClick = (evt) => {
     //console.log("onSelect -> ", evt);
@@ -56,6 +79,9 @@ const Diagram = () => {
       case "taskNode":
         defaultName = t("businessProcessModel.label.task");
         break;
+      case "initNode":
+        defaultName = t("businessProcessModel.label.init");
+        break;
       case "forkNode":
         defaultName = "forkNode";
         break;
@@ -64,6 +90,40 @@ const Diagram = () => {
         break;
     }
     return defaultName;
+  };
+
+  const getDefaultColor = (type) => {
+    let defaultValue = null;
+
+    switch (type) {
+      case "stageNode":
+        defaultValue = "rgba(255,0,0,0.1)";
+        break;
+      case "taskNode":
+      case "initNode":
+      case "forkNode":
+      case "joinNode":
+        defaultValue = "rgba(255,255,255,1)";
+        break;
+    }
+    return defaultValue;
+  };
+
+  const getDefaultBorderColor = (type) => {
+    let defaultValue = null;
+
+    switch (type) {
+      case "stageNode":
+        defaultValue = "rgba(255,0,0,1)";
+        break;
+      case "taskNode":
+        defaultValue = "rgba(0,0,0,1)";
+        break;
+      case "initNode":
+        defaultValue = "rgba(255,0,0,1)";
+        break;
+    }
+    return defaultValue;
   };
 
   const onDrop = useCallback(
@@ -87,7 +147,12 @@ const Diagram = () => {
         id: uuid(),
         type,
         position,
-        data: { label: getName(type), role: "", type: "" },
+        data: {
+          label: getName(type),
+          role: "",
+          color: getDefaultColor(type),
+          borderColor: getDefaultBorderColor(type),
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -134,17 +199,32 @@ const Diagram = () => {
   useEffect(() => {
     if (businessProcessModel) {
       const nodes = businessProcessModel.tasks.map((t) => {
+        const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
-          data: { label: t.name, role: getRoleById(t.requiredRole), taskType: "" },
+          data: {
+            label: t.name,
+            role: getRoleById(t.requiredRole),
+            color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
+            borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
+          },
           position: { x: t.locationx, y: t.locationy },
-          type: getTypeNode(t),
+          type: type,
         };
         return ret;
       });
 
       const edges = businessProcessModel.transitions.map((e) => {
-        const ret = { id: e.id, source: e.originNodeId, target: e.targetNodeId, label: "", type: "smoothstep" };
+        const ret = {
+          id: e.id,
+          source: e.originTaskId,
+          target: e.targetTaskId,
+          label: "",
+          type: "smoothstep",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
+        };
         return ret;
       });
       setNodes(nodes);
@@ -180,8 +260,23 @@ const Diagram = () => {
   }, [delPressed]);
 
   const updateNode = (values) => {
+    let borderColorRgba = null;
+    let colorRgba = null;
     let roleFound = null;
     let assignedRole = null;
+
+    if (values.color) {
+      colorRgba = hexToRgba(values.color, values.alpha);
+    } else {
+      colorRgba = "rgba(255,255,255,0.9)";
+    }
+
+    if (values.borderColor) {
+      borderColorRgba = values.borderColor;
+    } else {
+      borderColorRgba = hexToRgba(values.color, 0.8);
+    }
+
     if (values.role) {
       roleFound = roles.find((r) => r.role.id === parseInt(values.role));
       if (roleFound) {
@@ -195,6 +290,8 @@ const Diagram = () => {
           ...node.data,
           label: values.name,
           role: assignedRole,
+          color: colorRgba,
+          borderColor: borderColorRgba,
         };
       }
 
@@ -209,7 +306,7 @@ const Diagram = () => {
       <TaskSettings
         node={selectedNode}
         updateNode={updateNode}
-        open={selectedNode?.type === "taskNode" ? true : false}
+        open={selectedNode?.type === "taskNode" || selectedNode?.type === "initNode" ? true : false}
         close={() => {
           setSelectedNode(null);
         }}
@@ -245,6 +342,7 @@ const Diagram = () => {
           onNodeClick={onNodeClick}
           elementsSelectable={true}
           snapGrid={[1, 1]}
+          minZoom={0.1}
         >
           <Background />
           <Controls />

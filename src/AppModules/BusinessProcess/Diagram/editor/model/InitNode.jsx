@@ -1,12 +1,13 @@
 import { Handle, NodeResizer, Position } from "reactflow";
 
-function TaskNode(props) {
+function InitNode(props) {
   const { data, isConnectable, selected } = props;
 
   return (
     <div
       style={{
-        border: "1px solid",
+        border: "3px solid",
+        minWidth: 100,
         background: selected ? "rgba(255, 0, 0, 0.2)" : data?.color,
         borderColor: selected ? "rgba(255, 0, 0, 0.8)" : data?.borderColor,
         height: "100%",
@@ -50,4 +51,4 @@ function TaskNode(props) {
   );
 }
 
-export default TaskNode;
+export default InitNode;

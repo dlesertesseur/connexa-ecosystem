@@ -1,8 +1,11 @@
 import React from "react";
-import { Button, Group, Modal, Stack, TextInput } from "@mantine/core";
+import { AlphaSlider, Button, Group, Modal, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
+import { rgbaToHexAndAlpha } from "../../../../Util";
+import { config } from "../../../../Constants/config";
+import CustomColorPicker from "../../../../Components/CustomColorPicker";
 
 const StageSettings = ({ open, close, updateNode, node }) => {
   const { t } = useTranslation();
@@ -10,17 +13,32 @@ const StageSettings = ({ open, close, updateNode, node }) => {
   const form = useForm({
     initialValues: {
       name: "",
-      role:""
+      color: "",
+      alpha: "",
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
-      //role: (val) => (val ? null : t("validation.required")),
+      // color: (val) => (val ? null : t("validation.required")),
     },
   });
 
   const getData = async () => {
     form.setFieldValue("name", node.data.label);
+
+    if (node.data.color) {
+      const colorInfo = rgbaToHexAndAlpha(node.data.color);
+      if (colorInfo) {
+        form.setFieldValue("color", colorInfo.color);
+        form.setFieldValue("alpha", colorInfo.alpha);
+      } else {
+        form.setFieldValue("color", config.ARR_COLORS[0]);
+        form.setFieldValue("alpha", 0.2);
+      }
+    }else {
+      form.setFieldValue("color", config.ARR_COLORS[0]);
+      form.setFieldValue("alpha", 0.2);
+    }
   };
 
   useEffect(() => {
@@ -49,7 +67,7 @@ const StageSettings = ({ open, close, updateNode, node }) => {
 
   return (
     <Modal
-      size={"lg"}
+      size={"md"}
       opened={open}
       onClose={() => {
         close();
@@ -66,7 +84,15 @@ const StageSettings = ({ open, close, updateNode, node }) => {
           <Group mt={"xs"} grow>
             {createTextField("name")}
           </Group>
-          {/* <Group mt={"xs"}>{createTextField("code")}</Group> */}
+
+          <Stack mt={"xs"} spacing={"xs"}>
+            <CustomColorPicker {...form.getInputProps("color")} swatchesPerRow={18} format={"rgba"} />
+            <AlphaSlider
+              color={form.getInputProps("color").value}
+              {...form.getInputProps("alpha")}
+              onChangeEnd={(evt) => {}}
+            />
+          </Stack>
 
           <Group position="right" mt={"xl"}>
             <Button type="submit">{t("button.accept")}</Button>

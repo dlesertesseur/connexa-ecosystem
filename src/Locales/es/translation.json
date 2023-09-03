@@ -1286,7 +1286,8 @@
       "task":"Tarea",
       "fork":"Fork",
       "join":"Join",
-      "status":"Status"
+      "status":"Status",
+      "init":"Inicio"
     },
     "placeholder": {
       "name": "un nombre",

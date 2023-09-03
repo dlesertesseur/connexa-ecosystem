@@ -79,8 +79,9 @@ export function UpdatePage() {
       id: businessProcessModel.id,
       name: values.name,
       description: values.description,
-      stages: businessProcessModel.stages,
-      parameters: businessProcessModel.parameters,
+      tasks: [],
+      transitions: [],
+      initialTaskId:null
     };
 
     setWorking(true);
