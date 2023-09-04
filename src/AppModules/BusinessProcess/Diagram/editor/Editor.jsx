@@ -72,8 +72,6 @@ const Editor = () => {
       transitions: transitions,
     };
 
-    console.log("onSave params -> ", params)
-
     setSaving(true);
     try {
       const ret = await saveBusinessProcessModel(params);

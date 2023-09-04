@@ -10,6 +10,7 @@ import { HEADER_HIGHT } from "../../../Constants";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
 import { saveBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
+import uuid from "react-uuid";
 
 export function CreatePage() {
   const { t } = useTranslation();
@@ -49,6 +50,7 @@ export function CreatePage() {
 
   const onCreate = async (values) => {
     const params = {
+      id:uuid(),
       token: user.token,
       name: values.name,
       description: values.description,

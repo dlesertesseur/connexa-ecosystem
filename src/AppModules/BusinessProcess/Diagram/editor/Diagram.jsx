@@ -207,9 +207,11 @@ const Diagram = () => {
             role: getRoleById(t.requiredRole),
             color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
+            width: t.dimensionx,
+            height: t.dimensiony   
           },
           position: { x: t.locationx, y: t.locationy },
-          type: type,
+          type: type,       
         };
         return ret;
       });
@@ -338,10 +340,10 @@ const Diagram = () => {
           onDrop={onDrop}
           onDragOver={onDragOver}
           onConnect={onConnect}
-          snapToGrid={false}
           onNodeClick={onNodeClick}
           elementsSelectable={true}
-          snapGrid={[1, 1]}
+          snapToGrid={true}
+          snapGrid={[10, 10]}
           minZoom={0.1}
         >
           <Background />
