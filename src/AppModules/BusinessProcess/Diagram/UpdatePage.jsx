@@ -66,7 +66,6 @@ export function UpdatePage() {
       if (businessProcessModel) {
         form.setFieldValue("name", businessProcessModel.name);
         form.setFieldValue("description", businessProcessModel.description);
-        //form.setFieldValue("status", project.status);
       }
     };
     f();
@@ -79,9 +78,9 @@ export function UpdatePage() {
       id: businessProcessModel.id,
       name: values.name,
       description: values.description,
-      tasks: [],
-      transitions: [],
-      initialTaskId:null
+      tasks: businessProcessModel.tasks,
+      transitions: businessProcessModel.transitions,
+      initialTaskId:businessProcessModel.initialTaskId
     };
 
     setWorking(true);
