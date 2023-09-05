@@ -29,13 +29,27 @@ function TaskNode(props) {
           border: "1px solid",
           background: selected ? "rgba(255, 0, 0, 0.2)" : data?.color,
           borderColor: selected ? "rgba(255, 0, 0, 0.8)" : data?.borderColor,
-          padding: "5px",
+          padding: "2px",
+          gap: "0px",
           borderRadius: "5px",
           height: `${nodeSize.height}px`,
           width: `${nodeSize.width}px`,
         }}
       >
-        <label
+        {data.sprint ? (
+          <div
+            style={{
+              color: "#000",
+              fontWeight: "600",
+              fontSize: "8px",
+              textAlign: "right",
+            }}
+          >
+            {data.sprint.name}
+          </div>
+        ) : null}
+
+        <div
           style={{
             color: "#000",
             fontWeight: "600",
@@ -44,8 +58,17 @@ function TaskNode(props) {
           }}
         >
           {data.label}
-        </label>
-        <label className="task-node-roles">{data?.role?.name}</label>
+        </div>
+        <div
+          style={{
+            color: "#777",
+            fontWeight: "600",
+            fontSize: "12px",
+            textAlign: "left",
+          }}
+        >
+          {data?.role?.name}
+        </div>
       </div>
 
       <Handle type="source" position={Position.Bottom} isConnectable={isConnectable} />

@@ -24,6 +24,7 @@ import { useRef } from "react";
 import { LoadingOverlay } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { hexToRgba } from "../../../../Util";
+import EdgeSettings from "./EdgeSettings";
 
 const Diagram = () => {
   const reactFlowRef = useRef();
@@ -31,10 +32,11 @@ const Diagram = () => {
   const { width, height } = useWindowSize();
   const { businessProcessModel, nodes, setNodes, onNodesChange, edges, setEdges, onEdgesChange, saving } =
     useContext(EditorStateContext);
-  const { roles } = useContext(AbmStateContext);
+  const { roles, sprints } = useContext(AbmStateContext);
   const [dim, setDim] = useState(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedEdge, setSelectedEdge] = useState(null);
   const delPressed = useKeyPress("Delete");
   const nodeTypes = useMemo(
     () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode, initNode: InitNode }),
@@ -62,6 +64,10 @@ const Diagram = () => {
 
   const onNodeDoubleClick = useCallback((e, node) => {
     setSelectedNode(node);
+  }, []);
+
+  const onEdgeDoubleClick = useCallback((e, edge) => {
+    setSelectedEdge(edge);
   }, []);
 
   const onDragOver = useCallback((event) => {
@@ -208,16 +214,16 @@ const Diagram = () => {
             color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
             width: t.dimensionx,
-            height: t.dimensiony   
+            height: t.dimensiony,
           },
           position: { x: t.locationx, y: t.locationy },
-          type: type,       
+          type: type,
         };
         return ret;
       });
 
       const edges = businessProcessModel.transitions.map((e) => {
-        const ret = {
+        let ret = {
           id: e.id,
           source: e.originTaskId,
           target: e.targetTaskId,
@@ -226,7 +232,12 @@ const Diagram = () => {
           markerEnd: {
             type: MarkerType.ArrowClosed,
           },
+          data: { bidirectional: e.bidirectional ? e.bidirectional : false },
         };
+
+        if (e.bidirectional) {
+          ret = { ...ret, markerStart: { type: MarkerType.ArrowClosed } };
+        }
         return ret;
       });
       setNodes(nodes);
@@ -266,17 +277,19 @@ const Diagram = () => {
     let colorRgba = null;
     let roleFound = null;
     let assignedRole = null;
+    let sprintFound = null;
+    const assignedSprint = [];
 
     if (values.color) {
       colorRgba = hexToRgba(values.color, values.alpha);
     } else {
-      colorRgba = "rgba(255,255,255,0.9)";
+      colorRgba = "rgba(255,255,255,1)";
     }
 
     if (values.borderColor) {
-      borderColorRgba = values.borderColor;
+      borderColorRgba = hexToRgba(values.borderColor, 1);
     } else {
-      borderColorRgba = hexToRgba(values.color, 0.8);
+      borderColorRgba = "rgba(0,0,0,1)";
     }
 
     if (values.role) {
@@ -284,6 +297,17 @@ const Diagram = () => {
       if (roleFound) {
         assignedRole = { id: roleFound.role.id, name: roleFound.role.name };
       }
+    }
+
+    if (values.sprint) {
+      values.sprint.forEach((sprint) => {
+        sprintFound = sprints.find((s) => {
+          return s.value === parseInt(sprint);
+        });
+        if (sprintFound) {
+          assignedSprint.push({ id: sprintFound.value, name: sprintFound.label });
+        }
+      });
     }
 
     const ret = nodes.map((node) => {
@@ -294,6 +318,10 @@ const Diagram = () => {
           role: assignedRole,
           color: colorRgba,
           borderColor: borderColorRgba,
+          automatic: values.automatic,
+          applicationPath: values.applicationPath,
+          serviceUrl: values.serviceUrl,
+          sprint: assignedSprint,
         };
       }
 
@@ -301,6 +329,24 @@ const Diagram = () => {
     });
 
     setNodes(ret);
+  };
+
+  const updateEdge = (values) => {
+    const ret = edges.map((edge) => {
+      if (edge.id === selectedEdge.id) {
+        edge.label = values.name;
+        edge.data.bidirectional = values.bidirectional;
+        if (values.bidirectional) {
+          edge.markerStart = { type: MarkerType.ArrowClosed };
+        }else{
+          delete edge.markerStart;
+        }
+      }
+
+      return edge;
+    });
+
+    setEdges(ret);
   };
 
   const diagram = dim ? (
@@ -313,7 +359,14 @@ const Diagram = () => {
           setSelectedNode(null);
         }}
       />
-
+      <EdgeSettings
+        edge={selectedEdge}
+        updateEdge={updateEdge}
+        open={selectedEdge ? true : false}
+        close={() => {
+          setSelectedEdge(null);
+        }}
+      />
       <StageSettings
         node={selectedNode}
         updateNode={updateNode}
@@ -337,6 +390,7 @@ const Diagram = () => {
           nodeTypes={nodeTypes}
           fitView
           onNodeDoubleClick={onNodeDoubleClick}
+          onEdgeDoubleClick={onEdgeDoubleClick}
           onDrop={onDrop}
           onDragOver={onDragOver}
           onConnect={onConnect}

@@ -1281,7 +1281,8 @@
       "create": "New business process model",
       "update": "Update a business process model",
       "delete": "Delete a business process model",
-      "taskSettings": "Task settings"
+      "taskSettings": "Task settings",
+      "connectorProperties":"Propiedades de conector"
     },
     "label": {
       "name": "Name",
@@ -1306,14 +1307,21 @@
       "fork":"Fork",
       "join":"Join",
       "status":"Status",
-      "init":"Init"
+      "init":"Init",
+      "automatic":"Automatic",
+      "applicationPath":"Application",
+      "serviceUrl":"Service URL",
+      "borderColor":"Border color",
+      "bidirectionalConnection":"Bidirectional connection"
     },
     "placeholder": {
       "name": "a name",
       "description": "a description",
       "code":"a code",
       "sprint":"Select a sprint",
-      "role":"Select a role"
+      "role":"Select a role",
+      "applicationPath":"an application path",
+      "serviceUrl":"a service URL"
     },
     "buttons": {
       "editor": "Edit",

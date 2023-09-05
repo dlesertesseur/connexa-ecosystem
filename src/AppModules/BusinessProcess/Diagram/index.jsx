@@ -9,9 +9,10 @@ import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { findAllBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
-import { IconEditCircle } from "@tabler/icons-react";
+import { IconEditCircle, IconVariable } from "@tabler/icons-react";
 import { findAllSprints } from "../../../DataAccess/Sprints";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
+import Parameters from "./parameters/Parameters";
 
 const DynamicApp = ({ app }) => {
   const { user, organizationSelected } = useSelector((state) => state.auth.value);
@@ -94,18 +95,12 @@ const DynamicApp = ({ app }) => {
             key: "businessProcessModel.buttons.editor",
             element: <Editor back={"../"} />,
           },
-          // {
-          //   path: "parameters",
-          //   icon: <IconVariable size={20} />,
-          //   key: "businessProcessModel.buttons.parameters",
-          //   element: <Parameters back={"../"} />,
-          // },
-          // {
-          //   path: "connections",
-          //   icon: <IconShare size={20} />,
-          //   key: "businessProcessModel.buttons.connections",
-          //   element: <Connections back={"../"} />,
-          // }
+          {
+            path: "parameters",
+            icon: <IconVariable size={20} />,
+            key: "businessProcessModel.buttons.parameters",
+            element: <Parameters back={"../"} />,
+          },
         ]}
       />
 

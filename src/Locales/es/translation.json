@@ -1262,7 +1262,8 @@
       "create": "Nuevo model de proceso de negocio",
       "update": "Modificar un model de proceso de negocio",
       "delete": "Eliminar un model de proceso de negocio",
-      "taskSettings": "Configuracion de tarea"
+      "taskSettings": "Configuracion de tarea",
+      "connectorProperties":"Connector properties"
     },
     "label":{
       "name":"Nombre",
@@ -1287,14 +1288,22 @@
       "fork":"Fork",
       "join":"Join",
       "status":"Status",
-      "init":"Inicio"
+      "init":"Inicio",
+      "automatic":"Automatica",
+      "applicationPath":"Aplicacion",
+      "serviceUrl":"URL de Servicio",
+      "borderColor":"Color de borde",
+      "bidirectionalConnection":"Conexión bidireccional"
+
     },
     "placeholder": {
       "name": "un nombre",
       "description": "una descripcion",
       "code":"un codido",
       "sprint":"Seleccione un sprint",
-      "role":"Seleccione un rol"
+      "role":"Seleccione un rol",
+      "applicationPath":"un path de aplicacion",
+      "serviceUrl":"una url de servicio"
     },
     "buttons":{
       "design":"Editar",

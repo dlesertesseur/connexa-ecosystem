@@ -1,47 +1,92 @@
 import React from "react";
-import { AlphaSlider, Button, Grid, Group, Modal, Select, Stack, TextInput } from "@mantine/core";
+import {
+  AlphaSlider,
+  Button,
+  Checkbox,
+  Grid,
+  Group,
+  Modal,
+  MultiSelect,
+  Select,
+  Stack,
+  TextInput,
+} from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { useContext } from "react";
 import { AbmStateContext } from "../Context";
 import { useEffect } from "react";
-import CustomColorPicker from "../../../../Components/CustomColorPicker";
 import { rgbaToHexAndAlpha } from "../../../../Util";
 import { config } from "../../../../Constants/config";
+import CustomColorPicker from "../../../../Components/CustomColorPicker";
 
 const TaskSettings = ({ open, close, updateNode, node }) => {
   const { t } = useTranslation();
-  const { roles } = useContext(AbmStateContext);
+  const { roles, sprints } = useContext(AbmStateContext);
   const [data, setData] = useState(null);
 
   const form = useForm({
     initialValues: {
       name: "",
       role: "",
-      color: "",
+      color: "rgba(255,255,255,0.4)",
       alpha: "",
+      borderColor: "rgba(0,0,0,0.99)",
+      automatic: false,
+      applicationPath: "",
+      serviceUrl: "",
+      sprint: "",
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
-      //role: (val) => (val ? null : t("validation.required")),
+
+      applicationPath: (val) => {
+        let ret = val ? null : t("validation.required");
+        if (!form.getInputProps("automatic").value) {
+          ret;
+        } else {
+          ret = null;
+        }
+        return ret;
+      },
+      serviceUrl: (val) => {
+        let ret = val ? null : t("validation.required");
+        if (form.getInputProps("automatic").value) {
+          ret;
+        } else {
+          ret = null;
+        }
+        return ret;
+      },
     },
   });
 
-  const getData = async () => {
+  useEffect(() => {
+    const ret = roles.map((r) => {
+      const reg = { value: r.role.id, label: `${r.role.name} (${r.role.groupName})` };
+      return reg;
+    });
+    setData(ret);
+  }, [roles]);
 
+  const getData = async () => {
     form.setFieldValue("name", node.data.label);
+
     if (node.data.role) {
       form.setFieldValue("role", node.data.role.id);
     } else {
       form.setFieldValue("role", null);
     }
 
-    const ret = roles.map((r) => {
-      const reg = { value: r.role.id, label: `${r.role.name} (${r.role.groupName})` };
-      return reg;
-    });
+    if (node.data.sprint) {
+      const sprints = node.data.sprint;
+      const ret = sprints.map(s => s.id);
+      form.setFieldValue("sprint", ret);
+    } else {
+      form.setFieldValue("sprint", null);
+    }
 
     if (node.data.color) {
       const colorInfo = rgbaToHexAndAlpha(node.data.color);
@@ -52,12 +97,25 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
         form.setFieldValue("color", config.ARR_COLORS[0]);
         form.setFieldValue("alpha", 0.2);
       }
-    }else {
+    } else {
       form.setFieldValue("color", config.ARR_COLORS[0]);
       form.setFieldValue("alpha", 0.2);
     }
 
-    setData(ret);
+    if (node.data.borderColor) {
+      const colorInfo = rgbaToHexAndAlpha(node.data.borderColor);
+      if (colorInfo) {
+        form.setFieldValue("borderColor", colorInfo.color);
+      } else {
+        form.setFieldValue("borderColor", config.ARR_COLORS[1]);
+      }
+    } else {
+      form.setFieldValue("borderColor", config.ARR_COLORS[1]);
+    }
+
+    form.setFieldValue("automatic", node.data.automatic);
+    form.setFieldValue("applicationPath", node.data.applicationPath);
+    form.setFieldValue("serviceUrl", node.data.serviceUrl);
   };
 
   useEffect(() => {
@@ -103,7 +161,6 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
           <Group mt={"xs"} grow>
             {createTextField("name")}
           </Group>
-          {/* <Group mt={"xs"}>{createTextField("code")}</Group> */}
 
           <Grid mt={"xs"}>
             <Grid.Col span={6}>
@@ -114,16 +171,52 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
                 {...form.getInputProps("role")}
               />
             </Grid.Col>
+            <Grid.Col span={6}>
+              <MultiSelect
+                maxSelectedValues={3}
+                label={t("businessProcessModel.label.sprint")}
+                placeholder={t("businessProcessModel.placeholder.sprint")}
+                data={sprints}
+                {...form.getInputProps("sprint")}
+              />
+            </Grid.Col>
           </Grid>
 
-          <Stack mt={"xs"} spacing={"xs"}>
-            <CustomColorPicker {...form.getInputProps("color")} swatchesPerRow={18} format={"rgba"} />
-            <AlphaSlider
-              color={form.getInputProps("color").value}
-              {...form.getInputProps("alpha")}
-              onChangeEnd={(evt) => {}}
-            />
-          </Stack>
+          <Grid mt={"xs"}>
+            <Grid.Col span={6}>
+              <Checkbox label={t("businessProcessModel.label.automatic")} {...form.getInputProps("automatic")} />
+            </Grid.Col>
+          </Grid>
+
+          <Group mt={"xs"} grow>
+            {createTextField("applicationPath", form.getInputProps("automatic").value)}
+          </Group>
+          <Group mt={"xs"} grow>
+            {createTextField("serviceUrl", !form.getInputProps("automatic").value)}
+          </Group>
+
+          <Grid mt={"xs"}>
+            <Grid.Col span={6}>
+              <Stack mt={"xs"} spacing={"xs"}>
+                <CustomColorPicker {...form.getInputProps("color")} swatchesPerRow={15} format={"rgba"} />
+                <AlphaSlider
+                  color={form.getInputProps("color").value}
+                  {...form.getInputProps("alpha")}
+                  onChangeEnd={(evt) => {}}
+                />
+              </Stack>
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Stack mt={"xs"} spacing={"xs"}>
+                <CustomColorPicker
+                  {...form.getInputProps("borderColor")}
+                  swatchesPerRow={15}
+                  format={"rgba"}
+                  text={t("businessProcessModel.label.borderColor")}
+                />
+              </Stack>
+            </Grid.Col>
+          </Grid>
 
           <Group position="right" mt={"xl"}>
             <Button type="submit">{t("button.accept")}</Button>

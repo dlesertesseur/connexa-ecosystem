@@ -59,6 +59,7 @@ const Editor = () => {
         id: uuid(),
         originTaskId: e.source,
         targetTaskId: e.target,
+        bidirectional: e.data.bidirectional
       };
       return ret;
     });

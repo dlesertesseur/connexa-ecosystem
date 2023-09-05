@@ -13,7 +13,8 @@ const config = {
   PUBLIC_URL: mode === "production" ? import.meta.env.VITE_PUBLIC_URL_PROD : import.meta.env.VITE_PUBLIC_URL_DEV,
   PIXEL_METER_RELATION: 1,
   ARR_COLORS: [
-    "#25262b",
+    "#ffffff",
+    "#000000",
     "#868e96",
     "#fa5252",
     "#e64980",
