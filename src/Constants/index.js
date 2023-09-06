@@ -392,6 +392,12 @@ export const API = {
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models/",
   },
 
+  businessProcessModelInbox: {
+    findAllbusinessProcessModelByRoleId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
+    findAllTasksByRoleId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
+    createInstance: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
+    getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
+  },
 };
 
 export const ERRORS = {

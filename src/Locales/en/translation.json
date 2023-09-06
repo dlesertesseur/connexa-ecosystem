@@ -1206,37 +1206,36 @@
     "label": {
       "name": "Name",
       "description": "Description",
-      "stage":"Stage",
-      "actionDefaultName":"new Action",
-      "stageDefaultName":"new Stage",
-      "taskDefaultName":"new Task",
-      "parameters":"Parameters",
-      "connections":"Connections",
-      "definition":"Definition",
-      "code":"Code",
-      "taskList":"Tasks",
-      "transferTask":"Transfer to",
-      "searchTask":"Search task",
-      "noDataSelected":"No data selected",
-      "sprint":"Sprint",
-      "searchRol":"Search",
-      "rolesList":"Roles",
-      "assignedRoles":"Assigned roles"
-
+      "stage": "Stage",
+      "actionDefaultName": "new Action",
+      "stageDefaultName": "new Stage",
+      "taskDefaultName": "new Task",
+      "parameters": "Parameters",
+      "connections": "Connections",
+      "definition": "Definition",
+      "code": "Code",
+      "taskList": "Tasks",
+      "transferTask": "Transfer to",
+      "searchTask": "Search task",
+      "noDataSelected": "No data selected",
+      "sprint": "Sprint",
+      "searchRol": "Search",
+      "rolesList": "Roles",
+      "assignedRoles": "Assigned roles"
     },
     "placeholder": {
       "name": "a name",
       "description": "a description",
-      "code":"a code",
-      "sprint":"Select a sprint"
+      "code": "a code",
+      "sprint": "Select a sprint"
     },
     "buttons": {
       "design": "Design",
-      "parameters":"Parameters",
-      "connections":"Connections"
+      "parameters": "Parameters",
+      "connections": "Connections"
     },
     "columns": ["Name", "Description", "Status"],
-    "parameters":{
+    "parameters": {
       "title": {
         "create": "New parameter",
         "update": "Update parameter",
@@ -1245,16 +1244,16 @@
       "label": {
         "name": "Name",
         "description": "Description",
-        "type":"Type"
+        "type": "Type"
       },
       "placeholder": {
         "name": "a name",
         "description": "a description",
-        "type":"a parameter type"
+        "type": "a parameter type"
       },
       "columns": ["Name", "Description", "Type"]
     },
-    "connections":{
+    "connections": {
       "title": {
         "create": "New connection",
         "update": "Update connection",
@@ -1264,13 +1263,13 @@
       "label": {
         "name": "Name",
         "description": "Description",
-        "type":"Type",
+        "type": "Type",
         "connections": "Define connections"
       },
       "placeholder": {
         "name": "a name",
         "description": "a description",
-        "type":"a parameter type"
+        "type": "a parameter type"
       },
       "columns": ["Stage", "Business status", "Task"]
     }
@@ -1282,54 +1281,54 @@
       "update": "Update a business process model",
       "delete": "Delete a business process model",
       "taskSettings": "Task settings",
-      "connectorProperties":"Propiedades de conector"
+      "connectorProperties": "Propiedades de conector"
     },
     "label": {
       "name": "Name",
       "description": "Description",
-      "stage":"Stage",
-      "actionDefaultName":"new Action",
-      "stageDefaultName":"new Stage",
-      "taskDefaultName":"new Task",
-      "parameters":"Parameters",
-      "connections":"Connections",
-      "definition":"Definition",
-      "code":"Code",
-      "taskList":"Tasks",
-      "transferTask":"Transfer to",
-      "searchTask":"Search task",
-      "noDataSelected":"No data selected",
-      "sprint":"Sprint",
-      "searchRol":"Search",
-      "rolesList":"Roles",
-      "assignedRoles":"Assigned roles",
-      "task":"Task",
-      "fork":"Fork",
-      "join":"Join",
-      "status":"Status",
-      "init":"Init",
-      "automatic":"Automatic",
-      "applicationPath":"Application",
-      "serviceUrl":"Service URL",
-      "borderColor":"Border color",
-      "bidirectionalConnection":"Bidirectional connection"
+      "stage": "Stage",
+      "actionDefaultName": "new Action",
+      "stageDefaultName": "new Stage",
+      "taskDefaultName": "new Task",
+      "parameters": "Parameters",
+      "connections": "Connections",
+      "definition": "Definition",
+      "code": "Code",
+      "taskList": "Tasks",
+      "transferTask": "Transfer to",
+      "searchTask": "Search task",
+      "noDataSelected": "No data selected",
+      "sprint": "Sprint",
+      "searchRol": "Search",
+      "rolesList": "Roles",
+      "assignedRoles": "Assigned roles",
+      "task": "Task",
+      "fork": "Fork",
+      "join": "Join",
+      "status": "Status",
+      "init": "Init",
+      "automatic": "Automatic",
+      "applicationPath": "Application",
+      "serviceUrl": "Service URL",
+      "borderColor": "Border color",
+      "bidirectionalConnection": "Bidirectional connection"
     },
     "placeholder": {
       "name": "a name",
       "description": "a description",
-      "code":"a code",
-      "sprint":"Select a sprint",
-      "role":"Select a role",
-      "applicationPath":"an application path",
-      "serviceUrl":"a service URL"
+      "code": "a code",
+      "sprint": "Select a sprint",
+      "role": "Select a role",
+      "applicationPath": "an application path",
+      "serviceUrl": "a service URL"
     },
     "buttons": {
       "editor": "Edit",
-      "parameters":"Parameters",
-      "connections":"Connections"
+      "parameters": "Parameters",
+      "connections": "Connections"
     },
     "columns": ["Name", "Description"],
-    "parameters":{
+    "parameters": {
       "title": {
         "create": "New parameter",
         "update": "Update parameter",
@@ -1338,16 +1337,16 @@
       "label": {
         "name": "Name",
         "description": "Description",
-        "type":"Type"
+        "type": "Type"
       },
       "placeholder": {
         "name": "a name",
         "description": "a description",
-        "type":"a parameter type"
+        "type": "a parameter type"
       },
       "columns": ["Name", "Description", "Type"]
     },
-    "connections":{
+    "connections": {
       "title": {
         "create": "New connection",
         "update": "Update connection",
@@ -1357,15 +1356,43 @@
       "label": {
         "name": "Name",
         "description": "Description",
-        "type":"Type",
+        "type": "Type",
         "connections": "Define connections"
       },
       "placeholder": {
         "name": "a name",
         "description": "a description",
-        "type":"a parameter type"
+        "type": "a parameter type"
       },
       "columns": ["Stage", "Business status", "Task"]
+    }
+  },
+
+  "businessProcessModelInbox": {
+    "buttons":{
+      "create":"Create a new instance",
+      "take":"Take",
+      "release":"Release",
+      "doit":"Do it",
+      "transfer":"Transfer"
+    },
+    "columns": {
+      "processModel":["Name", "Description"],
+      "tasks":["Name", "Role", "User", "Status"]
+    },
+    "tabs":{
+      "businessProcessModels":"Business process models",
+      "tasks":"Tasks"
+    },
+    "messages":{
+      "creation":"Process model instance created successfully"
+    },
+    "title": {
+      "create": "New business process model",
+      "update": "Update a business process model",
+      "delete": "Delete a business process model",
+      "taskSettings": "Task settings",
+      "connectorProperties": "Propiedades de conector"
     }
   }
 }

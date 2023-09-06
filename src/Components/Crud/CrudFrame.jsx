@@ -5,6 +5,7 @@ import { Breadcrumbs, Divider, Stack, Text } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import { findTranslatedField } from "../../Util";
 import { useTranslation } from "react-i18next";
+import AppHeader from "../AppHeader";
 
 const CrudFrame = ({
   app,
@@ -35,7 +36,7 @@ const CrudFrame = ({
         width: "100%",
       })}
     >
-      <Stack
+      {/* <Stack
         spacing={0}
         align={"flex-start"}
         sx={(theme) => ({
@@ -50,7 +51,9 @@ const CrudFrame = ({
           {findTranslatedField(i18n.language, app, "description")}
         </Text>
       </Stack>
-      <Divider />
+      <Divider /> */}
+
+      <AppHeader app={app}/>
 
       <Stack
         justify="flex-start"

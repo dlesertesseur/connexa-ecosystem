@@ -173,13 +173,13 @@
     "dimensionX": "Dimension X",
     "dimensionY": "Dimension Y",
     "dimensionZ": "Dimension Z",
-    "layouts":"Layouts",
-    "racks":"Racks",
-    "markers":"Marcas",
-    "graph":"Grafo de ruteo",
-    "wmsApiAuth":"Autenticando en el api WMS",
-    "wmsApiData":"Obteniendo datos de la API de WMS"    ,
-    "color":"Color"
+    "layouts": "Layouts",
+    "racks": "Racks",
+    "markers": "Marcas",
+    "graph": "Grafo de ruteo",
+    "wmsApiAuth": "Autenticando en el api WMS",
+    "wmsApiData": "Obteniendo datos de la API de WMS",
+    "color": "Color"
   },
 
   "placeholder": {
@@ -314,7 +314,7 @@
         "createBaseNodes": "Base",
         "nodeProperties": "Propiedades del nodo",
         "name": "Nombre",
-        "description":"Descripcion",
+        "description": "Descripcion",
         "nameDescription": "Nonbre que identifica al grafo",
         "settingsNenu": "Configuracion",
         "graph": "Grafo",
@@ -838,7 +838,7 @@
     }
   },
 
-  "comex":{
+  "comex": {
     "recap": {
       "title": {
         "create": "Crear un nuevo RECAP",
@@ -853,21 +853,21 @@
         "country": "Pais",
         "originCountry": "Pais origen",
         "destinationCountry": "Paid destino",
-        "department":"Departamento",
-        "creditOffice":"Oficina de credito",
-        "factory":"Fabrica",
-        "vendorHost":"Vendor host",
-        "paymentTerms":"Terminos de pago",
-        "shippingPort":"Puerto",
-        "originShippingPort":"Puerto origen",
-        "destinationShippingPort":"Puerto destino",
-        "productionTime":"Tiempo de produccion (en dias)",
-        "campaign":"Campaña",
-        "addProducts":"Productos",
-        "addDocuments":"Documentos",
-        "incoterm":"Incoterm",
-        "currency":"Moneda",
-        "status":"Estado",
+        "department": "Departamento",
+        "creditOffice": "Oficina de credito",
+        "factory": "Fabrica",
+        "vendorHost": "Vendor host",
+        "paymentTerms": "Terminos de pago",
+        "shippingPort": "Puerto",
+        "originShippingPort": "Puerto origen",
+        "destinationShippingPort": "Puerto destino",
+        "productionTime": "Tiempo de produccion (en dias)",
+        "campaign": "Campaña",
+        "addProducts": "Productos",
+        "addDocuments": "Documentos",
+        "incoterm": "Incoterm",
+        "currency": "Moneda",
+        "status": "Estado",
         "transportType": "Tipo de transporte",
         "category": "Categoria"
       },
@@ -878,18 +878,18 @@
         "country": "seleccione un pais",
         "originCountry": "seleccione un pais",
         "destinationCountry": "seleccione un pais",
-        "department":"seleccione un departamento",
-        "creditOffice":"seleccione una oficina de credito",
-        "factory":"seleccione un fabrica",
-        "vendorHost":"seleccione un vendor host",
-        "paymentTerms":"seleccione un termino de pago",
-        "shippingPort":"seleccione un puerto",
-        "originShippingPort":"seleccione un puerto",
-        "destinationShippingPort":"seleccione un puerto",
-        "productionTime":"seleccione un tiempo de produccion",
-        "campaign":"seleccione una campaña",
-        "currency":"seleccione una moneda",
-        "status":"seleccione una estado",
+        "department": "seleccione un departamento",
+        "creditOffice": "seleccione una oficina de credito",
+        "factory": "seleccione un fabrica",
+        "vendorHost": "seleccione un vendor host",
+        "paymentTerms": "seleccione un termino de pago",
+        "shippingPort": "seleccione un puerto",
+        "originShippingPort": "seleccione un puerto",
+        "destinationShippingPort": "seleccione un puerto",
+        "productionTime": "seleccione un tiempo de produccion",
+        "campaign": "seleccione una campaña",
+        "currency": "seleccione una moneda",
+        "status": "seleccione una estado",
         "transportType": "seleccione un tipo de transporte",
         "category": "seleccione una categoria",
         "subcategory": "seleccione una subcategoria",
@@ -910,13 +910,13 @@
           "subcategory": "Subcategoria",
           "barcodeType": "Tipo de codigo de barra",
           "barcode": "Codigo de barra",
-          "pdq":"PDQ",
-          "quantity":"Cantidad",
-          "unitOfMeasurement":"Unidad de medida",
-          "priceByUnit":"Precio por unidad",
-          "totalPrice":"Precio total",
-          "boxes":"Cantidad de cajas",
-          "image":"Suelte imágenes o haga clic aquí"
+          "pdq": "PDQ",
+          "quantity": "Cantidad",
+          "unitOfMeasurement": "Unidad de medida",
+          "priceByUnit": "Precio por unidad",
+          "totalPrice": "Precio total",
+          "boxes": "Cantidad de cajas",
+          "image": "Suelte imágenes o haga clic aquí"
         },
         "placeholder": {
           "sku": "un codigo",
@@ -925,11 +925,11 @@
           "subcategory": "seleccione una subcategoria",
           "barcodeType": "seleccion un tipo de codigo de barra",
           "barcode": "un codigo de barra",
-          "quantity":"una cantidad",
-          "unitOfMeasurement":"una unidad de medida",
-          "priceByUnit":"un precio por unidad",
-          "totalPrice":"un precio total",
-          "boxes":"una cantidad de cajas"
+          "quantity": "una cantidad",
+          "unitOfMeasurement": "una unidad de medida",
+          "priceByUnit": "un precio por unidad",
+          "totalPrice": "un precio total",
+          "boxes": "una cantidad de cajas"
         },
         "columns": ["Codigo de barras", "Descripcion", "Precio", "Precio por unidad", "Cantidad", "Cajas"]
       }
@@ -1011,7 +1011,14 @@
         "label": "Items",
         "title": "Opciones de busqueda",
         "subTitle": "Seleccionar un grupo de informacion",
-        "options": ["Items por codigo", "Items por descripcion", "Items por marca", "Items por estado", "Items por tipo", "Items en posiciones similares"]
+        "options": [
+          "Items por codigo",
+          "Items por descripcion",
+          "Items por marca",
+          "Items por estado",
+          "Items por tipo",
+          "Items en posiciones similares"
+        ]
       },
       "option": {
         "itemByCode": {
@@ -1041,33 +1048,33 @@
           "label": "Seleccione una marca"
         },
         "itemByPosition": {
-          "label":"Nombre de posicion",
+          "label": "Nombre de posicion",
           "description": "Buscar items de posiciones con nombres similares",
           "placeholder": "una position"
         }
       },
-      "moduleInspector":{
-        "tabs":{
-          "information":"Informacion",
-          "view3d":"Vista 3D"
+      "moduleInspector": {
+        "tabs": {
+          "information": "Informacion",
+          "view3d": "Vista 3D"
         },
-        "label":{
-          "rackLevel":"Nivel en el rack",
-          "height":"Alto",
-          "width":"Ancho",
-          "depth":"Profundidad",
-          "rackType":"Tipo",
-          "status":"Estado",
-          "pallets":"Contenido",
-          "palletDimension":"Dimension",
-          "palletType":"Tipo",
-          "palletStatus":"Estado",
-          "palletCreationDate":"Fecha de creacion"
+        "label": {
+          "rackLevel": "Nivel en el rack",
+          "height": "Alto",
+          "width": "Ancho",
+          "depth": "Profundidad",
+          "rackType": "Tipo",
+          "status": "Estado",
+          "pallets": "Contenido",
+          "palletDimension": "Dimension",
+          "palletType": "Tipo",
+          "palletStatus": "Estado",
+          "palletCreationDate": "Fecha de creacion"
         }
       },
-      "layer":{
-        "label":"Capas",
-        "frames":"Soportes"
+      "layer": {
+        "label": "Capas",
+        "frames": "Soportes"
       }
     }
   },
@@ -1177,47 +1184,47 @@
     "sunday": "Domingo"
   },
 
-  "businessProcess":{
+  "businessProcess": {
     "title": {
       "create": "Nuevo proceso de negocio",
       "update": "Modificar un proceso de negocio",
       "delete": "Eliminar un proceso de negocio",
       "taskSettings": "Configuracion de tarea"
     },
-    "label":{
-      "name":"Nombre",
-      "description":"Descripcion",
-      "stage":"Stage",
-      "actionDefaultName":"nueva Accion",
-      "stageDefaultName":"nuevo Stage",
-      "taskDefaultName":"nueva Tarea",
-      "parameters":"Parametros",
-      "connections":"Conexiones",
-      "definition":"Definición",
-      "code":"Codido",
-      "taskList":"Tareas",
-      "transferTask":"Transferir a",
-      "searchTask":"Buscar tarea",
-      "noDataSelected":"Sin datos seleccionados",
-      "sprint":"Sprint",
-      "searchRol":"Buscar rol",
-      "rolesList":"Roles",
-      "assignedRoles":"Roles asignados"
+    "label": {
+      "name": "Nombre",
+      "description": "Descripcion",
+      "stage": "Stage",
+      "actionDefaultName": "nueva Accion",
+      "stageDefaultName": "nuevo Stage",
+      "taskDefaultName": "nueva Tarea",
+      "parameters": "Parametros",
+      "connections": "Conexiones",
+      "definition": "Definición",
+      "code": "Codido",
+      "taskList": "Tareas",
+      "transferTask": "Transferir a",
+      "searchTask": "Buscar tarea",
+      "noDataSelected": "Sin datos seleccionados",
+      "sprint": "Sprint",
+      "searchRol": "Buscar rol",
+      "rolesList": "Roles",
+      "assignedRoles": "Roles asignados"
     },
     "placeholder": {
       "name": "un nombre",
       "description": "una descripcion",
-      "code":"un codido",
-      "sprint":"Seleccione un sprint"
+      "code": "un codido",
+      "sprint": "Seleccione un sprint"
     },
-    "buttons":{
-      "design":"Diseñar",
-      "parameters":"Parametros",
-      "connections":"Conexiones"
+    "buttons": {
+      "design": "Diseñar",
+      "parameters": "Parametros",
+      "connections": "Conexiones"
     },
     "columns": ["Nombre", "Descripcion", "Estado"],
 
-    "parameters":{
+    "parameters": {
       "title": {
         "create": "Nuevo parametro",
         "update": "Modificar parametro",
@@ -1226,16 +1233,16 @@
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
-        "type":"Tipo"
+        "type": "Tipo"
       },
       "placeholder": {
         "name": "un nombre",
         "description": "una descripcion",
-        "type":"un tipo de parametro"
+        "type": "un tipo de parametro"
       },
       "columns": ["Nombre", "Descripcion", "Tipo"]
     },
-    "connections":{
+    "connections": {
       "title": {
         "create": "Nueva conexion",
         "update": "Modificar conexion",
@@ -1245,74 +1252,73 @@
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
-        "type":"Tipo",
+        "type": "Tipo",
         "connections": "Definir conexiones"
       },
       "placeholder": {
         "name": "un nombre",
         "description": "una descripcion",
-        "type":"un tipo de parametro"
+        "type": "un tipo de parametro"
       },
       "columns": ["Stage", "Business status", "Task"]
     }
   },
 
-  "businessProcessModel":{
+  "businessProcessModel": {
     "title": {
       "create": "Nuevo model de proceso de negocio",
       "update": "Modificar un model de proceso de negocio",
       "delete": "Eliminar un model de proceso de negocio",
       "taskSettings": "Configuracion de tarea",
-      "connectorProperties":"Connector properties"
+      "connectorProperties": "Connector properties"
     },
-    "label":{
-      "name":"Nombre",
-      "description":"Descripcion",
-      "stage":"Stage",
-      "actionDefaultName":"nueva Accion",
-      "stageDefaultName":"nuevo Stage",
-      "taskDefaultName":"nueva Tarea",
-      "parameters":"Parametros",
-      "connections":"Conexiones",
-      "definition":"Definición",
-      "code":"Codido",
-      "taskList":"Tareas",
-      "transferTask":"Transferir a",
-      "searchTask":"Buscar tarea",
-      "noDataSelected":"Sin datos seleccionados",
-      "sprint":"Sprint",
-      "searchRol":"Buscar rol",
-      "rolesList":"Roles",
-      "assignedRoles":"Roles asignados",
-      "task":"Tarea",
-      "fork":"Fork",
-      "join":"Join",
-      "status":"Status",
-      "init":"Inicio",
-      "automatic":"Automatica",
-      "applicationPath":"Aplicacion",
-      "serviceUrl":"URL de Servicio",
-      "borderColor":"Color de borde",
-      "bidirectionalConnection":"Conexión bidireccional"
-
+    "label": {
+      "name": "Nombre",
+      "description": "Descripcion",
+      "stage": "Stage",
+      "actionDefaultName": "nueva Accion",
+      "stageDefaultName": "nuevo Stage",
+      "taskDefaultName": "nueva Tarea",
+      "parameters": "Parametros",
+      "connections": "Conexiones",
+      "definition": "Definición",
+      "code": "Codido",
+      "taskList": "Tareas",
+      "transferTask": "Transferir a",
+      "searchTask": "Buscar tarea",
+      "noDataSelected": "Sin datos seleccionados",
+      "sprint": "Sprint",
+      "searchRol": "Buscar rol",
+      "rolesList": "Roles",
+      "assignedRoles": "Roles asignados",
+      "task": "Tarea",
+      "fork": "Fork",
+      "join": "Join",
+      "status": "Status",
+      "init": "Inicio",
+      "automatic": "Automatica",
+      "applicationPath": "Aplicacion",
+      "serviceUrl": "URL de Servicio",
+      "borderColor": "Color de borde",
+      "bidirectionalConnection": "Conexión bidireccional"
     },
     "placeholder": {
       "name": "un nombre",
       "description": "una descripcion",
-      "code":"un codido",
-      "sprint":"Seleccione un sprint",
-      "role":"Seleccione un rol",
-      "applicationPath":"un path de aplicacion",
-      "serviceUrl":"una url de servicio"
+      "code": "un codido",
+      "sprint": "Seleccione un sprint",
+      "role": "Seleccione un rol",
+      "applicationPath": "un path de aplicacion",
+      "serviceUrl": "una url de servicio"
     },
-    "buttons":{
-      "design":"Editar",
-      "parameters":"Parametros",
-      "connections":"Conexiones"
+    "buttons": {
+      "design": "Editar",
+      "parameters": "Parametros",
+      "connections": "Conexiones"
     },
     "columns": ["Nombre", "Descripcion"],
 
-    "parameters":{
+    "parameters": {
       "title": {
         "create": "Nuevo parametro",
         "update": "Modificar parametro",
@@ -1321,16 +1327,16 @@
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
-        "type":"Tipo"
+        "type": "Tipo"
       },
       "placeholder": {
         "name": "un nombre",
         "description": "una descripcion",
-        "type":"un tipo de parametro"
+        "type": "un tipo de parametro"
       },
       "columns": ["Nombre", "Descripcion", "Tipo"]
     },
-    "connections":{
+    "connections": {
       "title": {
         "create": "Nueva conexion",
         "update": "Modificar conexion",
@@ -1340,15 +1346,39 @@
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
-        "type":"Tipo",
+        "type": "Tipo",
         "connections": "Definir conexiones"
       },
       "placeholder": {
         "name": "un nombre",
         "description": "una descripcion",
-        "type":"un tipo de parametro"
+        "type": "un tipo de parametro"
       },
       "columns": ["Stage", "Business status", "Task"]
     }
+  },
+
+  "businessProcessModelInbox": {
+    "buttons": {
+      "create": "Crear una nueva instancia",
+      "take":"Tomar",
+      "release":"Liberar",
+      "doit":"Hacerla",
+      "transfer":"Transferir"
+    },
+    "messages":{
+      "creation":"Instancia de modelo de proceso creada correctamente"
+    },
+
+    "columns": {
+      "processModel":["Nombre", "Descripcion"],
+      "tasks":["Nombre", "Rol", "Usuario", "Estado"]
+    },
+
+    "tabs": {
+      "businessProcessModels": "Modelos de proceso de negocio",
+      "tasks": "Tareas"
+    },
+    "title": {}
   }
 }
