@@ -1,11 +1,11 @@
 import React from "react";
 import { ActionIcon, Button, Divider, Group, Stack, Text } from "@mantine/core";
-import { IconDeviceFloppy } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconDownload } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import DragButton from "./model/DragButton";
 
-const DesignToolbar = ({ onSave }) => {
+const DesignToolbar = ({ onSave, onExport }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -30,6 +30,15 @@ const DesignToolbar = ({ onSave }) => {
             }}
           >
             <IconDeviceFloppy size="20" />
+          </ActionIcon>
+          <ActionIcon
+            color="blue"
+            variant="filled"
+            onClick={() => {
+              onExport();
+            }}
+          >
+            <IconDownload size="20" />
           </ActionIcon>
           <Divider orientation="vertical" />
           <DragButton text={t("businessProcessModel.label.init")} onDragStart={(event) => onDragStart(event, "initNode")} />

@@ -2,14 +2,16 @@ import React from "react";
 import DesignToolbar from "./DesignToolbar";
 import BusinessProcessHeader from "../BusinessProcessHeader";
 import Diagram from "./Diagram";
+import uuid from "react-uuid";
 import { Stack } from "@mantine/core";
 import { useEffect, useContext, useState } from "react";
 import { AbmStateContext, EditorStateContext } from "../Context";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { findBusinessProcessModelById, saveBusinessProcessModel } from "../../../../DataAccess/BusinessProcessModel";
-import { useEdgesState, useNodesState } from "reactflow";
-import uuid from "react-uuid";
+import { getRectOfNodes, getTransformForBounds, useEdgesState, useNodesState } from "reactflow";
+import { toPng } from "html-to-image";
+import { config } from "../../../../Constants/config";
 
 const Editor = () => {
   const { t } = useTranslation();
@@ -88,6 +90,30 @@ const Editor = () => {
     }
   };
 
+  function downloadImage(dataUrl) {
+    const a = document.createElement('a');
+  
+    a.setAttribute('download', `${businessProcessModel.name}.png`);
+    a.setAttribute('href', dataUrl);
+    a.click();
+  }
+
+  const onExport = () => {
+    const nodesBounds = getRectOfNodes(nodes);
+    const transform = getTransformForBounds(nodesBounds, config.exportImageWidth, config.exportImageHeight, 0.5, 2);
+
+    toPng(document.querySelector('.react-flow__viewport'), {
+      backgroundColor: '#ffffff',
+      width: config.exportImageWidth,
+      height: config.exportImageHeight,
+      style: {
+        width: config.exportImageWidth,
+        height: config.exportImageHeight,
+        transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+      },
+    }).then(downloadImage);
+  }
+
   return (
     <Stack spacing={"xs"}>
       <EditorStateContext.Provider
@@ -109,7 +135,7 @@ const Editor = () => {
         }}
       >
         <BusinessProcessHeader text={t("businessProcess.label.definition")} businessProcess={businessProcessModel} />
-        <DesignToolbar onSave={onSave} />
+        <DesignToolbar onSave={onSave} onExport={onExport}/>
         <Diagram />
       </EditorStateContext.Provider>
     </Stack>

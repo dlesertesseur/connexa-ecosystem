@@ -1364,7 +1364,9 @@
       "take":"Tomar",
       "release":"Liberar",
       "doit":"Hacerla",
-      "transfer":"Transferir"
+      "transfer":"Transferir",
+      "back":"Volver",
+      "viewOnDiagram":"Ver"
     },
     "messages":{
       "creation":"Instancia de modelo de proceso creada correctamente"
@@ -1379,6 +1381,16 @@
       "businessProcessModels": "Modelos de proceso de negocio",
       "tasks": "Tareas"
     },
-    "title": {}
+    "label":{
+      "selectTask":"Select task"
+    },
+    "title": {
+      "create": "New business process model",
+      "update": "Update a business process model",
+      "delete": "Delete a business process model",
+      "taskSettings": "Task settings",
+      "connectorProperties": "Propiedades de conector",
+      "transferTask": "Transfer task"      
+    }
   }
 }

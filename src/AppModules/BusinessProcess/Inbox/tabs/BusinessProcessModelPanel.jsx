@@ -16,7 +16,7 @@ const BusinessProcessModelPanel = ({ name }) => {
   const [processModel, setProcessModel] = useState(null);
   const [openCreateProcessInstance, setOpenCreateProcessInstance] = useState(false);
 
-  const { processModelList, createProcessModelInstance, loading } = useContext(AbmStateContext);
+  const { processModelList, createProcessModelInstance } = useContext(AbmStateContext);
 
   let col = 0;
   const cols = t("businessProcessModelInbox.columns.processModel", { returnObjects: true });
@@ -62,7 +62,6 @@ const BusinessProcessModelPanel = ({ name }) => {
                 <SimpleTable
                   data={processModelList}
                   columns={columns}
-                  loading={loading}
                   rowSelected={rowSelected}
                   setRowSelected={setRowSelected}
                   headerHeight={HEADER_HIGHT + 64}

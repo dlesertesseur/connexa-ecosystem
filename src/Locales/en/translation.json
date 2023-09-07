@@ -1374,7 +1374,12 @@
       "take":"Take",
       "release":"Release",
       "doit":"Do it",
-      "transfer":"Transfer"
+      "transfer":"Transfer",
+      "back":"Back",
+      "viewOnDiagram":"View"
+    },
+    "label":{
+      "selectTask":"Select task"
     },
     "columns": {
       "processModel":["Name", "Description"],
@@ -1392,7 +1397,8 @@
       "update": "Update a business process model",
       "delete": "Delete a business process model",
       "taskSettings": "Task settings",
-      "connectorProperties": "Propiedades de conector"
+      "connectorProperties": "Propiedades de conector",
+      "transferTask": "Transfer task"
     }
   }
 }

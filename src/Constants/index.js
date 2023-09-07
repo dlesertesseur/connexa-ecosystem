@@ -397,6 +397,10 @@ export const API = {
     findAllTasksByRoleId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
     createInstance: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
+    getAllOutgoingTaskByTaskId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
+    executeTask:config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
+    releaseTask:config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
+    takeTask:config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox"
   },
 };
 

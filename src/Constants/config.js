@@ -4,11 +4,13 @@ const config = {
   SERVER: mode === "production" ? import.meta.env.VITE_APP_SERVER_PROD : import.meta.env.VITE_APP_SERVER_DEV,
   PORT: mode === "production" ? import.meta.env.VITE_APP_PORT_PROD : import.meta.env.VITE_APP_PORT_DEV,
   API_BASE: mode === "production" ? import.meta.env.VITE_APP_API_BASE_PROD : import.meta.env.VITE_APP_API_BASE_DEV,
-  API_COMEX_BASE: mode === "production" ? import.meta.env.VITE_APP_COMEX_API_BASE_PROD : import.meta.env.VITE_APP_COMEX_API_BASE_DEV,
+  API_COMEX_BASE:
+    mode === "production" ? import.meta.env.VITE_APP_COMEX_API_BASE_PROD : import.meta.env.VITE_APP_COMEX_API_BASE_DEV,
   API_WORKERS: import.meta.env.VITE_APP_API_WORKERS,
   WMS_API_BASE: import.meta.env.VITE_APP_API_WMS,
   WMS_IMAGE_URL: import.meta.env.VITE_APP_API_WMS_IMAGE_URL,
-  WMS_API_PORT: mode === "production" ? import.meta.env.VITE_APP_API_WMS_PORT_PROD : import.meta.env.VITE_APP_API_WMS_PORT_DEV,
+  WMS_API_PORT:
+    mode === "production" ? import.meta.env.VITE_APP_API_WMS_PORT_PROD : import.meta.env.VITE_APP_API_WMS_PORT_DEV,
   PORT: mode === "production" ? import.meta.env.VITE_APP_PORT_PROD : import.meta.env.VITE_APP_PORT_DEV,
   PUBLIC_URL: mode === "production" ? import.meta.env.VITE_PUBLIC_URL_PROD : import.meta.env.VITE_PUBLIC_URL_DEV,
   PIXEL_METER_RELATION: 1,
@@ -29,10 +31,12 @@ const config = {
     "#fab005",
     "#fd7e14",
   ],
-  PALLET_VERTICAL_SEPARATION : 0.25,
-  FRAMES_LAYER : 1,
-  BASE_URL:import.meta.env.BASE_URL,
-  COMEX_API_KEY: import.meta.env.VITE_APP_COMEX_API_KEY
+  PALLET_VERTICAL_SEPARATION: 0.25,
+  FRAMES_LAYER: 1,
+  BASE_URL: import.meta.env.BASE_URL,
+  COMEX_API_KEY: import.meta.env.VITE_APP_COMEX_API_KEY,
+  exportImageWidth: 1024 * 2,
+  exportImageHeight: 768 * 2,
 };
 
 export { config };

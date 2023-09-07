@@ -343,6 +343,16 @@ function rgbaToHexAndAlpha(rgbaString) {
   return result;
 }
 
+function arrayToMap(arr) {
+  const map = new Map();
+  for (const obj of arr) {
+    if (obj.hasOwnProperty('id')) {
+      map.set(obj.id, obj);
+    }
+  }
+  return map;
+}
+
 export {
   findTranslatedField,
   getFillColor,
@@ -360,5 +370,6 @@ export {
   lpad,
   convertMilisegToYYYYMMDDHHMISS,
   hexToRgba,
-  rgbaToHexAndAlpha
+  rgbaToHexAndAlpha,
+  arrayToMap
 };
