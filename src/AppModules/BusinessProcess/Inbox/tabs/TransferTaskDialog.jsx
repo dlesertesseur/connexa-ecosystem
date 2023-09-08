@@ -44,7 +44,7 @@ const TransferTaskDialog = ({ open, close, task, tasks, onAccept }) => {
         ) : null}
 
         <Group position="right" mt={"xl"}>
-          <Button onClick={() => {onAccept(task, value)}}>{t("button.accept")}</Button>
+          <Button onClick={() => {onAccept(task.id, value)}}>{t("button.accept")}</Button>
           <Button
             onClick={() => {
               close();

@@ -6,24 +6,26 @@ import { AbmStateContext } from "../Context";
 
 const TasksToolbar = ({ task }) => {
   const { t } = useTranslation();
-  const { doTask, takeTask, releaseTask, getTransferOptions, viewTask } = useContext(AbmStateContext);
+  const { onDoTask, onTakeTask, onReleaseTask, getTransferOptions, viewTask, loading } = useContext(AbmStateContext);
 
   const isDisabled = (button) => {
     let ret = true;
-    if (task) {
-      switch (button) {
-        case "view":
-          ret = false;
-          break;
+    if (!loading) {
+      if (task) {
+        switch (button) {
+          case "view":
+            ret = false;
+            break;
 
-        case "take":
-          ret = task.userId !== null;
-          break;
-        case "release":
-        case "doit":
-        case "transfer":
-          ret = task.userId === null;
-          break;
+          case "take":
+            ret = task.userId !== null;
+            break;
+          case "release":
+          case "doit":
+          case "transfer":
+            ret = task.userId === null;
+            break;
+        }
       }
     }
 
@@ -33,16 +35,16 @@ const TasksToolbar = ({ task }) => {
   return (
     <Group spacing={0} position="apart">
       <Group spacing={"xs"}>
-        <Button disabled={isDisabled("take")} onClick={() => takeTask(task)}>
+        <Button disabled={isDisabled("take")} onClick={() => onTakeTask(task)}>
           <Text>{t("businessProcessModelInbox.buttons.take")}</Text>
         </Button>
-        <Button disabled={isDisabled("release")} onClick={() => releaseTask(task)}>
+        <Button disabled={isDisabled("release")} onClick={() => onReleaseTask(task)}>
           <Text>{t("businessProcessModelInbox.buttons.release")}</Text>
         </Button>
         <Button
           disabled={isDisabled("doit")}
           onClick={() => {
-            doTask(task);
+            onDoTask(task);
           }}
         >
           <Text>{t("businessProcessModelInbox.buttons.doit")}</Text>
@@ -57,7 +59,7 @@ const TasksToolbar = ({ task }) => {
         </Button>
       </Group>
       <Group spacing={"xs"}>
-        <Button disabled={isDisabled("transfer")} onClick={() => getTransferOptions(task)}>
+        <Button disabled={isDisabled("transfer")} loading={loading} onClick={() => getTransferOptions(task)}>
           <Text>{t("businessProcessModelInbox.buttons.transfer")}</Text>
         </Button>
       </Group>

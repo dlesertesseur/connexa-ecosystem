@@ -67,10 +67,8 @@ async function getAllOutgoingTaskByTaskId(parameters) {
     headers: { "Content-Type": "application/json", token: parameters.token },
   };
 
-  const url =
-    API.businessProcessModelInbox.getAllOutgoingTaskByTaskId + "{taskId}/outgoing?taskId=" + parameters.taskId;
+  const url = API.businessProcessModelInbox.getAllOutgoingTaskByTaskId + parameters.taskId + "/outgoing";
 
-  console.log("getAllOutgoingTaskByTaskId url ->", url);
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 
@@ -79,14 +77,16 @@ async function getAllOutgoingTaskByTaskId(parameters) {
 
 async function executeTask(parameters) {
   const body = JSON.stringify({
+    userId: parameters.userId,
     originTaskId: parameters.originTaskId,
-    targetTaskId: parameters.targetTaskId,
+    targetTaskId: parameters.targetTaskId
   });
 
   const requestOptions = {
     method: "PATCH",
     mode: "cors",
     headers: {
+      "accept": "application/json",
       "Content-Type": "application/json",
       token: parameters.token,
     },
@@ -94,9 +94,6 @@ async function executeTask(parameters) {
   };
 
   const url = API.businessProcessModelInbox.executeTask;
-
-  console.log("executeTask url ->", url);
-
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 
@@ -111,7 +108,7 @@ async function releaseTask(parameters) {
   });
 
   const requestOptions = {
-    method: "PATCH",
+    method: "POST",
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
@@ -122,7 +119,7 @@ async function releaseTask(parameters) {
 
   const url = API.businessProcessModelInbox.releaseTask;
 
-  console.log("releaseTask url ->", url);
+  console.log("releaseTask requestOptions ->", requestOptions);
 
   const res = await fetch(url, requestOptions);
   const data = await res.json();
@@ -138,7 +135,7 @@ async function takeTask(parameters) {
   });
 
   const requestOptions = {
-    method: "PATCH",
+    method: "POST",
     mode: "cors",
     headers: {
       "Content-Type": "application/json",

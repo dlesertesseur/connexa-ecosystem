@@ -7,12 +7,15 @@ import TaskPanel from "./tabs/TaskPanel";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { AbmStateContext } from "./Context";
-import { LoadingOverlay, Tabs, Title } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 import {
   createBusinessProcessModelInstance,
+  executeTask,
   findAllBusinessProcessModelByRole,
   findAllTaskByRoleId,
   getAllOutgoingTaskByTaskId,
+  releaseTask,
+  takeTask,
 } from "../../../DataAccess/BusinessProcessModelInbox";
 import { getRoleBySiteIdAndUserId } from "../../../DataAccess/User";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
@@ -33,6 +36,16 @@ const DynamicApp = ({ app }) => {
   const [outgoingTasks, setOutgoingTasks] = useState(null);
   const navigate = useNavigate();
 
+  const [time, setTime] = useState();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(Date.now());
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [time]);
+
   function rolesToRoleById(roles) {
     const map = new Map();
     for (const role of roles) {
@@ -42,9 +55,9 @@ const DynamicApp = ({ app }) => {
     }
     return map;
   }
+
   const getData = async () => {
     let process = [];
-    let tasks = [];
     let rolesMap = null;
     let params = {
       token: user.token,
@@ -53,15 +66,14 @@ const DynamicApp = ({ app }) => {
       id: organizationSelected.id,
     };
 
-    setLoading(true);
     try {
       const roles = await findAllByOrganizationId(params);
       rolesMap = rolesToRoleById(roles);
-
       const userRole = await getRoleBySiteIdAndUserId(params);
 
       if (userRole) {
-        userRole.forEach(async (role) => {
+        let tasks = [];
+        for (const role of userRole) {
           const params = {
             token: user.token,
             userId: user.id,
@@ -104,19 +116,19 @@ const DynamicApp = ({ app }) => {
               };
             });
             tasks = tasks.concat(ret);
-            setTasksList(tasks);
           }
-        });
+        }
+        setTasksList(tasks);
       }
     } catch (error) {
       setError(error);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     getData();
-  }, [user, reload]);
+    console.log("getting data...");
+  }, [user, reload, time]);
 
   const createProcessModelInstance = async (values) => {
     const params = {
@@ -146,23 +158,66 @@ const DynamicApp = ({ app }) => {
     setLoading(false);
   };
 
-  const takeTask = (task) => {
-    console.log("takeTask task ->", task);
-  };
-
-  const releaseTask = (task) => {
-    console.log("releaseTask task ->", task);
-  };
-
-  const transferTask = async (origingTask, targetTask) => {
+  const onTakeTask = async (task) => {
     const params = {
       token: user.token,
-      originTaskId: origingTask.id,
-      targetTaskId: targetTask.id,
+      userId: user.id,
+      taskId: task.id,
     };
 
-    const outgoing = await executeTask(params);
-    console.log("transferTask outgoing ->", outgoing);
+    try {
+      const ret = await takeTask(params);
+      console.log("onTakeTask takeTask ret ->", ret);
+      if (ret.status !== 200) {
+        setError(ret.error);
+      } else {
+        setReload(Date.now());
+      }
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  const onReleaseTask = async (task) => {
+    const params = {
+      token: user.token,
+      userId: user.id,
+      taskId: task.id,
+    };
+
+    try {
+      const ret = await releaseTask(params);
+      console.log("onReleaseTask releaseTask ret ->", ret);
+      if (ret.status !== 200) {
+        setError(ret.error);
+      } else {
+        setReload(Date.now());
+      }
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  const onTransferTask = async (origingTaskId, targetTaskId) => {
+    const params = {
+      token: user.token,
+      userId: user.id,
+      originTaskId: origingTaskId,
+      targetTaskId: targetTaskId,
+    };
+
+    try {
+      const ret = await executeTask(params);
+
+      if (ret?.error) {
+        setError(ret.error);
+      } else {
+        setOutgoingTasks(null);
+        setReload(Date.now());
+      }
+    } catch (error) {
+      setError(error);
+    }
   };
 
   const getTransferOptions = async (task) => {
@@ -183,29 +238,26 @@ const DynamicApp = ({ app }) => {
 
   const tabs = () => {
     return (
-      <>
-        <LoadingOverlay visible={loading} />
-        <Tabs
-          defaultValue={tabName}
-          variant="outline"
-          mt={"xs"}
-          onTabChange={(e) => {
-            setTabName(e);
-          }}
-        >
-          <Tabs.List>
-            <TabLabel
-              name={"businessProcessModelTab"}
-              label={t("businessProcessModelInbox.tabs.businessProcessModels")}
-              rows={processModelList?.length}
-            />
-            <TabLabel name={"tasksTab"} label={t("businessProcessModelInbox.tabs.tasks")} rows={tasksList?.length} />
-          </Tabs.List>
+      <Tabs
+        defaultValue={tabName}
+        variant="outline"
+        mt={"xs"}
+        onTabChange={(e) => {
+          setTabName(e);
+        }}
+      >
+        <Tabs.List>
+          <TabLabel
+            name={"businessProcessModelTab"}
+            label={t("businessProcessModelInbox.tabs.businessProcessModels")}
+            rows={processModelList?.length}
+          />
+          <TabLabel name={"tasksTab"} label={t("businessProcessModelInbox.tabs.tasks")} rows={tasksList?.length} />
+        </Tabs.List>
 
-          <BusinessProcessModelPanel name={"businessProcessModelTab"} />
-          <TaskPanel name={"tasksTab"} />
-        </Tabs>
-      </>
+        <BusinessProcessModelPanel name={"businessProcessModelTab"} />
+        <TaskPanel name={"tasksTab"} />
+      </Tabs>
     );
   };
 
@@ -238,7 +290,7 @@ const DynamicApp = ({ app }) => {
     }
   };
 
-  const doTask = async (task) => {
+  const onDoTask = async (task) => {
     await importModule(task);
     navigate("applicationTaks", task);
   };
@@ -253,12 +305,12 @@ const DynamicApp = ({ app }) => {
         tasksList,
         loading,
         createProcessModelInstance,
-        doTask,
-        takeTask,
-        releaseTask,
+        onDoTask,
+        onTakeTask,
+        onReleaseTask,
+        onTransferTask,
         viewTask,
         getTransferOptions,
-        transferTask,
         setOutgoingTasks,
         outgoingTasks,
       }}

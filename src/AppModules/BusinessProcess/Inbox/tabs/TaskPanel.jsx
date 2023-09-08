@@ -14,8 +14,7 @@ const TaskPanel = ({ name }) => {
   const { t } = useTranslation();
   const [rowSelected, setRowSelected] = useState(null);
   const [task, setTask] = useState(null);
-
-  const { tasksList, transferTask, loading, outgoingTasks, setOutgoingTasks } = useContext(AbmStateContext);
+  const { tasksList, onTransferTask, loading, outgoingTasks, setOutgoingTasks } = useContext(AbmStateContext);
 
   let col = 0;
   const cols = t("businessProcessModelInbox.columns.tasks", { returnObjects: true });
@@ -30,8 +29,10 @@ const TaskPanel = ({ name }) => {
     if (tasksList) {
       const task = tasksList.find((mp) => mp.id === rowSelected);
       setTask(task);
+    } else {
+      setTask(null);
     }
-  }, [rowSelected]);
+  }, [rowSelected, tasksList]);
 
   return (
     <>
@@ -42,7 +43,7 @@ const TaskPanel = ({ name }) => {
         }}
         task={task}
         tasks={outgoingTasks}
-        onAccept={transferTask}
+        onAccept={onTransferTask}
       />
       <Tabs.Panel value={name} pt="xs">
         <Routes>
@@ -62,7 +63,6 @@ const TaskPanel = ({ name }) => {
               </Stack>
             }
           />
-          {/* <Route path="/create/*" element={<Title>{"create"}</Title>} /> */}
         </Routes>
       </Tabs.Panel>
     </>
