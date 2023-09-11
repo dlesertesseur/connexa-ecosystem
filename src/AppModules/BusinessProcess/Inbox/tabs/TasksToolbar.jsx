@@ -6,7 +6,7 @@ import { AbmStateContext } from "../Context";
 
 const TasksToolbar = ({ task }) => {
   const { t } = useTranslation();
-  const { onDoTask, onTakeTask, onReleaseTask, getTransferOptions, viewTask, loading } = useContext(AbmStateContext);
+  const { onDoTask, onTakeTask, onReleaseTask, getTransferOptions, onViewTask, loading } = useContext(AbmStateContext);
 
   const isDisabled = (button) => {
     let ret = true;
@@ -52,7 +52,7 @@ const TasksToolbar = ({ task }) => {
         <Button
           disabled={isDisabled("view")}
           onClick={() => {
-            viewTask(task);
+            onViewTask(task);
           }}
         >
           <Text>{t("businessProcessModelInbox.buttons.viewOnDiagram")}</Text>

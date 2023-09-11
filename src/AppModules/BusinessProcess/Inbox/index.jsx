@@ -20,6 +20,7 @@ import {
 import { getRoleBySiteIdAndUserId } from "../../../DataAccess/User";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 import { Route, Routes, useNavigate } from "react-router-dom";
+import BusinessProcessModelDialog from "../Diagram/editor/BusinessProcessModelDialog";
 
 const DynamicApp = ({ app }) => {
   const { user, organizationSelected, siteSelected } = useSelector((state) => state.auth.value);
@@ -34,6 +35,7 @@ const DynamicApp = ({ app }) => {
   const [tabName, setTabName] = useState("businessProcessModelTab");
   const [applicationTaksComponent, setApplicationTaskComponent] = useState(null);
   const [outgoingTasks, setOutgoingTasks] = useState(null);
+  const [openBpmDialog, setOpenBpmDialog] = useState(false);
   const navigate = useNavigate();
 
   const [time, setTime] = useState();
@@ -232,8 +234,9 @@ const DynamicApp = ({ app }) => {
     setLoading(false);
   };
 
-  const viewTask = (task) => {
-    console.log("viewTask task ->", task);
+  const onViewTask = (task) => {
+    console.log("onViewTask task ->", task);
+    setOpenBpmDialog(true);
   };
 
   const tabs = () => {
@@ -309,7 +312,7 @@ const DynamicApp = ({ app }) => {
         onTakeTask,
         onReleaseTask,
         onTransferTask,
-        viewTask,
+        onViewTask,
         getTransferOptions,
         setOutgoingTasks,
         outgoingTasks,
@@ -339,6 +342,12 @@ const DynamicApp = ({ app }) => {
         }}
         title={t("status.ok")}
         text={creationStatus}
+      />
+
+      <BusinessProcessModelDialog
+        open={openBpmDialog}
+        close={() => setOpenBpmDialog(false)}
+        businessProcessModelId={"a1d45ce3-cf88-492f-9e56-5bb63b6b7c23"}
       />
     </AbmStateContext.Provider>
   );
