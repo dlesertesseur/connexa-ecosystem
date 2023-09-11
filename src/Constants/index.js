@@ -390,6 +390,7 @@ export const API = {
     delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models/",
     findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models",
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models/",
+    getInstanceById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models/",
   },
 
   businessProcessModelInbox: {
@@ -402,6 +403,11 @@ export const API = {
     releaseTask:config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
     takeTask:config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox"
   },
+
+  businessProcessInstance: {
+    getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance/",
+  },
+
 };
 
 export const ERRORS = {

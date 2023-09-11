@@ -35,7 +35,7 @@ const DynamicApp = ({ app }) => {
   const [tabName, setTabName] = useState("businessProcessModelTab");
   const [applicationTaksComponent, setApplicationTaskComponent] = useState(null);
   const [outgoingTasks, setOutgoingTasks] = useState(null);
-  const [openBpmDialog, setOpenBpmDialog] = useState(false);
+  const [task, setTask] = useState(false);
   const navigate = useNavigate();
 
   const [time, setTime] = useState();
@@ -235,8 +235,7 @@ const DynamicApp = ({ app }) => {
   };
 
   const onViewTask = (task) => {
-    console.log("onViewTask task ->", task);
-    setOpenBpmDialog(true);
+    setTask(task);
   };
 
   const tabs = () => {
@@ -345,9 +344,10 @@ const DynamicApp = ({ app }) => {
       />
 
       <BusinessProcessModelDialog
-        open={openBpmDialog}
-        close={() => setOpenBpmDialog(false)}
-        businessProcessModelId={"a1d45ce3-cf88-492f-9e56-5bb63b6b7c23"}
+        open={task}
+        close={() => setTask(null)}
+        taskId={task?.id}
+        businessProcessInstanceId={task?.businessProcessInstanceId}
       />
     </AbmStateContext.Provider>
   );

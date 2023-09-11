@@ -7,31 +7,26 @@ import JoinNode from "./model/JoinNode";
 import StageNode from "./model/StageNode";
 import InitNode from "./model/InitNode";
 import {
-  Background,
   Controls,
   MarkerType,
   ReactFlow,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
-  useReactFlow,
 } from "reactflow";
 import { useEffect } from "react";
-import { findBusinessProcessModelById } from "../../../../DataAccess/BusinessProcessModel";
+import { findBusinessProcessInstanceById } from "../../../../DataAccess/BusinessProcessModel";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useMemo } from "react";
 import { Modal } from "@mantine/core";
-import { useCallback } from "react";
 import { useViewportSize } from "@mantine/hooks";
 
-const BusinessProcessModelDialog = ({ open, close, businessProcessModelId }) => {
+const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, taskId }) => {
   const { user } = useSelector((state) => state.auth.value);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes] = useNodesState([]);
+  const [edges, setEdges] = useEdgesState([]);
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
-  const [dim, setDim] = useState({ width: 1200, height: 500 });
-  //const { setViewport } = useReactFlow();
   const { height, width } = useViewportSize();
 
 
@@ -39,10 +34,6 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessModelId }) => 
     () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode, initNode: InitNode }),
     []
   );
-
-  // const handleTransform = useCallback(() => {
-  //   setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 800 });
-  // }, [setViewport]);
 
   const getRoleById = (id) => {
     let roleFound = null;
@@ -58,15 +49,15 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessModelId }) => 
   };
 
   const getData = async () => {
-    let params = { token: user.token, id: businessProcessModelId };
-    const ret = await findBusinessProcessModelById(params);
+    let params = { token: user.token, id: businessProcessInstanceId };
+    const ret = await findBusinessProcessInstanceById(params);
     setBusinessProcessModel(ret);
   };
 
   useEffect(() => {
     getData();
     //setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 800 });
-  }, [businessProcessModelId]);
+  }, [businessProcessInstanceId]);
 
   const getTypeNode = (task) => {
     let ret = null;
@@ -82,6 +73,23 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessModelId }) => 
     }
 
     return ret;
+  };
+
+  const getDefaultColor = (type) => {
+    let defaultValue = null;
+
+    switch (type) {
+      case "stageNode":
+        defaultValue = "rgba(255,0,0,0.1)";
+        break;
+      case "taskNode":
+      case "initNode":
+      case "forkNode":
+      case "joinNode":
+        defaultValue = "rgba(255,255,255,1)";
+        break;
+    }
+    return defaultValue;
   };
 
   const getDefaultBorderColor = (type) => {
@@ -103,14 +111,14 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessModelId }) => 
 
   useEffect(() => {
     if (businessProcessModel) {
-      const nodes = businessProcessModel.tasks.map((t) => {
+      const nodes = businessProcessModel?.tasks?.map((t) => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
           data: {
             label: t.name,
             role: getRoleById(t.requiredRole),
-            color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
+            color: t.id === taskId ? "rgba(255,0,0,1)" : t.backgroundColor,
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
             width: t.dimensionx,
             height: t.dimensiony,
@@ -121,7 +129,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessModelId }) => 
         return ret;
       });
 
-      const edges = businessProcessModel.transitions.map((e) => {
+      const edges = businessProcessModel?.transitions?.map((e) => {
         let ret = {
           id: e.id,
           source: e.originTaskId,
