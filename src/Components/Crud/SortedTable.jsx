@@ -218,6 +218,10 @@ export default function SortedTable({
         ret = avatarImage(data);
         break;
 
+      case "boolean":
+        ret = data ? t("label.true") : t("label.false") ;
+        break;
+
       default:
         ret = formatData(data, cell.format);
         break;

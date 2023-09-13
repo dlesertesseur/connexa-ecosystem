@@ -186,11 +186,19 @@ const BUSINESS = {
 const PARAMETERS_TYPE = [
   { id: 1, name: "String" },
   { id: 2, name: "Numeric" },
-  { id: 3, name: "URL" },
+  { id: 3, name: "Boolean" },
   { id: 4, name: "UUID" },
-  { id: 5, name: "JSON" },
 ];
 
+const WIDGETS = [
+    { id: 1, name: "TextInput" },
+    { id: 2, name: "TextArea" },
+    { id: 3, name: "NumberInput" },
+    { id: 4, name: "Select" },
+    { id: 5, name: "Upload image" },
+    { id: 6, name: "Upload document" },
+  ];
+  
 const SPRINTS = [
     { id: 1, name: "Def. Surtido" },
     { id: 2, name: "Ejec. Compra" },
@@ -198,4 +206,4 @@ const SPRINTS = [
     { id: 4, name: "Distribucion" },
     { id: 5, name: "Venta" },
   ];
-export { BUSINESS, PARAMETERS_TYPE, SPRINTS };
+export { BUSINESS, PARAMETERS_TYPE, SPRINTS, WIDGETS };

@@ -1472,25 +1472,53 @@
     },
 
     "field": {
-      "columns": ["Name", "Description"],
-
+      "columns": ["Name", "Description", "Type", "Required", "Widget"],
       "buttons": {
       },
 
       "label": {
         "name": "Name",
         "description": "Description",
-        "type": "Type"
+        "type": "Type",
+        "required":"Reuquired",
+        "widget":"Widget",
+        "dataSource":"Data source",
+        "relatedFieldId":"Related field",
+        "defaultValue":"Default value"
       },
       "placeholder": {
         "name": "a name",
         "description": "a description",
-        "type": "a type"
+        "type": "a type",
+        "widget":"select a widget",
+        "dataSource":"select a data source",
+        "relatedFieldId":"select a related field",
+        "defaultValue":"a default value"
       },
       "title": {
         "create": "New field",
         "update": "Update field",
         "delete": "Delete field"
+      }
+    },
+
+    "section": {
+      "columns": ["Entity", "Relation"],
+      "buttons": {
+      },
+
+      "label": {
+        "entity": "Entity",
+        "relacion": "Relation"
+      },
+      "placeholder": {
+        "entity": "an entity",
+        "relacion": "a relation"
+      },
+      "title": {
+        "create": "New section",
+        "update": "Update section",
+        "delete": "Delete section"
       }
     }
   }

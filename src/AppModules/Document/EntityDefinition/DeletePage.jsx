@@ -3,11 +3,9 @@ import {
   Container,
   Button,
   Group,
-  Select,
   LoadingOverlay,
   ScrollArea,
   TextInput,
-  NumberInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";

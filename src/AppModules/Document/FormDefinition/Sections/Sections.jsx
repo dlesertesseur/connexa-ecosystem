@@ -11,19 +11,19 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { Stack } from "@mantine/core";
 import { useContext } from "react";
-import EntityDefinitionHeader from "../EntityDefinitionHeader";
 import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
+import EntityDefinitionHeader from "../EntityDefinitionHeader";
 
-const Fields = () => {
+const Sections = () => {
   const { user } = useSelector((state) => state.auth.value);
   const { selectedRowId } = useContext(AbmStateContext);
   const { t } = useTranslation();
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedFieldId, setSelectedFieldId] = useState(null);
-  const [reloadFields, setReloadFields] = useState(null);
-  const [entityDefinition, setEntityDefinition] = useState(null);
+  const [selectedSectionId, setSelectedSectionId] = useState(null);
+  const [reloadSections, setReloadSections] = useState(null);
+  const [formDefinition, setEntityDefinition] = useState(null);
   const navigate = useNavigate();
 
   const HEADER = 32;
@@ -37,25 +37,22 @@ const Fields = () => {
 
   useEffect(() => {
     getData();
-  }, [selectedRowId, reloadFields]);
+  }, [selectedRowId, reloadSections]);
 
   let col = 0;
   const cols = t("document.field.columns", { returnObjects: true });
   const columns = [
-    { headerName: cols[col++], fieldName: "name", align: "left" },
-    { headerName: cols[col++], fieldName: "description", align: "left" },
-    { headerName: cols[col++], fieldName: "type", align: "left" },
-    { headerName: cols[col++], fieldName: "required", align: "left", type:"boolean" },
-    { headerName: cols[col++], fieldName: "widget", align: "left" },
+    { headerName: cols[col++], fieldName: "entity", align: "left" },
+    { headerName: cols[col++], fieldName: "relacion", align: "left" },
   ];
 
   const ret = rows ? (
     <FieldStateContext.Provider
       value={{
-        reloadFields,
-        setReloadFields,
-        selectedFieldId,
-        setSelectedFieldId,
+        reloadSections,
+        setReloadSections,
+        selectedSectionId,
+        setSelectedSectionId,
         rows
       }}
     >
@@ -66,7 +63,7 @@ const Fields = () => {
             backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
           })}
         >
-          <EntityDefinitionHeader text={t("document.entityDefinition.label.fields")} entityDefinition={entityDefinition}/>
+          <EntityDefinitionHeader text={t("document.formDefinition.label.fields")} formDefinition={formDefinition}/>
 
           <Routes>
             <Route
@@ -77,8 +74,8 @@ const Fields = () => {
                   columns={columns}
                   loading={loading}
                   enableCreateButton={true}
-                  rowSelected={selectedFieldId}
-                  setRowSelected={setSelectedFieldId}
+                  rowSelected={selectedSectionId}
+                  setRowSelected={setSelectedSectionId}
                   headerHeight={HEADER_HIGHT + HEADER + 32}
                   backButton={() => {
                     navigate("../");
@@ -86,9 +83,9 @@ const Fields = () => {
                 />
               }
             ></Route>
-            <Route path="create" element={<CreatePage entityDefinitionId={entityDefinition?.id} />} />
-            <Route path="update" element={<UpdatePage entityDefinitionId={entityDefinition?.id}/>} />
-            <Route path="delete" element={<DeletePage entityDefinitionId={entityDefinition?.id}/>} />
+            <Route path="create" element={<CreatePage formDefinitionId={formDefinition?.id} />} />
+            <Route path="update" element={<UpdatePage formDefinitionId={formDefinition?.id}/>} />
+            <Route path="delete" element={<DeletePage formDefinitionId={formDefinition?.id}/>} />
           </Routes>
         </Stack>
       </Stack>
@@ -108,4 +105,4 @@ const Fields = () => {
   return ret;
 };
 
-export default Fields;
+export default Sections;

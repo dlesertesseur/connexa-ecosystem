@@ -1465,7 +1465,7 @@
     },
 
     "field": {
-      "columns": ["Nombre", "Descripcion", "Tipo"],
+      "columns": ["Nombre", "Descripcion", "Tipo", "Requerido", "Widget"],
 
       "buttons": {
       },
@@ -1473,17 +1473,46 @@
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
-        "type": "Tipo"
+        "type": "Tipo",
+        "required":"Requerido",
+        "widget":"Widget",
+        "dataSource":"Fuente de datos",
+        "relatedFieldId":"Campo relacionado",
+        "defaultValue":"Valor por defecto"
       },
       "placeholder": {
         "name": "un nombre",
         "description": "una descripcion",
-        "type": "un tipo"
+        "type": "un tipo",
+        "widget":"seleccione un widget",
+        "dataSource":"seleccione una fuente de datos",
+        "relatedFieldId":"seleccione un campo relacionado",
+        "defaultValue":"seleccione un valor defecto"
       },
       "title": {
         "create": "Nuevo campo",
         "update": "Modificar campo",
         "delete": "Eliminar campo"
+      }
+    },
+
+    "section": {
+      "columns": ["Entidad", "Relacion"],
+      "buttons": {
+      },
+
+      "label": {
+        "entity": "Entidad",
+        "relacion": "Relacion"
+      },
+      "placeholder": {
+        "entity": "una entidad",
+        "relacion": "una relacion"
+      },
+      "title": {
+        "create": "Nueva seccion",
+        "update": "Modificar seccion",
+        "delete": "Eliminar seccion"
       }
     }
   }

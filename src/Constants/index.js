@@ -431,6 +431,14 @@ export const API = {
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition/",
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition/",
   },
+
+  field: {
+    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition-field",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition-field",
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition-field/",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition-field/",
+    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition-field/",
+  },
 };
 
 export const ERRORS = {

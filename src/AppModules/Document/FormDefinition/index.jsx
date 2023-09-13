@@ -76,14 +76,14 @@ const DynamicApp = ({ app }) => {
         createPage={<CreatePage />}
         updatePage={<UpdatePage />}
         deletePage={<DeletePage />}
-        // relationshipPages={[
-        //   {
-        //     path: "products",
-        //     icon: <IconList size={20} />,
-        //     key: "document.formDefinition.label.addProducts",
-        //     element: <ProductsList back={"../"} />,
-        //   },
-        // ]}
+        relationshipPages={[
+          {
+            path: "sections",
+            icon: <IconDatabase size={20} />,
+            key: "document.formDefinition.label.sections",
+            element: <Fields back={"../"} />,
+          },
+        ]}
       />
 
       <ResponceNotification
