@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { findTranslatedField } from "../Util";
 import { useNavigate } from "react-router";
 import React from "react";
-import { logOut } from "../Features/Auth";
 
 const CustomOptionsAccordion = () => {
   const [links, setLinks] = useState(null);
@@ -18,9 +17,11 @@ const CustomOptionsAccordion = () => {
 
   const createMenuGroup = (role, item) => {
     const ret = (
-      <Accordion.Item key={role.id} value={role.name} sx={{borderWidth:1, borderColor:"#d5d5d5"}}>
-        <Accordion.Control icon={<IconApps size={22} color={"grey"} stroke={1.5}/>}>
-          <Text weight={700}>{role.name}</Text></Accordion.Control>
+      <Accordion.Item key={role.id} value={role.name + role.groupName} sx={{ borderWidth: 1, borderColor: "#d5d5d5" }}>
+        <Accordion.Control icon={<IconApps size={22} color={"grey"} stroke={1.5} />}>
+          <Text weight={700}>{role.name}</Text>
+          {/* <Text color="dark.3" size={"xs"} weight={400}>{role.groupName}</Text> */}
+        </Accordion.Control>
         <Accordion.Panel>
           {item?.links.map((link) => {
             const lnk = (
@@ -104,7 +105,7 @@ const CustomOptionsAccordion = () => {
   const draw = links ? (
     <ScrollArea px={"xs"} h={"100%"}>
       <Stack justify="center" h={"100%"} m={0} spacing={"xs"}>
-        <Accordion variant="separated" >{links}</Accordion>
+        <Accordion variant="separated">{links}</Accordion>
       </Stack>
     </ScrollArea>
   ) : (

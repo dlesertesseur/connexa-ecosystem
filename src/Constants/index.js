@@ -408,6 +408,29 @@ export const API = {
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance/",
   },
 
+  entityDefinition: {
+    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition",
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition/",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition/",
+    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition/",
+  },
+
+  dataSource: {
+    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource",
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource/",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource/",
+    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource/",
+  },
+
+  formDefinition: {
+    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition",
+    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition",
+    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition/",
+    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition/",
+    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition/",
+  },
 };
 
 export const ERRORS = {

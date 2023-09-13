@@ -1400,5 +1400,98 @@
       "connectorProperties": "Propiedades de conector",
       "transferTask": "Transfer task"
     }
+  },
+
+  "document": {
+    "messages": {
+    },
+
+    "entityDefinition": {
+      "columns": ["Name", "Description"],
+
+      "buttons": {
+      },
+
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "fields":"Fields",
+        "formLayout":"Form layout"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description"
+      },
+      "title": {
+        "create": "New entity definition",
+        "update": "Update entity definition",
+        "delete": "Delete entity definition"
+      }
+    },
+
+    "dataSource": {
+      "columns": ["Name", "Description"],
+
+      "buttons": {
+      },
+
+      "label": {
+        "name": "Name",
+        "description": "Description"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description"
+      },
+      "title": {
+        "create": "New data source",
+        "update": "Update data source",
+        "delete": "Delete data source"
+      }
+    },
+
+    "formDefinition": {
+      "columns": ["Name", "Description"],
+
+      "buttons": {
+      },
+
+      "label": {
+        "name": "Name",
+        "description": "Description"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description"
+      },
+      "title": {
+        "create": "New form definition",
+        "update": "Update form definition",
+        "delete": "Delete form definition"
+      }
+    },
+
+    "field": {
+      "columns": ["Name", "Description"],
+
+      "buttons": {
+      },
+
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "type": "Type"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description",
+        "type": "a type"
+      },
+      "title": {
+        "create": "New field",
+        "update": "Update field",
+        "delete": "Delete field"
+      }
+    }
   }
 }

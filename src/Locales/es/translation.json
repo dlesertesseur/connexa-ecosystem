@@ -1361,28 +1361,28 @@
   "businessProcessModelInbox": {
     "buttons": {
       "create": "Crear una nueva instancia",
-      "take":"Tomar",
-      "release":"Liberar",
-      "doit":"Hacerla",
-      "transfer":"Transferir",
-      "back":"Volver",
-      "viewOnDiagram":"Ver"
+      "take": "Tomar",
+      "release": "Liberar",
+      "doit": "Hacerla",
+      "transfer": "Transferir",
+      "back": "Volver",
+      "viewOnDiagram": "Ver"
     },
-    "messages":{
-      "creation":"Instancia de modelo de proceso creada correctamente"
+    "messages": {
+      "creation": "Instancia de modelo de proceso creada correctamente"
     },
 
     "columns": {
-      "processModel":["Nombre", "Descripcion"],
-      "tasks":["Nombre", "Rol", "Usuario", "Estado"]
+      "processModel": ["Nombre", "Descripcion"],
+      "tasks": ["Nombre", "Rol", "Usuario", "Estado"]
     },
 
     "tabs": {
       "businessProcessModels": "Modelos de proceso de negocio",
       "tasks": "Tareas"
     },
-    "label":{
-      "selectTask":"Select task"
+    "label": {
+      "selectTask": "Select task"
     },
     "title": {
       "create": "New business process model",
@@ -1390,7 +1390,101 @@
       "delete": "Delete a business process model",
       "taskSettings": "Task settings",
       "connectorProperties": "Propiedades de conector",
-      "transferTask": "Transfer task"      
+      "transferTask": "Transfer task"
+    }
+  },
+
+  "document": {
+    "messages": {
+      "creation": "Instancia de modelo de proceso creada correctamente"
+    },
+
+    "entityDefinition": {
+      "columns": ["Nombre", "Descripcion"],
+
+      "buttons": {
+      },
+
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "fields":"Campos",
+        "formLayout":"Diseño de formulario"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion"
+      },
+      "title": {
+        "create": "Nueva definicion de entidad",
+        "update": "Modificar una definicion de entidad",
+        "delete": "Eliminar una definicion de entidad"
+      }
+    },
+
+    "dataSource": {
+      "columns": ["Nombre", "Descripcion"],
+
+      "buttons": {
+      },
+
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion"
+      },
+      "title": {
+        "create": "Nueva fuente de datos",
+        "update": "Modificar una fuente de datos",
+        "delete": "Eliminar una fuente de datos"
+      }
+    },
+
+    "formDefinition": {
+      "columns": ["Nombre", "Descripcion"],
+
+      "buttons": {
+      },
+
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion"
+      },
+      "title": {
+        "create": "Nueva definicion de formulario",
+        "update": "Modificar una definicion de formulario",
+        "delete": "Eliminar una definicion de formulario"
+      }
+    },
+
+    "field": {
+      "columns": ["Nombre", "Descripcion", "Tipo"],
+
+      "buttons": {
+      },
+
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "type": "Tipo"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion",
+        "type": "un tipo"
+      },
+      "title": {
+        "create": "Nuevo campo",
+        "update": "Modificar campo",
+        "delete": "Eliminar campo"
+      }
     }
   }
 }
