@@ -61,10 +61,12 @@ const Editor = () => {
         id: uuid(),
         originTaskId: e.source,
         targetTaskId: e.target,
-        bidirectional: e.data.bidirectional
+        bidirectional: e.data.bidirectional,
       };
       return ret;
     });
+
+    const initialTask = tasks.find((t) => t.type === "initNode");
 
     const params = {
       token: user.token,
@@ -73,6 +75,8 @@ const Editor = () => {
       description: businessProcessModel.description,
       tasks: tasks,
       transitions: transitions,
+      initialTaskId: initialTask ? initialTask.id : null,
+      requiredRole: initialTask ? initialTask.requiredRole : null,
     };
 
     setSaving(true);
@@ -91,10 +95,10 @@ const Editor = () => {
   };
 
   function downloadImage(dataUrl) {
-    const a = document.createElement('a');
-  
-    a.setAttribute('download', `${businessProcessModel.name}.png`);
-    a.setAttribute('href', dataUrl);
+    const a = document.createElement("a");
+
+    a.setAttribute("download", `${businessProcessModel.name}.png`);
+    a.setAttribute("href", dataUrl);
     a.click();
   }
 
@@ -102,8 +106,8 @@ const Editor = () => {
     const nodesBounds = getRectOfNodes(nodes);
     const transform = getTransformForBounds(nodesBounds, config.exportImageWidth, config.exportImageHeight, 0.5, 2);
 
-    toPng(document.querySelector('.react-flow__viewport'), {
-      backgroundColor: '#ffffff',
+    toPng(document.querySelector(".react-flow__viewport"), {
+      backgroundColor: "#ffffff",
       width: config.exportImageWidth,
       height: config.exportImageHeight,
       style: {
@@ -112,7 +116,7 @@ const Editor = () => {
         transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
       },
     }).then(downloadImage);
-  }
+  };
 
   return (
     <Stack spacing={"xs"}>
@@ -135,7 +139,7 @@ const Editor = () => {
         }}
       >
         <BusinessProcessHeader text={t("businessProcess.label.definition")} businessProcess={businessProcessModel} />
-        <DesignToolbar onSave={onSave} onExport={onExport}/>
+        <DesignToolbar onSave={onSave} onExport={onExport} />
         <Diagram />
       </EditorStateContext.Provider>
     </Stack>

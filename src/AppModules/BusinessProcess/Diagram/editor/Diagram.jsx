@@ -52,6 +52,7 @@ const Diagram = () => {
           markerEnd: {
             type: MarkerType.ArrowClosed,
           },
+          data: { bidirectional: false },
         };
         return addEdge(newParams, eds);
       }),
@@ -338,7 +339,7 @@ const Diagram = () => {
         edge.data.bidirectional = values.bidirectional;
         if (values.bidirectional) {
           edge.markerStart = { type: MarkerType.ArrowClosed };
-        }else{
+        } else {
           delete edge.markerStart;
         }
       }
