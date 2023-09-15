@@ -186,7 +186,7 @@ export function DeletePage({ entityDefinitionId }) {
             fontWeight: 700,
           })}
         >
-          {t("businessProcess.parameters.title.delete")}
+          {t("document.field.title.delete")}
         </Title>
 
         <form

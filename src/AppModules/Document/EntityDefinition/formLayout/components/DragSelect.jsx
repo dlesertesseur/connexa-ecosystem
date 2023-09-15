@@ -14,7 +14,12 @@ const DragSelect = ({ id, index, field }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Select disabled label={field?.label ? field?.label : field?.name} data={[]} />
+          <Select
+            disabled
+            label={field?.description ? field?.description : field?.name}
+            placeholder={field?.name}
+            data={[]}
+          />
         </Paper>
       )}
     </Draggable>

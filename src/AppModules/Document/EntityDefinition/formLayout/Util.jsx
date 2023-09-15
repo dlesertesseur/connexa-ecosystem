@@ -3,7 +3,7 @@ import DragTexarea from "./components/DragTexarea";
 import DragSelect from "./components/DragSelect";
 import DragCheckbox from "./components/DragCheckbox";
 import DragButton from "./components/DragButton";
-import { config } from "../../../../Constants/config";
+import DragNumberinput from "./components/DragNumberinput";
 
 const buildComponent = (field, index) => {
   let ret = null;
@@ -23,14 +23,13 @@ const buildComponent = (field, index) => {
     case 5:
       ret = <DragCheckbox key={field.id} id={field.id} index={index} field={field} />;
       break;
-    case config.components.types.button:
+    case 6:
       ret = <DragButton key={field.id} id={field.id} index={index} field={field} />;
       break;
 
     default:
       break;
   }
-  // ret = <DragComponent key={item.id} id={item.id} index={index} value={item.value} />;
   return ret;
 };
 

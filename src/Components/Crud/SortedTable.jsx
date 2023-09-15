@@ -255,7 +255,7 @@ export default function SortedTable({
   });
 
   return (
-    <Stack>
+    <Stack spacing={"xs"}>
       <Group position="apart">
         <Group spacing="xs">
           {setRowSelected ? (

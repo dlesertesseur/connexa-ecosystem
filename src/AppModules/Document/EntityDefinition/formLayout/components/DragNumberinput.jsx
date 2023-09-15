@@ -1,4 +1,4 @@
-import { Paper, TextInput } from "@mantine/core";
+import { NumberInput, Paper } from "@mantine/core";
 import { Draggable } from "react-beautiful-dnd";
 
 // eslint-disable-next-line react/prop-types
@@ -14,11 +14,11 @@ const DragNumberinput = ({ id, index, field }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <TextInput label={field.description} placeholder={field.name} />
+          <NumberInput disabled label={field.description} placeholder={0}/>
         </Paper>
       )}
     </Draggable>
   );
 };
 
-export default DragNumberinput;
+export default DragNumberinput

@@ -1404,7 +1404,8 @@
 
       "buttons": {
         "addRow":"Agregar fila",
-        "deleteRow":"Eliminar fila"
+        "deleteRow":"Eliminar fila",
+        "save":"Salvar"
       },
 
       "label": {

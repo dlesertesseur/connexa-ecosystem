@@ -139,7 +139,7 @@ export function UpdatePage({ entityDefinitionId }) {
   const onUpdate = async (values) => {
     const params = {
       token: user.token,
-      entityDefinitionId: entityDefinitionId,
+      id: entityDefinitionId,
       fieldId: selectedFieldId,
       values: values,
     };
@@ -170,7 +170,7 @@ export function UpdatePage({ entityDefinitionId }) {
             fontWeight: 700,
           })}
         >
-          {t("businessProcess.parameters.title.update")}
+          {t("document.field.title.update")}
         </Title>
 
         <form

@@ -9,9 +9,10 @@ import { AbmStateContext } from "./Context";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import { findAllEntityDefinition } from "../../../DataAccess/EntityDefinition";
-import { IconDatabase, IconForms, IconLayout } from "@tabler/icons-react";
+import { IconDatabase, IconLayout } from "@tabler/icons-react";
 import Fields from "./Fields/Fields";
-import FormLayout from "./FormLayout/FormLayout";
+import EntityLayout from "./FormLayout/EntityLayout";
+import FormLayout from "./formLayout/FormLayout";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -80,18 +81,25 @@ const DynamicApp = ({ app }) => {
         updatePage={<UpdatePage />}
         deletePage={<DeletePage />}
         relationshipPages={[
+          // {
+          //   path: "fields",
+          //   icon: <IconDatabase size={20} />,
+          //   key: "document.entityDefinition.label.fields",
+          //   element: <Fields back={"../"} />,
+          // },
+          // {
+          //   path: "formLayout",
+          //   icon: <IconLayout size={20} />,
+          //   key: "document.entityDefinition.label.formLayout",
+          //   element: <FormLayout back={"../"} />,
+          // },
           {
-            path: "fields",
-            icon: <IconDatabase size={20} />,
-            key: "document.entityDefinition.label.fields",
-            element: <Fields back={"../"} />,
-          },
-          {
-            path: "formLayout",
+            path: "entityLayout",
             icon: <IconLayout size={20} />,
             key: "document.entityDefinition.label.formLayout",
-            element: <FormLayout back={"../"} />,
+            element: <EntityLayout back={"../"} />,
           },
+
         ]}
       />
 

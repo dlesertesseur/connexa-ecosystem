@@ -1,5 +1,6 @@
 import { Group, Paper, Stack, Text } from "@mantine/core";
 import { Draggable } from "react-beautiful-dnd";
+import { WIDGETS_NAMES_BY_ID } from "../../../../Constants/BUSINESS";
 
 // eslint-disable-next-line react/prop-types
 const DragToolbarComponent = ({ id, index, field }) => {
@@ -13,7 +14,7 @@ const DragToolbarComponent = ({ id, index, field }) => {
                 {field.description}
               </Text>
               <Text size={"xs"} weight={400} color="gray">
-                {field.widget}
+                {WIDGETS_NAMES_BY_ID.get(field.widget).name}
               </Text>
             </Stack>
           </Group>

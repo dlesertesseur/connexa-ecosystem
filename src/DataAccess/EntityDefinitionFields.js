@@ -95,12 +95,20 @@ const updateField = async (parameters) => {
     // const res = await fetch(url, requestOptions);
     // const data = await res.json();
 
-    let index = DOCUMENTS.entityDefinition.findIndex((obj => obj.id == parameters.entityId));
+    let index = DOCUMENTS.entityDefinition.findIndex((obj => obj.id == parameters.id));
     const fields = DOCUMENTS.entityDefinition[index].fields;
 
-    index = fields.findIndex((obj => obj.id == parameters.id));
+    index = fields.findIndex((obj => obj.id == parameters.fieldId));
+    
     fields[index].name = parameters.values.name;
     fields[index].description = parameters.values.description;
+    fields[index].dataSourceId = parameters.values.dataSourceId;
+    fields[index].defatultValue = parameters.values.defatultValue;
+    fields[index].relatedFieldId = parameters.values.relatedFieldId;
+    fields[index].required = parameters.values.required;
+    fields[index].type = parameters.values.type;
+    fields[index].widget = parameters.values.widget;
+
     return fields[index];
 
   } catch (error) {

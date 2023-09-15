@@ -13,6 +13,7 @@ import { Stack } from "@mantine/core";
 import { useContext } from "react";
 import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
 import EntityDefinitionHeader from "../EntityDefinitionHeader";
+import { PARAMETERS_TYPE_NAMES_BY_ID, WIDGETS_NAMES_BY_ID } from "../../../../Constants/BUSINESS";
 
 const Fields = () => {
   const { user } = useSelector((state) => state.auth.value);
@@ -32,8 +33,15 @@ const Fields = () => {
     const params = { token: user.token, id: selectedRowId };
     const ret = await findEntityDefinitionById(params);
     setEntityDefinition(ret);
-    setRows(ret?.fields);
-    console.log("Fields ->", ret);
+
+    const data = ret?.fields.map((f) => {
+      return {
+        ...f,
+        widgetName: WIDGETS_NAMES_BY_ID.get(f.widget).name,
+        typeName: PARAMETERS_TYPE_NAMES_BY_ID.get(f.type).name,
+      };
+    });
+    setRows(data);
   };
 
   useEffect(() => {
@@ -45,9 +53,9 @@ const Fields = () => {
   const columns = [
     { headerName: cols[col++], fieldName: "name", align: "left" },
     { headerName: cols[col++], fieldName: "description", align: "left" },
-    { headerName: cols[col++], fieldName: "type", align: "left" },
-    { headerName: cols[col++], fieldName: "required", align: "left", type:"boolean" },
-    { headerName: cols[col++], fieldName: "widget", align: "left" },
+    { headerName: cols[col++], fieldName: "typeName", align: "left" },
+    { headerName: cols[col++], fieldName: "required", align: "left", type: "boolean" },
+    { headerName: cols[col++], fieldName: "widgetName", align: "left" },
   ];
 
   const ret = rows ? (
@@ -57,17 +65,21 @@ const Fields = () => {
         setReloadFields,
         selectedFieldId,
         setSelectedFieldId,
-        rows
+        rows,
       }}
     >
       <Stack spacing={"xs"}>
         <Stack
+          spacing={"xs"}
           justify="flex-start"
           sx={(theme) => ({
             backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
           })}
         >
-          <EntityDefinitionHeader text={t("document.entityDefinition.label.fields")} entityDefinition={entityDefinition}/>
+          <EntityDefinitionHeader
+            text={t("document.entityDefinition.label.fields")}
+            entityDefinition={entityDefinition}
+          />
 
           <Routes>
             <Route
@@ -88,8 +100,8 @@ const Fields = () => {
               }
             ></Route>
             <Route path="create" element={<CreatePage entityDefinitionId={entityDefinition?.id} />} />
-            <Route path="update" element={<UpdatePage entityDefinitionId={entityDefinition?.id}/>} />
-            <Route path="delete" element={<DeletePage entityDefinitionId={entityDefinition?.id}/>} />
+            <Route path="update" element={<UpdatePage entityDefinitionId={entityDefinition?.id} />} />
+            <Route path="delete" element={<DeletePage entityDefinitionId={entityDefinition?.id} />} />
           </Routes>
         </Stack>
       </Stack>

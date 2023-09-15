@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { Button, Container, Grid, Group, Paper, ScrollArea, SegmentedControl, Stack, Text } from "@mantine/core";
+import { Button, Container, Group, Paper, Popover, ScrollArea, SegmentedControl, Stack, Text } from "@mantine/core";
 import { useWindowSize } from "../../../../Hook";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
@@ -13,16 +13,17 @@ import { config } from "../../../../Constants/config";
 import { IconDeviceFloppy, IconRowInsertBottom, IconTrash } from "@tabler/icons-react";
 import uuid from "react-uuid";
 import EntityDefinitionHeader from "../EntityDefinitionHeader";
-import DragToolbar from "./DragToolbar";
-import DropPanel from "./components/DropPanel";
+import DropRow from "./components/DropRow";
+import { useDisclosure } from "@mantine/hooks";
 
-const FormLayout = ({ back }) => {
+const EntityLayout = ({ back }) => {
   const wsize = useWindowSize();
   const [panels, setPanels] = useState([]);
   const [fieldsToDrag, setFieldsToDrag] = useState([]);
   const [entityDefinition, setEntityDefinition] = useState(null);
   const [selectedPanel, setSelectedPanel] = useState(null);
   const [widgetByPanel, setWidgetByPanel] = useState(new Map());
+
   const [breakpoints] = useState(
     config.breakpoints.map((b) => {
       return { label: b.toUpperCase(), value: b };
@@ -57,9 +58,12 @@ const FormLayout = ({ back }) => {
   const save = (e) => {
     panels.forEach((p, index) => {
       const components = widgetByPanel.get(p.id);
-      console.log(`panel ${index} components ->`, components.map(c => c.description));
+      console.log(
+        `panel ${index} components ->`,
+        components.map((c) => c.description)
+      );
     });
-  }
+  };
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -140,6 +144,9 @@ const FormLayout = ({ back }) => {
     setSelectedPanel(null);
   };
 
+  const onEnter = (e) => {};
+  const onExit = (e) => {};
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Stack
@@ -155,9 +162,13 @@ const FormLayout = ({ back }) => {
         />
         <Group p={0} position="apart">
           <Group>
-            <Button leftIcon={<IconDeviceFloppy/>} onClick={save}>{t("document.entityDefinition.buttons.save")}</Button>
-            <Button leftIcon={<IconRowInsertBottom/>} onClick={addPanel}>{t("document.entityDefinition.buttons.addRow")}</Button>
-            <Button leftIcon={<IconTrash/>}onClick={deletePanel} disabled={!selectedPanel}>
+            <Button leftIcon={<IconDeviceFloppy />} onClick={save}>
+              {t("document.entityDefinition.buttons.save")}
+            </Button>
+            <Button leftIcon={<IconRowInsertBottom />} onClick={addPanel}>
+              {t("document.entityDefinition.buttons.addRow")}
+            </Button>
+            <Button leftIcon={<IconTrash />} onClick={deletePanel} disabled={!selectedPanel}>
               {t("document.entityDefinition.buttons.deleteRow")}
             </Button>
             <SegmentedControl value={containerSize} onChange={setContainerSize} data={breakpoints} />
@@ -167,39 +178,30 @@ const FormLayout = ({ back }) => {
           </Button>
         </Group>
 
-        <Grid w={wsize.width - 313} gutter={0}>
-          {/* <Grid.Col span={2}>
-            <DragToolbar id={"toolbar"} data={fieldsToDrag} h={wsize.height - 250} />
-          </Grid.Col> */}
-          <Grid.Col span={"auto"} pl={"xs"}>
-            <Paper
-              bg={"gray.1"}
-              h={"100%"}
-              p={"xs"}
-              withBorder
-              radius={0}
-            >
-              <Container size={containerSize}>
-                <ScrollArea h={wsize.height - 270}>
-                  {panels.map((p) => {
-                    return (
-                      <DropPanel
-                        key={p.id}
-                        id={p.id}
-                        data={widgetByPanel.get(p.id)}
-                        setSelected={setSelectedPanel}
-                        selected={selectedPanel === p.id}
-                      />
-                    );
-                  })}
-                </ScrollArea>
-              </Container>
-            </Paper>
-          </Grid.Col>
-        </Grid>
+        <Group grow>
+          <Paper bg={"gray.1"} h={"100%"} p={"xs"} withBorder radius={0}>
+            <Container size={containerSize}>
+              <ScrollArea h={wsize.height - 270}>
+                {panels.map((p) => {
+                  return (
+                    <DropRow
+                      key={p.id}
+                      id={p.id}
+                      data={widgetByPanel.get(p.id)}
+                      setSelected={setSelectedPanel}
+                      selected={selectedPanel === p.id}
+                      onEnter={onEnter}
+                      onExit={onExit}
+                    />
+                  );
+                })}
+              </ScrollArea>
+            </Container>
+          </Paper>
+        </Group>
       </Stack>
     </DragDropContext>
   );
 };
 
-export default FormLayout;
+export default EntityLayout;
