@@ -11,64 +11,39 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
-import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/BUSINESS";
-import { createBusinessProcessParameter } from "../../../../DataAccess/BusinessProcess";
 import { useContext } from "react";
 import { SectionStateContext } from "../Context";
-import { useEffect } from "react";
-import { findAllEntityDefinition } from "../../../../DataAccess/EntityDefinition";
-import { DOCUMENTS } from "../../../../Constants/DOCUMENTS";
+import { createFormDefinitionSection } from "../../../../DataAccess/FormDefinitionSections";
 
-export function CreatePage({ businessProcessId }) {
+export function CreatePage({ formDefinitionId }) {
   const { t } = useTranslation();
-  const { user } = useSelector((state) => state.auth.value);
-  const { height } = useViewportSize();
+  const { setReloadSections, entities, relations } = useContext(SectionStateContext);
   const [working, setWorking] = useState(false);
-  const [entities, setEntities] = useState(false);
-  const { setReloadSections } = useContext(SectionStateContext);
-
-  const [relations] = useState(
-    DOCUMENTS.relations.map((p) => {
-      return { value: p.id, label: p.name };
-    })
-  );
 
   const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
+      name:"",
       entity: "",
       relation: "",
     },
 
     validate: {
+      name: (val) => (val ? null : t("validation.required")),
       entity: (val) => (val ? null : t("validation.required")),
       relation: (val) => (val ? null : t("validation.required")),
     },
   });
 
-  const createTextField = (field) => {
-    const ret = (
-      <TextInput
-        label={t("document.section.label." + field)}
-        placeholder={t("document.section.placeholder." + field)}
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
-
   const createSelect = (field, data) => {
     const ret = (
       <Select
-        label={t("document.section.label." + field)}
+        label={t("document.formDefinition.label." + field)}
         data={data ? data : []}
-        placeholder={t("document.section.placeholder." + field)}
+        placeholder={t("document.formDefinition.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -76,11 +51,12 @@ export function CreatePage({ businessProcessId }) {
     return ret;
   };
 
-  const createCheck = (field, data) => {
+  const createTextField = (field) => {
     const ret = (
-      <Checkbox
-        label={t("document.section.label." + field)}
-        placeholder={t("document.section.placeholder." + field)}
+      <TextInput
+        w={"100%"}
+        label={t("document.formDefinition.label." + field)}
+        placeholder={t("document.formDefinition.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -94,30 +70,14 @@ export function CreatePage({ businessProcessId }) {
 
   const onCreate = async (values) => {
     const params = {
-      userId: user.id,
-      businessProcessId: businessProcessId,
+      id: formDefinitionId,
       values: { ...values },
     };
 
-    await createBusinessProcessParameter(params);
+    await createFormDefinitionSection(params);
     setReloadSections(new Date());
     onClose();
   };
-
-  const getData = async () => {
-    const params = { token: user.token };
-
-    let ret = await findAllEntityDefinition(params);
-    setEntities(
-      ret.map((p) => {
-        return { value: p.id, label: p.name };
-      })
-    );
-  };
-
-  useEffect(() => {
-    getData();
-  }, [user]);
 
   return (
     <Container size={"xl"} sx={{ width: "100%" }}>
@@ -133,7 +93,7 @@ export function CreatePage({ businessProcessId }) {
             fontWeight: 700,
           })}
         >
-          {t("document.section.title.create")}
+          {t("document.formDefinition.title.create")}
         </Title>
 
         <form
@@ -141,22 +101,18 @@ export function CreatePage({ businessProcessId }) {
             onCreate(values);
           })}
         >
-          {height ? (
-            <>
-              <ScrollArea type="scroll" style={{ width: "100%" }}>
-                <Group mb={"md"} grow>
-                  {createSelect("entity", entities)}
-                </Group>
-                <Group mb={"md"} grow>
-                  {createSelect("relation", relations)}
-                </Group>
-              </ScrollArea>
-              <Group position="right" mt="xl" mb="xs">
-                <Button type="submit">{t("button.accept")}</Button>
-                <Button onClick={onClose}>{t("button.cancel")}</Button>
-              </Group>
-            </>
-          ) : null}
+          <Group mb={"md"} grow>
+            {createTextField("name")}
+          </Group>
+          <Group mb={"md"} grow>
+            {createSelect("entity", entities)}
+          </Group>
+          <Group mb={"md"}>{createSelect("relation", relations)}</Group>
+
+          <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.accept")}</Button>
+            <Button onClick={onClose}>{t("button.cancel")}</Button>
+          </Group>
         </form>
       </Container>
     </Container>

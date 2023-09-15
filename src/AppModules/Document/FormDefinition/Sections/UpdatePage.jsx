@@ -1,81 +1,54 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Select, Checkbox } from "@mantine/core";
+import {
+  Title,
+  Container,
+  Button,
+  Group,
+  LoadingOverlay,
+  TextInput,
+  Select,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/BUSINESS";
-import { FieldStateContext } from "../Context";
-import { findFieldById, updateField } from "../../../../DataAccess/EntityDefinitionFields";
-import { findAllDataSource } from "../../../../DataAccess/DataSource";
+import { SectionStateContext } from "../Context";
+import {
+  findFormDefinitionSectionById,
+  updateFormDefinitionSection,
+} from "../../../../DataAccess/FormDefinitionSections";
 
-export function UpdatePage({ entityDefinitionId }) {
+export function UpdatePage({ formDefinitionId }) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-  const { height } = useViewportSize();
-  const { rows } = useContext(FieldStateContext);
-  const { setReloadFields, selectedFieldId } = useContext(FieldStateContext);
+  const { setReloadSections, selectedSectionId, entities, relations } = useContext(SectionStateContext);
   const [working, setWorking] = useState(false);
-  const [field, setField] = useState(false);
-  const [dataSources, setDataSources] = useState(false);
-  const [relatedField, setRelatedField] = useState(false);
-
-  const [fieldType] = useState(
-    PARAMETERS_TYPE.map((p) => {
-      return { value: p.id, label: p.name };
-    })
-  );
-
-  const [widgets] = useState(
-    WIDGETS.map((p) => {
-      return { value: p.id, label: p.name };
-    })
-  );
+  const [section, setSection] = useState(false);
 
   const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
-      description: "",
       name: "",
-      type: null,
-      required: null,
-      widget: null,
-      dataSourceId: null,
-      relatedFieldId: null,
-      defatultValue: null,
+      entity: null,
+      relation: null,
     },
 
     validate: {
-      description: (val) => (val ? null : t("validation.required")),
       name: (val) => (val ? null : t("validation.required")),
-      type: (val) => (val ? null : t("validation.required")),
-      required: (val) => (val ? null : t("validation.required")),
-      widget: (val) => (val ? null : t("validation.required")),
+      entity: (val) => (val ? null : t("validation.required")),
+      relation: (val) => (val ? null : t("validation.required")),
     },
   });
-
-  const createTextField = (field) => {
-    const ret = (
-      <TextInput
-        label={t("document.field.label." + field)}
-        placeholder={t("document.field.placeholder." + field)}
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
 
   const createSelect = (field, data) => {
     const ret = (
       <Select
-        label={t("document.field.label." + field)}
+        label={t("document.formDefinition.label." + field)}
         data={data ? data : []}
-        placeholder={t("document.field.placeholder." + field)}
+        placeholder={t("document.formDefinition.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -83,72 +56,55 @@ export function UpdatePage({ entityDefinitionId }) {
     return ret;
   };
 
-  const createCheck = (field, data) => {
+  const createTextField = (field) => {
     const ret = (
-      <Checkbox
-        label={t("document.field.label." + field)}
-        placeholder={t("document.field.placeholder." + field)}
+      <TextInput
+        w={"100%"}
+        label={t("document.formDefinition.label." + field)}
+        placeholder={t("document.formDefinition.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
 
     return ret;
   };
+
+  const getData = async () => {
+    const params = { token: user.token, id: formDefinitionId, sectionId: selectedSectionId };
+    let ret = await findFormDefinitionSectionById(params);
+    setSection(ret);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [selectedSectionId]);
+
+  useEffect(() => {
+    if (section) {
+      form.setFieldValue("name", section.name);
+      form.setFieldValue("entity", section.entity);
+      form.setFieldValue("relation", section.relation);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section]);
 
   const onClose = () => {
     navigate("../");
   };
 
-  const getData = async () => {
-    const params = { token: user.token, entityDefinitionId: entityDefinitionId, fieldId: selectedFieldId };
-    let ret = await findFieldById(params);
-    setField(ret);
-
-    ret = await findAllDataSource(params);
-    setDataSources(
-      ret.map((p) => {
-        return { value: p.id, label: p.name };
-      })
-    );
-
-    const filterRows = rows.filter((r) => r.widget === "Select");
-    ret = filterRows.map((r) => {
-      return { value: r.id, label: r.name };
-    });
-    setRelatedField(ret);
-  };
-
-  useEffect(() => {
-    getData();
-  }, [selectedFieldId]);
-
-  useEffect(() => {
-    if (field) {
-      form.setFieldValue("name", field.name);
-      form.setFieldValue("description", field.description);
-      form.setFieldValue("type", field.type);
-      form.setFieldValue("required", field.required);
-      form.setFieldValue("widget", field.widget);
-      form.setFieldValue("dataSourceId", field.dataSourceId);
-      form.setFieldValue("relatedFieldId", field.relatedFieldId);
-      form.setFieldValue("defatultValue", field.defatultValue);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [field]);
-
   const onUpdate = async (values) => {
     const params = {
       token: user.token,
-      entityDefinitionId: entityDefinitionId,
-      fieldId: selectedFieldId,
+      id: formDefinitionId,
+      sectionId: selectedSectionId,
       values: values,
     };
 
     setWorking(true);
     try {
-      await updateField(params);
+      await updateFormDefinitionSection(params);
       setWorking(false);
-      setReloadFields(Date.now());
+      setReloadSections(Date.now());
       navigate("../");
     } catch (error) {
       setWorking(false);
@@ -170,7 +126,7 @@ export function UpdatePage({ entityDefinitionId }) {
             fontWeight: 700,
           })}
         >
-          {t("businessProcess.parameters.title.update")}
+          {t("document.formDefinition.title.update")}
         </Title>
 
         <form
@@ -178,39 +134,20 @@ export function UpdatePage({ entityDefinitionId }) {
             onUpdate(values);
           })}
         >
-          {height ? (
-            <>
-              <ScrollArea type="scroll" style={{ width: "100%" }}>
-                <Group mb={"md"} grow>
-                  {createTextField("name")}
-                </Group>
-                <Group mb={"md"} grow>
-                  {createTextField("description")}
-                </Group>
+          <Group mb={"md"} grow>
+            {createTextField("name")}
+          </Group>
 
-                <Group mb={"md"} grow>
-                  {createCheck("required")}
-                </Group>
+          <Group mb={"md"} grow>
+            {createSelect("entity", entities)}
+          </Group>
 
-                <Group mb={"md"} grow>
-                  {createSelect("type", fieldType)}
-                  {createSelect("widget", widgets)}
-                </Group>
-                <Group mb={"md"} grow>
-                  {createSelect("dataSource", dataSources)}
-                  {createSelect("relatedFieldId", relatedField)}
-                </Group>
+          <Group mb={"md"}>{createSelect("relation", relations)}</Group>
 
-                <Group mb={"md"} grow>
-                  {createTextField("defaultValue")}
-                </Group>
-              </ScrollArea>
-              <Group position="right" mt="xl" mb="xs">
-                <Button type="submit">{t("button.accept")}</Button>
-                <Button onClick={onClose}>{t("button.cancel")}</Button>
-              </Group>
-            </>
-          ) : null}
+          <Group position="right" mt="xl" mb="xs">
+            <Button type="submit">{t("button.accept")}</Button>
+            <Button onClick={onClose}>{t("button.cancel")}</Button>
+          </Group>
         </form>
       </Container>
     </Container>

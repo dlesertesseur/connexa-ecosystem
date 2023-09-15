@@ -1403,6 +1403,8 @@
       "columns": ["Nombre", "Descripcion"],
 
       "buttons": {
+        "addRow":"Agregar fila",
+        "deleteRow":"Eliminar fila"
       },
 
       "label": {
@@ -1451,11 +1453,16 @@
 
       "label": {
         "name": "Nombre",
-        "description": "Descripcion"
+        "description": "Descripcion",
+        "sections": "Secciones",
+        "relation": "Relacion con la entidad",
+        "entity": "Entidad"
       },
       "placeholder": {
         "name": "un nombre",
-        "description": "una descripcion"
+        "description": "una descripcion",
+        "relation": "una relacion con la entidad",
+        "entity": "una entidad"
       },
       "title": {
         "create": "Nueva definicion de formulario",
@@ -1497,15 +1504,17 @@
     },
 
     "section": {
-      "columns": ["Entidad", "Relacion"],
+      "columns": ["Nombre", "Entidad", "Relacion"],
       "buttons": {
       },
 
       "label": {
+        "name":"Nombre",
         "entity": "Entidad",
         "relacion": "Relacion"
       },
       "placeholder": {
+        "name":"un nombre",
         "entity": "una entidad",
         "relacion": "una relacion"
       },

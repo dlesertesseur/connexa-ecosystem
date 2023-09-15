@@ -196,7 +196,7 @@ export function DeletePage({ entityDefinitionId }) {
         >
           {height ? (
             <>
-              <ScrollArea type="scroll" style={{ width: "100%" }}>
+              <ScrollArea type="scroll" style={{ width: "100%" }} h={height - 330}>
                 <Group mb={"md"} grow>
                   {createTextField("name")}
                 </Group>

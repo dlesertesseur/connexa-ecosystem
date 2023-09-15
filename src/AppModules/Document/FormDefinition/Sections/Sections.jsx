@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import SortedTable from "../../../../Components/Crud/SortedTable";
+import FormDefinitionHeader from "../FormDefinitionHeader";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
-import { FieldStateContext, AbmStateContext } from "../Context";
+import { SectionStateContext, AbmStateContext } from "../Context";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { Stack } from "@mantine/core";
 import { useContext } from "react";
-import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
-import EntityDefinitionHeader from "../EntityDefinitionHeader";
+import { findFormDefinitionById } from "../../../../DataAccess/FormDefinition";
+import { DOCUMENTS } from "../../../../Constants/DOCUMENTS";
+import { findAllEntityDefinition } from "../../../../DataAccess/EntityDefinition";
 
 const Sections = () => {
   const { user } = useSelector((state) => state.auth.value);
@@ -23,16 +25,38 @@ const Sections = () => {
   const [loading, setLoading] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [reloadSections, setReloadSections] = useState(null);
-  const [formDefinition, setEntityDefinition] = useState(null);
+  const [formDefinition, setFormDefinition] = useState(null);
   const navigate = useNavigate();
+
+  const [entities, setEntities] = useState(null);
+  const [relations, setRelations] = useState(null);
 
   const HEADER = 32;
 
+  const getAditionalData = async () => {
+    const params = { token: user.token};
+    let ret = await findAllEntityDefinition(params);
+    setEntities(
+      ret.map((p) => {
+        return { value: p.id, label: p.name };
+      })
+    );
+
+    const relations = DOCUMENTS.relations.map((p) => {
+      return { value: p.id, label: p.name };
+    });
+    setRelations(relations);
+  };
+
+  useEffect(() => {
+    getAditionalData();
+  }, []);
+
   const getData = async () => {
     const params = { token: user.token, id: selectedRowId };
-    const ret = await findEntityDefinitionById(params);
-    setEntityDefinition(ret);
-    setRows(ret?.fields);
+    let ret = await findFormDefinitionById(params);
+    setFormDefinition(ret);
+    setRows(ret?.sections);
   };
 
   useEffect(() => {
@@ -40,20 +64,23 @@ const Sections = () => {
   }, [selectedRowId, reloadSections]);
 
   let col = 0;
-  const cols = t("document.field.columns", { returnObjects: true });
+  const cols = t("document.section.columns", { returnObjects: true });
   const columns = [
+    { headerName: cols[col++], fieldName: "name", align: "left" },
     { headerName: cols[col++], fieldName: "entity", align: "left" },
-    { headerName: cols[col++], fieldName: "relacion", align: "left" },
+    { headerName: cols[col++], fieldName: "relation", align: "left" },
   ];
 
   const ret = rows ? (
-    <FieldStateContext.Provider
+    <SectionStateContext.Provider
       value={{
         reloadSections,
         setReloadSections,
         selectedSectionId,
         setSelectedSectionId,
-        rows
+        entities,
+        relations,
+        rows,
       }}
     >
       <Stack spacing={"xs"}>
@@ -63,7 +90,7 @@ const Sections = () => {
             backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
           })}
         >
-          <EntityDefinitionHeader text={t("document.formDefinition.label.fields")} formDefinition={formDefinition}/>
+          <FormDefinitionHeader text={t("document.formDefinition.label.sections")} formDefinition={formDefinition} />
 
           <Routes>
             <Route
@@ -84,8 +111,8 @@ const Sections = () => {
               }
             ></Route>
             <Route path="create" element={<CreatePage formDefinitionId={formDefinition?.id} />} />
-            <Route path="update" element={<UpdatePage formDefinitionId={formDefinition?.id}/>} />
-            <Route path="delete" element={<DeletePage formDefinitionId={formDefinition?.id}/>} />
+            <Route path="update" element={<UpdatePage formDefinitionId={formDefinition?.id} />} />
+            <Route path="delete" element={<DeletePage formDefinitionId={formDefinition?.id} />} />
           </Routes>
         </Stack>
       </Stack>
@@ -99,7 +126,7 @@ const Sections = () => {
         title={t("status.error")}
         text={error}
       />
-    </FieldStateContext.Provider>
+    </SectionStateContext.Provider>
   ) : null;
 
   return ret;

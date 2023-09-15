@@ -11,8 +11,8 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { Stack } from "@mantine/core";
 import { useContext } from "react";
-import EntityDefinitionHeader from "../EntityDefinitionHeader";
 import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
+import EntityDefinitionHeader from "../EntityDefinitionHeader";
 
 const Fields = () => {
   const { user } = useSelector((state) => state.auth.value);
@@ -33,6 +33,7 @@ const Fields = () => {
     const ret = await findEntityDefinitionById(params);
     setEntityDefinition(ret);
     setRows(ret?.fields);
+    console.log("Fields ->", ret);
   };
 
   useEffect(() => {

@@ -1369,28 +1369,28 @@
   },
 
   "businessProcessModelInbox": {
-    "buttons":{
-      "create":"Create a new instance",
-      "take":"Take",
-      "release":"Release",
-      "doit":"Do it",
-      "transfer":"Transfer",
-      "back":"Back",
-      "viewOnDiagram":"View"
+    "buttons": {
+      "create": "Create a new instance",
+      "take": "Take",
+      "release": "Release",
+      "doit": "Do it",
+      "transfer": "Transfer",
+      "back": "Back",
+      "viewOnDiagram": "View"
     },
-    "label":{
-      "selectTask":"Select task"
+    "label": {
+      "selectTask": "Select task"
     },
     "columns": {
-      "processModel":["Name", "Description"],
-      "tasks":["Name", "Role", "User", "Status"]
+      "processModel": ["Name", "Description"],
+      "tasks": ["Name", "Role", "User", "Status"]
     },
-    "tabs":{
-      "businessProcessModels":"Business process models",
-      "tasks":"Tasks"
+    "tabs": {
+      "businessProcessModels": "Business process models",
+      "tasks": "Tasks"
     },
-    "messages":{
-      "creation":"Process model instance created successfully"
+    "messages": {
+      "creation": "Process model instance created successfully"
     },
     "title": {
       "create": "New business process model",
@@ -1403,20 +1403,21 @@
   },
 
   "document": {
-    "messages": {
-    },
+    "messages": {},
 
     "entityDefinition": {
       "columns": ["Name", "Description"],
 
       "buttons": {
+        "addRow":"Add row",
+        "deleteRow":"Delete row"
       },
 
       "label": {
         "name": "Name",
         "description": "Description",
-        "fields":"Fields",
-        "formLayout":"Form layout"
+        "fields": "Fields",
+        "formLayout": "Form layout"
       },
       "placeholder": {
         "name": "a name",
@@ -1432,8 +1433,7 @@
     "dataSource": {
       "columns": ["Name", "Description"],
 
-      "buttons": {
-      },
+      "buttons": {},
 
       "label": {
         "name": "Name",
@@ -1453,47 +1453,50 @@
     "formDefinition": {
       "columns": ["Name", "Description"],
 
-      "buttons": {
-      },
+      "buttons": {},
 
       "label": {
         "name": "Name",
-        "description": "Description"
+        "description": "Description",
+        "sections": "Sections",
+        "relation": "Entity relation",
+        "entity": "Entity"
       },
       "placeholder": {
         "name": "a name",
-        "description": "a description"
+        "description": "a description",
+        "relation": "an entity relation",
+        "entity": "an entity"
       },
       "title": {
-        "create": "New form definition",
-        "update": "Update form definition",
-        "delete": "Delete form definition"
+        "create": "New section",
+        "update": "Update section",
+        "delete": "Delete section"
       }
     },
 
     "field": {
       "columns": ["Name", "Description", "Type", "Required", "Widget"],
-      "buttons": {
-      },
+      "buttons": {},
 
       "label": {
         "name": "Name",
         "description": "Description",
         "type": "Type",
-        "required":"Reuquired",
-        "widget":"Widget",
-        "dataSource":"Data source",
-        "relatedFieldId":"Related field",
-        "defaultValue":"Default value"
+        "required": "Reuquired",
+        "widget": "Widget",
+        "dataSource": "Data source",
+        "relatedFieldId": "Related field",
+        "defaultValue": "Default value"
       },
       "placeholder": {
         "name": "a name",
         "description": "a description",
         "type": "a type",
-        "widget":"select a widget",
-        "dataSource":"select a data source",
-        "relatedFieldId":"select a related field",
-        "defaultValue":"a default value"
+        "widget": "select a widget",
+        "dataSource": "select a data source",
+        "relatedFieldId": "select a related field",
+        "defaultValue": "a default value"
       },
       "title": {
         "create": "New field",
@@ -1503,15 +1506,16 @@
     },
 
     "section": {
-      "columns": ["Entity", "Relation"],
-      "buttons": {
-      },
+      "columns": ["Name","Entity", "Relation"],
+      "buttons": {},
 
       "label": {
+        "name":"Name",
         "entity": "Entity",
         "relacion": "Relation"
       },
       "placeholder": {
+        "name": "a name",
         "entity": "an entity",
         "relacion": "a relation"
       },

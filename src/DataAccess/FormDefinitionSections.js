@@ -2,7 +2,7 @@ import uuid from "react-uuid";
 import { API } from "../Constants";
 import { DOCUMENTS } from "../Constants/DOCUMENTS";
 
-const findAllEntityDefinition = async (parameters) => {
+const findAllFormDefinitionSections = async (parameters) => {
   try {
     const requestOptions = {
       method: "GET",
@@ -12,18 +12,18 @@ const findAllEntityDefinition = async (parameters) => {
         token: parameters.token,
       },
     };
-    const url = API.entityDefinition.findAll;
+    const url = API.sections.findAll;
     // const res = await fetch(url, requestOptions);
     // const data = await res.json();
 
-    const data = DOCUMENTS.entityDefinition;
+    const data = DOCUMENTS.formDefinition;
     return data;
   } catch (error) {
     return error;
   }
 };
 
-const createEntityDefinition = async (parameters) => {
+const createFormDefinitionSection = async (parameters) => {
   try {
     const body = JSON.stringify(parameters.values);
 
@@ -37,12 +37,14 @@ const createEntityDefinition = async (parameters) => {
       body: body,
     };
 
-    const url = API.entityDefinition.create;
+    const url = API.sections.create;
 
     // const res = await fetch(url, requestOptions);
     // const data = await res.json();
 
-    const data = DOCUMENTS.entityDefinition.push({ ...parameters.values, id: uuid() });
+    const index = DOCUMENTS.formDefinition.findIndex((obj => obj.id == parameters.id));
+    const sections = DOCUMENTS.formDefinition[index].sections;
+    const data = sections.push({ ...parameters.values, id: uuid() });
 
     return data;
   } catch (error) {
@@ -50,7 +52,7 @@ const createEntityDefinition = async (parameters) => {
   }
 };
 
-const findEntityDefinitionById = async (parameters) => {
+const findFormDefinitionSectionById = async (parameters) => {
   try {
     const requestOptions = {
       method: "GET",
@@ -60,11 +62,13 @@ const findEntityDefinitionById = async (parameters) => {
         token: parameters.token,
       },
     };
-    const url = API.entityDefinition.findById + parameters.id;
+    const url = API.sections.findById + parameters.id;
     // const res = await fetch(url, requestOptions);
     // const data = await res.json();
 
-    const data = DOCUMENTS.entityDefinition.find((e) => e.id === parameters.id);
+    const index = DOCUMENTS.formDefinition.findIndex((obj => obj.id == parameters.id));
+    const sections = DOCUMENTS.formDefinition[index].sections;
+    const data = sections.find((e) => e.id === parameters.sectionId);
 
     return data;
   } catch (error) {
@@ -72,7 +76,7 @@ const findEntityDefinitionById = async (parameters) => {
   }
 };
 
-const updateEntityDefinition = async (parameters) => {
+const updateFormDefinitionSection = async (parameters) => {
   try {
     const body = JSON.stringify(parameters.values);
 
@@ -86,20 +90,26 @@ const updateEntityDefinition = async (parameters) => {
       body: body,
     };
 
-    const url = API.entityDefinition.update + parameters.id;
+    const url = API.sections.update + parameters.id;
     // const res = await fetch(url, requestOptions);
     // const data = await res.json();
 
-    const index = DOCUMENTS.entityDefinition.findIndex((obj) => obj.id == parameters.id);
-    DOCUMENTS.entityDefinition[index].name = parameters.values.name;
-    DOCUMENTS.entityDefinition[index].description = parameters.values.description;
-    return DOCUMENTS.entityDefinition[index];
+    let index = DOCUMENTS.formDefinition.findIndex((obj => obj.id == parameters.id));
+    const sections = DOCUMENTS.formDefinition[index].sections;
+
+    index = sections.findIndex((obj => obj.id == parameters.sectionId));
+
+    sections[index].name = parameters.values.name;
+    sections[index].entity = parameters.values.entity;
+    sections[index].relation = parameters.values.relation;
+    return sections[index];
+
   } catch (error) {
     return error;
   }
 };
 
-const deleteEntityDefinition = async (parameters) => {
+const deleteFormDefinitionSection = async (parameters) => {
   try {
     const body = JSON.stringify(parameters.data);
 
@@ -113,12 +123,15 @@ const deleteEntityDefinition = async (parameters) => {
       body: body,
     };
 
-    const url = API.entityDefinition.delete + parameters.id;
+    const url = API.sections.delete + parameters.id;
     // const res = await fetch(url, requestOptions);
     // const data = await res.json();
 
-    const data = DOCUMENTS.entityDefinition.filter((e) => e.id !== parameters.id);
-    DOCUMENTS.entityDefinition = data;
+    let index = DOCUMENTS.formDefinition.findIndex((obj => obj.id == parameters.id));
+    const sections = DOCUMENTS.formDefinition[index].sections;
+
+    const data = sections.filter((e) => e.id !== parameters.sectionId);
+    DOCUMENTS.formDefinition[index].sections = data;
 
     return data;
   } catch (error) {
@@ -127,9 +140,9 @@ const deleteEntityDefinition = async (parameters) => {
 };
 
 export {
-  createEntityDefinition,
-  updateEntityDefinition,
-  deleteEntityDefinition,
-  findEntityDefinitionById,
-  findAllEntityDefinition,
+  createFormDefinitionSection,
+  updateFormDefinitionSection,
+  deleteFormDefinitionSection,
+  findFormDefinitionSectionById,
+  findAllFormDefinitionSections,
 };

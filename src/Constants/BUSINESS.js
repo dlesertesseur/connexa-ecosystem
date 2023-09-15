@@ -195,8 +195,9 @@ const WIDGETS = [
     { id: 2, name: "TextArea" },
     { id: 3, name: "NumberInput" },
     { id: 4, name: "Select" },
-    { id: 5, name: "Upload image" },
-    { id: 6, name: "Upload document" },
+    { id: 5, name: "CheckBox" },
+    { id: 6, name: "Upload image" },
+    { id: 7, name: "Upload document" },
   ];
   
 const SPRINTS = [

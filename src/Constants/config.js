@@ -37,6 +37,17 @@ const config = {
   COMEX_API_KEY: import.meta.env.VITE_APP_COMEX_API_KEY,
   exportImageWidth: 1024 * 2,
   exportImageHeight: 768 * 2,
+  components: {
+    types: {
+      label: "label",
+      panel: "panel",
+      textInput: "textInput",
+      textArea: "textArea",
+      select: "select",
+      checkbox: "checkbox",
+      button: "button",
+    },
+  },
 };
 
 export { config };

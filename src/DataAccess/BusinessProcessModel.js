@@ -1,59 +1,5 @@
 import { API } from "../Constants";
 
-// async function createBusinessProcessModel(parameters) {
-//   try {
-//     const obj = {
-//       name: parameters.values.name,
-//       description: parameters.values.description,
-//     };
-
-//     const body = JSON.stringify(obj);
-
-//     const requestOptions = {
-//       method: "POST",
-//       mode: "cors",
-//       headers: {
-//         "Content-Type": "application/json",
-//         token: parameters.token,
-//       },
-//       body: body,
-//     };
-
-//     const url = API.businessProcess.create;
-//     const res = await fetch(url, requestOptions);
-//     const data = await res.json();
-
-//     return data;
-//   } catch (error) {
-//     return error;
-//   }
-// }
-
-// async function updateBusinessProcessModel(parameters) {
-//   try {
-//     const body = JSON.stringify({
-//       id: parameters.data.id,
-//       name: parameters.data.name,
-//     });
-
-//     const requestOptions = {
-//       method: "PUT",
-//       mode: "cors",
-//       headers: {
-//         "Content-Type": "application/json",
-//         token: parameters.token,
-//       },
-//       body: body,
-//     };
-
-//     const res = await fetch(API.businessProcess.update, requestOptions);
-//     const data = await res.json();
-//     return data;
-//   } catch (error) {
-//     return error;
-//   }
-// }
-
 async function saveBusinessProcessModel(parameters) {
   const body = JSON.stringify({
     id: parameters.id,

@@ -11,7 +11,7 @@ import CrudFrame from "../../../Components/Crud/CrudFrame";
 import { findAllEntityDefinition } from "../../../DataAccess/EntityDefinition";
 import { IconDatabase, IconForms, IconLayout } from "@tabler/icons-react";
 import Fields from "./Fields/Fields";
-import FormLayout from "./formLayout/FormLayout";
+import FormLayout from "./FormLayout/FormLayout";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);

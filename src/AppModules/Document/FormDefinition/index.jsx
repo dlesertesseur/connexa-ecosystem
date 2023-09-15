@@ -8,7 +8,9 @@ import { AbmStateContext } from "./Context";
 
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
+import Sections from "./Sections/Sections";
 import { findAllFormDefinition } from "../../../DataAccess/FormDefinition";
+import { IconSection } from "@tabler/icons-react";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -79,9 +81,9 @@ const DynamicApp = ({ app }) => {
         relationshipPages={[
           {
             path: "sections",
-            icon: <IconDatabase size={20} />,
+            icon: <IconSection size={20} />,
             key: "document.formDefinition.label.sections",
-            element: <Fields back={"../"} />,
+            element: <Sections back={"../"} />,
           },
         ]}
       />

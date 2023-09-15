@@ -21,12 +21,14 @@ import { useState } from "react";
 import { useMemo } from "react";
 import { Modal } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
+import { findAllByOrganizationId } from "../../../../DataAccess/OrganizationRole";
 
 const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, taskId }) => {
-  const { user } = useSelector((state) => state.auth.value);
+  const { user, organizationSelected } = useSelector((state) => state.auth.value);
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
+  const [roles, setRoles] = useState(null);
   const { height, width } = useViewportSize();
 
 
@@ -39,12 +41,12 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
     let roleFound = null;
     let assignedRole = null;
 
-    // if (id) {
-    //   roleFound = roles.find((r) => r.role.id === parseInt(id));
-    //   if (roleFound) {
-    //     assignedRole = { id: roleFound.role.id, name: roleFound.role.name };
-    //   }
-    // }
+    if (id) {
+      roleFound = roles.find((r) => r.role.id === parseInt(id));
+      if (roleFound) {
+        assignedRole = { id: roleFound.role.id, name: roleFound.role.name };
+      }
+    }
     return assignedRole;
   };
 
@@ -52,6 +54,10 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
     let params = { token: user.token, id: businessProcessInstanceId };
     const ret = await findBusinessProcessInstanceById(params);
     setBusinessProcessModel(ret);
+
+    params = { token: user.token, id: organizationSelected.id };
+    const roles = await findAllByOrganizationId(params);
+    setRoles(roles);
   };
 
   useEffect(() => {
