@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { EntityLayoutContext } from "../../Context";
 
 // eslint-disable-next-line react/prop-types
-const ItemLabel = ({ field }) => {
+const ItemEntityList = ({ field }) => {
   const { selectedField, setSelectedField, setSelectedPanel } = useContext(EntityLayoutContext);
   return (
     <Paper
@@ -25,4 +25,4 @@ const ItemLabel = ({ field }) => {
   );
 };
 
-export default ItemLabel;
+export default ItemEntityList;

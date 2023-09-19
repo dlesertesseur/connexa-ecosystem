@@ -138,7 +138,7 @@ const DocumentEntityForm = ({ entityDef, height, onSubmitEntity }) => {
     fields?.forEach((p) => {
       const group = fieldsByRow.get(p.row);
       group?.forEach((f) => {
-        ret[f.name] = f.type === 1 ? "" : null;
+        ret[f.name] = (f.type === 1 || f.type === 2) ? "" : null;
       });
     });
 
