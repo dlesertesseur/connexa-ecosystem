@@ -34,7 +34,7 @@ const Sections = () => {
   const HEADER = 32;
 
   const getAditionalData = async () => {
-    const params = { token: user.token};
+    const params = { token: user.token };
     let ret = await findAllEntityDefinition(params);
     setEntities(
       ret.map((p) => {
@@ -55,20 +55,34 @@ const Sections = () => {
   const getData = async () => {
     const params = { token: user.token, id: selectedRowId };
     let ret = await findFormDefinitionById(params);
+
     setFormDefinition(ret);
-    setRows(ret?.sections);
+    if (ret?.sections) {
+      const data = ret.sections.map((s) => {
+        const entity = entities?.find((e) => e.value === s.entity);
+        const name = entity ? entity.label : "NOT FOUND";
+
+        const relation = relations?.find((e) => e.value === s.relation);
+        const relacionName = relation ? relation.label : "NOT FOUND";
+
+        const row = { ...s, entityName: name, relationName: relacionName };
+        return row;
+      });
+
+      setRows(data);
+    }
   };
 
   useEffect(() => {
     getData();
-  }, [selectedRowId, reloadSections]);
+  }, [selectedRowId, reloadSections, entities]);
 
   let col = 0;
   const cols = t("document.section.columns", { returnObjects: true });
   const columns = [
     { headerName: cols[col++], fieldName: "name", align: "left" },
-    { headerName: cols[col++], fieldName: "entity", align: "left" },
-    { headerName: cols[col++], fieldName: "relation", align: "left" },
+    { headerName: cols[col++], fieldName: "entityName", align: "left" },
+    { headerName: cols[col++], fieldName: "relationName", align: "left" },
   ];
 
   const ret = rows ? (

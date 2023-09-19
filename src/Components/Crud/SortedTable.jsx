@@ -297,8 +297,11 @@ export default function SortedTable({
                 <Button
                   key={r.path}
                   onClick={() => {
-                    //r.onPress ? r.onPress(r) : navigate("." + r.path);
-                    r.onPress ? r.onPress(r) : navigate(r.path);
+                    if(r.onClick){
+                      r.onClick(r);
+                    }else{
+                      r.onPress ? r.onPress(r) : navigate(r.path);
+                    }
                   }}
                   disabled={r.customState ? r.customState() : !rowSelected ? true : false}
                 >

@@ -8,7 +8,7 @@ import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/BUSINESS";
+import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/DOCUMENTS";
 import { FieldStateContext } from "../Context";
 import { deleteField, findFieldById,  } from "../../../../DataAccess/EntityDefinitionFields";
 import { findAllDataSource } from "../../../../DataAccess/DataSource";

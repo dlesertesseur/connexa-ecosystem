@@ -2,33 +2,6 @@ import { arrayToMap } from "../Util";
 
 const BUSINESS = {
   list: [
-    // {
-    //   id: uuid(),
-    //   name: "Proceso de Importacion",
-    //   description: "Especifica el proceso de importacion de productos",
-    //   status: "ACTIVO",
-    //   stages: [
-    //     {
-    //       id: uuid(),
-    //       name: "Stage 01",
-    //       actions: [
-    //         {
-    //           id: uuid(),
-    //           name: "Action 01",
-    //           tasks: [{ id: uuid(), name: "Task 01" }],
-    //         },
-    //       ],
-    //     },
-    //   ],
-    //   parameters: [
-    //     {
-    //       id: uuid(),
-    //       name: "N_ORDER",
-    //       description: "Nunero de Orden de compra",
-    //       type: 1,
-    //     },
-    //   ],
-    // },
     {
       id: "8a4f42a0-ad01-ff86-01c5-2b7581868995",
       name: "Proceso de Importacion",
@@ -183,27 +156,6 @@ const BUSINESS = {
   ],
 };
 
-const PARAMETERS_TYPE = [
-  { id: 1, name: "String" },
-  { id: 2, name: "Numeric" },
-  { id: 3, name: "Boolean" },
-  { id: 4, name: "UUID" },
-];
-
-const PARAMETERS_TYPE_NAMES_BY_ID = arrayToMap(PARAMETERS_TYPE);
-
-const WIDGETS = [
-  { id: 1, name: "TextInput" },
-  { id: 2, name: "TextArea" },
-  { id: 3, name: "NumberInput" },
-  { id: 4, name: "Select" },
-  { id: 5, name: "CheckBox" },
-  { id: 6, name: "Upload image" },
-  { id: 7, name: "Upload document" },
-];
-
-const WIDGETS_NAMES_BY_ID = arrayToMap(WIDGETS);
-
 const SPRINTS = [
   { id: 1, name: "Def. Surtido" },
   { id: 2, name: "Ejec. Compra" },
@@ -211,4 +163,4 @@ const SPRINTS = [
   { id: 4, name: "Distribucion" },
   { id: 5, name: "Venta" },
 ];
-export { BUSINESS, PARAMETERS_TYPE, SPRINTS, WIDGETS, WIDGETS_NAMES_BY_ID, PARAMETERS_TYPE_NAMES_BY_ID };
+export { BUSINESS, SPRINTS};

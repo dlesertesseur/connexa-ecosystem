@@ -23,6 +23,16 @@ const findAllEntityDefinition = async (parameters) => {
   }
 };
 
+const saveEntityDefinition = async (parameters) => 
+{
+  const data = DOCUMENTS.entityDefinition.find((e) => e.id === parameters.id);
+  if(data){
+    updateEntityDefinition(parameters);
+  }else{
+    createEntityDefinition(parameters);
+  }
+}
+
 const createEntityDefinition = async (parameters) => {
   try {
     const body = JSON.stringify(parameters.values);
@@ -43,6 +53,7 @@ const createEntityDefinition = async (parameters) => {
     // const data = await res.json();
 
     const data = DOCUMENTS.entityDefinition.push({ ...parameters.values, id: uuid() });
+    console.log("createEntityDefinition parameters ->", parameters, data);
 
     return data;
   } catch (error) {
@@ -86,6 +97,8 @@ const updateEntityDefinition = async (parameters) => {
       body: body,
     };
 
+    console.log("updateEntityDefinition parameters ->", parameters);
+
     const url = API.entityDefinition.update + parameters.id;
     // const res = await fetch(url, requestOptions);
     // const data = await res.json();
@@ -93,6 +106,7 @@ const updateEntityDefinition = async (parameters) => {
     const index = DOCUMENTS.entityDefinition.findIndex((obj) => obj.id == parameters.id);
     DOCUMENTS.entityDefinition[index].name = parameters.values.name;
     DOCUMENTS.entityDefinition[index].description = parameters.values.description;
+    DOCUMENTS.entityDefinition[index].fields = parameters.values.fields;
     return DOCUMENTS.entityDefinition[index];
   } catch (error) {
     return error;
@@ -132,4 +146,5 @@ export {
   deleteEntityDefinition,
   findEntityDefinitionById,
   findAllEntityDefinition,
+  saveEntityDefinition
 };

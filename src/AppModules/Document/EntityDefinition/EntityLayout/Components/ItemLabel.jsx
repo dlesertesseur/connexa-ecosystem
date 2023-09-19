@@ -12,7 +12,7 @@ const ItemLabel = ({ field }) => {
       p={"xs"}
       withBorder
       spacing={3}
-      bg={selectedField?.id === field.id ? "blue.3" : "gray.2"}
+      bg={selectedField?.id === field.id ? "blue.2" : "gray.2"}
       onMouseDown={(e) => {
         setSelectedField(field);
         setSelectedPanel(null);

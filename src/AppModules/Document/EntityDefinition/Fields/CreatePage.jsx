@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
-import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/BUSINESS";
+import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/DOCUMENTS";
 import { createBusinessProcessParameter } from "../../../../DataAccess/BusinessProcess";
 import { useContext } from "react";
 import { FieldStateContext } from "../Context";

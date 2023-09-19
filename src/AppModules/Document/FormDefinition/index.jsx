@@ -9,8 +9,9 @@ import { AbmStateContext } from "./Context";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import Sections from "./Sections/Sections";
+import ViewDocumentModal from "./ViewDocumentModal";
 import { findAllFormDefinition } from "../../../DataAccess/FormDefinition";
-import { IconSection } from "@tabler/icons-react";
+import { IconEye, IconSection } from "@tabler/icons-react";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -21,6 +22,7 @@ const DynamicApp = ({ app }) => {
   const [loading, setLoading] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [reload, setReload] = useState(null);
+  const [openView, setOpenView] = useState(false);
 
   const getData = async () => {
     const params = {
@@ -39,7 +41,6 @@ const DynamicApp = ({ app }) => {
         };
       });
       setRows(ret);
-
     } catch (error) {
       setError(error);
     }
@@ -66,6 +67,16 @@ const DynamicApp = ({ app }) => {
         setError,
       }}
     >
+      {selectedRowId ? (
+        <ViewDocumentModal
+          open={openView}
+          close={() => {
+            setOpenView(false);
+          }}
+          documentDefinitionId={selectedRowId}
+        />
+      ) : null}
+
       <CrudFrame
         app={app}
         columns={columns}
@@ -84,6 +95,12 @@ const DynamicApp = ({ app }) => {
             icon: <IconSection size={20} />,
             key: "document.formDefinition.label.sections",
             element: <Sections back={"../"} />,
+          },
+          {
+            path: "view",
+            icon: <IconEye size={20} />,
+            key: "document.formDefinition.label.view",
+            onClick: () => {setOpenView(true)},
           },
         ]}
       />

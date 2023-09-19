@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Button, Container, Group, Paper, ScrollArea, SegmentedControl, Stack, Text } from "@mantine/core";
 import { useWindowSize } from "../../../../Hook";
 import { useTranslation } from "react-i18next";
-import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
+import { findEntityDefinitionById, saveEntityDefinition } from "../../../../DataAccess/EntityDefinition";
 import { useContext } from "react";
 import { AbmStateContext, EntityLayoutContext } from "../Context";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { config } from "../../../../Constants/config";
-import { IconDeviceFloppy, IconRowInsertBottom } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconEye, IconRowInsertBottom, IconViewfinder } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import uuid from "react-uuid";
 import EntityDefinitionHeader from "../EntityDefinitionHeader";
 import FieldModal from "./FieldModal";
 import DropRow from "./Components/DropRow";
+import ViewLayoutModal from "./ViewLayoutModal";
 
 const EntityLayout = ({ back }) => {
   const wsize = useWindowSize();
@@ -33,6 +34,7 @@ const EntityLayout = ({ back }) => {
 
   const [containerSize, setContainerSize] = useState("md");
   const [opened, { open, close }] = useDisclosure(false);
+  const [openView, setOpenView] = useState(false);
 
   const { user } = useSelector((state) => state.auth.value);
   const { selectedRowId, reloadFields } = useContext(AbmStateContext);
@@ -42,11 +44,32 @@ const EntityLayout = ({ back }) => {
     const params = { token: user.token, id: selectedRowId };
     const ret = await findEntityDefinitionById(params);
     setEntityDefinition(ret);
+
+    const fields = ret.fields;
+    const panels = [];
+    const widgetByPanel = new Map();
+
+    fields?.forEach((field) => {
+      const id = `panel-${field.row}`;
+      const group = widgetByPanel.get(id);
+
+      if (group !== undefined) {
+        widgetByPanel.set(id, [...group, field]);
+      } else {
+        widgetByPanel.set(id, [field]);
+        panels.push({ id: id });
+      }
+    });
+
+    setPanels(panels);
+    setWidgetByPanel(widgetByPanel);
+
+    //console.log("getData fields ->", panels, widgetByPanel);
   };
 
-  // useEffect(() => {
-  //   getData();
-  // }, [selectedRowId, reloadFields]);
+  useEffect(() => {
+    getData();
+  }, [selectedRowId, reloadFields]);
 
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -57,14 +80,41 @@ const EntityLayout = ({ back }) => {
   };
 
   const save = (e) => {
-    panels.forEach((p, index) => {
+    const fields = [];
+
+    panels.forEach((p, row) => {
       const components = widgetByPanel.get(p.id);
-      console.log(
-        `panel ${index} components ->`,
-        components.map((c) => c.description)
-      );
+
+      components.forEach((w, order) => {
+        const obj = { ...w };
+        obj.row = row;
+        obj.order = order;
+        fields.push(obj);
+      });
     });
+
+    entityDefinition.fields = fields;
+
+    const params = {
+      token: user.token,
+      id: entityDefinition.id,
+      name: entityDefinition.name,
+      description: entityDefinition.description,
+      size: containerSize,
+      values: {
+        name: entityDefinition.name,
+        description: entityDefinition.description,
+        fields: entityDefinition.fields,
+      },
+    };
+
+    saveEntityDefinition(params);
   };
+
+  const deletePrefix = (cadena) => {
+    var ret = cadena.replace(/^panel-/, '');
+    return ret;
+  }
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -87,10 +137,12 @@ const EntityLayout = ({ back }) => {
   };
 
   const deleteField = () => {
-    let componentsInPanel = widgetByPanel.get(selectedField.rowId);
+    const panelId = `panel-${selectedField.row}`;
+
+    let componentsInPanel = widgetByPanel.get(panelId);    
     if (componentsInPanel) {
       const ret = componentsInPanel.filter((f) => f.id !== selectedField.id);
-      setWidgetByPanel((widgetByPanel) => new Map(widgetByPanel.set(selectedField.rowId, ret)));
+      setWidgetByPanel((widgetByPanel) => new Map(widgetByPanel.set(panelId, ret)));
     }
 
     setSelectedPanel(null);
@@ -105,10 +157,15 @@ const EntityLayout = ({ back }) => {
     open();
   };
 
+  const viewEntityDefinition = (e) => {
+    setOpenView(true);
+  };
+
   const onCreate = (values) => {
     if (values.id === null) {
       values.id = uuid();
-      values.rowId = selectedPanel;
+      values.row = deletePrefix(selectedPanel);
+
       const fields = widgetByPanel.get(selectedPanel);
 
       if (fields !== undefined) {
@@ -116,10 +173,11 @@ const EntityLayout = ({ back }) => {
       } else {
         setWidgetByPanel((widgetByPanel) => new Map(widgetByPanel.set(selectedPanel, [values])));
       }
-    }
-    else{
-      const fields = widgetByPanel.get(values.rowId);
-      const objIndex = fields.findIndex((obj => obj.id == values.id));
+    } else {
+      const id = `panel-${values.row}`;
+      const fields = widgetByPanel.get(id);
+
+      const objIndex = fields.findIndex((obj) => obj.id == values.id);
       fields[objIndex] = values;
       setWidgetByPanel((widgetByPanel) => new Map(widgetByPanel.set(selectedPanel, [...fields])));
     }
@@ -147,6 +205,16 @@ const EntityLayout = ({ back }) => {
     >
       <DragDropContext onDragEnd={onDragEnd}>
         <FieldModal opened={opened} close={close} onCreate={onCreate} />
+        {entityDefinition ? (
+          <ViewLayoutModal
+            open={openView}
+            close={() => {setOpenView(false)}}
+            entityDefinition={entityDefinition}
+            panels={panels}
+            widgetByPanel={widgetByPanel}
+            size={containerSize}
+          />
+        ) : null}
         <Stack
           spacing={"xs"}
           justify="flex-start"
@@ -168,6 +236,9 @@ const EntityLayout = ({ back }) => {
                 {t("document.entityDefinition.buttons.addRow")}
               </Button>
               <SegmentedControl value={containerSize} onChange={setContainerSize} data={breakpoints} />
+              <Button leftIcon={<IconEye />} onClick={viewEntityDefinition}>
+                {t("document.entityDefinition.buttons.view")}
+              </Button>
             </Group>
             <Button onClick={() => navigate(back)}>
               <Text>{t("button.back")}</Text>

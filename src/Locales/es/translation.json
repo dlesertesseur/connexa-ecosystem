@@ -1405,7 +1405,8 @@
       "buttons": {
         "addRow":"Agregar fila",
         "deleteRow":"Eliminar fila",
-        "save":"Salvar"
+        "save":"Salvar",
+        "view":"Ver"
       },
 
       "label": {
@@ -1457,7 +1458,8 @@
         "description": "Descripcion",
         "sections": "Secciones",
         "relation": "Relacion con la entidad",
-        "entity": "Entidad"
+        "entity": "Entidad",
+        "view":"Ver"
       },
       "placeholder": {
         "name": "un nombre",

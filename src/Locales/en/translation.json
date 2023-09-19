@@ -1411,7 +1411,8 @@
       "buttons": {
         "addRow":"Add row",
         "deleteRow":"Delete row",
-        "save":"Save"
+        "save":"Save",
+        "view":"View"
       },
 
       "label": {
@@ -1461,7 +1462,8 @@
         "description": "Description",
         "sections": "Sections",
         "relation": "Entity relation",
-        "entity": "Entity"
+        "entity": "Entity",
+        "view":"View"
       },
       "placeholder": {
         "name": "a name",
@@ -1484,7 +1486,7 @@
         "name": "Name",
         "description": "Description",
         "type": "Type",
-        "required": "Reuquired",
+        "required": "Required",
         "widget": "Widget",
         "dataSource": "Data source",
         "relatedFieldId": "Related field",

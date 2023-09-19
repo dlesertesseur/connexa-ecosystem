@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Group, Modal, TextInput, Select, Checkbox, Stack } from "@mantine/core";
-import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/BUSINESS";
+import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/DOCUMENTS";
 import { findAllDataSource } from "../../../../DataAccess/DataSource";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -45,10 +45,10 @@ const FieldModal = ({ opened, close, onCreate }) => {
         form.setFieldValue("relatedFieldId", selectedField.relatedFieldId);
         form.setFieldValue("defatultValue", selectedField.defatultValue);
         form.setFieldValue("id", selectedField.id);
-        form.setFieldValue("rowId", selectedField.rowId);
+        form.setFieldValue("row", selectedField.row);
       }
     };
-    if(opened && selectedField){
+    if (opened && selectedField) {
       f();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,7 +81,7 @@ const FieldModal = ({ opened, close, onCreate }) => {
       relatedFieldId: "",
       defatultValue: "",
       id: null,
-      rowId: null
+      row: null,
     },
 
     validate: {
@@ -117,12 +117,15 @@ const FieldModal = ({ opened, close, onCreate }) => {
     return ret;
   };
 
-  const createCheck = (field, data) => {
+  const createCheck = (field) => {
     const ret = (
       <Checkbox
         label={t("document.field.label." + field)}
         placeholder={t("document.field.placeholder." + field)}
-        {...form.getInputProps(field)}
+        checked={ form.getInputProps(field).value}
+        onChange={(event) => {
+          form.setFieldValue(field, event.currentTarget.checked);
+        }}
       />
     );
 
