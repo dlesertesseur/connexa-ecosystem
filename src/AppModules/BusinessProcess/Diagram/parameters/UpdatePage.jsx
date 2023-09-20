@@ -20,7 +20,7 @@ import {
   findBusinessProcessParameterById,
   updateBusinessProcessParameter,
 } from "../../../../DataAccess/BusinessProcess";
-import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
+import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
 import { AbmParametersStateContext } from "../Context";
 
 export function UpdatePage({ businessProcessId }) {

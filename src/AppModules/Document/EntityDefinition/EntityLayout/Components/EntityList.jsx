@@ -44,8 +44,6 @@ const EntityList = ({ field, rowSelected, setRowSelected }) => {
         })
       );
       setWidgetByPanel(table);
-
-      console.log("EntityList processEntity entity ->", entity);
     }
   };
 

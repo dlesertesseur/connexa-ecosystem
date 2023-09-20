@@ -10,7 +10,7 @@ import {
   deleteBusinessProcessParameter,
   findBusinessProcessParameterById,
 } from "../../../../DataAccess/BusinessProcess";
-import { PARAMETERS_TYPE } from "../../../../Constants/BUSINESS";
+import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
 import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
 
 export function DeletePage({businessProcessId}) {

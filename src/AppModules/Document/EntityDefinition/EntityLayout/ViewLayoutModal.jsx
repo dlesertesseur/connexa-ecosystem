@@ -42,9 +42,6 @@ const ViewLayoutModal = ({ fullScreen = true, open, close, name, panels, widgetB
         validate: createValidations(panels),
       };
       setFormConfig(config);
-
-      console.log("panels ->", panels);
-      console.log("widgetByPanel ->", widgetByPanel);
     }
   }, [open]);
 
