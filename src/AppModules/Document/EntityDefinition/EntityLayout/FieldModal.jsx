@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Button, Group, Modal, TextInput, Select, Checkbox, Stack } from "@mantine/core";
-import { PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/DOCUMENTS";
+import { DOCUMENTS, PARAMETERS_TYPE, WIDGETS } from "../../../../Constants/DOCUMENTS";
 import { findAllDataSource } from "../../../../DataAccess/DataSource";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useForm } from "@mantine/form";
 import { useContext } from "react";
 import { EntityLayoutContext } from "../Context";
+import { findAllEntityDefinition } from "../../../../DataAccess/EntityDefinition";
 
 const FieldModal = ({ opened, close, onCreate }) => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
+  const { selectedField } = useContext(EntityLayoutContext);
   const [dataSources, setDataSources] = useState(false);
   const [relatedField, setRelatedField] = useState(false);
-
-  const { selectedField } = useContext(EntityLayoutContext);
+  const [entities, setEntities] = useState(null);
+  const [heights, setHeights] = useState([]);
 
   const getData = async () => {
     const params = { token: user.token };
@@ -26,6 +28,18 @@ const FieldModal = ({ opened, close, onCreate }) => {
       })
     );
 
+    ret = await findAllEntityDefinition(params);
+    setEntities(
+      ret.map((p) => {
+        return { value: p.id, label: p.name };
+      })
+    );
+
+    setHeights(
+      DOCUMENTS.heights.map((p) => {
+        return { value: p.id, label: p.name };
+      })
+    );
     // const filterRows = rows.filter((r) => r.widget === "Select");
     // ret = filterRows.map((r) => {
     //   return { value: r.id, label: r.name };
@@ -44,8 +58,10 @@ const FieldModal = ({ opened, close, onCreate }) => {
         form.setFieldValue("dataSourceId", selectedField.dataSourceId);
         form.setFieldValue("relatedFieldId", selectedField.relatedFieldId);
         form.setFieldValue("defatultValue", selectedField.defatultValue);
+        form.setFieldValue("entity", selectedField.entity);
         form.setFieldValue("id", selectedField.id);
         form.setFieldValue("row", selectedField.row);
+        form.setFieldValue("height", selectedField.height ? selectedField.height : 1);
       }
     };
     if (opened && selectedField) {
@@ -82,6 +98,7 @@ const FieldModal = ({ opened, close, onCreate }) => {
       defatultValue: "",
       id: null,
       row: null,
+      height:1
     },
 
     validate: {
@@ -122,7 +139,7 @@ const FieldModal = ({ opened, close, onCreate }) => {
       <Checkbox
         label={t("document.field.label." + field)}
         placeholder={t("document.field.placeholder." + field)}
-        checked={ form.getInputProps(field).value}
+        checked={form.getInputProps(field).value}
         onChange={(event) => {
           form.setFieldValue(field, event.currentTarget.checked);
         }}
@@ -163,8 +180,14 @@ const FieldModal = ({ opened, close, onCreate }) => {
           </Group>
 
           <Group mb={"md"} grow>
+            {createSelect("entity", entities)}
+          </Group>
+
+          <Group mb={"md"} grow>
+            {createSelect("height", heights)}
             {createTextField("defaultValue")}
           </Group>
+
           <Group position="right">
             <Button type="submit">{t("button.accept")}</Button>
             <Button

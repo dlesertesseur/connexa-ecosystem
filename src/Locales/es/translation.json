@@ -1488,7 +1488,9 @@
         "widget":"Widget",
         "dataSource":"Fuente de datos",
         "relatedFieldId":"Campo relacionado",
-        "defaultValue":"Valor por defecto"
+        "defaultValue":"Valor por defecto",
+        "entity":"Entidad",
+        "height": "Alto"
       },
       "placeholder": {
         "name": "un nombre",
@@ -1497,7 +1499,8 @@
         "widget":"seleccione un widget",
         "dataSource":"seleccione una fuente de datos",
         "relatedFieldId":"seleccione un campo relacionado",
-        "defaultValue":"seleccione un valor defecto"
+        "defaultValue":"seleccione un valor defecto",
+        "entity":"una entidad"
       },
       "title": {
         "create": "Nuevo campo",

@@ -209,7 +209,7 @@ const EntityLayout = ({ back }) => {
           <ViewLayoutModal
             open={openView}
             close={() => {setOpenView(false)}}
-            entityDefinition={entityDefinition}
+            name={entityDefinition.name}
             panels={panels}
             widgetByPanel={widgetByPanel}
             size={containerSize}

@@ -12,20 +12,18 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useWindowSize } from "../../../../Hook";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import uuid from "react-uuid";
+import EntityList from "./Components/EntityList";
 
-const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, size, close }) => {
+const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, size, close, height }) => {
   const { t } = useTranslation();
   const wsize = useWindowSize();
-  const [rows, setRows] = useState(null);
-
   const form = useForm(formConfig);
 
   const buildGroup = (group, index) => {
     const ret = (
-      <Group key={index} grow mb={"xs"}>
+      <Group key={index} grow mb={"md"}>
         {group?.map((f) => buildField(f))}
       </Group>
     );
@@ -93,6 +91,9 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, size, close }
           />
         );
         break;
+      case 6:
+        ret = <EntityList key={field.id} field={field} />;
+        break;
 
       default:
         break;
@@ -119,7 +120,7 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, size, close }
             form.reset();
           })}
         >
-          <ScrollArea h={wsize.height - 120}>{buildForm(panels)}</ScrollArea>
+          <ScrollArea offsetScrollbars h={height ? height : (wsize.height - 120)}>{buildForm(panels)}</ScrollArea>
 
           <Group position="right">
             <Button type="submit">{t("button.accept")}</Button>

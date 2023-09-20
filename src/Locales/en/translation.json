@@ -1490,7 +1490,9 @@
         "widget": "Widget",
         "dataSource": "Data source",
         "relatedFieldId": "Related field",
-        "defaultValue": "Default value"
+        "defaultValue": "Default value",
+        "entity":"Entity",
+        "height": "Height"
       },
       "placeholder": {
         "name": "a name",
@@ -1499,7 +1501,8 @@
         "widget": "select a widget",
         "dataSource": "select a data source",
         "relatedFieldId": "select a related field",
-        "defaultValue": "a default value"
+        "defaultValue": "a default value",
+        "entity":"an entity"
       },
       "title": {
         "create": "New field",

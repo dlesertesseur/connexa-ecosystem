@@ -6,6 +6,7 @@ const PARAMETERS_TYPE = [
   { id: 2, name: "Numeric" },
   { id: 3, name: "Boolean" },
   { id: 4, name: "UUID" },
+  { id: 5, name: "List" },
 ];
 
 const PARAMETERS_TYPE_NAMES_BY_ID = arrayToMap(PARAMETERS_TYPE);
@@ -226,6 +227,21 @@ const DOCUMENTS = {
           row: 14,
           order: 0,
         },
+        {
+          description: "Lista de productos",
+          name: "products",
+          type: 5,
+          required: false,
+          widget: 6,
+          dataSourceId: "",
+          relatedFieldId: "",
+          defatultValue: "",
+          id: "7e0462d6-17f4-656a-e4d5-5fa8680f58dd",
+          row: 15,
+          height: 3,
+          entity: "0357dd97-dba8-ff11-9b01-2880ba511cb6",
+          order: 0
+        }
       ],
     },
     {
@@ -368,6 +384,13 @@ const DOCUMENTS = {
   relations: [
     { id: 1, name: "FOMULARIO" },
     { id: 2, name: "LISTA" },
+  ],
+
+  heights: [
+    { id: 1, name: "AUTO" },
+    { id: 2, name: "SMALL" },
+    { id: 3, name: "MEDIUM" },
+    { id: 4, name: "LARGE" },
   ],
 };
 

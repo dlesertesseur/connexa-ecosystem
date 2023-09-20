@@ -9,6 +9,7 @@ import ItemTexarea from "./ItemTexarea";
 import ItemNumberinput from "./ItemNumberinput";
 import ItemSelect from "./ItemSelect";
 import ItemCheckbox from "./ItemCheckbox";
+import ItemEntityList from "./ItemEntityList";
 
 // eslint-disable-next-line react/prop-types
 const DropRow = ({ id, index, data }) => {
@@ -27,22 +28,22 @@ const DropRow = ({ id, index, data }) => {
     let ret = null;
     switch (field.widget) {
       case 1:
-        ret = <ItemTextinput key={field.id} id={field.id} index={index} field={field} />;
+        ret = <ItemTextinput key={field.id} field={field} />;
         break;
       case 2:
-        ret = <ItemTexarea key={field.id} id={field.id} index={index} field={field} />;
+        ret = <ItemTexarea key={field.id} field={field} />;
         break;
       case 3:
-        ret = <ItemNumberinput key={field.id} id={field.id} index={index} field={field} />;
+        ret = <ItemNumberinput key={field.id} field={field} />;
         break;
       case 4:
-        ret = <ItemSelect key={field.id} id={field.id} index={index} field={field} />;
+        ret = <ItemSelect key={field.id} field={field} />;
         break;
       case 5:
-        ret = <ItemCheckbox key={field.id} id={field.id} index={index} field={field} />;
+        ret = <ItemCheckbox key={field.id} field={field} />;
         break;
       case 6:
-        ret = <ItemButton key={field.id} id={field.id} index={index} field={field} />;
+        ret = <ItemEntityList key={field.id} field={field} />;
         break;
 
       default:
