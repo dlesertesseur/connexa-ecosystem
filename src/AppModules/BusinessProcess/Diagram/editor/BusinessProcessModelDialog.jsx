@@ -6,14 +6,7 @@ import ForkNode from "./model/ForkNode";
 import JoinNode from "./model/JoinNode";
 import StageNode from "./model/StageNode";
 import InitNode from "./model/InitNode";
-import {
-  Controls,
-  MarkerType,
-  ReactFlow,
-  ReactFlowProvider,
-  useEdgesState,
-  useNodesState,
-} from "reactflow";
+import { Controls, MarkerType, ReactFlow, ReactFlowProvider, useEdgesState, useNodesState } from "reactflow";
 import { useEffect } from "react";
 import { findBusinessProcessInstanceById } from "../../../../DataAccess/BusinessProcessModel";
 import { useSelector } from "react-redux";
@@ -30,7 +23,6 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
   const [roles, setRoles] = useState(null);
   const { height, width } = useViewportSize();
-
 
   const nodeTypes = useMemo(
     () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode, initNode: InitNode }),
@@ -61,8 +53,10 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
   };
 
   useEffect(() => {
-    getData();
-    //setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 800 });
+    if (open) {
+      getData();
+      //setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 800 });
+    }
   }, [businessProcessInstanceId]);
 
   const getTypeNode = (task) => {
@@ -169,23 +163,23 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
         title={businessProcessModel?.name}
         centered
       >
-        <div style={{ height: `${height-90}px`, width: `${width-40}px`, border: "solid 1px #e5e5e5" }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          fitView
-          // onNodeDoubleClick={onNodeDoubleClick}
-          // onEdgeDoubleClick={onEdgeDoubleClick}
-          // onNodeClick={onNodeClick}
-          elementsSelectable={false}
-          snapToGrid={true}
-          snapGrid={[10, 10]}
-          minZoom={0.1}
-        >
-          {/* <Background /> */}
-          <Controls />
-        </ReactFlow>
+        <div style={{ height: `${height - 90}px`, width: `${width - 40}px`, border: "solid 1px #e5e5e5" }}>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            fitView
+            // onNodeDoubleClick={onNodeDoubleClick}
+            // onEdgeDoubleClick={onEdgeDoubleClick}
+            // onNodeClick={onNodeClick}
+            elementsSelectable={false}
+            snapToGrid={true}
+            snapGrid={[10, 10]}
+            minZoom={0.1}
+          >
+            {/* <Background /> */}
+            <Controls />
+          </ReactFlow>
         </div>
       </Modal>
     </ReactFlowProvider>

@@ -7,7 +7,7 @@ import TaskPanel from "./tabs/TaskPanel";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { AbmStateContext } from "./Context";
-import { Tabs } from "@mantine/core";
+import { LoadingOverlay, Tabs } from "@mantine/core";
 import {
   createBusinessProcessModelInstance,
   executeTask,
@@ -143,13 +143,11 @@ const DynamicApp = ({ app }) => {
     try {
       setLoading(true);
       const ret = await createBusinessProcessModelInstance(params);
-      console.log("ret", ret);
 
       if (ret.error) {
-        setError(error);
+        setError(ret.message);
       } else {
         console.log("createBusinessProcessModelInstance -> ret", ret);
-
         if (ret && ret.id) {
           setCreationStatut(t("businessProcessModelInbox.messages.creation"));
         }
@@ -318,6 +316,8 @@ const DynamicApp = ({ app }) => {
       }}
     >
       <AppHeader app={app} />
+
+      <LoadingOverlay visible={loading} zIndex={1000} />
 
       <Routes>
         <Route path="/*" element={tabs()}></Route>
