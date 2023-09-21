@@ -146,8 +146,8 @@ const DynamicApp = ({ app }) => {
 
       if (ret.error) {
         setError(ret.message);
+        console.log("createBusinessProcessModelInstance -> Error", ret.message);
       } else {
-        console.log("createBusinessProcessModelInstance -> ret", ret);
         if (ret && ret.id) {
           setCreationStatut(t("businessProcessModelInbox.messages.creation"));
         }

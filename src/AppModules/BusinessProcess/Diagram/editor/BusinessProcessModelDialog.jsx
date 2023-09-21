@@ -34,7 +34,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
     let assignedRole = null;
 
     if (id) {
-      roleFound = roles.find((r) => r.role.id === parseInt(id));
+      roleFound = roles?.find((r) => r.role.id === parseInt(id));
       if (roleFound) {
         assignedRole = { id: roleFound.role.id, name: roleFound.role.name };
       }
@@ -43,13 +43,13 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
   };
 
   const getData = async () => {
-    let params = { token: user.token, id: businessProcessInstanceId };
-    const ret = await findBusinessProcessInstanceById(params);
-    setBusinessProcessModel(ret);
-
-    params = { token: user.token, id: organizationSelected.id };
+    let params = { token: user.token, id: organizationSelected.id };
     const roles = await findAllByOrganizationId(params);
     setRoles(roles);
+
+    params = { token: user.token, id: businessProcessInstanceId };
+    const ret = await findBusinessProcessInstanceById(params);
+    setBusinessProcessModel(ret);
   };
 
   useEffect(() => {
