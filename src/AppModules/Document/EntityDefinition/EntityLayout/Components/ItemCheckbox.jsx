@@ -5,7 +5,7 @@ import { EntityLayoutContext } from "../../Context";
 
 // eslint-disable-next-line react/prop-types
 const ItemCheckbox = ({ field }) => {
-  const { selectedField, setSelectedField, setSelectedPanel } = useContext(EntityLayoutContext);
+  const { selectedField, setSelectedField, setSelectedPanel, setSelectedRelatedEntity } = useContext(EntityLayoutContext);
   return (
     <Paper
       w={"100%"}
@@ -16,6 +16,7 @@ const ItemCheckbox = ({ field }) => {
       onMouseDown={(e) => {
         setSelectedField(field);
         setSelectedPanel(null);
+        setSelectedRelatedEntity(null);
         e.stopPropagation();
       }}
     >

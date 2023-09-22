@@ -4,7 +4,7 @@ import { useContext } from "react";
 
 // eslint-disable-next-line react/prop-types
 const ItemTextinput = ({ field }) => {
-  const { selectedField, setSelectedField, setSelectedPanel } = useContext(EntityLayoutContext);
+  const { selectedField, setSelectedField, setSelectedPanel, setSelectedRelatedEntity } = useContext(EntityLayoutContext);
   return (
     <Paper
       w={"100%"}
@@ -14,6 +14,7 @@ const ItemTextinput = ({ field }) => {
       bg={selectedField?.id === field.id? "blue.2" : "gray.2"}
       onMouseDown={(e) => {
         setSelectedField(field);
+        setSelectedRelatedEntity(null);
         setSelectedPanel(null);
         e.stopPropagation();
       }}

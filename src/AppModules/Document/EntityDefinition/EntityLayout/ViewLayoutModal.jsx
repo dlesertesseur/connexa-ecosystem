@@ -1,11 +1,22 @@
 import React, { useEffect } from "react";
-import { Modal } from "@mantine/core";
+import { Modal, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { ViewLayoutModalPanel } from "./ViewLayoutModalPanel";
+import { Route, Routes } from "react-router-dom";
 
-const ViewLayoutModal = ({ fullScreen = true, open, close, name, panels, widgetByPanel, size, height }) => {
-  
+const ViewLayoutModal = ({
+  fullScreen = true,
+  open,
+  close,
+  name,
+  panels,
+  widgetByPanel,
+  size,
+  height,
+  relatedEntities,
+  entity,
+}) => {
   const { t } = useTranslation();
   const [formConfig, setFormConfig] = useState(null);
 
@@ -47,14 +58,27 @@ const ViewLayoutModal = ({ fullScreen = true, open, close, name, panels, widgetB
 
   return (
     <Modal fullScreen={fullScreen} opened={open} onClose={close} title={name} size={fullScreen ? null : size}>
-      <ViewLayoutModalPanel
-        formConfig={formConfig}
-        panels={panels}
-        widgetByPanel={widgetByPanel}
-        size={size}
-        close={close}
-        height={height}
-      />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ViewLayoutModalPanel
+              formConfig={formConfig}
+              panels={panels}
+              widgetByPanel={widgetByPanel}
+              relatedEntities={relatedEntities}
+              size={size}
+              close={close}
+              height={height}
+              entity={entity}
+            />
+          }
+        ></Route>
+
+        {relatedEntities.map((re) => {
+          return(<Route path={"uno"} element={<Text>{"UNO"}</Text>} />);
+        })}
+      </Routes>
     </Modal>
   );
 };

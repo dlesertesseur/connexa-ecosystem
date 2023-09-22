@@ -1374,7 +1374,7 @@
 
     "columns": {
       "processModel": ["Nombre", "Descripcion"],
-      "tasks": ["Nombre", "Rol", "Usuario", "Estado"]
+      "tasks": ["Proceso de negocio", "Nombre", "Rol", "Usuario", "Estado"]
     },
 
     "tabs": {
@@ -1403,34 +1403,40 @@
       "columns": ["Nombre", "Descripcion"],
 
       "buttons": {
-        "addRow":"Agregar fila",
-        "deleteRow":"Eliminar fila",
-        "save":"Salvar",
-        "view":"Ver"
+        "addRow": "Agregar fila",
+        "deleteRow": "Eliminar fila",
+        "save": "Salvar",
+        "view": "Ver",
+        "addEntity": "Agregar entidad",
+        "entity": "Entidad"
       },
 
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
-        "fields":"Campos",
-        "formLayout":"Diseño de formulario"
+        "fields": "Campos",
+        "formLayout": "Diseño de formulario",
+        "relation": "Coleccion",
+        "entity": "una entidad"
       },
       "placeholder": {
         "name": "un nombre",
-        "description": "una descripcion"
+        "description": "una descripcion",
+        "relation": "una relacion con la entidad"
       },
       "title": {
         "create": "Nueva definicion de entidad",
         "update": "Modificar una definicion de entidad",
-        "delete": "Eliminar una definicion de entidad"
+        "delete": "Eliminar una definicion de entidad",
+        "addEntity": "Seleccionar entidad relacionada",
+        "viewDoc": "Ver diseño del documento"
       }
     },
 
     "dataSource": {
       "columns": ["Nombre", "Descripcion"],
 
-      "buttons": {
-      },
+      "buttons": {},
 
       "label": {
         "name": "Nombre",
@@ -1450,8 +1456,7 @@
     "formDefinition": {
       "columns": ["Nombre", "Descripcion"],
 
-      "buttons": {
-      },
+      "buttons": {},
 
       "label": {
         "name": "Nombre",
@@ -1459,7 +1464,7 @@
         "sections": "Secciones",
         "relation": "Relacion con la entidad",
         "entity": "Entidad",
-        "view":"Ver"
+        "view": "Ver"
       },
       "placeholder": {
         "name": "un nombre",
@@ -1477,30 +1482,29 @@
     "field": {
       "columns": ["Nombre", "Descripcion", "Tipo", "Requerido", "Widget"],
 
-      "buttons": {
-      },
+      "buttons": {},
 
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
         "type": "Tipo",
-        "required":"Requerido",
-        "widget":"Widget",
-        "dataSource":"Fuente de datos",
-        "relatedFieldId":"Campo relacionado",
-        "defaultValue":"Valor por defecto",
-        "entity":"Entidad",
+        "required": "Requerido",
+        "widget": "Widget",
+        "dataSource": "Fuente de datos",
+        "relatedFieldId": "Campo relacionado",
+        "defaultValue": "Valor por defecto",
+        "entity": "Entidad",
         "height": "Alto"
       },
       "placeholder": {
         "name": "un nombre",
         "description": "una descripcion",
         "type": "un tipo",
-        "widget":"seleccione un widget",
-        "dataSource":"seleccione una fuente de datos",
-        "relatedFieldId":"seleccione un campo relacionado",
-        "defaultValue":"seleccione un valor defecto",
-        "entity":"una entidad"
+        "widget": "seleccione un widget",
+        "dataSource": "seleccione una fuente de datos",
+        "relatedFieldId": "seleccione un campo relacionado",
+        "defaultValue": "seleccione un valor defecto",
+        "entity": "una entidad"
       },
       "title": {
         "create": "Nuevo campo",
@@ -1511,16 +1515,15 @@
 
     "section": {
       "columns": ["Nombre", "Entidad", "Relacion"],
-      "buttons": {
-      },
+      "buttons": {},
 
       "label": {
-        "name":"Nombre",
+        "name": "Nombre",
         "entity": "Entidad",
         "relacion": "Relacion"
       },
       "placeholder": {
-        "name":"un nombre",
+        "name": "un nombre",
         "entity": "una entidad",
         "relacion": "una relacion"
       },

@@ -16,6 +16,7 @@ const DropRow = ({ id, index, data }) => {
   const {
     selectedField,
     setSelectedField,
+    setSelectedRelatedEntity,
     selectedPanel,
     setSelectedPanel,
     addField,
@@ -62,11 +63,12 @@ const DropRow = ({ id, index, data }) => {
           withBorder
           mih={64}
           mb={"xs"}
-          bg={selectedPanel === id ? "blue.2" : "gray.3"}
+          bg={selectedPanel === id ? "blue.3" : "gray.3"}
           // sx={{ border: `2px solid ${selectedPanel === id ? "red" : "blue"}`, borderRadius: 5 }}
           onMouseDown={(e) => {
             setSelectedPanel(id);
             setSelectedField(null);
+            setSelectedRelatedEntity(null);
             e.stopPropagation();
           }}
         >

@@ -1383,7 +1383,7 @@
     },
     "columns": {
       "processModel": ["Name", "Description"],
-      "tasks": ["Name", "Role", "User", "Status"]
+      "tasks": ["Business process", "Name", "Role", "User", "Status"]
     },
     "tabs": {
       "businessProcessModels": "Business process models",
@@ -1409,26 +1409,32 @@
       "columns": ["Name", "Description"],
 
       "buttons": {
-        "addRow":"Add row",
-        "deleteRow":"Delete row",
-        "save":"Save",
-        "view":"View"
+        "addRow": "Add row",
+        "deleteRow": "Delete row",
+        "save": "Save",
+        "view": "View",
+        "addEntity": "Add entity"
       },
 
       "label": {
         "name": "Name",
         "description": "Description",
         "fields": "Fields",
-        "formLayout": "Form layout"
+        "formLayout": "Form layout",
+        "relation": "Collection",
+        "entity": "Entity"
       },
       "placeholder": {
         "name": "a name",
-        "description": "a description"
+        "description": "a description",
+        "entity": "an entity"
       },
       "title": {
         "create": "New entity definition",
         "update": "Update entity definition",
-        "delete": "Delete entity definition"
+        "delete": "Delete entity definition",
+        "addEntity": "Select related entity",
+        "viewDoc": "See document layout"
       }
     },
 
@@ -1463,7 +1469,7 @@
         "sections": "Sections",
         "relation": "Entity relation",
         "entity": "Entity",
-        "view":"View"
+        "view": "View"
       },
       "placeholder": {
         "name": "a name",
@@ -1491,7 +1497,7 @@
         "dataSource": "Data source",
         "relatedFieldId": "Related field",
         "defaultValue": "Default value",
-        "entity":"Entity",
+        "entity": "Entity",
         "height": "Height"
       },
       "placeholder": {
@@ -1502,7 +1508,7 @@
         "dataSource": "select a data source",
         "relatedFieldId": "select a related field",
         "defaultValue": "a default value",
-        "entity":"an entity"
+        "entity": "an entity"
       },
       "title": {
         "create": "New field",
@@ -1512,11 +1518,11 @@
     },
 
     "section": {
-      "columns": ["Name","Entity", "Relation"],
+      "columns": ["Name", "Entity", "Relation"],
       "buttons": {},
 
       "label": {
-        "name":"Name",
+        "name": "Name",
         "entity": "Entity",
         "relacion": "Relation"
       },

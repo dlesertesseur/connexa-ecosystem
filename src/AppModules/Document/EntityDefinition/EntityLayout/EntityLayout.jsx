@@ -9,21 +9,39 @@ import { AbmStateContext, EntityLayoutContext } from "../Context";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { config } from "../../../../Constants/config";
-import { IconDeviceFloppy, IconEye, IconRowInsertBottom, IconViewfinder } from "@tabler/icons-react";
+import {
+  IconDeviceFloppy,
+  IconEye,
+  IconRowInsertBottom,
+} from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import uuid from "react-uuid";
 import EntityDefinitionHeader from "../EntityDefinitionHeader";
 import FieldModal from "./FieldModal";
 import DropRow from "./Components/DropRow";
 import ViewLayoutModal from "./ViewLayoutModal";
+import EntitySelectionModal from "./EntitySelectionModal";
+import EntitiesPanel from "./Components/EntitiesPanel";
 
 const EntityLayout = ({ back }) => {
   const wsize = useWindowSize();
   const [panels, setPanels] = useState([]);
+  const [relatedEntities, setRelatedEntities] = useState([]);
+
   const [entityDefinition, setEntityDefinition] = useState(null);
   const [selectedPanel, setSelectedPanel] = useState(null);
   const [selectedField, setSelectedField] = useState(null);
+  const [selectedRelatedEntity, setSelectedRelatedEntity] = useState(null);
   const [widgetByPanel, setWidgetByPanel] = useState(new Map());
+  const [containerSize, setContainerSize] = useState("md");
+  const [opened, { open, close }] = useDisclosure(false);
+  const [openView, setOpenView] = useState(false);
+  const [openEntitySelection, setOpenEntitySelection] = useState(false);
+  const { user } = useSelector((state) => state.auth.value);
+  const { selectedRowId, reloadFields } = useContext(AbmStateContext);
+  const { t } = useTranslation();
+
+  const totalHeaderHeight = 330 + (relatedEntities.length > 0 ? 26   : 0);
 
   const [breakpoints] = useState(
     config.breakpoints.map((b) => {
@@ -31,14 +49,6 @@ const EntityLayout = ({ back }) => {
     })
   );
   const navigate = useNavigate();
-
-  const [containerSize, setContainerSize] = useState("md");
-  const [opened, { open, close }] = useDisclosure(false);
-  const [openView, setOpenView] = useState(false);
-
-  const { user } = useSelector((state) => state.auth.value);
-  const { selectedRowId, reloadFields } = useContext(AbmStateContext);
-  const { t } = useTranslation();
 
   const getData = async () => {
     const params = { token: user.token, id: selectedRowId };
@@ -63,8 +73,6 @@ const EntityLayout = ({ back }) => {
 
     setPanels(panels);
     setWidgetByPanel(widgetByPanel);
-
-    //console.log("getData fields ->", panels, widgetByPanel);
   };
 
   useEffect(() => {
@@ -112,9 +120,9 @@ const EntityLayout = ({ back }) => {
   };
 
   const deletePrefix = (cadena) => {
-    var ret = cadena.replace(/^panel-/, '');
+    var ret = cadena.replace(/^panel-/, "");
     return ret;
-  }
+  };
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -130,6 +138,31 @@ const EntityLayout = ({ back }) => {
     setPanels([...panels, panel]);
   };
 
+  const editRelatedEntity = (e) => {
+    setOpenEntitySelection(true);
+  };
+
+  const deleteRelatedEntity = (e) => {
+    const ret = relatedEntities.filter((f) => f.entity.id !== selectedRelatedEntity.entity.id);
+    setRelatedEntities(ret);
+  };
+
+  const addRelatedEntity = (entity, asCollection) => {
+    const obj = { entity: entity, asCollection: asCollection ? true : false }
+    setRelatedEntities([...relatedEntities, obj]);
+  };
+
+  const updateRelatedEntity = (entity, asCollection) => {
+
+    const objIndex = relatedEntities.findIndex((obj) => obj.entity.id == selectedRelatedEntity.entity.id);
+    
+    if(objIndex >= 0){
+      relatedEntities[objIndex].entity = entity;
+      relatedEntities[objIndex].asCollection = asCollection;
+    }
+    setRelatedEntities([...relatedEntities]);
+  };
+
   const deletePanel = () => {
     const ret = panels.filter((p) => p.id !== selectedPanel);
     setPanels(ret);
@@ -139,7 +172,7 @@ const EntityLayout = ({ back }) => {
   const deleteField = () => {
     const panelId = `panel-${selectedField.row}`;
 
-    let componentsInPanel = widgetByPanel.get(panelId);    
+    let componentsInPanel = widgetByPanel.get(panelId);
     if (componentsInPanel) {
       const ret = componentsInPanel.filter((f) => f.id !== selectedField.id);
       setWidgetByPanel((widgetByPanel) => new Map(widgetByPanel.set(panelId, ret)));
@@ -147,6 +180,7 @@ const EntityLayout = ({ back }) => {
 
     setSelectedPanel(null);
     setSelectedField(null);
+    setSelectedRelatedEntity(null);
   };
 
   const addField = (e) => {
@@ -188,6 +222,7 @@ const EntityLayout = ({ back }) => {
   const clearSelections = () => {
     setSelectedField(null);
     setSelectedPanel(null);
+    setSelectedRelatedEntity(null);
   };
 
   return (
@@ -197,6 +232,8 @@ const EntityLayout = ({ back }) => {
         setSelectedPanel,
         selectedField,
         setSelectedField,
+        selectedRelatedEntity,
+        setSelectedRelatedEntity,
         addField,
         deletePanel,
         editField,
@@ -205,14 +242,25 @@ const EntityLayout = ({ back }) => {
     >
       <DragDropContext onDragEnd={onDragEnd}>
         <FieldModal opened={opened} close={close} onCreate={onCreate} />
+        <EntitySelectionModal
+          open={openEntitySelection}
+          close={() => setOpenEntitySelection(false)}
+          selectedEntity={selectedRelatedEntity}
+          addEntity={addRelatedEntity}
+          updateEntity={updateRelatedEntity}
+        />
         {entityDefinition ? (
           <ViewLayoutModal
             open={openView}
-            close={() => {setOpenView(false)}}
-            name={entityDefinition.name}
+            close={() => {
+              setOpenView(false);
+            }}
+            name={t("document.entityDefinition.title.viewDoc")}
             panels={panels}
             widgetByPanel={widgetByPanel}
-            size={containerSize}
+            relatedEntities={relatedEntities}
+            entity={entityDefinition}
+            //fullScreen={false}
           />
         ) : null}
         <Stack
@@ -247,7 +295,23 @@ const EntityLayout = ({ back }) => {
 
           <Group grow>
             <Paper bg={"gray.1"} h={"100%"} p={"xs"} withBorder radius={0}>
-              <ScrollArea h={wsize.height - 270} onMouseDown={clearSelections}>
+              <Container size={containerSize} mb={"xs"}>
+                <EntitiesPanel
+                  data={relatedEntities}
+                  selectedPanel={selectedPanel}
+                  setSelectedPanel={setSelectedPanel}
+                  selectedRelatedEntity={selectedRelatedEntity}
+                  setSelectedRelatedEntity={setSelectedRelatedEntity}
+                  addRelatedEntity={() => {
+                    setOpenEntitySelection(true);
+                  }}
+                  editRelatedEntity={editRelatedEntity}
+                  deleteRelatedEntity={deleteRelatedEntity}
+                  setSelectedField={setSelectedField} 
+                />
+              </Container>
+
+              <ScrollArea h={wsize.height - totalHeaderHeight} onMouseDown={clearSelections}>
                 <Droppable droppableId="droppable">
                   {(provided) => (
                     <Container size={containerSize} {...provided.droppableProps} ref={provided.innerRef}>

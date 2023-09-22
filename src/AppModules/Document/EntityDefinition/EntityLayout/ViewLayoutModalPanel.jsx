@@ -13,13 +13,16 @@ import {
 import { useForm } from "@mantine/form";
 import { useWindowSize } from "../../../../Hook";
 import { useTranslation } from "react-i18next";
-import uuid from "react-uuid";
 import EntityList from "./Components/EntityList";
+import ViewLayoutModalHeader from "./ViewLayoutModalHeader";
+import { useNavigate } from "react-router-dom";
 
-const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, size, close, height }) => {
+const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntities, size, close, height, entity }) => {
   const { t } = useTranslation();
   const wsize = useWindowSize();
   const form = useForm(formConfig);
+  const navigate = useNavigate();
+  const totalHeaderHeight = 220 + (relatedEntities ? 60 : 0);
 
   const buildGroup = (group, index) => {
     const ret = (
@@ -32,7 +35,6 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, size, close, 
   };
 
   const buildField = (field) => {
-    const key = uuid();
     let ret = null;
     switch (field.widget) {
       case 1:
@@ -112,7 +114,7 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, size, close, 
   };
 
   return (
-    <Container size={size}>
+    <Container size={size} bg={"gray.0"}>
       <Stack spacing={"xs"}>
         <form
           onSubmit={form.onSubmit((values) => {
@@ -120,9 +122,30 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, size, close, 
             form.reset();
           })}
         >
-          <ScrollArea offsetScrollbars h={height ? height : (wsize.height - 120)}>{buildForm(panels)}</ScrollArea>
+          <ViewLayoutModalHeader name={entity?.name} description={entity?.description} />
 
-          <Group position="right">
+          {relatedEntities ? (
+            <Group position="left" mb={"xs"} spacing={"xs"}>
+              {relatedEntities.map((re) => {
+                return (
+                  <Button
+                    key={re.entity.id}
+                    onClick={() => {
+                      navigate("uno");
+                    }}
+                  >
+                    {re.entity.name}
+                  </Button>
+                );
+              })}
+            </Group>
+          ) : null}
+
+          <ScrollArea offsetScrollbars h={height ? height : wsize.height - totalHeaderHeight}>
+            {buildForm(panels)}
+          </ScrollArea>
+
+          <Group position="right" my={"xs"}>
             <Button type="submit">{t("button.accept")}</Button>
             <Button
               onClick={() => {

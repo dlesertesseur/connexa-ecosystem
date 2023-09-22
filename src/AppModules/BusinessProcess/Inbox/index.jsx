@@ -21,6 +21,7 @@ import { getRoleBySiteIdAndUserId } from "../../../DataAccess/User";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import BusinessProcessModelDialog from "../Diagram/editor/BusinessProcessModelDialog";
+import { findBusinessProcessInstanceById } from "../../../DataAccess/BusinessProcessModel";
 
 const DynamicApp = ({ app }) => {
   const { user, organizationSelected, siteSelected } = useSelector((state) => state.auth.value);
@@ -72,7 +73,7 @@ const DynamicApp = ({ app }) => {
       const roles = await findAllByOrganizationId(params);
       rolesMap = rolesToRoleById(roles);
       const userRole = await getRoleBySiteIdAndUserId(params);
-
+      
       if (userRole) {
         let tasks = [];
         for (const role of userRole) {
@@ -82,9 +83,9 @@ const DynamicApp = ({ app }) => {
             roleId: role.id,
           };
 
-          const roleList = await findAllBusinessProcessModelByRole(params);
-          if (roleList.length) {
-            process = process.concat(roleList);
+          const processList = await findAllBusinessProcessModelByRole(params);
+          if (processList.length) {
+            process = process.concat(processList);
             setProcessModelList(process);
           }
 
@@ -115,11 +116,15 @@ const DynamicApp = ({ app }) => {
                 applicationPath: applicationPath,
                 automatic: automatic,
                 serviceUrl: serviceUrl,
+                businesProcessName:"***"
               };
             });
             tasks = tasks.concat(ret);
           }
         }
+
+        console.log("tasks ->", tasks);
+
         setTasksList(tasks);
       }
     } catch (error) {

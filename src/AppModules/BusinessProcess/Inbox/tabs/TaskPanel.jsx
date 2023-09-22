@@ -19,6 +19,7 @@ const TaskPanel = ({ name }) => {
   let col = 0;
   const cols = t("businessProcessModelInbox.columns.tasks", { returnObjects: true });
   const columns = [
+    { headerName: cols[col++], fieldName: "businesProcessName", align: "left" },
     { headerName: cols[col++], fieldName: "name", align: "left" },
     { headerName: cols[col++], fieldName: "roleName", align: "left" },
     { headerName: cols[col++], fieldName: "userName", align: "left" },
@@ -26,7 +27,7 @@ const TaskPanel = ({ name }) => {
   ];
 
   useEffect(() => {
-    if (tasksList) {
+    if (tasksList && rowSelected) {
       const task = tasksList.find((mp) => mp.id === rowSelected);
       setTask(task);
     } else {
