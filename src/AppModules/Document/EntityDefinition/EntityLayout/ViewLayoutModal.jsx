@@ -25,7 +25,7 @@ const ViewLayoutModal = ({
     panels?.forEach((p) => {
       const group = widgetByPanel?.get(p.id);
       group?.forEach((f) => {
-        ret[f.name] = f.widget === 1 || f.widget === 2 ? "" : null;
+        ret[f.name] = f.type === "TEXTINPUT" || f.widget === "TEXTAREA" ? "" : null;
       });
     });
 

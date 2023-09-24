@@ -66,7 +66,9 @@ const EntityLayout = ({ back }) => {
 
     fields?.forEach((field) => {
       if (field.type === "COLLECTION") {
-        collections.push(JSON.parse(field.options));
+        const json = JSON.parse(field.options);
+        json.collection = json.collection === 'true' ? true : false; 
+        collections.push(json);
       } else {
         const id = `panel-${field.row}`;
         const group = widgetByPanel.get(id);
@@ -156,7 +158,7 @@ const EntityLayout = ({ back }) => {
         name: w.entity.name,
         label: w.entity.description,
         required: true,
-        options: { formId: w.entity.id, collection: w.asCollection },
+        options: { formId: w.entity.id, collection: w.collection },
         parent: entityDefinition.id,
         row: -1,
         order: index,
@@ -214,17 +216,17 @@ const EntityLayout = ({ back }) => {
     setRelatedEntities(ret);
   };
 
-  const addRelatedEntity = (entity, asCollection) => {
-    const obj = { id: uuid(), form: entity, asCollection: asCollection ? true : false };
+  const addRelatedEntity = (entity, collection) => {
+    const obj = { id: uuid(), form: entity, collection: collection ? true : false };
     setRelatedEntities([...relatedEntities, obj]);
   };
 
-  const updateRelatedEntity = (entity, asCollection) => {
-    const objIndex = relatedEntities.findIndex((obj) => obj.form.id == selectedRelatedEntity.form.id);
+  const updateRelatedEntity = (entity, collection) => {
+    const objIndex = relatedEntities.findIndex((obj) => obj.formId == selectedRelatedEntity.formId);
 
     if (objIndex >= 0) {
       relatedEntities[objIndex].entity = entity;
-      relatedEntities[objIndex].asCollection = asCollection;
+      relatedEntities[objIndex].collection = collection;
     }
     setRelatedEntities([...relatedEntities]);
   };
@@ -326,7 +328,7 @@ const EntityLayout = ({ back }) => {
             widgetByPanel={widgetByPanel}
             relatedEntities={relatedEntities}
             entity={entityDefinition}
-            //fullScreen={false}
+            size={containerSize}
           />
         ) : null}
         <Stack

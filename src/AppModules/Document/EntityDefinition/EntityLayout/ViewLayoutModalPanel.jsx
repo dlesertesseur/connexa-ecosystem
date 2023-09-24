@@ -131,6 +131,7 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
               {relatedEntities.map((re) => {
                 return (
                   <Button
+                    disabled
                     key={re.formId}
                     onClick={() => {
                       navigate(re.formId);

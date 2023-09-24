@@ -28,7 +28,7 @@ const ItemEntiyButton = ({ relatedEntity }) => {
         >
           {relatedEntity?.name}
         </Text>
-        {relatedEntity.asCollection ? (
+        {relatedEntity.collection ? (
           <IconPlaylistAdd
             size={20}
             color={selectedRelatedEntity?.formId === relatedEntity?.formId ? "white" : "gray"}

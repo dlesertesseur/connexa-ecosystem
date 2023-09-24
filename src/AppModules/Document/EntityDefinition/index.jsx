@@ -29,7 +29,6 @@ const DynamicApp = ({ app }) => {
     try {
       let ret = null;
       const list = await findAllEntityDefinition(params);
-
       ret = list.map((r) => {
         return {
           id: r.id,
