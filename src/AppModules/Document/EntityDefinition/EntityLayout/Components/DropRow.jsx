@@ -27,26 +27,27 @@ const DropRow = ({ id, index, data }) => {
 
   const buildComponent = (field, index) => {
     let ret = null;
-    switch (field.widget) {
-      case 1:
+
+    switch (field.type) {
+      case "TEXTINPUT":
         ret = <ItemTextinput key={field.id} field={field} />;
         break;
-      case 2:
+      case "TEXTAREA":
         ret = <ItemTexarea key={field.id} field={field} />;
         break;
-      case 3:
+      case "NUMBERINPUT":
         ret = <ItemNumberinput key={field.id} field={field} />;
         break;
-      case 4:
+      case "SELECT":
         ret = <ItemSelect key={field.id} field={field} />;
         break;
-      case 5:
+      case "CHECKBOX":
         ret = <ItemCheckbox key={field.id} field={field} />;
         break;
-      case 6:
-        ret = <ItemEntityList key={field.id} field={field} />;
+      case "IMAGE":
         break;
-
+      case "UPLOAD":
+        break;
       default:
         break;
     }

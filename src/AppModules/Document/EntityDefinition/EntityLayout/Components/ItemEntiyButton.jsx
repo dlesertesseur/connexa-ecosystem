@@ -1,7 +1,7 @@
 import { Group, Paper, Text } from "@mantine/core";
 import { useContext } from "react";
 import { EntityLayoutContext } from "../../Context";
-import { IconForms, IconList, IconListDetails, IconPlaylistAdd, IconPlus } from "@tabler/icons-react";
+import {IconPlaylistAdd } from "@tabler/icons-react";
 
 // eslint-disable-next-line react/prop-types
 const ItemEntiyButton = ({ relatedEntity }) => {
@@ -12,7 +12,7 @@ const ItemEntiyButton = ({ relatedEntity }) => {
     <Paper
       py={8}
       px={"xs"}
-      bg={selectedRelatedEntity?.entity?.id === relatedEntity?.entity?.id ? "blue" : "gray.4"}
+      bg={selectedRelatedEntity?.formId === relatedEntity?.formId ? "blue" : "gray.4"}
       onMouseDown={(e) => {
         setSelectedRelatedEntity(relatedEntity);
         setSelectedPanel(null);
@@ -22,16 +22,16 @@ const ItemEntiyButton = ({ relatedEntity }) => {
     >
       <Group p={0}>
         <Text
-          color={selectedRelatedEntity?.entity?.id === relatedEntity?.entity?.id ? "white" : "gray.5"}
+          color={selectedRelatedEntity?.formId === relatedEntity?.formId ? "white" : "gray.5"}
           size={"sm"}
-          weight={500}
+          weight={600}
         >
-          {relatedEntity?.entity?.name}
+          {relatedEntity?.name}
         </Text>
         {relatedEntity.asCollection ? (
           <IconPlaylistAdd
             size={20}
-            color={selectedRelatedEntity?.entity?.id === relatedEntity?.entity?.id ? "white" : "gray"}
+            color={selectedRelatedEntity?.formId === relatedEntity?.formId ? "white" : "gray"}
           />
         ) : null}
       </Group>

@@ -6,20 +6,23 @@ const PARAMETERS_TYPE = [
   { id: 2, name: "Numeric" },
   { id: 3, name: "Boolean" },
   { id: 4, name: "UUID" },
-  { id: 5, name: "List" },
+  // { id: 5, name: "List" },
 ];
 
 const PARAMETERS_TYPE_NAMES_BY_ID = arrayToMap(PARAMETERS_TYPE);
 
 const WIDGETS = [
-  { id: 1, name: "TextInput" },
-  { id: 2, name: "TextArea" },
-  { id: 3, name: "NumberInput" },
-  { id: 4, name: "Select" },
-  { id: 5, name: "CheckBox" },
-  { id: 6, name: "Entity list" },
-  { id: 7, name: "Upload image" },
-  { id: 8, name: "Upload document" },
+  { id: 1, name: "TEXTINPUT", hidden: false },
+  { id: 2, name: "TEXTAREA", hidden: false },
+  { id: 3, name: "NUMBERINPUT", hidden: false },
+  { id: 4, name: "SELECT", hidden: false },
+  { id: 5, name: "CHECKBOX", hidden: false },
+  { id: 6, name: "IMAGE", hidden: false },
+  { id: 7, name: "UPLOAD", hidden: false },
+  { id: 8, name: "COLLECTION", hidden: true },
+  { id: 9, name: "FORM", hidden: true },
+
+  // { id: 8, name: "Entity list" },
 ];
 
 const WIDGETS_NAMES_BY_ID = arrayToMap(WIDGETS);
@@ -240,8 +243,8 @@ const DOCUMENTS = {
           row: 15,
           height: 3,
           entity: "0357dd97-dba8-ff11-9b01-2880ba511cb6",
-          order: 0
-        }
+          order: 0,
+        },
       ],
     },
     {

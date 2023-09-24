@@ -68,7 +68,7 @@ const DocumentEntityForm = ({ entityDef, height, onSubmitEntity }) => {
           <TextInput
             key={key}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}
           />
@@ -79,7 +79,7 @@ const DocumentEntityForm = ({ entityDef, height, onSubmitEntity }) => {
           <Textarea
             key={key}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}
           />
@@ -90,7 +90,7 @@ const DocumentEntityForm = ({ entityDef, height, onSubmitEntity }) => {
           <NumberInput
             key={key}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}
           />
@@ -101,7 +101,7 @@ const DocumentEntityForm = ({ entityDef, height, onSubmitEntity }) => {
           <Select
             key={key}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             data={[]}
             {...form.getInputProps(field.name)}
@@ -113,7 +113,7 @@ const DocumentEntityForm = ({ entityDef, height, onSubmitEntity }) => {
           <Checkbox
             key={key}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}
           />

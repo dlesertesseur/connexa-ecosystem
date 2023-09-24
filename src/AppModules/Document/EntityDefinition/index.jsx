@@ -34,7 +34,7 @@ const DynamicApp = ({ app }) => {
         return {
           id: r.id,
           name: r.name,
-          description: r.description,
+          description: r.label,
         };
       });
       setRows(ret);

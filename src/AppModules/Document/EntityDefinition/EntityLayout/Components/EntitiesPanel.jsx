@@ -36,7 +36,7 @@ const EntitiesPanel = ({
         </ActionIcon>
         <ActionIcon
           color="blue"
-          disabled={!data?.some((item) => item.entity.id === selectedRelatedEntity?.entity?.id)}
+          disabled={!data?.some((item) => item.formId === selectedRelatedEntity?.formId)}
           variant="transparent"
         >
           <IconEditCircle
@@ -49,7 +49,7 @@ const EntitiesPanel = ({
         <ActionIcon
           color="blue"
           variant="transparent"
-          disabled={!data?.some((item) => item.entity.id === selectedRelatedEntity?.entity?.id)}
+          disabled={!data?.some((item) => item.formId === selectedRelatedEntity?.formId)}
         >
           <IconTrash
             onMouseDown={(e) => {
@@ -62,7 +62,7 @@ const EntitiesPanel = ({
 
       <Group w={"100%"} noWrap position="left" p={3} spacing={"xs"} align="flex-start">
         {data?.map((e) => {
-          return <ItemEntiyButton key={e.entity.id} relatedEntity={e} />;
+          return <ItemEntiyButton key={e.formId} relatedEntity={e} />;
         })}
       </Group>
     </Paper>

@@ -9,7 +9,7 @@ import { useForm } from "@mantine/form";
 const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEntity }) => {
   const { user } = useSelector((state) => state.auth.value);
   const { t } = useTranslation();
-  const [rows, setRows] = useState(null);
+  const [rows, setRows] = useState([]);
   const [checked, setChecked] = useState(false);
 
   const getData = async () => {
@@ -25,9 +25,10 @@ const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEn
         return {
           id: r.id,
           name: r.name,
-          description: r.description,
+          description: r.label,
         };
       });
+
       setRows(ret);
     } catch (error) {
       setError(error);
@@ -44,8 +45,8 @@ const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEn
 
   useEffect(() => {
     if (open && selectedEntity) {
-      form.setFieldValue("entity", selectedEntity.entity.id);
-      setChecked(selectedEntity.asCollection);
+      form.setFieldValue("entity", selectedEntity.formId);
+      setChecked(selectedEntity.collection);
     }
   }, [selectedEntity, open]);
 

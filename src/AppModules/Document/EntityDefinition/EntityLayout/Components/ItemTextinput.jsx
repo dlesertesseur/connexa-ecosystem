@@ -19,7 +19,7 @@ const ItemTextinput = ({ field }) => {
         e.stopPropagation();
       }}
     >
-      <TextInput disabled label={field.description} placeholder={field.name} />
+      <TextInput disabled label={field.label} placeholder={field.name} />
     </Paper>
   );
 };

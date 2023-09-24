@@ -1,12 +1,4 @@
-import {
-  Title,
-  Container,
-  Button,
-  Group,
-  LoadingOverlay,
-  ScrollArea,
-  TextInput,
-} from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -16,6 +8,7 @@ import { useContext, useState } from "react";
 import { AbmStateContext } from "./Context";
 import { HEADER_HIGHT } from "../../../Constants";
 import { createEntityDefinition } from "../../../DataAccess/EntityDefinition";
+import uuid from "react-uuid";
 
 export function CreatePage() {
   const { t } = useTranslation();
@@ -58,17 +51,35 @@ export function CreatePage() {
   };
 
   const onCreate = async (values) => {
+    const form = {
+      id: uuid(),
+      type: "FORM",
+      name: values.name,
+      label: values.description,
+      required: "true",
+      options: JSON.stringify({ size: "sm" }),
+      parent: null,
+      children: [],
+      // row: 0,
+      // order: 0,
+    };
+
     const params = {
       token: user.token,
-      values: { ...values },
+      body: form,
     };
 
     setWorking(true);
     try {
-      await createEntityDefinition(params);
+      const ret = await createEntityDefinition(params);
+
       setWorking(false);
-      setReload(Date.now());
-      navigate("../");
+      if (ret.status !== 200) {
+        setError(ret.error);
+      } else {
+        setReload(Date.now());
+        navigate("../");
+      }
     } catch (error) {
       setWorking(false);
       setError(error);

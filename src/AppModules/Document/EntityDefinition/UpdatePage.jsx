@@ -67,7 +67,7 @@ export function UpdatePage() {
     const f = async () => {
       if (entity) {
         form.setFieldValue("name", entity.name);
-        form.setFieldValue("description", entity.description);
+        form.setFieldValue("description", entity.label);
       }
     };
     f();
@@ -75,18 +75,29 @@ export function UpdatePage() {
   }, [entity]);
 
   const onUpdate = async (values) => {
+
+    const obj = {...entity};
+    obj.name = values.name;
+    obj.label = values.description;
+
     const params = {
       token: user.token,
-      values: values,
+      body: obj,
       id: selectedRowId
     };
 
     setWorking(true);
     try {
-      await updateEntityDefinition(params);
+      const ret = await updateEntityDefinition(params);
       setWorking(false);
-      setReload(Date.now());
-      navigate("../");
+
+      if(ret.status !== 200){
+        setError(ret.error);
+      }else{
+        setReload(Date.now());
+        navigate("../");  
+      }
+      
     } catch (error) {
       setWorking(false);
       setError(error);

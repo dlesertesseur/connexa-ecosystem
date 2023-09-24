@@ -1,3 +1,4 @@
+import ViewLayoutModalHeader from "./ViewLayoutModalHeader";
 import {
   Checkbox,
   Container,
@@ -13,8 +14,6 @@ import {
 import { useForm } from "@mantine/form";
 import { useWindowSize } from "../../../../Hook";
 import { useTranslation } from "react-i18next";
-import EntityList from "./Components/EntityList";
-import ViewLayoutModalHeader from "./ViewLayoutModalHeader";
 import { useNavigate } from "react-router-dom";
 
 const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntities, size, close, height, entity }) => {
@@ -36,65 +35,68 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
 
   const buildField = (field) => {
     let ret = null;
-    switch (field.widget) {
-      case 1:
+
+    switch (field.type) {
+      case "TEXTINPUT":
         ret = (
           <TextInput
             {...form.getInputProps(field.name)}
             key={field.id}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
           />
         );
         break;
-      case 2:
+      case "TEXTAREA":
         ret = (
           <Textarea
             key={field.id}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}
           />
         );
         break;
-      case 3:
+      case "NUMBERINPUT":
         ret = (
           <NumberInput
             key={field.id}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}
           />
         );
         break;
-      case 4:
+      case "SELECT":
         ret = (
           <Select
             key={field.id}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             data={[]}
             {...form.getInputProps(field.name)}
           />
         );
         break;
-      case 5:
+      case "CHECKBOX":
         ret = (
           <Checkbox
             key={field.id}
             withAsterisk={field.required}
-            label={field.description}
+            label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}
           />
         );
         break;
-      case 6:
-        ret = <EntityList key={field.id} field={field} />;
+
+      case "IMAGE":
+        break;
+      case "UPLOAD":
         break;
 
       default:
@@ -122,19 +124,19 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
             form.reset();
           })}
         >
-          <ViewLayoutModalHeader name={entity?.name} description={entity?.description} />
+          <ViewLayoutModalHeader name={entity?.name} description={entity?.label} />
 
           {relatedEntities ? (
             <Group position="left" mb={"xs"} spacing={"xs"}>
               {relatedEntities.map((re) => {
                 return (
                   <Button
-                    key={re.entity.id}
+                    key={re.formId}
                     onClick={() => {
-                      navigate("uno");
+                      navigate(re.formId);
                     }}
                   >
-                    {re.entity.name}
+                    {re.name}
                   </Button>
                 );
               })}

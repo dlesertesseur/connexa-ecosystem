@@ -1,6 +1,4 @@
-import uuid from "react-uuid";
 import { API } from "../Constants";
-import { DOCUMENTS } from "../Constants/DOCUMENTS";
 
 const findAllEntityDefinition = async (parameters) => {
   try {
@@ -13,52 +11,36 @@ const findAllEntityDefinition = async (parameters) => {
       },
     };
     const url = API.entityDefinition.findAll;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
 
-    const data = DOCUMENTS.entityDefinition;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
     return data;
   } catch (error) {
     return error;
   }
 };
 
-const saveEntityDefinition = async (parameters) => 
-{
-  const data = DOCUMENTS.entityDefinition.find((e) => e.id === parameters.id);
-  if(data){
-    const ret = await updateEntityDefinition(parameters);
-    console.log("saveEntityDefinition updateEntityDefinition ->", ret);
-  }else{
-    createEntityDefinition(parameters);
-  }
-}
-
 const createEntityDefinition = async (parameters) => {
-  try {
-    const body = JSON.stringify(parameters.values);
+  const body = JSON.stringify(parameters.body);
 
-    const requestOptions = {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: parameters.token,
-      },
-      body: body,
-    };
+  const requestOptions = {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token: parameters.token,
+    },
+    body: body,
+  };
 
-    const url = API.entityDefinition.create;
+  const url = API.entityDefinition.create;
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
 
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
+  console.log("createEntityDefinition data ->", data);
 
-    const data = DOCUMENTS.entityDefinition.push({ ...parameters.values, id: uuid() });
-  
-    return data;
-  } catch (error) {
-    return error;
-  }
+  return data;
 };
 
 const findEntityDefinitionById = async (parameters) => {
@@ -72,10 +54,8 @@ const findEntityDefinitionById = async (parameters) => {
       },
     };
     const url = API.entityDefinition.findById + parameters.id;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
-
-    const data = DOCUMENTS.entityDefinition.find((e) => e.id === parameters.id);
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -84,32 +64,27 @@ const findEntityDefinitionById = async (parameters) => {
 };
 
 const updateEntityDefinition = async (parameters) => {
-  try {
-    const body = JSON.stringify(parameters.values);
+  const body = JSON.stringify(parameters.body);
 
-    const requestOptions = {
-      method: "PUT",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: parameters.token,
-      },
-      body: body,
-    };
+  const requestOptions = {
+    method: "PUT",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token: parameters.token,
+    },
+    body: body,
+  };
 
-    const url = API.entityDefinition.update + parameters.id;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
+  console.log("updateEntityDefinition body -> ", body);
 
-    const index = DOCUMENTS.entityDefinition.findIndex((obj) => obj.id == parameters.id);
-    DOCUMENTS.entityDefinition[index].name = parameters.values.name;
-    DOCUMENTS.entityDefinition[index].description = parameters.values.description;
-    DOCUMENTS.entityDefinition[index].fields = parameters.values.fields;
-    DOCUMENTS.entityDefinition[index].size = parameters.size;
-    return DOCUMENTS.entityDefinition[index];
-  } catch (error) {
-    return error;
-  }
+  const url = API.entityDefinition.update + parameters.id;
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
+
+  console.log("updateEntityDefinition data -> ", data);
+
+  return data;
 };
 
 const deleteEntityDefinition = async (parameters) => {
@@ -127,11 +102,8 @@ const deleteEntityDefinition = async (parameters) => {
     };
 
     const url = API.entityDefinition.delete + parameters.id;
-    // const res = await fetch(url, requestOptions);
-    // const data = await res.json();
-
-    const data = DOCUMENTS.entityDefinition.filter((e) => e.id !== parameters.id);
-    DOCUMENTS.entityDefinition = data;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -145,5 +117,4 @@ export {
   deleteEntityDefinition,
   findEntityDefinitionById,
   findAllEntityDefinition,
-  saveEntityDefinition
 };

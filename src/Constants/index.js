@@ -409,19 +409,19 @@ export const API = {
   },
 
   entityDefinition: {
-    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition",
-    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition",
-    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition/",
-    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition/",
-    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/entity-definition/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models",
+    findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models/",
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models/",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models/",
   },
 
   dataSource: {
-    findAll: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource",
-    findById: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource",
-    create: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource/",
-    update: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource/",
-    delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/dataSource/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource",
+    findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource",
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource/",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource/",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource/",
   },
 
   formDefinition: {

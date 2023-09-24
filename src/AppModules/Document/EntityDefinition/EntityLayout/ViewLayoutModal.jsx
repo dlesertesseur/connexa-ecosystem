@@ -75,8 +75,8 @@ const ViewLayoutModal = ({
           }
         ></Route>
 
-        {relatedEntities.map((re) => {
-          return(<Route path={"uno"} element={<Text>{"UNO"}</Text>} />);
+        {relatedEntities.map((re, index) => {
+          return(<Route key={index} path={re.formId} element={<Text>{re.name}</Text>} />);
         })}
       </Routes>
     </Modal>

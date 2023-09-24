@@ -20,7 +20,7 @@ const ItemCheckbox = ({ field }) => {
         e.stopPropagation();
       }}
     >
-      <Checkbox disabled label={field.description} placeholder={field.name} />
+      <Checkbox disabled label={field.label} placeholder={field.name} />
     </Paper>
   );
 };

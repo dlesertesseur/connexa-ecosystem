@@ -21,7 +21,7 @@ const ItemSelect = ({ field }) => {
     >
       <Select
         disabled
-        label={field?.description ? field?.description : field?.name}
+        label={field?.label ? field?.label : field?.name}
         placeholder={field?.name}
         data={[]}
       />

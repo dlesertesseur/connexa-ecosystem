@@ -19,7 +19,7 @@ const ItemTexarea = ({ field }) => {
         e.stopPropagation();
       }}
     >
-      <Textarea disabled label={field.description} placeholder={field.name} />
+      <Textarea disabled label={field.label} placeholder={field.name} />
     </Paper>
   );
 };

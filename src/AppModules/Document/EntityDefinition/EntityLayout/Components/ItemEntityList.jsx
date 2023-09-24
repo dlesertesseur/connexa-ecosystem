@@ -67,7 +67,7 @@ const ItemEntityList = ({ field }) => {
       <Group spacing={"xs"} >
         <Stack spacing={"xs"} p={"xs"} w={"100%"}>
           <Group spacing={"xs"} position="apart">
-            <Text size={"md"}>{field.description}</Text>
+            <Text size={"md"}>{field.label}</Text>
             <Badge variant="outline" color="blue">
               {entity?.name}
             </Badge>

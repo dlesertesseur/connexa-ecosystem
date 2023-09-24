@@ -56,7 +56,7 @@ export function DeletePage() {
     const f = async () => {
       if (entity) {
         form.setFieldValue("name", entity.name);
-        form.setFieldValue("description", entity.description);
+        form.setFieldValue("description", entity.label);
       }
     };
     f();

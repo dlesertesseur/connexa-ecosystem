@@ -3,18 +3,15 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Button, Container, Group, Paper, ScrollArea, SegmentedControl, Stack, Text } from "@mantine/core";
 import { useWindowSize } from "../../../../Hook";
 import { useTranslation } from "react-i18next";
-import { findEntityDefinitionById, saveEntityDefinition } from "../../../../DataAccess/EntityDefinition";
+import { findEntityDefinitionById, updateEntityDefinition } from "../../../../DataAccess/EntityDefinition";
 import { useContext } from "react";
 import { AbmStateContext, EntityLayoutContext } from "../Context";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { config } from "../../../../Constants/config";
-import {
-  IconDeviceFloppy,
-  IconEye,
-  IconRowInsertBottom,
-} from "@tabler/icons-react";
+import { IconDeviceFloppy, IconEye, IconRowInsertBottom } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
+import { WIDGETS_NAMES_BY_ID } from "../../../../Constants/DOCUMENTS";
 import uuid from "react-uuid";
 import EntityDefinitionHeader from "../EntityDefinitionHeader";
 import FieldModal from "./FieldModal";
@@ -41,7 +38,7 @@ const EntityLayout = ({ back }) => {
   const { selectedRowId, reloadFields } = useContext(AbmStateContext);
   const { t } = useTranslation();
 
-  const totalHeaderHeight = 330 + (relatedEntities.length > 0 ? 26   : 0);
+  const totalHeaderHeight = 330 + (relatedEntities.length > 0 ? 26 : 0);
 
   const [breakpoints] = useState(
     config.breakpoints.map((b) => {
@@ -55,24 +52,37 @@ const EntityLayout = ({ back }) => {
     const ret = await findEntityDefinitionById(params);
     setEntityDefinition(ret);
 
-    const fields = ret.fields;
+    /***** QUITAR *****/
+    const fields = ret.children?.map((c, index) => {
+      const r = { ...c };
+      (r.row = index), (r.order = 0);
+      return r;
+    });
+    /***** QUITAR *****/
+
     const panels = [];
+    const collections = [];
     const widgetByPanel = new Map();
 
     fields?.forEach((field) => {
-      const id = `panel-${field.row}`;
-      const group = widgetByPanel.get(id);
-
-      if (group !== undefined) {
-        widgetByPanel.set(id, [...group, field]);
+      if (field.type === "COLLECTION") {
+        collections.push(JSON.parse(field.options));
       } else {
-        widgetByPanel.set(id, [field]);
-        panels.push({ id: id });
+        const id = `panel-${field.row}`;
+        const group = widgetByPanel.get(id);
+
+        if (group !== undefined) {
+          widgetByPanel.set(id, [...group, field]);
+        } else {
+          widgetByPanel.set(id, [field]);
+          panels.push({ id: id });
+        }
       }
     });
 
     setPanels(panels);
     setWidgetByPanel(widgetByPanel);
+    setRelatedEntities(collections);
   };
 
   useEffect(() => {
@@ -87,6 +97,36 @@ const EntityLayout = ({ back }) => {
     return result;
   };
 
+  const getOptions = (widget) => {
+    let options = null;
+
+    switch (widget) {
+      case "TEXTINPUT":
+      case "TEXTAREA":
+      case "NUMBERINPUT":
+        options = "NA";
+        break;
+      case "SELECT":
+        options = { dataSourceId: widget.dataSourceId, relatedFieldId: w.relatedFieldId };
+        break;
+      case "CHECKBOX":
+        options = "NA";
+        break;
+      case "IMAGE":
+        options = "NA";
+        break;
+      case "UPLOAD":
+        options = "NA";
+        break;
+
+      default:
+        options = "NA";
+        break;
+    }
+
+    return options;
+  };
+
   const save = (e) => {
     const fields = [];
 
@@ -94,29 +134,56 @@ const EntityLayout = ({ back }) => {
       const components = widgetByPanel.get(p.id);
 
       components.forEach((w, order) => {
-        const obj = { ...w };
-        obj.row = row;
-        obj.order = order;
+        const obj = {
+          id: w.id,
+          type: WIDGETS_NAMES_BY_ID.get(w.wigget).name,
+          name: w.name,
+          label: w.description,
+          required: w.required,
+          options: getOptions(w),
+          parent: entityDefinition.id,
+          row: row,
+          order: order,
+        };
         fields.push(obj);
       });
     });
 
-    entityDefinition.fields = fields;
+    relatedEntities.forEach((re, index) => {
+      const obj = {
+        id: re.id,
+        type: "COLLECTION",
+        name: w.entity.name,
+        label: w.entity.description,
+        required: true,
+        options: { formId: w.entity.id, collection: w.asCollection },
+        parent: entityDefinition.id,
+        row: -1,
+        order: index,
+      };
+      fields.push(obj);
+    });
+
+    const form = {
+      id: entityDefinition.id,
+      type: "FORM",
+      name: entityDefinition.name,
+      label: entityDefinition.description,
+      required: true,
+      options: { size: containerSize },
+      parent: null,
+      children: fields,
+      row: 0,
+      order: 0,
+    };
 
     const params = {
       token: user.token,
       id: entityDefinition.id,
-      name: entityDefinition.name,
-      description: entityDefinition.description,
-      size: containerSize,
-      values: {
-        name: entityDefinition.name,
-        description: entityDefinition.description,
-        fields: entityDefinition.fields,
-      },
+      body: form,
     };
 
-    saveEntityDefinition(params);
+    updateEntityDefinition(params);
   };
 
   const deletePrefix = (cadena) => {
@@ -143,20 +210,19 @@ const EntityLayout = ({ back }) => {
   };
 
   const deleteRelatedEntity = (e) => {
-    const ret = relatedEntities.filter((f) => f.entity.id !== selectedRelatedEntity.entity.id);
+    const ret = relatedEntities.filter((f) => f.form.id !== selectedRelatedEntity.form.id);
     setRelatedEntities(ret);
   };
 
   const addRelatedEntity = (entity, asCollection) => {
-    const obj = { entity: entity, asCollection: asCollection ? true : false }
+    const obj = { id: uuid(), form: entity, asCollection: asCollection ? true : false };
     setRelatedEntities([...relatedEntities, obj]);
   };
 
   const updateRelatedEntity = (entity, asCollection) => {
+    const objIndex = relatedEntities.findIndex((obj) => obj.form.id == selectedRelatedEntity.form.id);
 
-    const objIndex = relatedEntities.findIndex((obj) => obj.entity.id == selectedRelatedEntity.entity.id);
-    
-    if(objIndex >= 0){
+    if (objIndex >= 0) {
       relatedEntities[objIndex].entity = entity;
       relatedEntities[objIndex].asCollection = asCollection;
     }
@@ -307,7 +373,7 @@ const EntityLayout = ({ back }) => {
                   }}
                   editRelatedEntity={editRelatedEntity}
                   deleteRelatedEntity={deleteRelatedEntity}
-                  setSelectedField={setSelectedField} 
+                  setSelectedField={setSelectedField}
                 />
               </Container>
 

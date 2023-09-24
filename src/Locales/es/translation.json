@@ -1487,6 +1487,7 @@
       "label": {
         "name": "Nombre",
         "description": "Descripcion",
+        "label": "Descripcion",
         "type": "Tipo",
         "required": "Requerido",
         "widget": "Widget",
@@ -1499,6 +1500,7 @@
       "placeholder": {
         "name": "un nombre",
         "description": "una descripcion",
+        "label": "una descripcion",
         "type": "un tipo",
         "widget": "seleccione un widget",
         "dataSource": "seleccione una fuente de datos",

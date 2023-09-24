@@ -20,7 +20,7 @@ const ItemLabel = ({ field }) => {
       }}
     >
       <Text size={"md"} weight={600}>
-        {field.description}
+        {field.label}
       </Text>
     </Paper>
   );

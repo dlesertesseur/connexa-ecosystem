@@ -112,7 +112,7 @@ const EntityList = ({ field, rowSelected, setRowSelected }) => {
       <Group spacing={"xs"}>
         <Stack spacing={"xs"} w={"100%"}>
           <Group spacing={"xs"} position="apart">
-            <Text size={"md"}>{field.description}</Text>
+            <Text size={"md"}>{field.label}</Text>
           </Group>
 
           <Group spacing={"xs"} position="left">
