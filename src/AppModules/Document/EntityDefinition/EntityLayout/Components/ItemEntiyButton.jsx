@@ -26,7 +26,7 @@ const ItemEntiyButton = ({ relatedEntity }) => {
           size={"sm"}
           weight={600}
         >
-          {relatedEntity?.name}
+          {relatedEntity?.label}
         </Text>
         {relatedEntity.collection ? (
           <IconPlaylistAdd

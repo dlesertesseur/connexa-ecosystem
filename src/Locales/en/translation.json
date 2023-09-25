@@ -1383,7 +1383,7 @@
     },
     "columns": {
       "processModel": ["Name", "Description"],
-      "tasks": ["Business process", "Name", "Role", "User", "Status"]
+      "tasks": ["Business instance", "Name", "Role", "User", "Status"]
     },
     "tabs": {
       "businessProcessModels": "Business process models",
@@ -1406,7 +1406,7 @@
     "messages": {},
 
     "entityDefinition": {
-      "columns": ["Name", "Description"],
+      "columns": ["Name", "Label", "Description"],
 
       "buttons": {
         "addRow": "Add row",
@@ -1423,7 +1423,8 @@
         "fields": "Fields",
         "formLayout": "Form layout",
         "relation": "Collection",
-        "entity": "Entity"
+        "entity": "Entity",
+        "formTest": "Form Test"
       },
       "placeholder": {
         "name": "a name",

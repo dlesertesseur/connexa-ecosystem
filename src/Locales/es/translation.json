@@ -1374,7 +1374,7 @@
 
     "columns": {
       "processModel": ["Nombre", "Descripcion"],
-      "tasks": ["Proceso de negocio", "Nombre", "Rol", "Usuario", "Estado"]
+      "tasks": ["Instancia de proceso", "Nombre", "Rol", "Usuario", "Estado"]
     },
 
     "tabs": {
@@ -1400,7 +1400,7 @@
     },
 
     "entityDefinition": {
-      "columns": ["Nombre", "Descripcion"],
+      "columns": ["Nombre", "Etiqueta", "Descripcion"],
 
       "buttons": {
         "addRow": "Agregar fila",
@@ -1417,7 +1417,8 @@
         "fields": "Campos",
         "formLayout": "Diseño de formulario",
         "relation": "Coleccion",
-        "entity": "una entidad"
+        "entity": "una entidad",
+        "formTest": "Probar formulario"
       },
       "placeholder": {
         "name": "un nombre",

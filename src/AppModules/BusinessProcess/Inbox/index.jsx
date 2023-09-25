@@ -21,7 +21,6 @@ import { getRoleBySiteIdAndUserId } from "../../../DataAccess/User";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import BusinessProcessModelDialog from "../Diagram/editor/BusinessProcessModelDialog";
-import { findBusinessProcessInstanceById } from "../../../DataAccess/BusinessProcessModel";
 
 const DynamicApp = ({ app }) => {
   const { user, organizationSelected, siteSelected } = useSelector((state) => state.auth.value);
@@ -104,7 +103,7 @@ const DynamicApp = ({ app }) => {
               }
 
               //***************** EXTRA DATA *****************
-              const applicationPath = "TaskApplication/DummyApp";
+              const applicationPath = "TaskApplication/FormInstanceApp";
               const automatic = false;
               const serviceUrl = null;
               //***************** EXTRA DATA *****************
@@ -116,7 +115,7 @@ const DynamicApp = ({ app }) => {
                 applicationPath: applicationPath,
                 automatic: automatic,
                 serviceUrl: serviceUrl,
-                businesProcessName:"***"
+                businesProcessName:t.businessProcessInstanceName
               };
             });
             tasks = tasks.concat(ret);

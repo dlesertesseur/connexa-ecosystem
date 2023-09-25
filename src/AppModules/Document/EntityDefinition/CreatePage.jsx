@@ -112,6 +112,11 @@ export function CreatePage() {
             <Group mb={"md"} grow>
               {createTextField("name")}
             </Group>
+
+            <Group mb={"md"} grow>
+              {createTextField("label")}
+            </Group>
+            
             <Group mb={"md"} grow>
               {createTextField("description")}
             </Group>

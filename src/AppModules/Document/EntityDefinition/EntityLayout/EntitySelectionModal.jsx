@@ -25,7 +25,8 @@ const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEn
         return {
           id: r.id,
           name: r.name,
-          description: r.label,
+          label: r.label,
+          description: r.description,
         };
       });
 

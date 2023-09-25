@@ -19,7 +19,7 @@ const WIDGETS = [
   { id: 5, name: "CHECKBOX", hidden: false },
   { id: 6, name: "IMAGE", hidden: false },
   { id: 7, name: "UPLOAD", hidden: false },
-  { id: 8, name: "COLLECTION", hidden: true },
+  { id: 8, name: "LINK_BUTTON", hidden: true },
   { id: 9, name: "FORM", hidden: true },
 
   // { id: 8, name: "Entity list" },

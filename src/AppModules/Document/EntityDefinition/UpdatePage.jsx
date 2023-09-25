@@ -7,7 +7,7 @@ import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
 import { AbmStateContext } from "./Context";
 import { HEADER_HIGHT } from "../../../Constants";
-import { findEntityDefinitionById, updateEntityDefinition } from "../../../DataAccess/EntityDefinition";
+import { findEntityDefinitionById, updateEntityDefinition, updateFormHeader } from "../../../DataAccess/EntityDefinition";
 
 export function UpdatePage() {
   const { t } = useTranslation();
@@ -37,12 +37,13 @@ export function UpdatePage() {
   const form = useForm({
     initialValues: {
       name: "",
+      label: "",
       description: "",
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
-      description: (val) => (val ? null : t("validation.required")),
+      label: (val) => (val ? null : t("validation.required")),
     },
   });
 
@@ -67,7 +68,8 @@ export function UpdatePage() {
     const f = async () => {
       if (entity) {
         form.setFieldValue("name", entity.name);
-        form.setFieldValue("description", entity.label);
+        form.setFieldValue("label", entity.label);
+        form.setFieldValue("description", entity.description);
       }
     };
     f();
@@ -78,20 +80,20 @@ export function UpdatePage() {
 
     const obj = {...entity};
     obj.name = values.name;
-    obj.label = values.description;
+    obj.label = values.label;
+    obj.description = values.description;
 
     const params = {
       token: user.token,
-      body: obj,
-      id: selectedRowId
+      body: obj
     };
 
     setWorking(true);
     try {
-      const ret = await updateEntityDefinition(params);
+      const ret = await updateFormHeader(params);
       setWorking(false);
 
-      if(ret.status !== 200){
+      if(ret.error){
         setError(ret.error);
       }else{
         setReload(Date.now());
@@ -129,6 +131,10 @@ export function UpdatePage() {
           >
             <Group mb={"md"} grow>
               {createTextField("name")}
+            </Group>
+
+            <Group mb={"md"} grow>
+              {createTextField("label")}
             </Group>
 
             <Group mb={"md"} grow>

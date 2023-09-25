@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { config } from "../../../../Constants/config";
 import { IconDeviceFloppy, IconEye, IconRowInsertBottom } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-import { WIDGETS_NAMES_BY_ID } from "../../../../Constants/DOCUMENTS";
 import uuid from "react-uuid";
 import EntityDefinitionHeader from "../EntityDefinitionHeader";
 import FieldModal from "./FieldModal";
@@ -65,9 +64,12 @@ const EntityLayout = ({ back }) => {
     const widgetByPanel = new Map();
 
     fields?.forEach((field) => {
-      if (field.type === "COLLECTION") {
+      if (field.type === "LINK_BUTTON") {
         const json = JSON.parse(field.options);
-        json.collection = json.collection === 'true' ? true : false; 
+        json.id = field.id;
+        json.name = field.name;
+        json.label = field.label;
+        json.description = field.description;
         collections.push(json);
       } else {
         const id = `panel-${field.row}`;
@@ -109,7 +111,7 @@ const EntityLayout = ({ back }) => {
         options = "NA";
         break;
       case "SELECT":
-        options = { dataSourceId: widget.dataSourceId, relatedFieldId: w.relatedFieldId };
+        options = { dataSourceId:widget.dataSourceId, relatedFieldId: w.relatedFieldId };
         break;
       case "CHECKBOX":
         options = "NA";
@@ -126,7 +128,7 @@ const EntityLayout = ({ back }) => {
         break;
     }
 
-    return options;
+    return JSON.stringify(options);
   };
 
   const save = (e) => {
@@ -138,31 +140,37 @@ const EntityLayout = ({ back }) => {
       components.forEach((w, order) => {
         const obj = {
           id: w.id,
-          type: WIDGETS_NAMES_BY_ID.get(w.wigget).name,
+          type: w.type,
           name: w.name,
-          label: w.description,
+          label: w.label,
+          description: w.description,
           required: w.required,
-          options: getOptions(w),
-          parent: entityDefinition.id,
+          options: `${getOptions(w)}`,
           row: row,
-          order: order,
+          orderInRow: order,
         };
         fields.push(obj);
       });
     });
 
     relatedEntities.forEach((re, index) => {
+      
+      const options = JSON.stringify({ formId: re.formId, collection: re.collection });
+
+      console.log("save relatedEntities options -> ", options);
+
       const obj = {
         id: re.id,
-        type: "COLLECTION",
-        name: w.entity.name,
-        label: w.entity.description,
+        type: "LINK_BUTTON",
+        name: re.name,
+        label: re.label,
+        description: re.description,
         required: true,
-        options: { formId: w.entity.id, collection: w.collection },
-        parent: entityDefinition.id,
-        row: -1,
-        order: index,
+        options: `${options}`,
+        row: 0,
+        orderInRow: index,
       };
+
       fields.push(obj);
     });
 
@@ -170,13 +178,13 @@ const EntityLayout = ({ back }) => {
       id: entityDefinition.id,
       type: "FORM",
       name: entityDefinition.name,
-      label: entityDefinition.description,
+      label: entityDefinition.label,
+      description: entityDefinition.description,
       required: true,
-      options: { size: containerSize },
-      parent: null,
+      options: `${JSON.stringify({ size: containerSize })}`,
       children: fields,
       row: 0,
-      order: 0,
+      orderInRow: 0,
     };
 
     const params = {
@@ -212,17 +220,24 @@ const EntityLayout = ({ back }) => {
   };
 
   const deleteRelatedEntity = (e) => {
-    const ret = relatedEntities.filter((f) => f.form.id !== selectedRelatedEntity.form.id);
+    const ret = relatedEntities.filter((f) => f.formId !== selectedRelatedEntity.formId);
     setRelatedEntities(ret);
   };
 
   const addRelatedEntity = (entity, collection) => {
-    const obj = { id: uuid(), form: entity, collection: collection ? true : false };
+    const obj = {
+      id: uuid(),
+      formId: entity.id,
+      name: entity.name,
+      label: entity.label,
+      description: entity.description,
+      collection: collection ? true : false,
+    };
     setRelatedEntities([...relatedEntities, obj]);
   };
 
   const updateRelatedEntity = (entity, collection) => {
-    const objIndex = relatedEntities.findIndex((obj) => obj.formId == selectedRelatedEntity.formId);
+    const objIndex = relatedEntities.findIndex((obj) => obj.formId === selectedRelatedEntity.formId);
 
     if (objIndex >= 0) {
       relatedEntities[objIndex].entity = entity;

@@ -28,9 +28,12 @@ const FieldModal = ({ opened, close, onCreate }) => {
 
   useEffect(() => {
     const f = async () => {
+      form.reset();
+
       if (selectedField) {
         form.setFieldValue("name", selectedField.name);
         form.setFieldValue("label", selectedField.label);
+        form.setFieldValue("description", selectedField.description);
         form.setFieldValue("required", selectedField.required);
         form.setFieldValue("type", selectedField.type);
         form.setFieldValue("dataSourceId", selectedField.dataSourceId);
@@ -50,12 +53,6 @@ const FieldModal = ({ opened, close, onCreate }) => {
     getData();
   }, [user]);
 
-  // const [fieldType] = useState(
-  //   PARAMETERS_TYPE.map((p) => {
-  //     return { value: p.id, label: p.name };
-  //   })
-  // );
-
   const [widgets] = useState(
     WIDGETS.filter((p) => !p.hidden).map((p) => {
       return { value: p.name, label: p.name };
@@ -65,6 +62,7 @@ const FieldModal = ({ opened, close, onCreate }) => {
   const form = useForm({
     initialValues: {
       label: "",
+      description: "",
       name: "",
       type: "",
       required: false,
@@ -128,7 +126,6 @@ const FieldModal = ({ opened, close, onCreate }) => {
         <form
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
-            form.reset();
           })}
         >
           <Group mb={"md"} grow>
@@ -137,6 +134,10 @@ const FieldModal = ({ opened, close, onCreate }) => {
 
           <Group mb={"md"} grow>
             {createTextField("label")}
+          </Group>
+
+          <Group mb={"md"} grow>
+            {createTextField("description")}
           </Group>
 
           <Group mb={"md"} grow>

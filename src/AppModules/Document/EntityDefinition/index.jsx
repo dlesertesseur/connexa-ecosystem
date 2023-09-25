@@ -6,10 +6,11 @@ import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { findAllEntityDefinition } from "../../../DataAccess/EntityDefinition";
-import { IconLayout } from "@tabler/icons-react";
+import { IconLayout, IconTestPipe, IconTestPipe2 } from "@tabler/icons-react";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import EntityLayout from "./EntityLayout/EntityLayout";
+import FormTest from "./FormTest/FormTest";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -29,15 +30,16 @@ const DynamicApp = ({ app }) => {
     try {
       let ret = null;
       const list = await findAllEntityDefinition(params);
+
       ret = list.map((r) => {
         return {
           id: r.id,
           name: r.name,
-          description: r.label,
+          label: r.label,
+          description: r.description,
         };
       });
       setRows(ret);
-
     } catch (error) {
       setError(error);
     }
@@ -52,6 +54,7 @@ const DynamicApp = ({ app }) => {
   const cols = t("document.entityDefinition.columns", { returnObjects: true });
   const columns = [
     { headerName: cols[col++], fieldName: "name", align: "left" },
+    { headerName: cols[col++], fieldName: "label", align: "left" },
     { headerName: cols[col++], fieldName: "description", align: "left" },
   ];
 
@@ -77,25 +80,18 @@ const DynamicApp = ({ app }) => {
         updatePage={<UpdatePage />}
         deletePage={<DeletePage />}
         relationshipPages={[
-          // {
-          //   path: "fields",
-          //   icon: <IconDatabase size={20} />,
-          //   key: "document.entityDefinition.label.fields",
-          //   element: <Fields back={"../"} />,
-          // },
-          // {
-          //   path: "formLayout",
-          //   icon: <IconLayout size={20} />,
-          //   key: "document.entityDefinition.label.formLayout",
-          //   element: <FormLayout back={"../"} />,
-          // },
           {
-            path: "entityLayout",
+            path: "formLayout",
             icon: <IconLayout size={20} />,
             key: "document.entityDefinition.label.formLayout",
             element: <EntityLayout back={"../"} />,
           },
-
+          {
+            path: "formTest",
+            icon: <IconTestPipe size={20} />,
+            key: "document.entityDefinition.label.formTest",
+            element: <FormTest back={"../"} />,
+          },
         ]}
       />
 

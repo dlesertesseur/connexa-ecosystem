@@ -46,6 +46,7 @@ export function DeletePage() {
   const form = useForm({
     initialValues: {
       name: "",
+      label: "",
       description: "",
     },
 
@@ -56,7 +57,8 @@ export function DeletePage() {
     const f = async () => {
       if (entity) {
         form.setFieldValue("name", entity.name);
-        form.setFieldValue("description", entity.label);
+        form.setFieldValue("label", entity.label);
+        form.setFieldValue("description", entity.description);
       }
     };
     f();
@@ -136,6 +138,9 @@ export function DeletePage() {
           >
             <Group mb={"md"} grow>
               {createTextField("name", true)}
+            </Group>
+            <Group mb={"md"} grow>
+              {createTextField("label", true)}
             </Group>
             <Group mb={"md"} grow>
               {createTextField("description", true)}

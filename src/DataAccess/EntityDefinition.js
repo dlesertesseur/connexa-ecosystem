@@ -76,14 +76,10 @@ const updateEntityDefinition = async (parameters) => {
     body: body,
   };
 
-  console.log("updateEntityDefinition body -> ", body);
-
   const url = API.entityDefinition.update + parameters.id;
   const res = await fetch(url, requestOptions);
   const data = await res.json();
-
-  console.log("updateEntityDefinition data -> ", data);
-
+  
   return data;
 };
 
@@ -111,10 +107,31 @@ const deleteEntityDefinition = async (parameters) => {
   }
 };
 
+const updateFormHeader = async (parameters) => {
+  const body = JSON.stringify(parameters.body);
+
+  const requestOptions = {
+    method: "PATCH",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token: parameters.token,
+    },
+    body: body,
+  };
+
+  const url = API.entityDefinition.updateHeader;
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
+  
+  return data;
+};
+
 export {
   createEntityDefinition,
   updateEntityDefinition,
   deleteEntityDefinition,
   findEntityDefinitionById,
   findAllEntityDefinition,
+  updateFormHeader
 };
