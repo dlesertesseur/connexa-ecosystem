@@ -28,7 +28,6 @@ const FieldModal = ({ opened, close, onCreate }) => {
 
   useEffect(() => {
     const f = async () => {
-      form.reset();
 
       if (selectedField) {
         form.setFieldValue("name", selectedField.name);
@@ -46,6 +45,7 @@ const FieldModal = ({ opened, close, onCreate }) => {
     if (opened && selectedField) {
       f();
     }
+    form.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
 

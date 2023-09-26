@@ -38,8 +38,6 @@ const createEntityDefinition = async (parameters) => {
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 
-  console.log("createEntityDefinition data ->", data);
-
   return data;
 };
 
@@ -76,7 +74,7 @@ const updateEntityDefinition = async (parameters) => {
     body: body,
   };
 
-  const url = API.entityDefinition.update + parameters.id;
+  const url = API.entityDefinition.update;
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   

@@ -412,7 +412,7 @@ export const API = {
     findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models",
     findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models/",
     create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models",
-    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models/",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models",
     delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models/",
     updateHeader: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models",
   },

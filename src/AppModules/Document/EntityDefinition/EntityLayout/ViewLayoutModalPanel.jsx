@@ -137,7 +137,7 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
                       navigate(re.formId);
                     }}
                   >
-                    {re.name}
+                    {re.label}
                   </Button>
                 );
               })}

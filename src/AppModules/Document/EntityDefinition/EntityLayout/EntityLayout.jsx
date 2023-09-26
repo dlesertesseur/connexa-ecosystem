@@ -35,6 +35,7 @@ const EntityLayout = ({ back }) => {
   const [openEntitySelection, setOpenEntitySelection] = useState(false);
   const { user } = useSelector((state) => state.auth.value);
   const { selectedRowId, reloadFields } = useContext(AbmStateContext);
+  const [saving, setSaving] = useState(false);
   const { t } = useTranslation();
 
   const totalHeaderHeight = 330 + (relatedEntities.length > 0 ? 26 : 0);
@@ -51,19 +52,18 @@ const EntityLayout = ({ back }) => {
     const ret = await findEntityDefinitionById(params);
     setEntityDefinition(ret);
 
-    /***** QUITAR *****/
-    const fields = ret.children?.map((c, index) => {
-      const r = { ...c };
-      (r.row = index), (r.order = 0);
-      return r;
-    });
-    /***** QUITAR *****/
+    try {
+      const options = await JSON.parse(ret.options);
+      setContainerSize(options.size);
+    } catch (error) {
+      console.log("error ->", error);
+    }
 
     const panels = [];
     const collections = [];
     const widgetByPanel = new Map();
 
-    fields?.forEach((field) => {
+    ret.children?.forEach((field) => {
       if (field.type === "LINK_BUTTON") {
         const json = JSON.parse(field.options);
         json.id = field.id;
@@ -131,9 +131,10 @@ const EntityLayout = ({ back }) => {
     return JSON.stringify(options);
   };
 
-  const save = (e) => {
+  const save = async (e) => {
     const fields = [];
 
+    setSaving(true);
     panels.forEach((p, row) => {
       const components = widgetByPanel.get(p.id);
 
@@ -153,12 +154,8 @@ const EntityLayout = ({ back }) => {
       });
     });
 
-    relatedEntities.forEach((re, index) => {
-      
+    relatedEntities.forEach((re, index) => {      
       const options = JSON.stringify({ formId: re.formId, collection: re.collection });
-
-      console.log("save relatedEntities options -> ", options);
-
       const obj = {
         id: re.id,
         type: "LINK_BUTTON",
@@ -193,7 +190,8 @@ const EntityLayout = ({ back }) => {
       body: form,
     };
 
-    updateEntityDefinition(params);
+    const ret = await updateEntityDefinition(params);
+    setSaving(false);
   };
 
   const deletePrefix = (cadena) => {
@@ -360,7 +358,7 @@ const EntityLayout = ({ back }) => {
 
           <Group p={0} position="apart">
             <Group>
-              <Button leftIcon={<IconDeviceFloppy />} onClick={save}>
+              <Button leftIcon={<IconDeviceFloppy />} onClick={save} disabled={saving}>
                 {t("document.entityDefinition.buttons.save")}
               </Button>
               <Button leftIcon={<IconRowInsertBottom />} onClick={addPanel}>

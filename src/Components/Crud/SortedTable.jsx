@@ -137,6 +137,7 @@ export default function SortedTable({
   updateButton = true,
   deleteButton = true,
   backButton = null,
+  actionButtons = null,
 }) {
   const { classes, cx } = useStyles();
   const { t } = useTranslation();
@@ -219,7 +220,7 @@ export default function SortedTable({
         break;
 
       case "boolean":
-        ret = data ? t("label.true") : t("label.false") ;
+        ret = data ? t("label.true") : t("label.false");
         break;
 
       default:
@@ -297,9 +298,9 @@ export default function SortedTable({
                 <Button
                   key={r.path}
                   onClick={() => {
-                    if(r.onClick){
+                    if (r.onClick) {
                       r.onClick(r);
-                    }else{
+                    } else {
                       r.onPress ? r.onPress(r) : navigate(r.path);
                     }
                   }}
@@ -311,6 +312,22 @@ export default function SortedTable({
                     </Group>
                   ) : (
                     t(r.key)
+                  )}
+                </Button>
+              ))}
+
+              {actionButtons?.map((r) => (
+                <Button
+                  key={r.text}
+                  onClick={r.onClick}
+                  disabled={r.disabled}
+                >
+                  {r.icon ? (
+                    <Group position="apart" spacing={"xs"}>
+                      {r.icon} {t(r.text)}
+                    </Group>
+                  ) : (
+                    t(r.text)
                   )}
                 </Button>
               ))}

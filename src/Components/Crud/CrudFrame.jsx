@@ -3,7 +3,6 @@ import uuid from "react-uuid";
 import SortedTable from "./SortedTable";
 import { Breadcrumbs, Divider, Stack, Text } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
-import { findTranslatedField } from "../../Util";
 import { useTranslation } from "react-i18next";
 import AppHeader from "../AppHeader";
 
@@ -23,6 +22,7 @@ const CrudFrame = ({
   loading = false,
   breadcrumbs = null,
   headerHeight = 230,
+  actionButtons = null
 }) => {
   const { i18n } = useTranslation();
 
@@ -36,23 +36,6 @@ const CrudFrame = ({
         width: "100%",
       })}
     >
-      {/* <Stack
-        spacing={0}
-        align={"flex-start"}
-        sx={(theme) => ({
-          backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
-          height: "48px",
-        })}
-      >
-        <Text size="xl" weight={700}>
-          {findTranslatedField(i18n.language, app, "name")}
-        </Text>
-        <Text size="xs" color="dimmed">
-          {findTranslatedField(i18n.language, app, "description")}
-        </Text>
-      </Stack>
-      <Divider /> */}
-
       <AppHeader app={app}/>
 
       <Stack
@@ -77,6 +60,7 @@ const CrudFrame = ({
                 setRowSelected={setRowSelected}
                 relationship={relationshipPages}
                 headerHeight={headerHeight}
+                actionButtons={actionButtons}
               />
             }
           />
@@ -93,15 +77,6 @@ const CrudFrame = ({
           })}
         </Routes>
       </Stack>
-
-      {/* <Group
-        position="center"
-        sx={(theme) => ({
-          backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
-        })}
-      >
-        <Pagination total={2}/>
-      </Group> */}
     </Stack>
   );
 };

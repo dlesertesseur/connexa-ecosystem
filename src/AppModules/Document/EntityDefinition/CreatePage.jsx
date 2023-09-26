@@ -24,12 +24,13 @@ export function CreatePage() {
   const form = useForm({
     initialValues: {
       name: "",
+      label: "",
       description: "",
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
-      description: (val) => (val ? null : t("validation.required")),
+      label: (val) => (val ? null : t("validation.required")),
     },
   });
 
@@ -55,7 +56,8 @@ export function CreatePage() {
       id: uuid(),
       type: "FORM",
       name: values.name,
-      label: values.description,
+      label: values.label,
+      description: values.description,
       required: "true",
       options: JSON.stringify({ size: "sm" }),
       parent: null,
@@ -74,7 +76,7 @@ export function CreatePage() {
       const ret = await createEntityDefinition(params);
 
       setWorking(false);
-      if (ret.status !== 200) {
+      if (ret.error) {
         setError(ret.error);
       } else {
         setReload(Date.now());

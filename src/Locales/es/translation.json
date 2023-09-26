@@ -1418,7 +1418,10 @@
         "formLayout": "Diseño de formulario",
         "relation": "Coleccion",
         "entity": "una entidad",
-        "formTest": "Probar formulario"
+        "formTest": "Probar formulario",
+        "newRecord":"Nuevo",
+        "updateRecord":"Modificar",
+        "deleteRecord":"Eliminar"
       },
       "placeholder": {
         "name": "un nombre",
@@ -1430,7 +1433,8 @@
         "update": "Modificar una definicion de entidad",
         "delete": "Eliminar una definicion de entidad",
         "addEntity": "Seleccionar entidad relacionada",
-        "viewDoc": "Ver diseño del documento"
+        "viewDoc": "Ver diseño del documento",
+        "testForm": "Prueba de Formulario"
       }
     },
 

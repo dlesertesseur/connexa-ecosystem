@@ -1424,7 +1424,10 @@
         "formLayout": "Form layout",
         "relation": "Collection",
         "entity": "Entity",
-        "formTest": "Form Test"
+        "formTest": "Form Test",
+        "newRecord":"New",
+        "updateRecord":"Update",
+        "deleteRecord":"Delete"
       },
       "placeholder": {
         "name": "a name",
@@ -1437,7 +1440,9 @@
         "update": "Update entity definition",
         "delete": "Delete entity definition",
         "addEntity": "Select related entity",
-        "viewDoc": "See document layout"
+        "viewDoc": "See document layout",
+        "testForm": "Test Form"
+
       }
     },
 

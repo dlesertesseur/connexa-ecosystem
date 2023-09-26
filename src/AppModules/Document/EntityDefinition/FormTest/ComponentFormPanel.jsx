@@ -1,49 +1,38 @@
-import { Button, Container, Group, ScrollArea, Stack } from "@mantine/core";
-import React from "react";
+import {
+  Button,
+  Checkbox,
+  Container,
+  Group,
+  NumberInput,
+  ScrollArea,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
+import React, { useEffect } from "react";
 import FormHeaderPanel from "./FormHeaderPanel";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../../Hook";
-import { useEffect } from "react";
+import { useForm } from "@mantine/form";
 
-const ComponentFormPanel = ({ formData }) => {
+const ComponentFormPanel = ({
+  formData,
+  options,
+  panels,
+  widgetByPanel,
+  formConfig,
+  relatedEntities,
+  parentId,
+  mode,
+}) => {
   const { t } = useTranslation();
   const wsize = useWindowSize();
-  const form = useForm(formConfig);
   const navigate = useNavigate();
-  const totalHeaderHeight = 220 + (relatedEntities ? 60 : 0);
 
-  const [panels, setPanels] = useState([]);
-  const [relatedEntities, setRelatedEntities] = useState([]);
-  const [widgetByPanel, setWidgetByPanel] = useState(new Map());
-
-  const [formConfig, setFormConfig] = useState(null);
-
-  const createInitialValues = () => {
-    const ret = {};
-    panels?.forEach((p) => {
-      const group = widgetByPanel?.get(p.id);
-      group?.forEach((f) => {
-        ret[f.name] = f.type === "TEXTINPUT" || f.widget === "TEXTAREA" ? "" : null;
-      });
-    });
-
-    return ret;
-  };
-
-  const createValidations = () => {
-    const ret = {};
-
-    panels?.forEach((p) => {
-      const group = widgetByPanel?.get(p.id);
-      group?.forEach((f) => {
-        if (f.required) {
-          ret[f.name] = (val) => (val ? null : t("validation.required"));
-        }
-      });
-    });
-    return ret;
-  };
+  const totalHeaderHeight = 310 + (mode ? 60 : 0) ;
 
   const buildGroup = (group, index) => {
     const ret = (
@@ -137,60 +126,58 @@ const ComponentFormPanel = ({ formData }) => {
     return rows;
   };
 
-  useEffect(() => {
-    if (open) {
-      const config = {
-        initialValues: createInitialValues(panels),
-        validate: createValidations(panels),
-      };
-      setFormConfig(config);
-    }
-  }, [open]);
+  const form = useForm(formConfig);
 
   return (
-    <Container size={size} bg={"gray.0"}>
+    <Container size={options?.size} w={"100%"}>
       <Stack spacing={"xs"}>
         <form
           onSubmit={form.onSubmit((values) => {
             console.log("onSubmit ->", values);
-            form.reset();
           })}
         >
-          <FormHeaderPanel name={formData?.name} description={formData?.label} />
+          {mode === undefined ? (
+            <FormHeaderPanel name={formData?.label} description={formData?.description} />
+          ) : (
+            <Group position={"center"}>
+              <Text size={"lg"} weight={600}>{mode}</Text>
+            </Group>
+          )}
 
           {relatedEntities ? (
-            <Group position="left" mb={"xs"} spacing={"xs"}>
+            <Group position="left" my={"xs"} spacing={"xs"}>
               {relatedEntities.map((re) => {
                 return (
                   <Button
-                    disabled
                     key={re.formId}
                     onClick={() => {
-                      navigate(re.formId);
+                      navigate(`${re.name}`);
                     }}
                   >
-                    {re.name}
+                    {re.label}
                   </Button>
                 );
               })}
             </Group>
           ) : null}
 
-          <ScrollArea offsetScrollbars h={height ? height : wsize.height - totalHeaderHeight}>
+          <ScrollArea offsetScrollbars h={wsize.height - totalHeaderHeight - (relatedEntities?.length > 0 ? 36 : 0)}>
             {buildForm(panels)}
           </ScrollArea>
 
-          <Group position="right" my={"xs"}>
-            <Button type="submit">{t("button.accept")}</Button>
-            <Button
-              onClick={() => {
-                close();
-                form.reset();
-              }}
-            >
-              {t("button.cancel")}
-            </Button>
-          </Group>
+          {formData ? (
+            <Group position="right" my={"xs"}>
+              <Button type="submit">{t("button.accept")}</Button>
+              <Button
+                onClick={() => {
+                  navigate("../../");
+                  form.reset();
+                }}
+              >
+                {t("button.cancel")}
+              </Button>
+            </Group>
+          ) : null}
         </form>
       </Stack>
     </Container>
