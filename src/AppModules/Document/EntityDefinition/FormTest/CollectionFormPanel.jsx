@@ -3,6 +3,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Stack } from "@mantine/core";
 import { HEADER_HIGHT } from "../../../../Constants";
+import { useEffect } from "react";
 import FormHeaderPanel from "./FormHeaderPanel";
 import SortedTable from "../../../../Components/Crud/SortedTable";
 import ComponentFormPanel from "./ComponentFormPanel";
@@ -10,23 +11,23 @@ import ComponentFormPanel from "./ComponentFormPanel";
 const CollectionFormPanel = ({ formData, options, panels, widgetByPanel, formConfig, relatedEntities, parentId }) => {
   const { t } = useTranslation();
   const [selectedRowId, setSelectedRowId] = useState(null);
+  const [columns, setColumns] = useState([]);
   const navigate = useNavigate();
 
   const HEADER = 60;
 
-  // const getData = async () => {};
+  useEffect(() => {
+    if (formData) {
+      const list = formData.children;
+      if (list) {
+        const ret = list.map((c) => {
+          return { headerName: c.label, fieldName: c.name, align: "left" };
+        });
 
-  // useEffect(() => {
-  //   getData();
-  // }, [reloadData]);
-
-  let col = 0;
-  const cols = t("businessProcess.parameters.columns", { returnObjects: true });
-  const columns = [
-    { headerName: cols[col++], fieldName: "name", align: "left" },
-    { headerName: cols[col++], fieldName: "description", align: "left" },
-    { headerName: cols[col++], fieldName: "type", align: "left" },
-  ];
+        setColumns(ret);
+      }
+    }
+  }, [formData]);
 
   return (
     <Stack

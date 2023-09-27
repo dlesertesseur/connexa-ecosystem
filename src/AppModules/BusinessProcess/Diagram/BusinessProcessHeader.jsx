@@ -1,30 +1,23 @@
 import React from "react";
-import { Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
+import { Breadcrumbs, Group, Skeleton, Text } from "@mantine/core";
 
 const BusinessProcessHeader = ({ businessProcess, text }) => {
 
+  const items = [
+    { title: businessProcess?.name, href: null },
+    { title: text, href: null },
+  ].map((item, index) => <Text key={index}>{item.title}</Text>);
+
   return (
-    <Paper withBorder p={6}>
-      <Stack spacing={"xs"} h={32} justify="center">
-        {businessProcess ? (
-          <Group position="left" >
-            <Text size={"md"} weight={700}>
-              {businessProcess?.name}
-            </Text>
-
-            <Text size={"md"} weight={700}>
-              {"|"}
-            </Text>
-
-            <Text size={"md"} weight={700}>
-              {text}
-            </Text>
-          </Group>
-        ) : (
-          <Skeleton visible={true} h={"100%"}></Skeleton>
-        )}
-      </Stack>
-    </Paper>
+    <Group p={0} h={32}>
+      {businessProcess ? (
+        <Group position="left">
+          <Breadcrumbs>{items}</Breadcrumbs>
+        </Group>
+      ) : (
+        <Skeleton visible={true} h={"100%"}></Skeleton>
+      )}
+    </Group>
   );
 };
 

@@ -191,6 +191,9 @@ const EntityLayout = ({ back }) => {
     };
 
     const ret = await updateEntityDefinition(params);
+
+
+    console.log("save -> ",ret)
     setSaving(false);
   };
 

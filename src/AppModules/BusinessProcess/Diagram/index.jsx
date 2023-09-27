@@ -9,10 +9,11 @@ import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { findAllBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
-import { IconEditCircle, IconVariable } from "@tabler/icons-react";
+import { IconEditCircle, IconPageBreak, IconPaperBag, IconPaperclip, IconVariable } from "@tabler/icons-react";
 import { findAllSprints } from "../../../DataAccess/Sprints";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 import Parameters from "./parameters/Parameters";
+import FormSelector from "./FormSelector/FormSelector";
 
 const DynamicApp = ({ app }) => {
   const { user, organizationSelected } = useSelector((state) => state.auth.value);
@@ -43,11 +44,10 @@ const DynamicApp = ({ app }) => {
           return ret;
         })
       );
-  
+
       params = { token: user.token, id: organizationSelected.id };
       const roles = await findAllByOrganizationId(params);
       setRoles(roles);
-
     } catch (error) {
       setError(error);
     }
@@ -73,7 +73,7 @@ const DynamicApp = ({ app }) => {
         selectedRowId,
         setError,
         sprints,
-        roles
+        roles,
       }}
     >
       <CrudFrame
@@ -94,6 +94,12 @@ const DynamicApp = ({ app }) => {
             icon: <IconEditCircle size={20} />,
             key: "businessProcessModel.buttons.editor",
             element: <Editor back={"../"} />,
+          },
+          {
+            path: "forms",
+            icon: <IconPaperclip size={20} />,
+            key: "businessProcessModel.buttons.forms",
+            element: <FormSelector back={"../"} />,
           },
           {
             path: "parameters",

@@ -1300,7 +1300,12 @@
       "applicationPath": "Aplicacion",
       "serviceUrl": "URL de Servicio",
       "borderColor": "Color de borde",
-      "bidirectionalConnection": "Conexión bidireccional"
+      "bidirectionalConnection": "Conexión bidireccional",
+      "forms": "Formularios",
+      "search":"Buscar...",
+      "noData":"sin datos",
+      "businessProcessList":"Lista de procesos de negocio",
+      "businessProcessesSeleted":"Procesos de negocio seleccionados"
     },
     "placeholder": {
       "name": "un nombre",
@@ -1314,7 +1319,8 @@
     "buttons": {
       "design": "Editar",
       "parameters": "Parametros",
-      "connections": "Conexiones"
+      "connections": "Conexiones",
+      "forms": "Formularios"
     },
     "columns": ["Nombre", "Descripcion"],
 

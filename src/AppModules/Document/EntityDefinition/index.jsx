@@ -21,7 +21,6 @@ const DynamicApp = ({ app }) => {
   const [loading, setLoading] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [reload, setReload] = useState(null);
-  const [openTestForm, setOpenTestForm] = useState(false);
 
   const getData = async () => {
     const params = {

@@ -32,7 +32,9 @@ const ComponentFormPanel = ({
   const wsize = useWindowSize();
   const navigate = useNavigate();
 
-  const totalHeaderHeight = 310 + (mode ? 60 : 0) ;
+  const form = useForm(formConfig);
+
+  const totalHeaderHeight = 310 + (mode ? 60 : 0);
 
   const buildGroup = (group, index) => {
     const ret = (
@@ -126,8 +128,6 @@ const ComponentFormPanel = ({
     return rows;
   };
 
-  const form = useForm(formConfig);
-
   return (
     <Container size={options?.size} w={"100%"}>
       <Stack spacing={"xs"}>
@@ -140,7 +140,9 @@ const ComponentFormPanel = ({
             <FormHeaderPanel name={formData?.label} description={formData?.description} />
           ) : (
             <Group position={"center"}>
-              <Text size={"lg"} weight={600}>{mode}</Text>
+              <Text size={"lg"} weight={600}>
+                {mode}
+              </Text>
             </Group>
           )}
 
@@ -163,21 +165,21 @@ const ComponentFormPanel = ({
 
           <ScrollArea offsetScrollbars h={wsize.height - totalHeaderHeight - (relatedEntities?.length > 0 ? 36 : 0)}>
             {buildForm(panels)}
+            
+            {panels?.length > 0 ? (
+              <Group position="right" my={"xs"}>
+                <Button type="submit">{t("button.accept")}</Button>
+                <Button
+                  onClick={() => {
+                    navigate("../../");
+                    form.reset();
+                  }}
+                >
+                  {t("button.cancel")}
+                </Button>
+              </Group>
+            ) : null}
           </ScrollArea>
-
-          {formData ? (
-            <Group position="right" my={"xs"}>
-              <Button type="submit">{t("button.accept")}</Button>
-              <Button
-                onClick={() => {
-                  navigate("../../");
-                  form.reset();
-                }}
-              >
-                {t("button.cancel")}
-              </Button>
-            </Group>
-          ) : null}
         </form>
       </Stack>
     </Container>

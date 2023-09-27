@@ -1,5 +1,5 @@
 import React from "react";
-import { Anchor, Breadcrumbs, Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
+import { Breadcrumbs, Group, Skeleton, Text } from "@mantine/core";
 
 const EntityDefinitionHeader = ({ entityDefinition, text }) => {
   const items = [

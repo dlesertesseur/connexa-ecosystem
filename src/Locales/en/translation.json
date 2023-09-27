@@ -1311,7 +1311,12 @@
       "applicationPath": "Application",
       "serviceUrl": "Service URL",
       "borderColor": "Border color",
-      "bidirectionalConnection": "Bidirectional connection"
+      "bidirectionalConnection": "Bidirectional connection",
+      "forms": "Forms",
+      "search":"Search...",
+      "noData":"Nothing found",
+      "businessProcessList":"Business process list",
+      "businessProcessesSeleted":"Selected business processes"
     },
     "placeholder": {
       "name": "a name",
@@ -1325,7 +1330,8 @@
     "buttons": {
       "editor": "Edit",
       "parameters": "Parameters",
-      "connections": "Connections"
+      "connections": "Connections",
+      "forms": "Forms"
     },
     "columns": ["Name", "Description"],
     "parameters": {
