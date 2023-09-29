@@ -1,12 +1,4 @@
-import {
-  Title,
-  Container,
-  Button,
-  Group,
-  LoadingOverlay,
-  ScrollArea,
-  TextInput,
-} from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -45,6 +37,7 @@ export function DeletePage() {
 
   const form = useForm({
     initialValues: {
+      code: "",
       name: "",
       description: "",
     },
@@ -55,6 +48,7 @@ export function DeletePage() {
   useEffect(() => {
     const f = async () => {
       if (entity) {
+        form.setFieldValue("code", entity.code);
         form.setFieldValue("name", entity.name);
         form.setFieldValue("description", entity.description);
       }
@@ -66,10 +60,24 @@ export function DeletePage() {
   const createTextField = (field, disabled = false) => {
     const ret = (
       <TextInput
-        disabled={disabled}
+        disabled
         w={"100%"}
-        label={t("document.dataSource.label." + field)}
-        placeholder={t("document.dataSource.placeholder." + field)}
+        label={t("dataSource.label." + field)}
+        placeholder={t("dataSource.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
+  const createTextArea = (field) => {
+    const ret = (
+      <Textarea
+        disabled
+        w={"100%"}
+        label={t("dataSource.label." + field)}
+        placeholder={t("dataSource.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -125,7 +133,7 @@ export function DeletePage() {
             fontWeight: 700,
           })}
         >
-          {t("document.dataSource.title.delete")}
+          {t("dataSource.title.delete")}
         </Title>
 
         <ScrollArea type="scroll" style={{ width: "100%", height: height - HEADER_HIGHT }}>
@@ -134,11 +142,16 @@ export function DeletePage() {
               setConfirmModalOpen(true);
             })}
           >
+            <Group grow mb={"md"} w={"50%"}>
+              {createTextField("code")}
+            </Group>
+
             <Group mb={"md"} grow>
               {createTextField("name", true)}
             </Group>
+
             <Group mb={"md"} grow>
-              {createTextField("description", true)}
+              {createTextArea("description", true)}
             </Group>
 
             <Group position="right" mt="xl" mb="xs">

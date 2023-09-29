@@ -11,12 +11,17 @@ import {
   TextInput,
   Textarea,
 } from "@mantine/core";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FormHeaderPanel from "./FormHeaderPanel";
+import InstanceFormContex from "./Context";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../../Hook";
 import { useForm } from "@mantine/form";
+import { useSelector } from "react-redux";
+import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
+import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
+import { findDataSourceById } from "../../../../DataAccess/DataSource";
 
 const ComponentFormPanel = ({
   formData,
@@ -27,14 +32,20 @@ const ComponentFormPanel = ({
   relatedEntities,
   parentId,
   mode,
+  title,
+  selectedRowId,
+  widgetByName,
 }) => {
+  const { user } = useSelector((state) => state.auth.value);
   const { t } = useTranslation();
   const wsize = useWindowSize();
   const navigate = useNavigate();
 
-  const form = useForm(formConfig);
 
-  const totalHeaderHeight = 310 + (mode ? 60 : 0);
+  const { onCreate, onUpdate, onDelete, setReloadData, confirmModalOpen, setConfirmModalOpen, datasourceValuesById } =
+    useContext(InstanceFormContex);
+  const form = useForm(formConfig);
+  const totalHeaderHeight = 260 + (title ? 60 : 0);
 
   const buildGroup = (group, index) => {
     const ret = (
@@ -53,6 +64,7 @@ const ComponentFormPanel = ({
       case "TEXTINPUT":
         ret = (
           <TextInput
+            disabled={mode === "DELETE" ? true : false}
             {...form.getInputProps(field.name)}
             key={field.id}
             withAsterisk={field.required}
@@ -64,6 +76,7 @@ const ComponentFormPanel = ({
       case "TEXTAREA":
         ret = (
           <Textarea
+            disabled={mode === "DELETE" ? true : false}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -75,6 +88,7 @@ const ComponentFormPanel = ({
       case "NUMBERINPUT":
         ret = (
           <NumberInput
+            disabled={mode === "DELETE" ? true : false}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -86,11 +100,16 @@ const ComponentFormPanel = ({
       case "SELECT":
         ret = (
           <Select
+            disabled={mode === "DELETE" ? true : false}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
             placeholder={field.name}
-            data={[]}
+            data={
+              datasourceValuesById.has(field.datasourceId)
+                ? datasourceValuesById.get(field.datasourceId)
+                : []
+            }
             {...form.getInputProps(field.name)}
           />
         );
@@ -98,6 +117,7 @@ const ComponentFormPanel = ({
       case "CHECKBOX":
         ret = (
           <Checkbox
+            disabled={mode === "DELETE" ? true : false}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -115,6 +135,7 @@ const ComponentFormPanel = ({
       default:
         break;
     }
+
     return ret;
   };
 
@@ -128,20 +149,90 @@ const ComponentFormPanel = ({
     return rows;
   };
 
+  const getValue = (c) => {
+    const widget = widgetByName.get(c.name);
+    let ret = null;
+    switch (widget?.type) {
+      case "NUMBERINPUT":
+        ret = parseFloat(c.value);
+        break;
+
+      default:
+        ret = c.value;
+        break;
+    }
+    return ret;
+  };
+
+  const getData = async () => {
+    const params = { token: user.token, id: selectedRowId };
+    const ret = await findFormInstanceById(params);
+    ret?.children.forEach((c) => {
+      const value = getValue(c);
+      form.setFieldValue(c.name, value);
+    });
+  };
+
+  useEffect(() => {
+    if (selectedRowId) {
+      getData();
+    }
+  }, [selectedRowId]);
+
+  const processAction = async (mode, parentId, values, selectedRowId) => {
+    switch (mode) {
+      case "CREATE":
+        await onCreate(parentId, values);
+        setReloadData(Date.now());
+        navigate("../../");
+        break;
+
+      case "UPDATE":
+        await onUpdate(parentId, selectedRowId, values);
+        setReloadData(Date.now());
+        navigate("../../");
+        break;
+
+      case "DELETE":
+        setConfirmModalOpen(true);
+        break;
+
+      case "FORM":
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const onConfirm = async () => {
+    await onDelete(parentId, selectedRowId);
+    setReloadData(Date.now());
+    navigate("../../");
+  };
+
   return (
     <Container size={options?.size} w={"100%"}>
+      <DeleteConfirmation
+        opened={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={onConfirm}
+        title={t("notification.title")}
+        text={t("notification.delete")}
+      />
+
       <Stack spacing={"xs"}>
         <form
-          onSubmit={form.onSubmit((values) => {
-            console.log("onSubmit ->", values);
+          onSubmit={form.onSubmit(async (values) => {
+            await processAction(mode, parentId, values, selectedRowId);
           })}
         >
-          {mode === undefined ? (
+          {title === undefined ? (
             <FormHeaderPanel name={formData?.label} description={formData?.description} />
           ) : (
             <Group position={"center"}>
               <Text size={"lg"} weight={600}>
-                {mode}
+                {title}
               </Text>
             </Group>
           )}
@@ -165,9 +256,9 @@ const ComponentFormPanel = ({
 
           <ScrollArea offsetScrollbars h={wsize.height - totalHeaderHeight - (relatedEntities?.length > 0 ? 36 : 0)}>
             {buildForm(panels)}
-            
+
             {panels?.length > 0 ? (
-              <Group position="right" my={"xs"}>
+              <Group position="right" pt={"md"}>
                 <Button type="submit">{t("button.accept")}</Button>
                 <Button
                   onClick={() => {

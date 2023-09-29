@@ -418,11 +418,11 @@ export const API = {
   },
 
   dataSource: {
-    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource",
-    findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource",
-    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource/",
-    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource/",
-    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/dataSource/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-datasources",
+    findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-datasources/",
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-datasources",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-datasources",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-datasources/",
   },
 
   formDefinition: {
@@ -447,6 +447,13 @@ export const API = {
     create: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition-sections/",
     update: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition-sections/",
     delete: config.SERVER + ":" + config.PORT + config.API_BASE + "/form-definition-sections/",
+  },
+
+  formInstance: {
+    findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-instances/",
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-instances",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-instances",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-instances/",
   },
 };
 

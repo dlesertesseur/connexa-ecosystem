@@ -1,4 +1,4 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput } from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -36,11 +36,13 @@ export function UpdatePage() {
 
   const form = useForm({
     initialValues: {
+      code: "",
       name: "",
       description: "",
     },
 
     validate: {
+      code: (val) => (val ? null : t("validation.required")),
       name: (val) => (val ? null : t("validation.required")),
       description: (val) => (val ? null : t("validation.required")),
     },
@@ -50,8 +52,21 @@ export function UpdatePage() {
     const ret = (
       <TextInput
         w={"100%"}
-        label={t("document.dataSource.label." + field)}
-        placeholder={t("document.dataSource.placeholder." + field)}
+        label={t("dataSource.label." + field)}
+        placeholder={t("dataSource.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
+  const createTextArea = (field) => {
+    const ret = (
+      <Textarea
+        w={"100%"}
+        label={t("dataSource.label." + field)}
+        placeholder={t("dataSource.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -66,6 +81,7 @@ export function UpdatePage() {
   useEffect(() => {
     const f = async () => {
       if (entity) {
+        form.setFieldValue("code", entity.code);
         form.setFieldValue("name", entity.name);
         form.setFieldValue("description", entity.description);
       }
@@ -75,22 +91,34 @@ export function UpdatePage() {
   }, [entity]);
 
   const onUpdate = async (values) => {
-    const params = {
-      token: user.token,
-      values: values,
-      id: selectedRowId
-    };
-
     setWorking(true);
     try {
-      await updateDataSource(params);
-      setWorking(false);
-      setReload(Date.now());
-      navigate("../");
+      let params = {
+        token: user.token,
+        id: selectedRowId,
+      };
+
+      const obj = await findDataSourceById(params);
+      obj.name = values.name;
+      obj.code = values.code;
+      obj.description = values.description;
+
+      params = {
+        token: user.token,
+        body: obj,
+      };
+
+      const ret = await updateDataSource(params);
+      if (ret.error) {
+        setError(ret.error);
+      } else {
+        setReload(Date.now());
+        navigate("../");
+      }
     } catch (error) {
-      setWorking(false);
       setError(error);
     }
+    setWorking(false);
   };
 
   return (
@@ -107,7 +135,7 @@ export function UpdatePage() {
             fontWeight: 700,
           })}
         >
-          {t("document.dataSource.title.update")}
+          {t("dataSource.title.update")}
         </Title>
 
         <ScrollArea type="scroll" style={{ width: "100%", height: height - HEADER_HIGHT }}>
@@ -116,12 +144,16 @@ export function UpdatePage() {
               onUpdate(values);
             })}
           >
+            <Group grow mb={"md"} w={"50%"}>
+              {createTextField("code")}
+            </Group>
+
             <Group mb={"md"} grow>
               {createTextField("name")}
             </Group>
 
             <Group mb={"md"} grow>
-              {createTextField("description")}
+              {createTextArea("description")}
             </Group>
 
             <Group position="right" mt="xl" mb="xs">

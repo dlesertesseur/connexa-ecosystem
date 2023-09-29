@@ -12,7 +12,7 @@ const ItemEntiyButton = ({ relatedEntity }) => {
     <Paper
       py={8}
       px={"xs"}
-      bg={selectedRelatedEntity?.formId === relatedEntity?.formId ? "blue" : "gray.4"}
+      bg={selectedRelatedEntity?.options === relatedEntity?.options ? "blue" : "gray.4"}
       onMouseDown={(e) => {
         setSelectedRelatedEntity(relatedEntity);
         setSelectedPanel(null);
@@ -22,16 +22,16 @@ const ItemEntiyButton = ({ relatedEntity }) => {
     >
       <Group p={0}>
         <Text
-          color={selectedRelatedEntity?.formId === relatedEntity?.formId ? "white" : "gray.5"}
+          color={selectedRelatedEntity?.options === relatedEntity?.options ? "white" : "gray.5"}
           size={"sm"}
           weight={600}
         >
           {relatedEntity?.label}
         </Text>
-        {relatedEntity.collection ? (
+        {relatedEntity.type === "COLLECTION<SUBFORM>" ? (
           <IconPlaylistAdd
             size={20}
-            color={selectedRelatedEntity?.formId === relatedEntity?.formId ? "white" : "gray"}
+            color={selectedRelatedEntity?.options === relatedEntity?.options ? "white" : "gray"}
           />
         ) : null}
       </Group>

@@ -121,9 +121,6 @@ const DynamicApp = ({ app }) => {
             tasks = tasks.concat(ret);
           }
         }
-
-        console.log("tasks ->", tasks);
-
         setTasksList(tasks);
       }
     } catch (error) {
@@ -325,7 +322,7 @@ const DynamicApp = ({ app }) => {
 
       <Routes>
         <Route path="/*" element={tabs()}></Route>
-        <Route path="applicationTaks" element={applicationTaksComponent} />
+        <Route path="applicationTaks/*" element={applicationTaksComponent} />
       </Routes>
 
       <ResponceNotification

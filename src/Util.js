@@ -353,6 +353,16 @@ function arrayToMap(arr) {
   return map;
 }
 
+function arrayToMapByProp(propName, arr) {
+  const map = new Map();
+  for (const obj of arr) {
+    if (obj.hasOwnProperty(propName)) {
+      map.set(obj[propName], obj);
+    }
+  }
+  return map;
+}
+
 export {
   findTranslatedField,
   getFillColor,
@@ -371,5 +381,6 @@ export {
   convertMilisegToYYYYMMDDHHMISS,
   hexToRgba,
   rgbaToHexAndAlpha,
-  arrayToMap
+  arrayToMap,
+  arrayToMapByProp
 };

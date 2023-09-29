@@ -34,13 +34,8 @@ const FormPanel = ({ formId, collection, parentId }) => {
     const widgetByPanel = new Map();
 
     ret?.children?.forEach((field) => {
-      if (field.type === "LINK_BUTTON") {
-        const json = JSON.parse(field.options);
-        json.id = field.id;
-        json.name = field.name;
-        json.label = field.label;
-        json.description = field.description;
-        collections.push(json);
+      if (field.type === "COLLECTION<SUBFORM>" || field.type === "SUBFORM") {
+        collections.push(field);
       } else {
         const id = `panel-${field.row}`;
         const group = widgetByPanel.get(id);
@@ -131,11 +126,12 @@ const FormPanel = ({ formId, collection, parentId }) => {
         }
       ></Route>
       {relatedEntities.map((re) => {
+        const collection = re.type === "COLLECTION<SUBFORM>" ? true : false;
         return (
           <Route
             key={re.formId}
             path={`${re.name}/*`}
-            element={<FormPanel formId={re.formId} collection={re.collection} parentId={formId} />}
+            element={<FormPanel formId={re.options} collection={collection} parentId={formId} />}
           />
         );
       })}

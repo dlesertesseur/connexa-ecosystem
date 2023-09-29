@@ -1502,7 +1502,7 @@
         "type": "Tipo",
         "required": "Requerido",
         "widget": "Widget",
-        "dataSource": "Fuente de datos",
+        "datasourceId": "Fuente de datos",
         "relatedFieldId": "Campo relacionado",
         "defaultValue": "Valor por defecto",
         "entity": "Entidad",
@@ -1514,7 +1514,7 @@
         "label": "una descripcion",
         "type": "un tipo",
         "widget": "seleccione un widget",
-        "dataSource": "seleccione una fuente de datos",
+        "datasourceId": "seleccione una fuente de datos",
         "relatedFieldId": "seleccione un campo relacionado",
         "defaultValue": "seleccione un valor defecto",
         "entity": "una entidad"
@@ -1546,5 +1546,50 @@
         "delete": "Eliminar seccion"
       }
     }
+  },
+
+  "dataSource": {
+    "columns": ["Nombre", "Descripcion"],
+
+    "buttons": {
+      "values":"Valores"
+    },
+
+    "label": {
+      "values":"Valores",
+      "code": "Codigo",
+      "name": "Nombre",
+      "description": "Descripcion"
+    },
+    "placeholder": {
+      "code": "un codigo",
+      "name": "un nombre",
+      "description": "una descripcion"
+    },
+    "title": {
+      "create": "Nueva fuente de datos",
+      "update": "Modificar fuente de datos",
+      "delete": "Eliminar fuente de datos"
+    }
+  },
+
+  "dataSourceValues": {
+    "title": {
+      "create": "Nuevo valor",
+      "update": "Modificar valor",
+      "delete": "Eliminar valor"
+    },
+    "label": {
+      "code": "Codigo",
+      "name": "Nombre",
+      "description": "Descripcion"
+    },
+    "placeholder": {
+      "code": "un codigo",
+      "name": "un nombre",
+      "description": "una descripcion"
+    },
+    "columns": ["Codigo", "Nombre", "Description"]
   }
+
 }

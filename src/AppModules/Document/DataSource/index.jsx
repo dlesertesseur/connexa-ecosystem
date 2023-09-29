@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
+import ResponceNotification from "../../../Modal/ResponceNotification";
+import CrudFrame from "../../../Components/Crud/CrudFrame";
+import Values from "./Values/Values";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
 import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
-
-import ResponceNotification from "../../../Modal/ResponceNotification";
-import CrudFrame from "../../../Components/Crud/CrudFrame";
 import { findAllDataSource } from "../../../DataAccess/DataSource";
+import { IconDatabaseEdit } from "@tabler/icons-react";
 
 const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -48,7 +49,7 @@ const DynamicApp = ({ app }) => {
   }, [user, reload]);
 
   let col = 0;
-  const cols = t("document.dataSource.columns", { returnObjects: true });
+  const cols = t("dataSource.columns", { returnObjects: true });
   const columns = [
     { headerName: cols[col++], fieldName: "name", align: "left" },
     { headerName: cols[col++], fieldName: "description", align: "left" },
@@ -75,14 +76,14 @@ const DynamicApp = ({ app }) => {
         createPage={<CreatePage />}
         updatePage={<UpdatePage />}
         deletePage={<DeletePage />}
-        // relationshipPages={[
-        //   {
-        //     path: "products",
-        //     icon: <IconList size={20} />,
-        //     key: "document.dataSource.label.addProducts",
-        //     element: <ProductsList back={"../"} />,
-        //   },
-        // ]}
+        relationshipPages={[
+          {
+            path: "values",
+            icon: <IconDatabaseEdit size={20} />,
+            key: "dataSource.buttons.values",
+            element: <Values back={"../"} />,
+          },
+        ]}
       />
 
       <ResponceNotification

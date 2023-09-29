@@ -102,7 +102,7 @@ const updateField = async (parameters) => {
     
     fields[index].name = parameters.values.name;
     fields[index].description = parameters.values.description;
-    fields[index].dataSourceId = parameters.values.dataSourceId;
+    fields[index].datasourceId = parameters.values.datasourceId;
     fields[index].defatultValue = parameters.values.defatultValue;
     fields[index].relatedFieldId = parameters.values.relatedFieldId;
     fields[index].required = parameters.values.required;

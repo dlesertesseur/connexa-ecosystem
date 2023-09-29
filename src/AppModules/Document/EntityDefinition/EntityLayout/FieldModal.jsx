@@ -28,24 +28,23 @@ const FieldModal = ({ opened, close, onCreate }) => {
 
   useEffect(() => {
     const f = async () => {
-
       if (selectedField) {
-        form.setFieldValue("name", selectedField.name);
-        form.setFieldValue("label", selectedField.label);
-        form.setFieldValue("description", selectedField.description);
-        form.setFieldValue("required", selectedField.required);
+        form.setFieldValue("name", selectedField.name ? selectedField.name : "");
+        form.setFieldValue("label", selectedField.label ? selectedField.label : "");
+        form.setFieldValue("description", selectedField.description ? selectedField.description : "");
+        form.setFieldValue("required", selectedField.required === "true" ? true : false);
         form.setFieldValue("type", selectedField.type);
-        form.setFieldValue("dataSourceId", selectedField.dataSourceId);
+        form.setFieldValue("datasourceId", selectedField.datasourceId);
         form.setFieldValue("relatedFieldId", selectedField.relatedFieldId);
-        form.setFieldValue("defatultValue", selectedField.defatultValue);
-        form.setFieldValue("id", selectedField.id);
-        form.setFieldValue("row", selectedField.row);
+        form.setFieldValue("defatultValue", selectedField.defatultValue ? selectedField.defatultValue : "");
+        // form.setFieldValue("row", selectedField.defatultValue);
+        // form.setFieldValue("id", selectedField.id);
       }
     };
     if (opened && selectedField) {
+      form.reset();
       f();
     }
-    form.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
 
@@ -66,11 +65,11 @@ const FieldModal = ({ opened, close, onCreate }) => {
       name: "",
       type: "",
       required: false,
-      dataSourceId: "",
+      datasourceId: "",
       relatedFieldId: "",
       defatultValue: "",
-      id: null,
-      row: null,
+      // id: null,
+      // row: null,
     },
 
     validate: {
@@ -121,11 +120,17 @@ const FieldModal = ({ opened, close, onCreate }) => {
   };
 
   return (
-    <Modal opened={opened} onClose={close} title={t("document.field.title.create")} size={"sm"}>
+    <Modal
+      opened={opened}
+      onClose={close}
+      title={selectedField ? t("document.field.title.update") : t("document.field.title.create")}
+      size={"md"}
+    >
       <Stack spacing={"xs"}>
         <form
           onSubmit={form.onSubmit((values) => {
-            onCreate(values);
+            const obj = { ...values, id: selectedField.id, row: selectedField.row };
+            onCreate(obj);
           })}
         >
           <Group mb={"md"} grow>
@@ -146,9 +151,10 @@ const FieldModal = ({ opened, close, onCreate }) => {
 
           <Group mb={"md"} grow>
             {createSelect("type", widgets)}
+            {createTextField("defaultValue")}
           </Group>
           <Group mb={"md"} grow>
-            {createSelect("dataSource", dataSources)}
+            {createSelect("datasourceId", dataSources)}
           </Group>
           <Group mb={"md"} grow>
             {createSelect("relatedFieldId", relatedField)}
@@ -157,11 +163,6 @@ const FieldModal = ({ opened, close, onCreate }) => {
           {/* <Group mb={"md"} grow>
             {createSelect("entity", entities)}
           </Group> */}
-
-          <Group mb={"md"} grow>
-            {/* {createSelect("height", heights)} */}
-            {createTextField("defaultValue")}
-          </Group>
 
           <Group position="right">
             <Button type="submit">{t("button.accept")}</Button>

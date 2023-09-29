@@ -1,5 +1,5 @@
 import uuid from "react-uuid";
-import { arrayToMap } from "../Util";
+import { arrayToMap, arrayToMapByProp } from "../Util";
 
 const PARAMETERS_TYPE = [
   { id: 1, name: "String" },
@@ -19,13 +19,17 @@ const WIDGETS = [
   { id: 5, name: "CHECKBOX", hidden: false },
   { id: 6, name: "IMAGE", hidden: false },
   { id: 7, name: "UPLOAD", hidden: false },
-  { id: 8, name: "LINK_BUTTON", hidden: true },
-  { id: 9, name: "FORM", hidden: true },
+  { id: 8, name: "COLLECTION<SUBFORM>", hidden: true },
+  { id: 9, name: "SUBFORM", hidden: true },
+  { id: 10, name: "FORM", hidden: true },
+  { id: 11, name: "RECORD", hidden: true },
+  { id: 12, name: "VALUE", hidden: true },
 
   // { id: 8, name: "Entity list" },
 ];
 
 const WIDGETS_NAMES_BY_ID = arrayToMap(WIDGETS);
+const WIDGETS_NAMES_BY_NAME = arrayToMapByProp("name",WIDGETS);
 
 const DOCUMENTS = {
   entityDefinition: [
@@ -397,4 +401,4 @@ const DOCUMENTS = {
   ],
 };
 
-export { WIDGETS, WIDGETS_NAMES_BY_ID, PARAMETERS_TYPE, PARAMETERS_TYPE_NAMES_BY_ID, DOCUMENTS };
+export { WIDGETS, WIDGETS_NAMES_BY_ID, PARAMETERS_TYPE, PARAMETERS_TYPE_NAMES_BY_ID, DOCUMENTS, WIDGETS_NAMES_BY_NAME };

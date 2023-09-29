@@ -64,13 +64,8 @@ const EntityLayout = ({ back }) => {
     const widgetByPanel = new Map();
 
     ret.children?.forEach((field) => {
-      if (field.type === "LINK_BUTTON") {
-        const json = JSON.parse(field.options);
-        json.id = field.id;
-        json.name = field.name;
-        json.label = field.label;
-        json.description = field.description;
-        collections.push(json);
+      if (field.type === "COLLECTION<SUBFORM>" || field.type === "SUBFORM") {
+        collections.push(field);
       } else {
         const id = `panel-${field.row}`;
         const group = widgetByPanel.get(id);
@@ -111,7 +106,7 @@ const EntityLayout = ({ back }) => {
         options = "NA";
         break;
       case "SELECT":
-        options = { dataSourceId:widget.dataSourceId, relatedFieldId: w.relatedFieldId };
+        options = { datasourceId: widget.datasourceId, relatedFieldId: w.relatedField };
         break;
       case "CHECKBOX":
         options = "NA";
@@ -149,21 +144,23 @@ const EntityLayout = ({ back }) => {
           options: `${getOptions(w)}`,
           row: row,
           orderInRow: order,
+          datasourceId: w.datasourceId,
+          defaultValue: w.defaultValue,
+          relaredField: w.relaredField
         };
         fields.push(obj);
       });
     });
 
-    relatedEntities.forEach((re, index) => {      
-      const options = JSON.stringify({ formId: re.formId, collection: re.collection });
+    relatedEntities.forEach((re, index) => {
       const obj = {
         id: re.id,
-        type: "LINK_BUTTON",
+        type: re.type,
         name: re.name,
         label: re.label,
         description: re.description,
         required: true,
-        options: `${options}`,
+        options: re.options,
         row: 0,
         orderInRow: index,
       };
@@ -191,9 +188,6 @@ const EntityLayout = ({ back }) => {
     };
 
     const ret = await updateEntityDefinition(params);
-
-
-    console.log("save -> ",ret)
     setSaving(false);
   };
 
@@ -221,28 +215,28 @@ const EntityLayout = ({ back }) => {
   };
 
   const deleteRelatedEntity = (e) => {
-    const ret = relatedEntities.filter((f) => f.formId !== selectedRelatedEntity.formId);
+    const ret = relatedEntities.filter((f) => f.options !== selectedRelatedEntity.options);
     setRelatedEntities(ret);
   };
 
   const addRelatedEntity = (entity, collection) => {
     const obj = {
       id: uuid(),
-      formId: entity.id,
+      options: entity.id,
       name: entity.name,
       label: entity.label,
       description: entity.description,
-      collection: collection ? true : false,
+      type: collection ? "COLLECTION<SUBFORM>" : "SUBFORM",
     };
     setRelatedEntities([...relatedEntities, obj]);
   };
 
   const updateRelatedEntity = (entity, collection) => {
-    const objIndex = relatedEntities.findIndex((obj) => obj.formId === selectedRelatedEntity.formId);
+    const objIndex = relatedEntities.findIndex((obj) => obj.options === selectedRelatedEntity.options);
 
     if (objIndex >= 0) {
-      relatedEntities[objIndex].entity = entity;
-      relatedEntities[objIndex].collection = collection;
+      relatedEntities[objIndex].options = entity.id;
+      relatedEntities[objIndex].type = collection ? "COLLECTION<SUBFORM>" : "SUBFORM";
     }
     setRelatedEntities([...relatedEntities]);
   };

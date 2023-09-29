@@ -46,8 +46,8 @@ const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEn
 
   useEffect(() => {
     if (open && selectedEntity) {
-      form.setFieldValue("entity", selectedEntity.formId);
-      setChecked(selectedEntity.collection);
+      form.setFieldValue("entity", selectedEntity.options);
+      setChecked(selectedEntity.type === "COLLECTION<SUBFORM>" ? true : false );
     }
   }, [selectedEntity, open]);
 

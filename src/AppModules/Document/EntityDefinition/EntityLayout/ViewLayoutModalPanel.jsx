@@ -132,9 +132,9 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
                 return (
                   <Button
                     disabled
-                    key={re.formId}
+                    key={re.id}
                     onClick={() => {
-                      navigate(re.formId);
+                      navigate(re.options);
                     }}
                   >
                     {re.label}

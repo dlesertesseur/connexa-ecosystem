@@ -1452,26 +1452,6 @@
       }
     },
 
-    "dataSource": {
-      "columns": ["Name", "Description"],
-
-      "buttons": {},
-
-      "label": {
-        "name": "Name",
-        "description": "Description"
-      },
-      "placeholder": {
-        "name": "a name",
-        "description": "a description"
-      },
-      "title": {
-        "create": "New data source",
-        "update": "Update data source",
-        "delete": "Delete data source"
-      }
-    },
-
     "formDefinition": {
       "columns": ["Name", "Description"],
 
@@ -1509,7 +1489,7 @@
         "type": "Type",
         "required": "Required",
         "widget": "Widget",
-        "dataSource": "Data source",
+        "datasourceId": "Data source",
         "relatedFieldId": "Related field",
         "defaultValue": "Default value",
         "entity": "Entity",
@@ -1521,7 +1501,7 @@
         "label": "a label",
         "type": "a type",
         "widget": "select a widget",
-        "dataSource": "select a data source",
+        "datasourceId": "select a data source",
         "relatedFieldId": "select a related field",
         "defaultValue": "a default value",
         "entity": "an entity"
@@ -1553,5 +1533,49 @@
         "delete": "Delete section"
       }
     }
+  },
+
+  "dataSource": {
+    "columns": ["Name", "Description"],
+
+    "buttons": {
+      "values":"Values"
+    },
+
+    "label": {
+      "code": "Code",
+      "name": "Name",
+      "description": "Description"
+    },
+    "placeholder": {
+      "code": "a code",
+      "name": "a name",
+      "description": "a description"
+    },
+    "title": {
+      "create": "New data source",
+      "update": "Update data source",
+      "delete": "Delete data source"
+    }
+  },
+
+  "dataSourceValues": {
+    "title": {
+      "create": "New value",
+      "update": "Update value",
+      "delete": "Delete value"
+    },
+    "label": {
+      "values":"Values",
+      "name": "Name",
+      "description": "Description",
+      "code": "Code"
+    },
+    "placeholder": {
+      "name": "a name",
+      "description": "a description",
+      "code": "a code"
+    },
+    "columns": ["Code", "Name", "Description"]
   }
 }
