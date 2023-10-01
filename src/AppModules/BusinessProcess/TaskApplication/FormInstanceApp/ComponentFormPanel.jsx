@@ -11,17 +11,16 @@ import {
   TextInput,
   Textarea,
 } from "@mantine/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import FormHeaderPanel from "./FormHeaderPanel";
 import InstanceFormContex from "./Context";
+import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../../Hook";
 import { useForm } from "@mantine/form";
 import { useSelector } from "react-redux";
 import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
-import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
-import { findDataSourceById } from "../../../../DataAccess/DataSource";
 
 const ComponentFormPanel = ({
   formData,
@@ -41,7 +40,6 @@ const ComponentFormPanel = ({
   const wsize = useWindowSize();
   const navigate = useNavigate();
 
-
   const { onCreate, onUpdate, onDelete, setReloadData, confirmModalOpen, setConfirmModalOpen, datasourceValuesById } =
     useContext(InstanceFormContex);
   const form = useForm(formConfig);
@@ -56,6 +54,15 @@ const ComponentFormPanel = ({
 
     return ret;
   };
+
+  const getDataSource = (field) => {
+    let ret = [];    
+    if(datasourceValuesById.has(field.datasourceId)){
+      ret = datasourceValuesById.get(field.datasourceId)
+    }
+    return(ret);
+  }
+
 
   const buildField = (field) => {
     let ret = null;
@@ -105,11 +112,7 @@ const ComponentFormPanel = ({
             withAsterisk={field.required}
             label={field.label}
             placeholder={field.name}
-            data={
-              datasourceValuesById.has(field.datasourceId)
-                ? datasourceValuesById.get(field.datasourceId)
-                : []
-            }
+            data={getDataSource(field)}
             {...form.getInputProps(field.name)}
           />
         );
@@ -198,6 +201,9 @@ const ComponentFormPanel = ({
         break;
 
       case "FORM":
+        await onCreate(parentId, values);
+        setReloadData(Date.now());
+        navigate("../../");
         break;
 
       default:
@@ -206,7 +212,8 @@ const ComponentFormPanel = ({
   };
 
   const onConfirm = async () => {
-    await onDelete(parentId, selectedRowId);
+    const ret = await onDelete(parentId, selectedRowId);
+    setConfirmModalOpen(false)
     setReloadData(Date.now());
     navigate("../../");
   };

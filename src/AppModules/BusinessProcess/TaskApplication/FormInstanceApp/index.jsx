@@ -12,7 +12,7 @@ const DummyApp = ({ task }) => {
         backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
       })}
     >
-      <InstanceFormPanel task={task} formId={"dc6f2874-e6ee-43ab-9071-c5855d17f235"} collection={false} parentId={null} />
+      <InstanceFormPanel task={task} formId={"1f10774a-4ba7-44ee-b4a4-cca7e5808b23"} collection={false} parentId={null} />
     </Stack>
   );
 };

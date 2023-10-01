@@ -7,8 +7,8 @@ import { useSelector } from "react-redux";
 import { Group } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { deleteFormInstance, findFormInstanceById, updateFormInstance } from "../../../../DataAccess/FormInstance";
-import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
+import { findFormInstanceById, updateFormInstance } from "../../../../DataAccess/FormInstance";
+import { findDataSourceById } from "../../../../DataAccess/DataSource";
 
 const InstanceFormPanel = ({ formId, collection, parentId }) => {
   const { t } = useTranslation();
@@ -26,30 +26,34 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [datasourceValuesById, setDatasourceValuesById] = useState(new Map());
 
-  /*TERMINAR*/
-  const getDataSourceData = async (datasourceId) => {
-    let ret = [];
-    if (datasourceId) {
+  const storeDataSourceData = async (dataSourcesId) => {
+    const dataMap = new Map();
+    for (let index = 0; index < dataSourcesId.length; index++) {
+      const id = dataSourcesId[index];
+      
       const params = {
         token: user.token,
-        id: datasourceId,
+        id: id,
       };
+
       const datasource = await findDataSourceById(params);
       if (datasource) {
-        ret = datasource.children?.map(() => {
+        const ret = datasource.children?.map((d) => {
           return { value: d.id, label: d.name };
         });
-        setDatasourceValuesById((datasourceValuesById) => new Map(datasourceValuesById.set(datasourceId, ret)));
+
+        if(ret){
+          dataMap.set(id, ret);
+        }
       }
     }
-
-    return ret;
+    return(dataMap);
   };
 
   const getData = async () => {
     const params = { token: user.token, id: formId };
     const ret = await findFormInstanceById(params);
-
+    const dataSourcesId = [];
     try {
       const options = await JSON.parse(ret.options);
       setOptions(options);
@@ -63,7 +67,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     const records = [];
     const widgetByPanel = new Map();
 
-    ret?.children?.forEach((field) => {
+    ret?.children?.forEach(async (field) => {
       switch (field.type) {
         case "COLLECTION<SUBFORM>":
         case "SUBFORM":
@@ -74,6 +78,10 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
           records.push(field);
           break;
 
+        case "SELECT":
+          if (field.datasourceId) {
+            dataSourcesId.push(field.datasourceId);
+          }
         default:
           const id = `panel-${field.row}`;
           widgetByName.set(field.name, field);
@@ -85,9 +93,12 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
             widgetByPanel.set(id, [field]);
             panels.push({ id: id });
           }
+
           break;
       }
     });
+
+    const dataMap = await storeDataSourceData(dataSourcesId);
 
     setPanels(panels);
     setWidgetByPanel(widgetByPanel);
@@ -95,6 +106,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     setFormDefinition(ret);
     setRecords(records);
     setWidgetByName(widgetByName);
+    setDatasourceValuesById(dataMap);
   };
 
   const createInitialValues = () => {
@@ -220,13 +232,22 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     const toSave = children.filter((c) => c.id !== rowId);
     parent.children = toSave;
 
-    // params = { token: user.token, body: parent };
-    // const ret = await updateFormInstance(params);
+    params = { token: user.token, body: parent };
+    const ret = await updateFormInstance(params);
+  
   };
 
   return (
     <InstanceFormContex.Provider
-      value={{ onCreate, onUpdate, onDelete, setReloadData, confirmModalOpen, setConfirmModalOpen, datasourceValuesById }}
+      value={{
+        onCreate,
+        onUpdate,
+        onDelete,
+        setReloadData,
+        confirmModalOpen,
+        setConfirmModalOpen,
+        datasourceValuesById,
+      }}
     >
       <Routes>
         <Route
@@ -255,6 +276,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
                   relatedEntities={relatedEntities}
                   parentId={parentId}
                   widgetByName={widgetByName}
+                  mode={"FORM"}
                 />
               )}
             </Group>
