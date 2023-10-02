@@ -10,6 +10,7 @@ import {
   TextInput,
   Textarea,
   Button,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useWindowSize } from "../../../../Hook";
@@ -93,6 +94,43 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
           />
         );
         break;
+
+      case "LABEL":
+        ret = (
+          <Stack key={field.id} spacing={0} align={"flex-start"}>
+            <Text size="xl" weight={700}>
+              {field.label}
+            </Text>
+            <Text size="xs" color="dimmed">
+              {field.description}
+            </Text>
+          </Stack>
+        );
+        break;
+
+      // case "DATE":
+      //   ret = (
+      //     <DatePickerInput
+      //       key={field.id}
+      //       withAsterisk={field.required}
+      //       label={field.label}
+      //       placeholder={field.name}
+      //       {...form.getInputProps(field.name)}
+      //     />
+      //   );
+      //   break;
+
+      // case "TIME":
+      //   ret = (
+      //     <TimeInput
+      //       key={field.id}
+      //       withAsterisk={field.required}
+      //       label={field.label}
+      //       placeholder={field.name}
+      //       {...form.getInputProps(field.name)}
+      //     />
+      //   );
+      //   break;
 
       case "IMAGE":
         break;

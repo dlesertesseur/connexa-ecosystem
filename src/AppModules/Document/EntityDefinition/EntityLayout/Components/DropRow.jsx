@@ -10,6 +10,7 @@ import ItemNumberinput from "./ItemNumberinput";
 import ItemSelect from "./ItemSelect";
 import ItemCheckbox from "./ItemCheckbox";
 import ItemEntityList from "./ItemEntityList";
+import ItemLabel from "./ItemLabel";
 
 // eslint-disable-next-line react/prop-types
 const DropRow = ({ id, index, data }) => {
@@ -44,6 +45,16 @@ const DropRow = ({ id, index, data }) => {
       case "CHECKBOX":
         ret = <ItemCheckbox key={field.id} field={field} />;
         break;
+      case "LABEL":
+        ret = <ItemLabel key={field.id} field={field} />;
+        break;
+      // case "DATE":
+      //   ret = <ItemLabel key={field.id} field={field} />;
+      //   break;
+      // case "TIME":
+      //   ret = <ItemLabel key={field.id} field={field} />;
+      //   break;
+
       case "IMAGE":
         break;
       case "UPLOAD":

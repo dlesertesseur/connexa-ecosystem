@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
 import { AbmStateContext, AbmValuesStateContext } from "../Context";
+import { findDataSourceById, updateDataSource } from "../../../../DataAccess/DataSource";
+import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
 
 export function DeletePage() {
   const { t } = useTranslation();
@@ -15,6 +17,8 @@ export function DeletePage() {
   const [value, setValue] = useState(null);
   const { setReloadValues, rows, selectedValueId } = useContext(AbmValuesStateContext);
   const { selectedRowId, setError } = useContext(AbmStateContext);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -122,6 +126,14 @@ export function DeletePage() {
     <Container size={"xl"} sx={{ width: "100%" }}>
       <LoadingOverlay overlayOpacity={0.5} visible={working} />
 
+      <DeleteConfirmation
+        opened={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={onConfirm}
+        title={t("notification.title")}
+        text={t("notification.delete")}
+      />
+
       <Container size={"sm"}>
         <Title
           mb={"lg"}
@@ -137,7 +149,7 @@ export function DeletePage() {
 
         <form
           onSubmit={form.onSubmit((values) => {
-            onConfirm();
+            setConfirmModalOpen(true);
           })}
         >
           {height ? (

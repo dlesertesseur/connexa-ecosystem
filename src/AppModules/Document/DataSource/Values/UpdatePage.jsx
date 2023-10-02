@@ -87,13 +87,6 @@ export function UpdatePage() {
     try {
       const dataSource = await findDataSourceById(params);
       if (dataSource) {
-        const value = {
-          id: uuid(),
-          code: values.code,
-          name: values.name,
-          description: values.description,
-          children: null
-        };
 
         const record = dataSource.children.find(r => r.id === selectedValueId)
         if(record){

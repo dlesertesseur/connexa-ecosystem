@@ -1,9 +1,10 @@
-import { Checkbox, Paper } from "@mantine/core";
+import { Paper, Text } from "@mantine/core";
 import { useContext } from "react";
 import { EntityLayoutContext } from "../../Context";
+import { DatePicker } from "@mantine/dates";
 
 // eslint-disable-next-line react/prop-types
-const ItemCheckbox = ({ field }) => {
+const ItemDate = ({ field }) => {
   const { selectedField, setSelectedField, setSelectedPanel, setSelectedRelatedEntity } = useContext(EntityLayoutContext);
   return (
     <Paper
@@ -19,9 +20,9 @@ const ItemCheckbox = ({ field }) => {
         e.stopPropagation();
       }}
     >
-      <Checkbox disabled label={field.label} placeholder={field.name} />
+      <DatePicker size={"md"} weight={600} label={field.label}/>
     </Paper>
   );
 };
 
-export default ItemCheckbox;
+export default ItemDate;

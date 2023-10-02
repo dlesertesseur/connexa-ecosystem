@@ -107,6 +107,18 @@ const ComponentFormPanel = ({
         );
         break;
 
+      case "LABEL":
+        ret = (
+          <Stack disabled={mode === "DELETE" ? true : false} key={field.id} spacing={0} align={"flex-start"}>
+            <Text size="xl" weight={700}>
+              {field.label}
+            </Text>
+            <Text size="xs" color="dimmed">
+              {field.description}
+            </Text>
+          </Stack>
+        );
+        break;
       case "IMAGE":
         break;
       case "UPLOAD":
@@ -165,7 +177,7 @@ const ComponentFormPanel = ({
 
           <ScrollArea offsetScrollbars h={wsize.height - totalHeaderHeight - (relatedEntities?.length > 0 ? 36 : 0)}>
             {buildForm(panels)}
-            
+
             {panels?.length > 0 ? (
               <Group position="right" my={"xs"}>
                 <Button type="submit">{t("button.accept")}</Button>

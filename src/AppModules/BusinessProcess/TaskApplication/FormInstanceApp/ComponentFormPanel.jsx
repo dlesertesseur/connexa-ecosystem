@@ -3,6 +3,7 @@ import {
   Checkbox,
   Container,
   Group,
+  LoadingOverlay,
   NumberInput,
   ScrollArea,
   Select,
@@ -21,6 +22,7 @@ import { useWindowSize } from "../../../../Hook";
 import { useForm } from "@mantine/form";
 import { useSelector } from "react-redux";
 import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
+// import { TimeInput, DatePickerInput } from "@mantine/dates";
 
 const ComponentFormPanel = ({
   formData,
@@ -40,8 +42,17 @@ const ComponentFormPanel = ({
   const wsize = useWindowSize();
   const navigate = useNavigate();
 
-  const { onCreate, onUpdate, onDelete, setReloadData, confirmModalOpen, setConfirmModalOpen, datasourceValuesById } =
-    useContext(InstanceFormContex);
+  const {
+    onCreate,
+    onUpdate,
+    onDelete,
+    onCompleteForm,
+    setReloadData,
+    confirmModalOpen,
+    setConfirmModalOpen,
+    datasourceValuesById,
+    setError,
+  } = useContext(InstanceFormContex);
   const form = useForm(formConfig);
   const totalHeaderHeight = 260 + (title ? 60 : 0);
 
@@ -56,13 +67,12 @@ const ComponentFormPanel = ({
   };
 
   const getDataSource = (field) => {
-    let ret = [];    
-    if(datasourceValuesById.has(field.datasourceId)){
-      ret = datasourceValuesById.get(field.datasourceId)
+    let ret = [];
+    if (datasourceValuesById.has(field.datasourceId)) {
+      ret = datasourceValuesById.get(field.datasourceId);
     }
-    return(ret);
-  }
-
+    return ret;
+  };
 
   const buildField = (field) => {
     let ret = null;
@@ -72,11 +82,11 @@ const ComponentFormPanel = ({
         ret = (
           <TextInput
             disabled={mode === "DELETE" ? true : false}
-            {...form.getInputProps(field.name)}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
             placeholder={field.name}
+            {...form.getInputProps(field.name)}
           />
         );
         break;
@@ -129,6 +139,45 @@ const ComponentFormPanel = ({
           />
         );
         break;
+
+      case "LABEL":
+        ret = (
+          <Stack disabled={mode === "DELETE" ? true : false} key={field.id} spacing={0} align={"flex-start"}>
+            <Text size="xl" weight={700}>
+              {field.label}
+            </Text>
+            <Text size="xs" color="dimmed">
+              {field.description}
+            </Text>
+          </Stack>
+        );
+        break;
+
+      // case "DATE":
+      //   ret = (
+      //     <DatePickerInput
+      //       disabled={mode === "DELETE" ? true : false}
+      //       key={field.id}
+      //       withAsterisk={field.required}
+      //       label={field.label}
+      //       placeholder={field.name}
+      //       {...form.getInputProps(field.name)}
+      //     />
+      //   );
+      //   break;
+
+      // case "TIME":
+      //   ret = (
+      //     <TimeInput
+      //       disabled={mode === "DELETE" ? true : false}
+      //       key={field.id}
+      //       withAsterisk={field.required}
+      //       label={field.label}
+      //       placeholder={field.name}
+      //       {...form.getInputProps(field.name)}
+      //     />
+      //   );
+      //   break;
 
       case "IMAGE":
         break;
@@ -183,37 +232,41 @@ const ComponentFormPanel = ({
   }, [selectedRowId]);
 
   const processAction = async (mode, parentId, values, selectedRowId) => {
-    switch (mode) {
-      case "CREATE":
-        await onCreate(parentId, values);
-        setReloadData(Date.now());
-        navigate("../../");
-        break;
+    try {
+      switch (mode) {
+        case "CREATE":
+          await onCreate(parentId, values);
+          setReloadData(Date.now());
+          navigate("../../");
+          break;
 
-      case "UPDATE":
-        await onUpdate(parentId, selectedRowId, values);
-        setReloadData(Date.now());
-        navigate("../../");
-        break;
+        case "UPDATE":
+          await onUpdate(parentId, selectedRowId, values);
+          setReloadData(Date.now());
+          navigate("../../");
+          break;
 
-      case "DELETE":
-        setConfirmModalOpen(true);
-        break;
+        case "DELETE":
+          setConfirmModalOpen(true);
+          break;
 
-      case "FORM":
-        await onCreate(parentId, values);
-        setReloadData(Date.now());
-        navigate("../../");
-        break;
+        case "FORM":
+          await onCompleteForm(selectedRowId, values);
+          setReloadData(Date.now());
+          navigate("../../");
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
+    } catch (error) {
+      setError(error);
     }
   };
 
   const onConfirm = async () => {
     const ret = await onDelete(parentId, selectedRowId);
-    setConfirmModalOpen(false)
+    setConfirmModalOpen(false);
     setReloadData(Date.now());
     navigate("../../");
   };
@@ -276,7 +329,11 @@ const ComponentFormPanel = ({
                   {t("button.cancel")}
                 </Button>
               </Group>
-            ) : null}
+            ) : (
+              <Group grow>
+                <LoadingOverlay visible={true} />
+              </Group>
+            )}
           </ScrollArea>
         </form>
       </Stack>

@@ -2,7 +2,7 @@ import React from "react";
 import { Divider, Stack, Text } from "@mantine/core";
 
 const FormHeaderPanel = ({ name, description }) => {
-  return (
+  const ret = name ? (
     <Stack
       justify="stretch"
       spacing={"xs"}
@@ -30,7 +30,9 @@ const FormHeaderPanel = ({ name, description }) => {
       </Stack>
       <Divider />
     </Stack>
-  );
+  ) : null;
+
+  return ret;
 };
 
 export default FormHeaderPanel;

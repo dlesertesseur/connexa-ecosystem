@@ -81,7 +81,8 @@ export function CreatePage() {
           id: uuid(),
           code: values.code,
           name: values.name,
-          description: values.description
+          description: values.description,
+          children:[]
         };
         
         dataSource.children.push(value);

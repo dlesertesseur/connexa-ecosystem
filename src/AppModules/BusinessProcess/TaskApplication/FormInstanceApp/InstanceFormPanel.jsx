@@ -9,6 +9,7 @@ import { Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { findFormInstanceById, updateFormInstance } from "../../../../DataAccess/FormInstance";
 import { findDataSourceById } from "../../../../DataAccess/DataSource";
+import ResponceNotification from "../../../../Modal/ResponceNotification";
 
 const InstanceFormPanel = ({ formId, collection, parentId }) => {
   const { t } = useTranslation();
@@ -25,12 +26,13 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
   const [reloadData, setReloadData] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [datasourceValuesById, setDatasourceValuesById] = useState(new Map());
+  const [error, setError] = useState(null);
 
   const storeDataSourceData = async (dataSourcesId) => {
     const dataMap = new Map();
     for (let index = 0; index < dataSourcesId.length; index++) {
       const id = dataSourcesId[index];
-      
+
       const params = {
         token: user.token,
         id: id,
@@ -42,12 +44,12 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
           return { value: d.id, label: d.name };
         });
 
-        if(ret){
+        if (ret) {
           dataMap.set(id, ret);
         }
       }
     }
-    return(dataMap);
+    return dataMap;
   };
 
   const getData = async () => {
@@ -55,7 +57,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     const ret = await findFormInstanceById(params);
     const dataSourcesId = [];
     try {
-      const options = await JSON.parse(ret.options);
+      const options = await JSON.parse(ret?.options);
       setOptions(options);
     } catch (error) {
       console.log("error ->", error);
@@ -166,44 +168,48 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     let params = { token: user.token, id: parentId };
     const parent = await findFormInstanceById(params);
 
-    const list = Object.entries(values);
-    const children = [];
+    if (parent.error) {
+      throw parent.error;
+    } else {
+      const list = Object.entries(values);
+      const children = [];
 
-    list.forEach((e, index) => {
-      const obj = {
+      list.forEach((e, index) => {
+        const obj = {
+          id: uuid(),
+          description: "",
+          label: "",
+          name: e[0],
+          options: "",
+          order_in_row: 0,
+          required: "true",
+          row: index,
+          type: "VALUE",
+          value: e[1],
+        };
+        children.push(obj);
+      });
+
+      const reg = {
         id: uuid(),
         description: "",
         label: "",
-        name: e[0],
+        name: "",
         options: "",
-        order_in_row: 0,
+        order_in_row: null,
         required: "true",
-        row: index,
-        type: "VALUE",
-        value: e[1],
+        row: null,
+        type: "RECORD",
+        value: null,
+        parent_id: parentId,
+        children: children,
       };
-      children.push(obj);
-    });
 
-    const reg = {
-      id: uuid(),
-      description: "",
-      label: "",
-      name: "",
-      options: "",
-      order_in_row: null,
-      required: "true",
-      row: null,
-      type: "RECORD",
-      value: null,
-      parent_id: parentId,
-      children: children,
-    };
+      parent.children.push(reg);
 
-    parent.children.push(reg);
-
-    params = { token: user.token, body: parent };
-    const ret = await updateFormInstance(params);
+      params = { token: user.token, body: parent };
+      const ret = await updateFormInstance(params);
+    }
   };
 
   const onUpdate = async (parentId, rowId, values) => {
@@ -220,6 +226,9 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
 
       params = { token: user.token, body: parent };
       const ret = await updateFormInstance(params);
+      if (ret.error) {
+        throw ret.error;
+      }
     }
   };
 
@@ -234,7 +243,30 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
 
     params = { token: user.token, body: parent };
     const ret = await updateFormInstance(params);
-  
+    if (ret.error) {
+      throw ret.error;
+    }
+  };
+
+  const onCompleteForm = async (formId, values) => {
+    let params = { token: user.token, id: formId };
+    const form = await findFormInstanceById(params);
+
+    if (form.error) {
+      throw form.error;
+    } else {
+      const children = form.children;
+
+      children.forEach((c) => {
+        c.value = values[c.name];
+      });
+
+      params = { token: user.token, body: form };
+      const ret = await updateFormInstance(params);
+      if (ret.error) {
+        throw ret.error;
+      }
+    }
   };
 
   return (
@@ -243,10 +275,12 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
         onCreate,
         onUpdate,
         onDelete,
+        onCompleteForm,
         setReloadData,
         confirmModalOpen,
         setConfirmModalOpen,
         datasourceValuesById,
+        setError,
       }}
     >
       <Routes>
@@ -276,6 +310,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
                   relatedEntities={relatedEntities}
                   parentId={parentId}
                   widgetByName={widgetByName}
+                  selectedRowId={formDefinition?.id}
                   mode={"FORM"}
                 />
               )}
@@ -293,6 +328,16 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
           );
         })}
       </Routes>
+
+      <ResponceNotification
+        opened={error ? true : false}
+        onClose={() => {
+          setError(null);
+        }}
+        code={error}
+        title={t("status.error")}
+        text={error}
+      />
     </InstanceFormContex.Provider>
   );
 };

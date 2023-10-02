@@ -129,7 +129,20 @@ const FieldModal = ({ opened, close, onCreate }) => {
       <Stack spacing={"xs"}>
         <form
           onSubmit={form.onSubmit((values) => {
-            const obj = { ...values, id: selectedField.id, row: selectedField.row };
+            const obj = { ...values };
+            
+            if(selectedField?.id){
+              obj.id = selectedField.id;
+            }else{
+              obj.id = null;
+            }
+
+            if(selectedField?.row){
+              obj.row = selectedField.row;
+            }else{
+              obj.row = null;
+            }
+
             onCreate(obj);
           })}
         >

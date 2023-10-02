@@ -24,6 +24,8 @@ const WIDGETS = [
   { id: 10, name: "FORM", hidden: true },
   { id: 11, name: "RECORD", hidden: true },
   { id: 12, name: "VALUE", hidden: true },
+  { id: 13, name: "LABEL", hidden: false },
+  { id: 14, name: "DATETIME", hidden: false },
 
   // { id: 8, name: "Entity list" },
 ];
