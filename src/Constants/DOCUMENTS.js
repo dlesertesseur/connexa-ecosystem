@@ -25,7 +25,8 @@ const WIDGETS = [
   { id: 11, name: "RECORD", hidden: true },
   { id: 12, name: "VALUE", hidden: true },
   { id: 13, name: "LABEL", hidden: false },
-  { id: 14, name: "DATETIME", hidden: false },
+  { id: 14, name: "DATE", hidden: false },
+  { id: 15, name: "TIME", hidden: false },
 
   // { id: 8, name: "Entity list" },
 ];

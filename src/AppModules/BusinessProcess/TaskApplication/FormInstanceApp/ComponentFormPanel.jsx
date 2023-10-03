@@ -22,6 +22,7 @@ import { useWindowSize } from "../../../../Hook";
 import { useForm } from "@mantine/form";
 import { useSelector } from "react-redux";
 import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
+import { DatePicker, TimeInput } from "@mantine/dates";
 // import { TimeInput, DatePickerInput } from "@mantine/dates";
 
 const ComponentFormPanel = ({
@@ -153,31 +154,31 @@ const ComponentFormPanel = ({
         );
         break;
 
-      // case "DATE":
-      //   ret = (
-      //     <DatePickerInput
-      //       disabled={mode === "DELETE" ? true : false}
-      //       key={field.id}
-      //       withAsterisk={field.required}
-      //       label={field.label}
-      //       placeholder={field.name}
-      //       {...form.getInputProps(field.name)}
-      //     />
-      //   );
-      //   break;
+      case "DATE":
+        ret = (
+          <DatePicker
+            disabled={mode === "DELETE" ? true : false}
+            key={field.id}
+            withAsterisk={field.required}
+            label={field.label}
+            placeholder={field.name}
+            {...form.getInputProps(field.name)}
+          />
+        );
+        break;
 
-      // case "TIME":
-      //   ret = (
-      //     <TimeInput
-      //       disabled={mode === "DELETE" ? true : false}
-      //       key={field.id}
-      //       withAsterisk={field.required}
-      //       label={field.label}
-      //       placeholder={field.name}
-      //       {...form.getInputProps(field.name)}
-      //     />
-      //   );
-      //   break;
+      case "TIME":
+        ret = (
+          <TimeInput
+            disabled={mode === "DELETE" ? true : false}
+            key={field.id}
+            withAsterisk={field.required}
+            label={field.label}
+            placeholder={field.name}
+            {...form.getInputProps(field.name)}
+          />
+        );
+        break;
 
       case "IMAGE":
         break;
@@ -202,7 +203,7 @@ const ComponentFormPanel = ({
   };
 
   const getValue = (c) => {
-    const widget = widgetByName.get(c.name);
+    const widget = widgetByName?.get(c.name);
     let ret = null;
     switch (widget?.type) {
       case "NUMBERINPUT":
@@ -217,31 +218,56 @@ const ComponentFormPanel = ({
   };
 
   const getData = async () => {
-    const params = { token: user.token, id: selectedRowId };
-    const ret = await findFormInstanceById(params);
-    ret?.children.forEach((c) => {
-      const value = getValue(c);
-      form.setFieldValue(c.name, value);
-    });
+    const params = { token: user.token, id: parentId };
+    const instanceNode = await findFormInstanceById(params);
+    let fields = null;
+
+    switch (mode) {
+      case "CREATE":
+        break;
+
+      case "UPDATE":
+      case "DELETE":
+        if (instanceNode && selectedRowId) {
+          const collectionName = `COLLECTION<${formData.name}>`;
+          const collection = instanceNode.children.find((c) => c.name === collectionName);
+          const record = collection?.children.find((c) => c.id === selectedRowId);
+          if (record) {
+            fields = record.children;
+          }
+        }
+        break;
+
+      case "FORM":
+        fields = instanceNode?.children;
+        break;
+    }
+
+    if (instanceNode && fields) {
+      fields?.forEach((c) => {
+        const value = getValue(c);
+        form.setFieldValue(c.name, value);
+      });
+    }
   };
 
   useEffect(() => {
-    if (selectedRowId) {
+    if (parentId) {
       getData();
     }
-  }, [selectedRowId]);
+  }, [parentId]);
 
   const processAction = async (mode, parentId, values, selectedRowId) => {
     try {
       switch (mode) {
         case "CREATE":
-          await onCreate(parentId, values);
+          await onCreate(parentId, formData, values);
           setReloadData(Date.now());
           navigate("../../");
           break;
 
         case "UPDATE":
-          await onUpdate(parentId, selectedRowId, values);
+          await onUpdate(formData, parentId, selectedRowId, values);
           setReloadData(Date.now());
           navigate("../../");
           break;
@@ -251,7 +277,7 @@ const ComponentFormPanel = ({
           break;
 
         case "FORM":
-          await onCompleteForm(selectedRowId, values);
+          await onCompleteForm(parentId, values);
           setReloadData(Date.now());
           navigate("../../");
           break;
@@ -265,7 +291,7 @@ const ComponentFormPanel = ({
   };
 
   const onConfirm = async () => {
-    const ret = await onDelete(parentId, selectedRowId);
+    const ret = await onDelete(formData, parentId, selectedRowId);
     setConfirmModalOpen(false);
     setReloadData(Date.now());
     navigate("../../");

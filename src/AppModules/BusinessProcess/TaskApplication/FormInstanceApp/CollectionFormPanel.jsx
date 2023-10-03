@@ -5,17 +5,53 @@ import { Skeleton, Stack } from "@mantine/core";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { useEffect } from "react";
 import { WIDGETS_NAMES_BY_NAME } from "../../../../Constants/DOCUMENTS";
+import { useSelector } from "react-redux";
+import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
 import FormHeaderPanel from "./FormHeaderPanel";
 import SortedTable from "../../../../Components/Crud/SortedTable";
 import ComponentFormPanel from "./ComponentFormPanel";
 
-const CollectionFormPanel = ({ formData, options, panels, widgetByPanel, formConfig, relatedEntities, parentId, data, widgetByName }) => {
+const CollectionFormPanel = ({
+  formData,
+  options,
+  panels,
+  widgetByPanel,
+  formConfig,
+  relatedEntities,
+  parentId,
+  widgetByName,
+}) => {
+  const { user } = useSelector((state) => state.auth.value);
   const { t } = useTranslation();
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [columns, setColumns] = useState([]);
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
 
   const HEADER = 60;
+
+  const getData = async () => {
+    const params = { token: user.token, id: parentId };
+    try {
+      const instanceNode = await findFormInstanceById(params);
+      const collectionName = `COLLECTION<${formData.name}>`;
+      let collection = instanceNode.children.find((c) => c.name === collectionName);
+      if (collection) {
+        const data = collection?.children?.map((r) => {
+          const obj = {};
+          r.children.forEach((c) => {
+            obj[c.name] = c.value;
+          });
+          obj.id = r.id;
+          return obj;
+        });
+
+        setData(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (formData) {
@@ -32,6 +68,8 @@ const CollectionFormPanel = ({ formData, options, panels, widgetByPanel, formCon
         });
 
         setColumns(ret);
+
+        getData();
       }
     }
   }, [formData]);
@@ -116,12 +154,11 @@ const CollectionFormPanel = ({ formData, options, panels, widgetByPanel, formCon
               parentId={parentId}
               mode={"DELETE"}
               title={`${t("document.entityDefinition.label.deleteRecord")} ${formData?.label}`}
-              data={data}
               selectedRowId={selectedRowId}
               widgetByName={widgetByName}
             />
           }
-        />        
+        />
       </Routes>
     </Stack>
   );

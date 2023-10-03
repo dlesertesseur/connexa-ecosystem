@@ -3,13 +3,15 @@ import CollectionFormPanel from "./CollectionFormPanel";
 import ComponentFormPanel from "./ComponentFormPanel";
 import InstanceFormContex from "./Context";
 import uuid from "react-uuid";
+import ResponceNotification from "../../../../Modal/ResponceNotification";
 import { useSelector } from "react-redux";
 import { Group } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { findFormInstanceById, updateFormInstance } from "../../../../DataAccess/FormInstance";
 import { findDataSourceById } from "../../../../DataAccess/DataSource";
-import ResponceNotification from "../../../../Modal/ResponceNotification";
+import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
+import { arrayToMapByProp } from "../../../../Util";
 
 const InstanceFormPanel = ({ formId, collection, parentId }) => {
   const { t } = useTranslation();
@@ -17,9 +19,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
   const [formDefinition, setFormDefinition] = useState(null);
   const [options, setOptions] = useState(null);
   const [panels, setPanels] = useState([]);
-  const [data, setDate] = useState([]);
   const [relatedEntities, setRelatedEntities] = useState([]);
-  const [records, setRecords] = useState([]);
   const [widgetByPanel, setWidgetByPanel] = useState(new Map());
   const [widgetByName, setWidgetByName] = useState(new Map());
   const [formConfig, setFormConfig] = useState({});
@@ -53,11 +53,15 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
   };
 
   const getData = async () => {
-    const params = { token: user.token, id: formId };
-    const ret = await findFormInstanceById(params);
+    const params = {
+      token: user.token,
+      id: formId,
+    };
+    const modelNode = await findEntityDefinitionById(params);
+
     const dataSourcesId = [];
     try {
-      const options = await JSON.parse(ret?.options);
+      const options = await JSON.parse(modelNode?.options);
       setOptions(options);
     } catch (error) {
       console.log("error ->", error);
@@ -66,18 +70,13 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
 
     const panels = [];
     const collections = [];
-    const records = [];
     const widgetByPanel = new Map();
 
-    ret?.children?.forEach(async (field) => {
+    modelNode?.children?.forEach(async (field) => {
       switch (field.type) {
         case "COLLECTION<SUBFORM>":
         case "SUBFORM":
           collections.push(field);
-          break;
-
-        case "RECORD":
-          records.push(field);
           break;
 
         case "SELECT":
@@ -105,8 +104,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     setPanels(panels);
     setWidgetByPanel(widgetByPanel);
     setRelatedEntities(collections);
-    setFormDefinition(ret);
-    setRecords(records);
+    setFormDefinition(modelNode);
     setWidgetByName(widgetByName);
     setDatasourceValuesById(dataMap);
   };
@@ -138,7 +136,9 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
   };
 
   useEffect(() => {
-    getData();
+    if (formId) {
+      getData();
+    }
   }, [formId, reloadData]);
 
   useEffect(() => {
@@ -151,117 +151,137 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     }
   }, [panels]);
 
-  useEffect(() => {
-    const data = records?.map((r) => {
-      const obj = {};
-      r.children.forEach((c) => {
-        obj[c.name] = c.value;
-      });
-      obj.id = r.id;
-      return obj;
-    });
+  const createObject = (name) => {
+    const ret = {
+      id: uuid(),
+      type: "COLLECTION",
+      name: name,
+      label: "NA",
+      description: "NA",
+      required: false,
+      options: "NA",
+      children: [],
+      row: 0,
+      orderInRow: 0,
+      datasourceId: null,
+      relatedField: null,
+      defaultValue: null,
+    };
 
-    setDate(data);
-  }, [records]);
+    return ret;
+  };
 
-  const onCreate = async (parentId, values) => {
+  const onCreate = async (parentId, formData, values) => {
     let params = { token: user.token, id: parentId };
-    const parent = await findFormInstanceById(params);
+    const instanceNode = await findFormInstanceById(params);
 
-    if (parent.error) {
-      throw parent.error;
+    if (instanceNode.error) {
+      throw instanceNode.error;
     } else {
-      const list = Object.entries(values);
-      const children = [];
+      const collectionName = `COLLECTION<${formData.name}>`;
+      let collection = instanceNode.children.find((c) => c.name === collectionName);
 
-      list.forEach((e, index) => {
-        const obj = {
-          id: uuid(),
-          description: "",
-          label: "",
-          name: e[0],
-          options: "",
-          order_in_row: 0,
-          required: "true",
-          row: index,
-          type: "VALUE",
-          value: e[1],
-        };
-        children.push(obj);
+      if (!collection) {
+        collection = createObject(collectionName);
+        instanceNode.children.push(collection);
+      }
+
+      const record = { ...formData };
+      record.id = uuid();
+      record.parentId = null;
+
+      const children = record.children;
+      const subformFieldsByName = arrayToMapByProp("name", children);
+      const valuesList = Object.entries(values);
+
+      valuesList.forEach((v) => {
+        const instanceValue = subformFieldsByName.get(v[0]);
+        if (instanceValue) {
+          instanceValue.id = uuid();
+          instanceValue.parentId = null;
+          instanceValue.value = v[1];
+        }
       });
 
-      const reg = {
-        id: uuid(),
-        description: "",
-        label: "",
-        name: "",
-        options: "",
-        order_in_row: null,
-        required: "true",
-        row: null,
-        type: "RECORD",
-        value: null,
-        parent_id: parentId,
-        children: children,
-      };
-
-      parent.children.push(reg);
-
-      params = { token: user.token, body: parent };
+      collection.children.push(record);
+      params = { token: user.token, body: instanceNode };
       const ret = await updateFormInstance(params);
     }
   };
 
-  const onUpdate = async (parentId, rowId, values) => {
+  const onUpdate = async (formData, parentId, rowId, values) => {
     let params = { token: user.token, id: parentId };
-    const parent = await findFormInstanceById(params);
+    const instanceNode = await findFormInstanceById(params);
 
-    const children = parent.children;
+    if (instanceNode.error) {
+      throw instanceNode.error;
+    } else {
+      const collectionName = `COLLECTION<${formData.name}>`;
+      let collection = instanceNode.children.find((c) => c.name === collectionName);
 
-    const found = children.find((c) => c.id === rowId);
-    if (found) {
-      found.children.forEach((c) => {
-        c.value = values[c.name];
-      });
+      if (collection) {
+        const found = collection.children.find((c) => c.id === rowId);
+        if (found) {
+          found.children.forEach((c) => {
+            c.value = values[c.name];
+          });
+        }
+      }
 
-      params = { token: user.token, body: parent };
+      params = { token: user.token, body: instanceNode };
       const ret = await updateFormInstance(params);
-      if (ret.error) {
-        throw ret.error;
+    }
+  };
+
+  const onDelete = async (formData, parentId, rowId) => {
+    let params = { token: user.token, id: parentId };
+    const instanceNode = await findFormInstanceById(params);
+
+    if (instanceNode.error) {
+      throw instanceNode.error;
+    } else {
+      const collectionName = `COLLECTION<${formData.name}>`;
+      let collection = instanceNode.children.find((c) => c.name === collectionName);
+
+      if (collection) {
+        const data = collection.children.filter((c) => c.id !== rowId);
+        collection.children = data;
+
+        params = { token: user.token, body: instanceNode };
+        const ret = await updateFormInstance(params);
       }
     }
   };
 
-  const onDelete = async (parentId, rowId) => {
+  const onCompleteForm = async (parentId, values) => {
     let params = { token: user.token, id: parentId };
-    const parent = await findFormInstanceById(params);
+    const instanceNode = await findFormInstanceById(params);
 
-    const children = parent.children;
-
-    const toSave = children.filter((c) => c.id !== rowId);
-    parent.children = toSave;
-
-    params = { token: user.token, body: parent };
-    const ret = await updateFormInstance(params);
-    if (ret.error) {
-      throw ret.error;
-    }
-  };
-
-  const onCompleteForm = async (formId, values) => {
-    let params = { token: user.token, id: formId };
-    const form = await findFormInstanceById(params);
-
-    if (form.error) {
-      throw form.error;
+    if (instanceNode.error) {
+      throw instanceNode.error;
     } else {
-      const children = form.children;
+      const children = instanceNode.children;
 
-      children.forEach((c) => {
-        c.value = values[c.name];
+      const instanceValuesByName = arrayToMapByProp("name", children);
+      const valuesList = Object.entries(values);
+
+      valuesList.forEach((v) => {
+        const instanceValue = instanceValuesByName.get(v[0]);
+        if (instanceValue) {
+          instanceValue.value = v[1];
+        } else {
+          const widget = widgetByName.get(v[0]);
+          if (widget) {
+            const obj = { ...widget };
+            obj.id = uuid();
+            obj.value = v[1];
+            children.push(obj);
+          }
+        }
       });
 
-      params = { token: user.token, body: form };
+      instanceNode.children = children;
+      params = { token: user.token, body: instanceNode };
       const ret = await updateFormInstance(params);
       if (ret.error) {
         throw ret.error;
@@ -296,8 +316,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
                   widgetByPanel={widgetByPanel}
                   formConfig={formConfig}
                   relatedEntities={relatedEntities}
-                  parentId={formId}
-                  data={data}
+                  parentId={parentId}
                   widgetByName={widgetByName}
                 />
               ) : (
@@ -310,7 +329,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
                   relatedEntities={relatedEntities}
                   parentId={parentId}
                   widgetByName={widgetByName}
-                  selectedRowId={formDefinition?.id}
+                  //selectedRowId={formDefinition?.id}
                   mode={"FORM"}
                 />
               )}
@@ -323,7 +342,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
             <Route
               key={re.options}
               path={`${re.name}/*`}
-              element={<InstanceFormPanel formId={re.options} collection={collection} parentId={formId} />}
+              element={<InstanceFormPanel formId={re.options} collection={collection} parentId={parentId} />}
             />
           );
         })}

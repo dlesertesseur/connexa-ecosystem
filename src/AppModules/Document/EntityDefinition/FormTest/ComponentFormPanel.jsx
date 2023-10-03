@@ -11,12 +11,13 @@ import {
   TextInput,
   Textarea,
 } from "@mantine/core";
-import React, { useEffect } from "react";
+import React from "react";
 import FormHeaderPanel from "./FormHeaderPanel";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../../Hook";
 import { useForm } from "@mantine/form";
+import { TimeInput, DatePicker } from "@mantine/dates";
 
 const ComponentFormPanel = ({
   formData,
@@ -119,6 +120,24 @@ const ComponentFormPanel = ({
           </Stack>
         );
         break;
+
+      case "TIME":
+        ret = (
+          <TimeInput key={field.id} label={field.label} placeholder={field.name} {...form.getInputProps(field.name)} />
+        );
+        break;
+
+      case "DATE":
+        ret = (
+          <DatePicker
+            key={field.id}
+            label={field.label}
+            placeholder={field.name}
+            {...form.getInputProps(field.name)}
+          />
+        );
+        break;
+
       case "IMAGE":
         break;
       case "UPLOAD":

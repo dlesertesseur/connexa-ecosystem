@@ -16,6 +16,7 @@ import { useForm } from "@mantine/form";
 import { useWindowSize } from "../../../../Hook";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { DatePicker, TimeInput } from "@mantine/dates";
 
 const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntities, size, close, height, entity }) => {
   const { t } = useTranslation();
@@ -108,29 +109,29 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
         );
         break;
 
-      // case "DATE":
-      //   ret = (
-      //     <DatePickerInput
-      //       key={field.id}
-      //       withAsterisk={field.required}
-      //       label={field.label}
-      //       placeholder={field.name}
-      //       {...form.getInputProps(field.name)}
-      //     />
-      //   );
-      //   break;
+      case "DATE":
+        ret = (
+          <DatePicker
+            key={field.id}
+            withAsterisk={field.required}
+            label={field.label}
+            placeholder={field.name}
+            {...form.getInputProps(field.name)}
+          />
+        );
+        break;
 
-      // case "TIME":
-      //   ret = (
-      //     <TimeInput
-      //       key={field.id}
-      //       withAsterisk={field.required}
-      //       label={field.label}
-      //       placeholder={field.name}
-      //       {...form.getInputProps(field.name)}
-      //     />
-      //   );
-      //   break;
+      case "TIME":
+        ret = (
+          <TimeInput
+            key={field.id}
+            withAsterisk={field.required}
+            label={field.label}
+            placeholder={field.name}
+            {...form.getInputProps(field.name)}
+          />
+        );
+        break;
 
       case "IMAGE":
         break;
