@@ -41,9 +41,12 @@ const FieldModal = ({ opened, close, onCreate }) => {
         // form.setFieldValue("id", selectedField.id);
       }
     };
+
     if (opened && selectedField) {
-      form.reset();
       f();
+    }
+    if (opened && !selectedField) {
+      form.reset();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
@@ -130,16 +133,16 @@ const FieldModal = ({ opened, close, onCreate }) => {
         <form
           onSubmit={form.onSubmit((values) => {
             const obj = { ...values };
-            
-            if(selectedField?.id){
+
+            if (selectedField?.id) {
               obj.id = selectedField.id;
-            }else{
+            } else {
               obj.id = null;
             }
 
-            if(selectedField?.row){
+            if (selectedField?.row) {
               obj.row = selectedField.row;
-            }else{
+            } else {
               obj.row = null;
             }
 

@@ -5,7 +5,7 @@ import InstanceFormContex from "./Context";
 import uuid from "react-uuid";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import { useSelector } from "react-redux";
-import { Group } from "@mantine/core";
+import { Group, Stack } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { findFormInstanceById, updateFormInstance } from "../../../../DataAccess/FormInstance";
@@ -307,7 +307,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
         <Route
           path="/*"
           element={
-            <Group grow>
+            <Stack spacing={"xs"}>
               {collection ? (
                 <CollectionFormPanel
                   formData={formDefinition}
@@ -329,11 +329,10 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
                   relatedEntities={relatedEntities}
                   parentId={parentId}
                   widgetByName={widgetByName}
-                  //selectedRowId={formDefinition?.id}
                   mode={"FORM"}
                 />
               )}
-            </Group>
+            </Stack>
           }
         ></Route>
         {relatedEntities.map((re) => {

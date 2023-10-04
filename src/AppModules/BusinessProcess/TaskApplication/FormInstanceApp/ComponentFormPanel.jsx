@@ -298,7 +298,11 @@ const ComponentFormPanel = ({
   };
 
   return (
-    <Container size={options?.size} w={"100%"}>
+    <Stack
+      spacing={"xs"}
+      p={"xs"}
+      justify="flex-start"
+    >
       <DeleteConfirmation
         opened={confirmModalOpen}
         onClose={() => setConfirmModalOpen(false)}
@@ -307,63 +311,65 @@ const ComponentFormPanel = ({
         text={t("notification.delete")}
       />
 
-      <Stack spacing={"xs"}>
-        <form
-          onSubmit={form.onSubmit(async (values) => {
-            await processAction(mode, parentId, values, selectedRowId);
-          })}
-        >
-          {title === undefined ? (
-            <FormHeaderPanel name={formData?.label} description={formData?.description} />
-          ) : (
-            <Group position={"center"}>
-              <Text size={"lg"} weight={600}>
-                {title}
-              </Text>
-            </Group>
-          )}
+      {title === undefined ? (
+        <FormHeaderPanel name={formData?.label} description={formData?.description} />
+      ) : (
+        <Group position={"center"}>
+          <Text size={"lg"} weight={600}>
+            {title}
+          </Text>
+        </Group>
+      )}
 
-          {relatedEntities ? (
-            <Group position="left" my={"xs"} spacing={"xs"}>
-              {relatedEntities.map((re) => {
-                return (
+      {relatedEntities ? (
+        <Group position="left" spacing={"xs"} mb={"xs"}>
+          {relatedEntities.map((re) => {
+            return (
+              <Button
+                key={re.id}
+                onClick={() => {
+                  navigate(`${re.name}`);
+                }}
+              >
+                {re.label}
+              </Button>
+            );
+          })}
+        </Group>
+      ) : null}
+
+      <Container size={options?.size} w={"100%"}>
+        <Stack spacing={"xs"} w={"100%"}>
+          <form
+            onSubmit={form.onSubmit(async (values) => {
+              await processAction(mode, parentId, values, selectedRowId);
+            })}
+          >
+            <ScrollArea offsetScrollbars h={wsize.height - totalHeaderHeight - (relatedEntities?.length > 0 ? 36 : 0)}>
+              {buildForm(panels)}
+
+              {panels?.length > 0 ? (
+                <Group position="right" pt={"md"}>
+                  <Button type="submit">{t("button.accept")}</Button>
                   <Button
-                    key={re.id}
                     onClick={() => {
-                      navigate(`${re.name}`);
+                      navigate("../../");
+                      form.reset();
                     }}
                   >
-                    {re.label}
+                    {t("button.cancel")}
                   </Button>
-                );
-              })}
-            </Group>
-          ) : null}
-
-          <ScrollArea offsetScrollbars h={wsize.height - totalHeaderHeight - (relatedEntities?.length > 0 ? 36 : 0)}>
-            {buildForm(panels)}
-
-            {panels?.length > 0 ? (
-              <Group position="right" pt={"md"}>
-                <Button type="submit">{t("button.accept")}</Button>
-                <Button
-                  onClick={() => {
-                    navigate("../../");
-                    form.reset();
-                  }}
-                >
-                  {t("button.cancel")}
-                </Button>
-              </Group>
-            ) : (
-              <Group grow>
-                <LoadingOverlay visible={true} />
-              </Group>
-            )}
-          </ScrollArea>
-        </form>
-      </Stack>
-    </Container>
+                </Group>
+              ) : (
+                <Group grow>
+                  <LoadingOverlay visible={true} />
+                </Group>
+              )}
+            </ScrollArea>
+          </form>
+        </Stack>
+      </Container>
+    </Stack>
   );
 };
 

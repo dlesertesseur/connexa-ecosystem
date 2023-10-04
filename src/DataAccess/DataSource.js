@@ -22,7 +22,7 @@ const findAllDataSource = async (parameters) => {
 
 const createDataSource = async (parameters) => {
   try {
-    const body = JSON.stringify(parameters.values);
+    const body = JSON.stringify(parameters.body);
 
     const requestOptions = {
       method: "POST",

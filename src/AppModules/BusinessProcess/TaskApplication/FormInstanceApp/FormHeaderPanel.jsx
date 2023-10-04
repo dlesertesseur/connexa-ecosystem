@@ -6,12 +6,12 @@ const FormHeaderPanel = ({ name, description }) => {
     <Stack
       justify="stretch"
       spacing={"xs"}
-      h={60}
+      //h={60}
       sx={(theme) => ({
         backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
         width: "100%",
       })}
-      mt={"xs"}
+      //mt={"xs"}
     >
       <Stack
         spacing={0}
@@ -28,7 +28,7 @@ const FormHeaderPanel = ({ name, description }) => {
           {description}
         </Text>
       </Stack>
-      <Divider />
+      {/* <Divider /> */}
     </Stack>
   ) : null;
 

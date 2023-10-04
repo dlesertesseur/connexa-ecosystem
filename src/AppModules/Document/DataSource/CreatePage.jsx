@@ -65,9 +65,18 @@ export function CreatePage() {
   };
 
   const onCreate = async (values) => {
+    const body = {
+      id: uuid(),
+      code: values.code,
+      name: values.name,
+      description: values.description,
+      parent: null,
+      children: [],
+    };
+
     const params = {
       token: user.token,
-      values: { ...values, id:uuid() },
+      body: body,
     };
 
     setWorking(true);
@@ -109,7 +118,9 @@ export function CreatePage() {
               onCreate(values);
             })}
           >
-            <Group grow mb={"md"} w={"50%"}>{createTextField("code")}</Group>
+            <Group grow mb={"md"} w={"50%"}>
+              {createTextField("code")}
+            </Group>
 
             <Group mb={"md"} grow>
               {createTextField("name")}
