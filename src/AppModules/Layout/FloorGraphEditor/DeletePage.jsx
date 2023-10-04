@@ -132,7 +132,7 @@ export function DeletePage() {
           {t("crud.floorGrapthEditor.title.delete")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             setConfirmModalOpen(true);
           })}

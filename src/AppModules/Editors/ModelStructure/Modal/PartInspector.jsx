@@ -96,7 +96,7 @@ const PartInspector = ({ opened, close, part }) => {
     <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.partInspector")}>
       <Stack justify="flex-start">
       <Title order={4}>{title}</Title>
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             updateData(values);
             close();

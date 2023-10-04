@@ -127,7 +127,7 @@ export function UpdatePage() {
           {t("dataSourceValues.title.update")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onUpdate(values);
           })}

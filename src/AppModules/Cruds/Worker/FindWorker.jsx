@@ -132,7 +132,7 @@ export function FindWorker() {
         >
           {t("crud.worker.title.findWorker")}
         </Title>
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onSeek(values);
           })}

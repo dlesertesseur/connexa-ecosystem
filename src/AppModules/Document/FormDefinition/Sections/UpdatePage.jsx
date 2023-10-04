@@ -129,7 +129,7 @@ export function UpdatePage({ formDefinitionId }) {
           {t("document.formDefinition.title.update")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onUpdate(values);
           })}

@@ -47,10 +47,8 @@ export function SignIn() {
 
     // CANBIAR LA VALIDACION DE LA CLAVE a minimo 6 caracteres
     validate: {
-      email: (val) =>
-        /^\S+@\S+$/.test(val) ? null : t("validation.emailFormat"),
-      password: (val) =>
-        val.length <= 2 ? t("validation.passwordFormat") : null,
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : t("validation.emailFormat")),
+      password: (val) => (val.length <= 2 ? t("validation.passwordFormat") : null),
     },
   });
 
@@ -60,28 +58,18 @@ export function SignIn() {
         <LoadingOverlay overlayOpacity={0.5} visible={true} />
       ) : (
         <Stack m={"xl"} p={"xl"} align="center">
-          <Paper
-            sx={{ width: 400 }}
-            withBorder
-            shadow="md"
-            p={30}
-            radius="md"
-            bg={theme.colors.gray[0]}
-          >
+          <Paper sx={{ width: 400 }} withBorder shadow="md" p={30} radius="md" bg={theme.colors.gray[0]}>
             <Logo width={150} />
             <form
+              autoComplete="false"
               onSubmit={form.onSubmit((values) => {
-                dispatch(
-                  signIn({ email: values.email, password: values.password })
-                );
+                dispatch(signIn({ email: values.email, password: values.password }));
               })}
             >
               <TextInput
                 label={t("label.email")}
                 placeholder={t("placeholder.email")}
-                onChange={(event) =>
-                  form.setFieldValue("email", event.currentTarget.value)
-                }
+                onChange={(event) => form.setFieldValue("email", event.currentTarget.value)}
                 error={form.errors.email}
               />
               <PasswordInput
@@ -89,29 +77,17 @@ export function SignIn() {
                 placeholder={t("placeholder.password")}
                 autoComplete="off"
                 mt="md"
-                onChange={(event) =>
-                  form.setFieldValue("password", event.currentTarget.value)
-                }
+                onChange={(event) => form.setFieldValue("password", event.currentTarget.value)}
                 error={form.errors.password}
               />
 
               <Group position="apart" mt="md">
                 <Checkbox label={t("label.keepMeConnected")} />
-                <Anchor
-                  onClick={(event) => event.preventDefault()}
-                  href="#"
-                  size="sm"
-                >
+                <Anchor onClick={(event) => event.preventDefault()} href="#" size="sm">
                   {t("auth.forgotPassword")}
                 </Anchor>
               </Group>
-              <Button
-                type="submit"
-                fullWidth
-                mt="xl"
-                loading={loading}
-                loaderPosition={"left"}
-              >
+              <Button type="submit" fullWidth mt="xl" loading={loading} loaderPosition={"left"}>
                 {t("button.signIn")}
               </Button>
             </form>
@@ -134,7 +110,7 @@ export function SignIn() {
 
           <Group position="apart" mt={"xl"}>
             <Image
-              src={config.PUBLIC_URL+"/logos/zeetrex.png"}
+              src={config.PUBLIC_URL + "/logos/zeetrex.png"}
               alt="logo"
               width={100}
               component="a"

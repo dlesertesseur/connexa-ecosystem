@@ -107,7 +107,7 @@ const TaskSettings = ({ open, close, taskId }) => {
       centered
     >
       <Stack w={"100%"} spacing={"xs"}>
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             updateTask(data);
           })}

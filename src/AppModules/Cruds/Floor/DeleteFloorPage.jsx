@@ -139,7 +139,7 @@ export function DeleteFloorPage({ user, siteId, floorId, back, onFilter }) {
           {t("crud.floor.title.delete")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             setConfirmModalOpen(true);
           })}

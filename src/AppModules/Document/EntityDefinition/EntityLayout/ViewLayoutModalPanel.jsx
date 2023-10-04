@@ -136,6 +136,15 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
       case "IMAGE":
         break;
       case "UPLOAD":
+        // ret = (
+        //   <FileButton
+        //     key={field.id}
+        //     withAsterisk={field.required}
+        //     label={field.label}
+        //     placeholder={field.name}
+        //     {...form.getInputProps(field.name)}
+        //   />
+        // );
         break;
 
       default:
@@ -157,7 +166,7 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
   return (
     <Container size={size} bg={"gray.0"}>
       <Stack spacing={"xs"}>
-        <form
+        <form autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             console.log("onSubmit ->", values);
             form.reset();

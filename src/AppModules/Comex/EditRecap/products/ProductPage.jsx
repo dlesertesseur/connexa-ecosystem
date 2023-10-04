@@ -503,7 +503,7 @@ export function ProductPage({ mode = CRUD_PAGE_MODE.new, recap }) {
           {determinateTitle()}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onAccept(values);
           })}

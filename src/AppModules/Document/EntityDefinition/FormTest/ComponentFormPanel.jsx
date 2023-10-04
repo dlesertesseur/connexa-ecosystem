@@ -141,6 +141,14 @@ const ComponentFormPanel = ({
       case "IMAGE":
         break;
       case "UPLOAD":
+        // ret = (
+        //   <FileButton
+        //     key={field.id}
+        //     label={field.label}
+        //     placeholder={field.name}
+        //     {...form.getInputProps(field.name)}
+        //   />
+        // );
         break;
 
       default:
@@ -162,7 +170,7 @@ const ComponentFormPanel = ({
   return (
     <Container size={options?.size} w={"100%"}>
       <Stack spacing={"xs"}>
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             console.log("onSubmit ->", values);
           })}

@@ -122,7 +122,7 @@ export function Step2({ title, active, setActive, onCancel }) {
           {title}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
           })}

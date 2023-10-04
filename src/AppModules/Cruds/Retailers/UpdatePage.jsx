@@ -115,7 +115,7 @@ export function UpdatePage({ user, back, entityId, onLoadGrid }) {
           {t("crud.retailer.title.update")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             const data = { ...entity };
             data.name = values.name;

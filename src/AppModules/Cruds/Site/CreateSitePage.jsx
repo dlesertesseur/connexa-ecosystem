@@ -249,7 +249,7 @@ export function CreateSitePage({ user, back, onLoadGrid, contexts }) {
         </Title>
 
         <ScrollArea h={wSize.height - HEADER_HIGHT} pr={"md"}>
-          <form
+          <form   autoComplete="false"
             onSubmit={form.onSubmit((values) => {
               onCreate(values);
             })}

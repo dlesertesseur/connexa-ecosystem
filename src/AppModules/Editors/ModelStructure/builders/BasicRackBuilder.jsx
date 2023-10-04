@@ -78,7 +78,7 @@ export function BasicRackBuilder({ opened, close }) {
   return (
     <Modal opened={opened} onClose={close} title={t("editor.modelStructure.items.racking.basic")}>
       <Stack>
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values, STRUCTURE_TYPE_RACK_BASIC);
             close();

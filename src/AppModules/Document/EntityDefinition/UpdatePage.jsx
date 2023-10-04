@@ -124,7 +124,7 @@ export function UpdatePage() {
         </Title>
 
         <ScrollArea type="scroll" style={{ width: "100%", height: height - HEADER_HIGHT }}>
-          <form
+          <form   autoComplete="false"
             onSubmit={form.onSubmit((values) => {
               onUpdate(values);
             })}

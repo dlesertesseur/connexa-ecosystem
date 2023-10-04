@@ -320,7 +320,7 @@ export function DeletePage({ user, back, siteId, onLoadGrid, contexts }) {
         </Title>
 
         <ScrollArea h={wSize.height - HEADER_HIGHT} pr={"md"}>
-          <form
+          <form   autoComplete="false"
             onSubmit={form.onSubmit((values) => {
               setConfirmModalOpen(true);
             })}

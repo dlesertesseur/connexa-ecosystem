@@ -82,7 +82,7 @@ export function ShelvesBuilder({ opened, close }) {
   return (
     <Modal opened={opened} onClose={close} title={t("editor.modelStructure.title.shelving")}>
       <Stack>
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values, STRUCTURE_TYPE_SHELVING);
             close();

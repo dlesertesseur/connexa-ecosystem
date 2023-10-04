@@ -54,7 +54,7 @@ export function SignUp() {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit(() => {
             navigate("/menu");
           })}

@@ -130,7 +130,7 @@ const FieldModal = ({ opened, close, onCreate }) => {
       size={"md"}
     >
       <Stack spacing={"xs"}>
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             const obj = { ...values };
 

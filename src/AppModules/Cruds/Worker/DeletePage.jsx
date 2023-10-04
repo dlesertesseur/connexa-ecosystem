@@ -193,7 +193,7 @@ export function DeletePage() {
           {t("crud.worker.title.delete")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             setConfirmModalOpen(true);
           })}

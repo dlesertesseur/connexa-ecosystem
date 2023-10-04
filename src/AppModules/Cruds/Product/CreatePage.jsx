@@ -123,7 +123,7 @@ export function CreatePage({ onLoadGrid }) {
           {t("crud.product.title.create")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
           })}

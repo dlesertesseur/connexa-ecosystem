@@ -113,7 +113,7 @@ export function UpdatePage({ user, back, brandId, onLoadGrid }) {
           {t("crud.brand.title.update")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             const data = { ...brand };
             data.name = values.name;

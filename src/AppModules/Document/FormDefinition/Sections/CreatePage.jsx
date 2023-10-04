@@ -96,7 +96,7 @@ export function CreatePage({ formDefinitionId }) {
           {t("document.formDefinition.title.create")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
           })}

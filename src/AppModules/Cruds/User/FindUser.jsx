@@ -126,7 +126,7 @@ export function FindUser() {
         >
           {t("crud.user.title.findUser")}
         </Title>
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onSeek(values);
           })}

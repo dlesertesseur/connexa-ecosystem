@@ -93,7 +93,7 @@ export function CreatePage() {
           {t("crud.variables.title.create")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
           })}

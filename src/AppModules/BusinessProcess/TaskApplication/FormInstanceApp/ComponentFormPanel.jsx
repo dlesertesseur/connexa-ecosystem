@@ -23,7 +23,6 @@ import { useForm } from "@mantine/form";
 import { useSelector } from "react-redux";
 import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
 import { DatePicker, TimeInput } from "@mantine/dates";
-// import { TimeInput, DatePickerInput } from "@mantine/dates";
 
 const ComponentFormPanel = ({
   formData,
@@ -48,6 +47,7 @@ const ComponentFormPanel = ({
     onUpdate,
     onDelete,
     onCompleteForm,
+    onCompleteSubForm,
     setReloadData,
     confirmModalOpen,
     setConfirmModalOpen,
@@ -210,6 +210,14 @@ const ComponentFormPanel = ({
         ret = parseFloat(c.value);
         break;
 
+      case "DATE":
+        ret = new Date(Date.parse(c.value));
+        break;
+
+      case "TIME":
+        ret = new Date(Date.parse(c.value));
+        break;
+
       default:
         ret = c.value;
         break;
@@ -240,6 +248,16 @@ const ComponentFormPanel = ({
 
       case "FORM":
         fields = instanceNode?.children;
+        break;
+
+      case "SUBFORM":
+        if (instanceNode) {
+          const subformName = `SUBFORM<${formData?.name}>`;
+          const subform = instanceNode.children.find((c) => c.name === subformName);
+          if (subform !== undefined) {
+            fields = subform.children;
+          }
+        }
         break;
     }
 
@@ -282,6 +300,12 @@ const ComponentFormPanel = ({
           navigate("../../");
           break;
 
+        case "SUBFORM":
+          await onCompleteSubForm(formData, parentId, values);
+          setReloadData(Date.now());
+          navigate("../../");
+          break;
+
         default:
           break;
       }
@@ -298,11 +322,7 @@ const ComponentFormPanel = ({
   };
 
   return (
-    <Stack
-      spacing={"xs"}
-      p={"xs"}
-      justify="flex-start"
-    >
+    <Stack spacing={"xs"} p={"xs"} justify="flex-start">
       <DeleteConfirmation
         opened={confirmModalOpen}
         onClose={() => setConfirmModalOpen(false)}
@@ -341,6 +361,7 @@ const ComponentFormPanel = ({
       <Container size={options?.size} w={"100%"}>
         <Stack spacing={"xs"} w={"100%"}>
           <form
+            autoComplete="false"
             onSubmit={form.onSubmit(async (values) => {
               await processAction(mode, parentId, values, selectedRowId);
             })}

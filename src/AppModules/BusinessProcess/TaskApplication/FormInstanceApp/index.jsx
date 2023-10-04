@@ -35,7 +35,7 @@ const Index = ({ task }) => {
         backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
       })}
     >
-      <InstanceFormPanel task={task} formId={formId} collection={false} parentId={parentId} />
+      <InstanceFormPanel task={task} formId={formId} type={"FORM"} parentId={parentId} />
     </Stack>
   );
 };

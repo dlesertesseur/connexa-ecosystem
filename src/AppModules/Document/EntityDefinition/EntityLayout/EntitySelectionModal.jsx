@@ -65,7 +65,7 @@ const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEn
     <Modal opened={open} onClose={close} title={t("document.entityDefinition.title.addEntity")} size={"md"}>
       <Container>
         <Stack spacing={"xs"}>
-          <form
+          <form   autoComplete="false"
             onSubmit={form.onSubmit((values) => {
               const entity = rows.find((e) => e.id === values.entity);
               if (selectedEntity) {

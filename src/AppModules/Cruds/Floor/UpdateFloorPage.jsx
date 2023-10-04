@@ -120,7 +120,7 @@ export function UpdateFloorPage({ user, siteId, floorId, back, onFilter }) {
           {t("crud.floor.title.update")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             const data = { ...floor };
             data.name = values.name;

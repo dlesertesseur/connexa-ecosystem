@@ -13,6 +13,7 @@ import ItemEntityList from "./ItemEntityList";
 import ItemLabel from "./ItemLabel";
 import ItemTime from "./ItemTime";
 import ItemDate from "./ItemDate";
+import ItemFileButton from "./ItemFileButton";
 
 // eslint-disable-next-line react/prop-types
 const DropRow = ({ id, index, data }) => {
@@ -56,10 +57,10 @@ const DropRow = ({ id, index, data }) => {
       case "DATE":
         ret = <ItemDate key={field.id} field={field} />;
         break;
-
       case "IMAGE":
         break;
       case "UPLOAD":
+        ret = <ItemFileButton key={field.id} field={field} />;
         break;
       default:
         break;

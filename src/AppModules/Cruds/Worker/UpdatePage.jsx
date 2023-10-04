@@ -165,7 +165,7 @@ export function UpdatePage() {
           {t("crud.worker.title.create")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onUpdate({...values, id:worker.id});
           })}

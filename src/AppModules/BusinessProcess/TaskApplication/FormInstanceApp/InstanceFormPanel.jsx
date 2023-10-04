@@ -5,7 +5,7 @@ import InstanceFormContex from "./Context";
 import uuid from "react-uuid";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import { useSelector } from "react-redux";
-import { Group, Stack } from "@mantine/core";
+import { LoadingOverlay, Stack } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { findFormInstanceById, updateFormInstance } from "../../../../DataAccess/FormInstance";
@@ -13,7 +13,7 @@ import { findDataSourceById } from "../../../../DataAccess/DataSource";
 import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
 import { arrayToMapByProp } from "../../../../Util";
 
-const InstanceFormPanel = ({ formId, collection, parentId }) => {
+const InstanceFormPanel = ({ formId, type, parentId }) => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const [formDefinition, setFormDefinition] = useState(null);
@@ -151,10 +151,10 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     }
   }, [panels]);
 
-  const createObject = (name) => {
+  const createObject = (name, type) => {
     const ret = {
       id: uuid(),
-      type: "COLLECTION",
+      type: type,
       name: name,
       label: "NA",
       description: "NA",
@@ -182,7 +182,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
       let collection = instanceNode.children.find((c) => c.name === collectionName);
 
       if (!collection) {
-        collection = createObject(collectionName);
+        collection = createObject(collectionName, "COLLECTION");
         instanceNode.children.push(collection);
       }
 
@@ -219,7 +219,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
       const collectionName = `COLLECTION<${formData.name}>`;
       let collection = instanceNode.children.find((c) => c.name === collectionName);
 
-      if (collection) {
+      if (collection !== undefined) {
         const found = collection.children.find((c) => c.id === rowId);
         if (found) {
           found.children.forEach((c) => {
@@ -243,7 +243,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
       const collectionName = `COLLECTION<${formData.name}>`;
       let collection = instanceNode.children.find((c) => c.name === collectionName);
 
-      if (collection) {
+      if (collection !== undefined) {
         const data = collection.children.filter((c) => c.id !== rowId);
         collection.children = data;
 
@@ -289,6 +289,54 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
     }
   };
 
+  const onCompleteSubForm = async (formData, parentId, values) => {
+    let params = { token: user.token, id: parentId };
+    const instanceNode = await findFormInstanceById(params);
+
+    if (instanceNode.error) {
+      throw instanceNode.error;
+    } else {
+      const valuesList = Object.entries(values);
+
+      const subformName = `SUBFORM<${formData.name}>`;
+      let subform = instanceNode.children.find((c) => c.name === subformName);
+      if (!subform) {
+        subform = createObject(subformName, "SUBFORM");
+        instanceNode.children.push(subform);
+      }
+
+      const subformChildren = subform.children;
+
+      const subformValuesByName = arrayToMapByProp("name", subform.children);
+
+      valuesList.forEach((v) => {
+        const subformValue = subformValuesByName.get(v[0]);
+        if (subformValue) {
+          subformValue.value = v[1];
+        } else {
+          const widget = widgetByName.get(v[0]);
+          if (widget) {
+            const obj = { ...widget };
+            obj.id = uuid();
+            obj.value = v[1];
+            subformChildren.push(obj);
+          }
+        }
+      });
+
+      params = { token: user.token, body: instanceNode };
+      const ret = await updateFormInstance(params);
+      if (ret.error) {
+        throw ret.error;
+      }
+    }
+  };
+
+  const isACollectionObjects = () => {
+    const ret = type === "COLLECTION<SUBFORM>" ? true : false;
+    return ret;
+  };
+
   return (
     <InstanceFormContex.Provider
       value={{
@@ -296,6 +344,7 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
         onUpdate,
         onDelete,
         onCompleteForm,
+        onCompleteSubForm,
         setReloadData,
         confirmModalOpen,
         setConfirmModalOpen,
@@ -303,49 +352,53 @@ const InstanceFormPanel = ({ formId, collection, parentId }) => {
         setError,
       }}
     >
-      <Routes>
-        <Route
-          path="/*"
-          element={
-            <Stack spacing={"xs"}>
-              {collection ? (
-                <CollectionFormPanel
-                  formData={formDefinition}
-                  options={options}
-                  panels={panels}
-                  widgetByPanel={widgetByPanel}
-                  formConfig={formConfig}
-                  relatedEntities={relatedEntities}
-                  parentId={parentId}
-                  widgetByName={widgetByName}
-                />
-              ) : (
-                <ComponentFormPanel
-                  formData={formDefinition}
-                  options={options}
-                  panels={panels}
-                  widgetByPanel={widgetByPanel}
-                  formConfig={formConfig}
-                  relatedEntities={relatedEntities}
-                  parentId={parentId}
-                  widgetByName={widgetByName}
-                  mode={"FORM"}
-                />
-              )}
-            </Stack>
-          }
-        ></Route>
-        {relatedEntities.map((re) => {
-          const collection = re.type === "COLLECTION<SUBFORM>" ? true : false;
-          return (
-            <Route
-              key={re.options}
-              path={`${re.name}/*`}
-              element={<InstanceFormPanel formId={re.options} collection={collection} parentId={parentId} />}
-            />
-          );
-        })}
-      </Routes>
+      {formDefinition ? (
+        <Routes>
+          <Route
+            path="/*"
+            element={
+              <Stack spacing={"xs"}>
+                {isACollectionObjects() ? (
+                  <CollectionFormPanel
+                    formData={formDefinition}
+                    options={options}
+                    panels={panels}
+                    widgetByPanel={widgetByPanel}
+                    formConfig={formConfig}
+                    relatedEntities={relatedEntities}
+                    parentId={parentId}
+                    widgetByName={widgetByName}
+                  />
+                ) : (
+                  <ComponentFormPanel
+                    formData={formDefinition}
+                    options={options}
+                    panels={panels}
+                    widgetByPanel={widgetByPanel}
+                    formConfig={formConfig}
+                    relatedEntities={relatedEntities}
+                    parentId={parentId}
+                    widgetByName={widgetByName}
+                    mode={type}
+                  />
+                )}
+              </Stack>
+            }
+          ></Route>
+          {relatedEntities.map((re) => {
+            //const collection = re.type === "COLLECTION<SUBFORM>" ? true : false;
+            return (
+              <Route
+                key={re.options}
+                path={`${re.name}/*`}
+                element={<InstanceFormPanel formId={re.options} type={re.type} parentId={parentId} />}
+              />
+            );
+          })}
+        </Routes>
+      ) : (
+        <LoadingOverlay visible={true} />
+      )}
 
       <ResponceNotification
         opened={error ? true : false}

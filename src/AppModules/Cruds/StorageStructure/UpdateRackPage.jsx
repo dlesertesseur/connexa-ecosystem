@@ -114,7 +114,7 @@ export function UpdateRackPage({ user, siteId, floorId, rackId, back, onFilter }
           {t("crud.storageStructure.title.update")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             const data = { ...rack };
             data.name = values.name;

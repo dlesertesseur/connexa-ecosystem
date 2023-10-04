@@ -318,7 +318,7 @@ export function CreatePage() {
         </Title>
 
         <ScrollArea type="scroll" style={{ width: "100%", height: height - 250}}>
-          <form
+          <form   autoComplete="false"
             onSubmit={form.onSubmit((values) => {
               onCreate(values);
             })}

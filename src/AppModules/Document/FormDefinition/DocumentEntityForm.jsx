@@ -181,7 +181,7 @@ const DocumentEntityForm = ({ entityDef, height, onSubmitEntity }) => {
     <Container size={entity?.size}>
       <Stack spacing={"xs"}>
         {rows ? (
-          <form
+          <form   autoComplete="false"
             onSubmit={form.onSubmit((values) => {
               onSubmitEntity(entity, values);
               form.reset();

@@ -95,7 +95,7 @@ export function CreatePage({ user, back, onLoadGrid }) {
           {t("crud.retailer.title.create")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
           })}

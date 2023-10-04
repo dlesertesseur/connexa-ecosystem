@@ -95,7 +95,7 @@ export function Step1({ title, active, setActive, onCancel }) {
           {title}
         </Title>
 
-        <form>
+        <form   autoComplete="false">
           <Group grow mb={"md"}>
             {createTextField("name")}
           </Group>

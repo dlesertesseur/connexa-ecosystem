@@ -113,7 +113,7 @@ export function CreateApplicationPage({ user, back, onLoadGrid }) {
           {t("crud.application.title.create")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
           })}

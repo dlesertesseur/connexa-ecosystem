@@ -170,7 +170,7 @@ export function CreateRackPage({ user, siteId, floorId, back, onFilter }) {
             {t("crud.storageStructure.message.create")}
           </Notification>
 
-          <form
+          <form   autoComplete="false"
             onSubmit={form.onSubmit((values) => {
               onCreate(values);
             })}

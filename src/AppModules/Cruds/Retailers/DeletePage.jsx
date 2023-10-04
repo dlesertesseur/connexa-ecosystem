@@ -128,7 +128,7 @@ export function DeletePage({ user, back, entityId, onLoadGrid }) {
           {t("crud.retailer.title.delete")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             setConfirmModalOpen(true);
           })}

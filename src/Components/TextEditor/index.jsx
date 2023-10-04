@@ -68,7 +68,7 @@ const TextEditor = ({ data, opened, setOpened, updateMarker }) => {
       overlayBlur={3}
       centered
     >
-      <form
+      <form   autoComplete="false"
         onSubmit={form.onSubmit((values) => {
           console.log("values -> ", values);
           onAccept(values);

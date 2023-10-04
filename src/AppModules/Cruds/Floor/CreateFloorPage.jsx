@@ -105,7 +105,7 @@ export function CreateFloorPage({ user, siteId, back, onFilter }) {
           {t("crud.floor.title.create")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
           })}

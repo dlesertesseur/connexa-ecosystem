@@ -126,7 +126,7 @@ export function UpdatePage() {
           {t("crud.category.title.update")}
         </Title>
 
-        <form
+        <form   autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onUpdate(values);
           })}

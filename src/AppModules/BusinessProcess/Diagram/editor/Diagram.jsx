@@ -37,6 +37,8 @@ const Diagram = () => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
+  const [targetNode, setTargetNode] = useState(null);
+
   const delPressed = useKeyPress("Delete");
   const nodeTypes = useMemo(
     () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode, initNode: InitNode }),
@@ -116,6 +118,38 @@ const Diagram = () => {
     return defaultValue;
   };
 
+  const getDefaultWidth = (type) => {
+    let defaultValue = null;
+
+    switch (type) {
+      case "stageNode":
+        defaultValue = 200;
+        break;
+      case "taskNode":
+      case "initNode":
+      case "forkNode":
+      case "joinNode":
+        break;
+    }
+    return defaultValue;
+  };
+
+  const getDefaultHeight = (type) => {
+    let defaultValue = null;
+
+    switch (type) {
+      case "stageNode":
+        defaultValue = 200;
+        break;
+      case "taskNode":
+      case "initNode":
+      case "forkNode":
+      case "joinNode":
+        break;
+    }
+    return defaultValue;
+  };
+
   const getDefaultBorderColor = (type) => {
     let defaultValue = null;
 
@@ -157,6 +191,8 @@ const Diagram = () => {
         data: {
           label: getName(type),
           role: "",
+          width: getDefaultWidth(type),
+          height: getDefaultHeight(type),
           color: getDefaultColor(type),
           borderColor: getDefaultBorderColor(type),
         },
@@ -166,6 +202,41 @@ const Diagram = () => {
     },
     [reactFlowInstance]
   );
+
+  const onNodeDrag = (evt, node) => {
+    const centerX = node.position.x + node.width / 2;
+    const centerY = node.position.y + node.height / 2;
+
+    const targetNode = nodes.find(
+      (n) =>
+        centerX > n.position.x &&
+        centerX < n.position.x + n.width &&
+        centerY > n.position.y &&
+        centerY < n.position.y + n.height &&
+        n.id !== node.id
+    );
+
+    setTargetNode(targetNode);
+  };
+
+  const onNodeDragStop = (evt, node) => {
+    if (targetNode?.type === "stageNode" || targetNode?.type === undefined) {
+
+      const ret = nodes.map((n) => {
+        let ret = null;
+        if (n.id === node.id) {
+          ret = { ...n, parentNode: targetNode ? targetNode.id : null };
+        }
+        else{
+          ret = n;
+        }
+
+        return ret;
+      });
+
+      setNodes(ret);
+    }
+  };
 
   useEffect(() => {
     if (width && height) {
@@ -400,6 +471,8 @@ const Diagram = () => {
           snapToGrid={true}
           snapGrid={[10, 10]}
           minZoom={0.1}
+          onNodeDrag={onNodeDrag}
+          onNodeDragStop={onNodeDragStop}
         >
           <Background />
           <Controls />
