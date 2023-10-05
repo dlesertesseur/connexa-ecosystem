@@ -52,6 +52,7 @@ const Editor = () => {
         dimensionx: n.width,
         dimensiony: n.height,
         type: n.type,
+        parentNode: n.parentNode
       };
       return ret;
     });

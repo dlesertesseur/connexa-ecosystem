@@ -34,7 +34,7 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       alpha: "",
       borderColor: "rgba(0,0,0,0.99)",
       automatic: false,
-      applicationPath: "",
+      // applicationPath: "",
       serviceUrl: "",
       sprint: "",
     },
@@ -42,15 +42,16 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
     validate: {
       name: (val) => (val ? null : t("validation.required")),
 
-      applicationPath: (val) => {
-        let ret = val ? null : t("validation.required");
-        if (!form.getInputProps("automatic").value) {
-          ret;
-        } else {
-          ret = null;
-        }
-        return ret;
-      },
+      // applicationPath: (val) => {
+      //   let ret = val ? null : t("validation.required");
+      //   if (!form.getInputProps("automatic").value) {
+      //     ret;
+      //   } else {
+      //     ret = null;
+      //   }
+      //   return ret;
+      // },
+
       serviceUrl: (val) => {
         let ret = val ? null : t("validation.required");
         if (form.getInputProps("automatic").value) {
@@ -114,7 +115,7 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
     }
 
     form.setFieldValue("automatic", node.data.automatic);
-    form.setFieldValue("applicationPath", node.data.applicationPath);
+    // form.setFieldValue("applicationPath", node.data.applicationPath);
     form.setFieldValue("serviceUrl", node.data.serviceUrl);
   };
 
@@ -188,9 +189,10 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
             </Grid.Col>
           </Grid>
 
-          <Group mt={"xs"} grow>
+          {/* <Group mt={"xs"} grow>
             {createTextField("applicationPath", form.getInputProps("automatic").value)}
-          </Group>
+          </Group> */}
+          
           <Group mt={"xs"} grow>
             {createTextField("serviceUrl", !form.getInputProps("automatic").value)}
           </Group>

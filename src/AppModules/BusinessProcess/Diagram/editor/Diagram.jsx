@@ -23,7 +23,7 @@ import { AbmStateContext, EditorStateContext } from "../Context";
 import { useRef } from "react";
 import { LoadingOverlay } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { hexToRgba } from "../../../../Util";
+import { arrayToMapByProp, hexToRgba } from "../../../../Util";
 import EdgeSettings from "./EdgeSettings";
 
 const Diagram = () => {
@@ -126,6 +126,8 @@ const Diagram = () => {
         defaultValue = 200;
         break;
       case "taskNode":
+        defaultValue = 100;
+        break;
       case "initNode":
       case "forkNode":
       case "joinNode":
@@ -142,6 +144,8 @@ const Diagram = () => {
         defaultValue = 200;
         break;
       case "taskNode":
+        defaultValue = 30;
+        break;
       case "initNode":
       case "forkNode":
       case "joinNode":
@@ -167,45 +171,69 @@ const Diagram = () => {
     return defaultValue;
   };
 
-  const onDrop = useCallback(
-    (event) => {
-      event.preventDefault();
+  const getDefaultZIndex = (type) => {
+    let defaultValue = null;
 
-      const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData("application/reactflow");
+    switch (type) {
+      case "stageNode":
+        defaultValue = 0;
+        break;
 
-      // check if the dropped element is valid
-      if (typeof type === "undefined" || !type) {
-        return;
-      }
+      case "taskNode":
+      case "initNode":
+        defaultValue = 300;
+        break;
 
-      const position = reactFlowInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      });
+      default:
+        defaultValue = 200;
+        break;
+    }
+    return defaultValue;
+  };
 
-      const newNode = {
-        id: uuid(),
-        type,
-        position,
-        data: {
-          label: getName(type),
-          role: "",
-          width: getDefaultWidth(type),
-          height: getDefaultHeight(type),
-          color: getDefaultColor(type),
-          borderColor: getDefaultBorderColor(type),
-        },
-      };
+  const onDrop = (event) => {
+    event.preventDefault();
 
-      setNodes((nds) => nds.concat(newNode));
-    },
-    [reactFlowInstance]
-  );
+    const reactFlowBounds = reactFlowRef.current.getBoundingClientRect();
+    const type = event.dataTransfer.getData("application/reactflow");
+
+    // check if the dropped element is valid
+    if (typeof type === "undefined" || !type) {
+      return;
+    }
+
+    const position = reactFlowInstance.project({
+      x: event.clientX - reactFlowBounds.left,
+      y: event.clientY - reactFlowBounds.top,
+    });
+
+    const newNode = {
+      id: uuid(),
+      type,
+      position,
+      zIndex: getDefaultZIndex(type),
+      data: {
+        label: getName(type),
+        role: "",
+        width: getDefaultWidth(type),
+        height: getDefaultHeight(type),
+        color: getDefaultColor(type),
+        borderColor: getDefaultBorderColor(type),
+      },
+    };
+
+    const ret = [newNode, ...nodes];
+    ret.sort((a, b) => a.zIndex - b.zIndex);
+    setNodes(ret);
+  };
+
+  const onNodeDragStart = (evt, node) => {
+    // console.log("onNodeDragStart -> ", node);
+  };
 
   const onNodeDrag = (evt, node) => {
-    const centerX = node.position.x + node.width / 2;
-    const centerY = node.position.y + node.height / 2;
+    const centerX = node.positionAbsolute.x + node.width / 2;
+    const centerY = node.positionAbsolute.y + node.height / 2;
 
     const targetNode = nodes.find(
       (n) =>
@@ -220,22 +248,45 @@ const Diagram = () => {
   };
 
   const onNodeDragStop = (evt, node) => {
-    if (targetNode?.type === "stageNode" || targetNode?.type === undefined) {
+    if (node && node.type !== "stageNode") {
+      if (targetNode && targetNode?.type === "stageNode" && targetNode?.id !== node.id) {
+        const ret = nodes.map((n) => {
+          let ret = null;
+          if (n.id === node.id) {
+            if (!n.parentNode && n.parentNode !== targetNode.id) {
+              n.position.x = (targetNode.position.x - n.positionAbsolute?.x) * -1.0;
+              n.position.y = (targetNode.position.y - n.positionAbsolute?.y) * -1.0;
+              ret = { ...n, parentNode: targetNode.id };
+            } else {
+              ret = n;
+            }
+          } else {
+            ret = n;
+          }
+          return ret;
+        });
 
-      const ret = nodes.map((n) => {
-        let ret = null;
-        if (n.id === node.id) {
-          ret = { ...n, parentNode: targetNode ? targetNode.id : null };
-        }
-        else{
-          ret = n;
-        }
+        setNodes(ret);
+      }
 
-        return ret;
-      });
+      if (targetNode !== null && targetNode === undefined) {
+        const ret = nodes.map((n) => {
+          let ret = null;
+          if (n.id === node.id) {
+            n.position.x = n.positionAbsolute?.x;
+            n.position.y = n.positionAbsolute?.y;
+            ret = { ...n, parentNode: null };
+          } else {
+            ret = n;
+          }
+          return ret;
+        });
 
-      setNodes(ret);
+        setNodes(ret);
+      }
     }
+
+    setTargetNode(null);
   };
 
   useEffect(() => {
@@ -320,11 +371,17 @@ const Diagram = () => {
   useEffect(() => {
     if (delPressed) {
       let edgesToRemove = [];
+      
+      const nodesToRemove = nodes.filter((n) => n.selected && n.type !== "stageNode");
 
-      const nodesToRemove = nodes.filter((n) => n.selected);
+      const stageToRemove = nodes.filter((n) => n.selected && n.type === "stageNode");
+      const stageToRemoveId = stageToRemove.map((s) => s.id);
+
+      const stageById = arrayToMapByProp("id", stageToRemove);
+
+      const otherNodes = nodes.filter((n) => !n.selected);
+
       if (nodesToRemove.length > 0) {
-        const otherNodes = nodes.filter((n) => !n.selected);
-
         nodesToRemove.forEach((n) => {
           const connectedEdges = getConnectedEdges([n], edges);
           edgesToRemove = edgesToRemove.concat(connectedEdges.map((e) => e.id));
@@ -334,6 +391,22 @@ const Diagram = () => {
 
         setNodes(otherNodes);
         setEdges(otherEdges);
+      }
+
+      if (stageToRemoveId && stageToRemoveId.length > 0) {
+        otherNodes.forEach((n) => {
+          if (stageToRemoveId.includes(n.parentNode)) {
+
+            const stage = stageById.get(n.parentNode);
+            n.parentNode = null;
+            if(stage){
+              n.position.x = n.position.x + stage.position.x;
+              n.position.y = n.position.y + stage.position.y;
+            }
+          }
+        });
+
+        setNodes(otherNodes);
       }
 
       const selectedEdgesList = edges.filter((e) => e.selected);
@@ -471,6 +544,7 @@ const Diagram = () => {
           snapToGrid={true}
           snapGrid={[10, 10]}
           minZoom={0.1}
+          onNodeDragStart={onNodeDragStart}
           onNodeDrag={onNodeDrag}
           onNodeDragStop={onNodeDragStop}
         >
