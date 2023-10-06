@@ -95,7 +95,6 @@ const ViewLayoutModalPanel = ({ formConfig, panels, widgetByPanel, relatedEntiti
         ret = (
           <Checkbox
             key={field.id}
-            withAsterisk={field.required}
             label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}

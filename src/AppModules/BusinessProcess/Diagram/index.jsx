@@ -9,7 +9,7 @@ import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { findAllBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
-import { IconEditCircle, IconPageBreak, IconPaperBag, IconPaperclip, IconVariable } from "@tabler/icons-react";
+import { IconEditCircle, IconPaperclip, IconVariable } from "@tabler/icons-react";
 import { findAllSprints } from "../../../DataAccess/Sprints";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 import Parameters from "./parameters/Parameters";

@@ -6,9 +6,10 @@ async function saveBusinessProcessModel(parameters) {
     name: parameters.name,
     description: parameters.description,
     tasks: parameters.tasks,
+    stages: parameters.stages,
     transitions: parameters.transitions,
-    initialTaskId:parameters.initialTaskId,
-    requiredRole:parameters.requiredRole
+    initialTaskId: parameters.initialTaskId,
+    requiredRole: parameters.requiredRole
   });
 
   const requestOptions = {

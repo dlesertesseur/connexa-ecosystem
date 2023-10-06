@@ -1323,7 +1323,6 @@
       "forms": "Formularios"
     },
     "columns": ["Nombre", "Descripcion"],
-
     "parameters": {
       "title": {
         "create": "Nuevo parametro",
@@ -1361,6 +1360,10 @@
         "type": "un tipo de parametro"
       },
       "columns": ["Stage", "Business status", "Task"]
+    },
+    "relation":{
+      "title":"List of available forms",
+      "columns": ["Nombre", "Descripcion"]
     }
   },
 

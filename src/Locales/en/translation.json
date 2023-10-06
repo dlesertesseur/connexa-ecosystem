@@ -1371,6 +1371,10 @@
         "type": "a parameter type"
       },
       "columns": ["Stage", "Business status", "Task"]
+    },
+    "relation":{
+      "title":"Lista de formularios disponibles",
+      "columns": ["Name", "Description"]
     }
   },
 

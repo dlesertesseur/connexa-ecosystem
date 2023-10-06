@@ -25,32 +25,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
   const [formConfig, setFormConfig] = useState({});
   const [reloadData, setReloadData] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [datasourceValuesById, setDatasourceValuesById] = useState(new Map());
   const [error, setError] = useState(null);
-
-  const storeDataSourceData = async (dataSourcesId) => {
-    const dataMap = new Map();
-    for (let index = 0; index < dataSourcesId.length; index++) {
-      const id = dataSourcesId[index];
-
-      const params = {
-        token: user.token,
-        id: id,
-      };
-
-      const datasource = await findDataSourceById(params);
-      if (datasource) {
-        const ret = datasource.children?.map((d) => {
-          return { value: d.id, label: d.name };
-        });
-
-        if (ret) {
-          dataMap.set(id, ret);
-        }
-      }
-    }
-    return dataMap;
-  };
 
   const getData = async () => {
     const params = {
@@ -59,7 +34,6 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
     };
     const modelNode = await findEntityDefinitionById(params);
 
-    const dataSourcesId = [];
     try {
       const options = await JSON.parse(modelNode?.options);
       setOptions(options);
@@ -79,10 +53,6 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
           collections.push(field);
           break;
 
-        case "SELECT":
-          if (field.datasourceId) {
-            dataSourcesId.push(field.datasourceId);
-          }
         default:
           const id = `panel-${field.row}`;
           widgetByName.set(field.name, field);
@@ -99,14 +69,11 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
       }
     });
 
-    const dataMap = await storeDataSourceData(dataSourcesId);
-
     setPanels(panels);
     setWidgetByPanel(widgetByPanel);
     setRelatedEntities(collections);
     setFormDefinition(modelNode);
     setWidgetByName(widgetByName);
-    setDatasourceValuesById(dataMap);
   };
 
   const createInitialValues = () => {
@@ -348,7 +315,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
         setReloadData,
         confirmModalOpen,
         setConfirmModalOpen,
-        datasourceValuesById,
+        // datasourceValuesById,
         setError,
       }}
     >

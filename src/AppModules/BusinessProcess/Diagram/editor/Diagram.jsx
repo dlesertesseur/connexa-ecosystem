@@ -327,10 +327,29 @@ const Diagram = () => {
 
   useEffect(() => {
     if (businessProcessModel) {
+      const stages = businessProcessModel.stages.map((t) => {
+        const type = t.type ? t.type : getTypeNode(t);
+        const ret = {
+          id: t.id,
+          data: {
+            label: t.name,
+            role: getRoleById(t.requiredRole),
+            color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
+            borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
+            width: t.dimensionx,
+            height: t.dimensiony,
+          },
+          position: { x: t.locationx, y: t.locationy },
+          type: type,
+        };
+        return ret;
+      });
+
       const nodes = businessProcessModel.tasks.map((t) => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
+          parentNode: t.stageId,
           data: {
             label: t.name,
             role: getRoleById(t.requiredRole),
@@ -363,7 +382,9 @@ const Diagram = () => {
         }
         return ret;
       });
-      setNodes(nodes);
+
+      const totaNodes = stages.concat(nodes);
+      setNodes(totaNodes);
       setEdges(edges);
     }
   }, [businessProcessModel]);
@@ -371,7 +392,7 @@ const Diagram = () => {
   useEffect(() => {
     if (delPressed) {
       let edgesToRemove = [];
-      
+
       const nodesToRemove = nodes.filter((n) => n.selected && n.type !== "stageNode");
 
       const stageToRemove = nodes.filter((n) => n.selected && n.type === "stageNode");
@@ -396,10 +417,9 @@ const Diagram = () => {
       if (stageToRemoveId && stageToRemoveId.length > 0) {
         otherNodes.forEach((n) => {
           if (stageToRemoveId.includes(n.parentNode)) {
-
             const stage = stageById.get(n.parentNode);
             n.parentNode = null;
-            if(stage){
+            if (stage) {
               n.position.x = n.position.x + stage.position.x;
               n.position.y = n.position.y + stage.position.y;
             }

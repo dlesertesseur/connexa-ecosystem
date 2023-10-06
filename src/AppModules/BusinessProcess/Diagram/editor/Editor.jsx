@@ -35,26 +35,57 @@ const Editor = () => {
   }, [selectedRowId]);
 
   const onSave = async () => {
-    const tasks = nodes.map((n) => {
-      const ret = {
-        id: n.id,
-        name: n.data.label,
-        locationx: n.position.x,
-        locationy: n.position.y,
-        locationz: 0,
-        requiredRole: n.data.role ? n.data.role.id : null,
-        backgroundColor: n.data.color,
-        borderColor: n.data.borderColor,
-        border: null,
-        fontName: null,
-        fontColor: null,
-        fontSize: null,
-        dimensionx: n.width,
-        dimensiony: n.height,
-        type: n.type,
-        parentNode: n.parentNode
-      };
-      return ret;
+    const tasks = [];
+    const stages = [];
+
+    nodes.forEach((n) => {
+      switch (n.type) {
+        case "stageNode":
+          const stage = {
+            id: n.id,
+            name: n.data.label,
+            locationx: n.position.x,
+            locationy: n.position.y,
+            locationz: 0,
+            requiredRole: n.data.role ? n.data.role.id : null,
+            backgroundColor: n.data.color,
+            borderColor: n.data.borderColor,
+            border: null,
+            fontName: null,
+            fontColor: null,
+            fontSize: null,
+            dimensionx: n.width,
+            dimensiony: n.height,
+            type: n.type,
+            stageId: n.parentNode,
+          };
+
+          stages.push(stage);
+          break;
+
+        default:
+          const task = {
+            id: n.id,
+            name: n.data.label,
+            locationx: n.position.x,
+            locationy: n.position.y,
+            locationz: 0,
+            requiredRole: n.data.role ? n.data.role.id : null,
+            backgroundColor: n.data.color,
+            borderColor: n.data.borderColor,
+            border: null,
+            fontName: null,
+            fontColor: null,
+            fontSize: null,
+            dimensionx: n.width,
+            dimensiony: n.height,
+            type: n.type,
+            stageId: n.parentNode,
+          };
+
+          tasks.push(task);
+          break;
+      }
     });
 
     const transitions = edges.map((e) => {
@@ -75,6 +106,7 @@ const Editor = () => {
       name: businessProcessModel.name,
       description: businessProcessModel.description,
       tasks: tasks,
+      stages: stages,
       transitions: transitions,
       initialTaskId: initialTask ? initialTask.id : null,
       requiredRole: initialTask ? initialTask.requiredRole : null,

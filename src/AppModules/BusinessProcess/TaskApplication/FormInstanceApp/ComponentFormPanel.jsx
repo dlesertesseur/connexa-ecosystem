@@ -23,6 +23,8 @@ import { useForm } from "@mantine/form";
 import { useSelector } from "react-redux";
 import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
 import { DatePicker, TimeInput } from "@mantine/dates";
+import { useState } from "react";
+import { findDataSourceById } from "../../../../DataAccess/DataSource";
 
 const ComponentFormPanel = ({
   formData,
@@ -41,6 +43,7 @@ const ComponentFormPanel = ({
   const { t } = useTranslation();
   const wsize = useWindowSize();
   const navigate = useNavigate();
+  const [datasourceValuesById, setDatasourceValuesById] = useState(new Map());
 
   const {
     onCreate,
@@ -51,7 +54,6 @@ const ComponentFormPanel = ({
     setReloadData,
     confirmModalOpen,
     setConfirmModalOpen,
-    datasourceValuesById,
     setError,
   } = useContext(InstanceFormContex);
   const form = useForm(formConfig);
@@ -69,8 +71,16 @@ const ComponentFormPanel = ({
 
   const getDataSource = (field) => {
     let ret = [];
-    if (datasourceValuesById.has(field.datasourceId)) {
+    if (existDataSource(field)) {
       ret = datasourceValuesById.get(field.datasourceId);
+    }
+    return ret;
+  };
+
+  const existDataSource = (field) => {
+    let ret = false;
+    if (field?.datasourceId) {
+      ret = datasourceValuesById.has(field.datasourceId);
     }
     return ret;
   };
@@ -133,7 +143,6 @@ const ComponentFormPanel = ({
           <Checkbox
             disabled={mode === "DELETE" ? true : false}
             key={field.id}
-            withAsterisk={field.required}
             label={field.label}
             placeholder={field.name}
             {...form.getInputProps(field.name)}
@@ -263,8 +272,10 @@ const ComponentFormPanel = ({
 
     if (instanceNode && fields) {
       fields?.forEach((c) => {
-        const value = getValue(c);
-        form.setFieldValue(c.name, value);
+        if (!c.name.startsWith("COLLECTION") && !c.name.startsWith("FORM")) {
+          const value = getValue(c);
+          form.setFieldValue(c.name, value);
+        }
       });
     }
   };
@@ -272,6 +283,51 @@ const ComponentFormPanel = ({
   useEffect(() => {
     if (parentId) {
       getData();
+    }
+  }, [parentId]);
+
+  const storeDataSourceData = async (dataSourcesId) => {
+    const dataMap = new Map();
+    for (let index = 0; index < dataSourcesId.length; index++) {
+      const id = dataSourcesId[index];
+
+      const params = {
+        token: user.token,
+        id: id,
+      };
+
+      const datasource = await findDataSourceById(params);
+      if (datasource) {
+        const ret = datasource.children?.map((d) => {
+          return { value: d.id, label: d.name };
+        });
+
+        if (ret) {
+          dataMap.set(id, ret);
+        }
+      }
+    }
+    return dataMap;
+  };
+
+  const getDataSourceInfo = async () => {
+    const listId = new Set();
+    panels.forEach((p) => {
+      const group = widgetByPanel.get(p.id);
+      group.forEach((f) => {
+        if (f.datasourceId) {
+          listId.add(f.datasourceId);
+        }
+      });
+    });
+
+    const ret = await storeDataSourceData(Array.from(listId));
+    setDatasourceValuesById(ret);
+  };
+
+  useEffect(() => {
+    if (parentId) {
+      getDataSourceInfo();
     }
   }, [parentId]);
 
