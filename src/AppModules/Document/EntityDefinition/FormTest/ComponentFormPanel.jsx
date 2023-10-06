@@ -18,6 +18,10 @@ import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../../Hook";
 import { useForm } from "@mantine/form";
 import { TimeInput, DatePicker } from "@mantine/dates";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { findDataSourceById } from "../../../../DataAccess/DataSource";
+import { useState } from "react";
 
 const ComponentFormPanel = ({
   formData,
@@ -29,13 +33,15 @@ const ComponentFormPanel = ({
   parentId,
   mode,
 }) => {
+  const { user } = useSelector((state) => state.auth.value);
   const { t } = useTranslation();
   const wsize = useWindowSize();
   const navigate = useNavigate();
 
   const form = useForm(formConfig);
-
   const totalHeaderHeight = 310 + (mode ? 60 : 0);
+
+  const [datasourceValuesById, setDatasourceValuesById] = useState(new Map());
 
   const buildGroup = (group, index) => {
     const ret = (
@@ -54,11 +60,11 @@ const ComponentFormPanel = ({
       case "TEXTINPUT":
         ret = (
           <TextInput
-            {...form.getInputProps(field.name)}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
             placeholder={field.name}
+            {...form.getInputProps(field.name)}
           />
         );
         break;
@@ -87,11 +93,12 @@ const ComponentFormPanel = ({
       case "SELECT":
         ret = (
           <Select
+            disabled={!datasourceValuesById.has(field.datasourceId)}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
             placeholder={field.name}
-            data={[]}
+            data={datasourceValuesById.has(field.datasourceId) ? datasourceValuesById.get(field.datasourceId) : []}
             {...form.getInputProps(field.name)}
           />
         );
@@ -129,12 +136,7 @@ const ComponentFormPanel = ({
 
       case "DATE":
         ret = (
-          <DatePicker
-            key={field.id}
-            label={field.label}
-            placeholder={field.name}
-            {...form.getInputProps(field.name)}
-          />
+          <DatePicker key={field.id} label={field.label} placeholder={field.name} {...form.getInputProps(field.name)} />
         );
         break;
 
@@ -167,10 +169,56 @@ const ComponentFormPanel = ({
     return rows;
   };
 
+  const storeDataSourceData = async (dataSourcesId) => {
+    const dataMap = new Map();
+    for (let index = 0; index < dataSourcesId.length; index++) {
+      const id = dataSourcesId[index];
+
+      const params = {
+        token: user.token,
+        id: id,
+      };
+
+      const datasource = await findDataSourceById(params);
+      if (datasource) {
+        const ret = datasource.children?.map((d) => {
+          return { value: d.id, label: d.name };
+        });
+
+        if (ret) {
+          dataMap.set(id, ret);
+        }
+      }
+    }
+    return dataMap;
+  };
+
+  const getData = async () => {
+    const listId = new Set();
+    panels.forEach((p) => {
+      const group = widgetByPanel.get(p.id);
+      group.forEach((f) => {
+        if (f.datasourceId) {
+          listId.add(f.datasourceId);
+        }
+      });
+    });
+
+    const ret = await storeDataSourceData(Array.from(listId));
+    setDatasourceValuesById(ret);
+  };
+
+  useEffect(() => {
+    if (panels) {
+      getData();
+    }
+  }, [panels]);
+
   return (
     <Container size={options?.size} w={"100%"}>
       <Stack spacing={"xs"}>
-        <form   autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             console.log("onSubmit ->", values);
           })}

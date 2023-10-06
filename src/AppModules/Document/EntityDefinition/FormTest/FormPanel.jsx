@@ -129,7 +129,7 @@ const FormPanel = ({ formId, collection, parentId }) => {
         const collection = re.type === "COLLECTION<SUBFORM>" ? true : false;
         return (
           <Route
-            key={re.formId}
+            key={re.id}
             path={`${re.name}/*`}
             element={<FormPanel formId={re.options} collection={collection} parentId={formId} />}
           />
