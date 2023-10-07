@@ -5,15 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { AbmStateContext } from "../Context";
-import { Group, Stack, Text, TransferList } from "@mantine/core";
-import FormSelectorToolbar from "./FormSelectorToolbar";
+import { Group, Stack, Text } from "@mantine/core";
 import { findAllEntityDefinition } from "../../../../DataAccess/EntityDefinition";
-import CheckTable from "../../../../Components/Crud/CheckTable";
 import {
   deleteBusinessProcessModelRelation,
   findAllBusinessProcessModelRelationsById,
   saveBusinessProcessModelRelation,
 } from "../../../../DataAccess/BusinessProcessModelRelations";
+import FormSelectorToolbar from "./FormSelectorToolbar";
+import CheckTable from "../../../../Components/Crud/CheckTable";
 
 const FormSelector = ({ back }) => {
   const { user } = useSelector((state) => state.auth.value);
@@ -23,7 +23,7 @@ const FormSelector = ({ back }) => {
 
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
   const [data, setData] = useState([]);
-  const [relations, setRelations] = useState([]);
+  const [processingRow, setProcessingRow] = useState(null);
   const [rowSelected, setRowSelected] = useState(null);
 
   const getData = async () => {
@@ -34,23 +34,24 @@ const FormSelector = ({ back }) => {
       setBusinessProcessModel(ret);
       const relations = await findAllBusinessProcessModelRelationsById(params);
       const formsId = relations.map(f => f.formModelId);
-      setRelations(relations);
 
       const list = await findAllEntityDefinition(params);
       const data = list.map((r) => {
-        const obj = {...r, checked : formsId.include(r.formModelId)}
+        const obj = {...r, checked : formsId.includes(r.id)}
         return obj;
       });
 
       setData(data);
     } catch (error) {
-      setError(error);
+      setError(error.message);
     }
+
+    
   };
 
   useEffect(() => {
     getData();
-  }, [selectedRowId]);
+  }, [selectedRowId, processingRow]);
 
   let col = 0;
   const cols = t("businessProcessModel.relation.columns", { returnObjects: true });
@@ -66,6 +67,8 @@ const FormSelector = ({ back }) => {
       formModelId: rowId,
     };
 
+    setProcessingRow(rowId);
+
     if (check) {
       const ret = await saveBusinessProcessModelRelation(params);
       if (ret.error) {
@@ -73,10 +76,11 @@ const FormSelector = ({ back }) => {
       }
     } else {
       const ret = await deleteBusinessProcessModelRelation(params);
-      if (ret.error) {
-        setError(ret.error);
+      if (ret !== 200) {
+        setError("deleteBusinessProcessModelRelation ERROR");
       }
     }
+    setProcessingRow(null);
   };
 
   return (
@@ -96,10 +100,10 @@ const FormSelector = ({ back }) => {
         <CheckTable
           data={data}
           columns={columns}
-          //loading={loading}
           rowSelected={rowSelected}
           setRowSelected={setRowSelected}
           onCheckRow={onCheckRow}
+          processingRow={processingRow}
           headerHeight={300}
         />
       </Group>

@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Table,
-  ScrollArea,
-  Text,
-  LoadingOverlay,
-  Checkbox,
-} from "@mantine/core";
+import { Table, ScrollArea, Text, LoadingOverlay, Checkbox } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../Hook";
 
@@ -16,7 +10,8 @@ export default function CheckTable({
   rowSelected,
   setRowSelected,
   onCheckRow,
-  headerHeight
+  headerHeight,
+  processingRow,
 }) {
   const { t } = useTranslation();
   const wSize = useWindowSize();
@@ -56,6 +51,7 @@ export default function CheckTable({
       >
         <td key={"check"} align={"center"} width={36}>
           <Checkbox
+            disabled={row.id === processingRow}
             align={"center"}
             checked={row.checked}
             onChange={(event) => onCheckRow(row.id, event.currentTarget.checked)}
@@ -79,14 +75,7 @@ export default function CheckTable({
     >
       <LoadingOverlay visible={loading} overlayBlur={2} />
 
-      <Table
-        horizontalSpacing="xs"
-        verticalSpacing="xs"
-        striped
-        highlightOnHover
-        withBorder
-        withColumnBorders
-      >
+      <Table horizontalSpacing="xs" verticalSpacing="xs" striped highlightOnHover withBorder withColumnBorders>
         <tbody>
           {rows?.length > 0 ? (
             rows

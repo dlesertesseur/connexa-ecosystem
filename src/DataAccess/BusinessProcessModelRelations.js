@@ -20,6 +20,8 @@ async function saveBusinessProcessModelRelation(parameters) {
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 
+  console.log("saveBusinessProcessModelRelation data -> ", data);
+
   return data;
 }
 
@@ -37,11 +39,11 @@ async function deleteBusinessProcessModelRelation(parameters) {
     API.businessProcessModelRelation.delete +
     "processModel/" +
     parameters.processModelId +
-    "/formModelId/" +
+    "/fromModel/" +
     parameters.formModelId;
-  await fetch(url, requestOptions);
-  const data = await res.json();
 
+  const res = await fetch(url, requestOptions);
+  const data = res.status;
   return data;
 }
 
@@ -63,4 +65,8 @@ async function findAllBusinessProcessModelRelationsById(parameters) {
   }
 }
 
-export { saveBusinessProcessModelRelation, deleteBusinessProcessModelRelation, findAllBusinessProcessModelRelationsById };
+export {
+  saveBusinessProcessModelRelation,
+  deleteBusinessProcessModelRelation,
+  findAllBusinessProcessModelRelationsById,
+};
