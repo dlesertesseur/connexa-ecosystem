@@ -8,7 +8,10 @@ import StageNode from "./model/StageNode";
 import InitNode from "./model/InitNode";
 import { Controls, MarkerType, ReactFlow, ReactFlowProvider, useEdgesState, useNodesState } from "reactflow";
 import { useEffect } from "react";
-import { findBusinessProcessInstanceById } from "../../../../DataAccess/BusinessProcessModel";
+import {
+  findBusinessProcessInstanceById,
+  findBusinessProcessInstanceLogById,
+} from "../../../../DataAccess/BusinessProcessModel";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useMemo } from "react";
@@ -21,6 +24,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
+  // const [businessProcessModelLog, setBusinessProcessModelLog] = useState(null);
   const [roles, setRoles] = useState(null);
   const { height, width } = useViewportSize();
 
@@ -50,6 +54,9 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
     params = { token: user.token, id: businessProcessInstanceId };
     const ret = await findBusinessProcessInstanceById(params);
     setBusinessProcessModel(ret);
+
+    // const log = await findBusinessProcessInstanceLogById(params);
+    // setBusinessProcessModelLog(log);
   };
 
   useEffect(() => {
@@ -115,10 +122,29 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
+          parentNode: t.stageId,
           data: {
             label: t.name,
             role: getRoleById(t.requiredRole),
-            color: t.id === taskId ? "rgba(255,0,0,1)" : t.backgroundColor,
+            color: t.id === taskId ? "rgba(0,255,0,1)" : t.backgroundColor,
+            borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
+            width: t.dimensionx,
+            height: t.dimensiony,
+          },
+          position: { x: t.locationx, y: t.locationy },
+          type: type,
+        };
+        return ret;
+      });
+
+      const stages = businessProcessModel?.stages?.map((t) => {
+        const type = t.type ? t.type : getTypeNode(t);
+        const ret = {
+          id: t.id,
+          data: {
+            label: t.name,
+            role: getRoleById(t.requiredRole),
+            color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
             width: t.dimensionx,
             height: t.dimensiony,
@@ -147,7 +173,9 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
         }
         return ret;
       });
-      setNodes(nodes);
+
+      const totalNodes = stages.concat(nodes);
+      setNodes(totalNodes);
       setEdges(edges);
     }
   }, [businessProcessModel]);

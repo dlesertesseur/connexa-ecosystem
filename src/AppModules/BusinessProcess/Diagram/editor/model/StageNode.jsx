@@ -24,17 +24,53 @@ const StageNode = ({ data, selected }) => {
           borderColor: data?.borderColor ? data?.borderColor : "rgba(255,0,0,0.8)",
           height: `${nodeSize.height}px`,
           width: `${nodeSize.width}px`,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
         <div
           style={{
-            paddingLeft: 5,
-            color: "#000",
-            fontWeight: 600,
-            fontSize: "16px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {data.label}
+          <div
+            style={{
+              paddingLeft: 5,
+              color: "#000",
+              fontWeight: 600,
+              fontSize: "16px",
+            }}
+          >
+            {data.label}
+          </div>
+
+          <div
+            style={{
+              color: "#777",
+              fontWeight: "600",
+              fontSize: "16px",
+              textAlign: "right",
+              paddingRight:5
+            }}
+          >
+            {data.stageNumber}
+          </div>
+        </div>
+
+        <div
+          style={{
+            color: "#777",
+            fontWeight: "500",
+            fontSize: "10px",
+            textAlign: "right",
+            paddingRight:5,
+            paddingBottom:5
+          }}
+        >
+          {data.duration}
         </div>
       </div>
 

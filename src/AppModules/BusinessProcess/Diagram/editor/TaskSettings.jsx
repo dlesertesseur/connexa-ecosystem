@@ -7,6 +7,7 @@ import {
   Group,
   Modal,
   MultiSelect,
+  NumberInput,
   Select,
   Stack,
   TextInput,
@@ -37,6 +38,7 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       // applicationPath: "",
       serviceUrl: "",
       sprint: "",
+      duration:1
     },
 
     validate: {
@@ -138,6 +140,18 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
     return ret;
   };
 
+  const createNumberField = (field) => {
+    const ret = (
+      <NumberInput
+        label={t("businessProcessModel.label." + field)}
+        placeholder={t("businessProcessModel.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+  
   const updateTask = (values) => {
     updateNode(values);
     close();
@@ -189,10 +203,10 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
             </Grid.Col>
           </Grid>
 
-          {/* <Group mt={"xs"} grow>
-            {createTextField("applicationPath", form.getInputProps("automatic").value)}
-          </Group> */}
-          
+          <Group mt={"xs"} w={160}>
+            {createNumberField("duration")}
+          </Group>
+
           <Group mt={"xs"} grow>
             {createTextField("serviceUrl", !form.getInputProps("automatic").value)}
           </Group>

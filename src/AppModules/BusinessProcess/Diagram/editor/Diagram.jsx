@@ -215,6 +215,7 @@ const Diagram = () => {
       data: {
         label: getName(type),
         role: "",
+        duration:0,
         width: getDefaultWidth(type),
         height: getDefaultHeight(type),
         color: getDefaultColor(type),
@@ -334,6 +335,8 @@ const Diagram = () => {
           data: {
             label: t.name,
             role: getRoleById(t.requiredRole),
+            duration: t.duration,
+            stageNumber: t.number,
             color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
             width: t.dimensionx,
@@ -352,6 +355,7 @@ const Diagram = () => {
           parentNode: t.stageId,
           data: {
             label: t.name,
+            duration: t.duration,
             role: getRoleById(t.requiredRole),
             color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
@@ -383,8 +387,8 @@ const Diagram = () => {
         return ret;
       });
 
-      const totaNodes = stages.concat(nodes);
-      setNodes(totaNodes);
+      const totalNodes = stages.concat(nodes);
+      setNodes(totalNodes);
       setEdges(edges);
     }
   }, [businessProcessModel]);
@@ -481,6 +485,7 @@ const Diagram = () => {
           ...node.data,
           label: values.name,
           role: assignedRole,
+          duration: values.duration,
           color: colorRgba,
           borderColor: borderColorRgba,
           automatic: values.automatic,
@@ -488,6 +493,10 @@ const Diagram = () => {
           serviceUrl: values.serviceUrl,
           sprint: assignedSprint,
         };
+
+        if(node.type === "stageNode"){
+          node.stageNumber = values.stageNumber;
+        }
       }
 
       return node;

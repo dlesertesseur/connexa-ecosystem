@@ -415,6 +415,10 @@ export const API = {
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance/",
   },
 
+  businessProcessInstanceLog: {
+    getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance-log/",
+  },
+
   entityDefinition: {
     findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models",
     findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models/",

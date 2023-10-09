@@ -1316,8 +1316,10 @@
       "search":"Search...",
       "noData":"Nothing found",
       "businessProcessList":"Business process list",
-      "businessProcessesSeleted":"Selected business processes"
-    },
+      "businessProcessesSeleted":"Selected business processes",
+      "duration":"Durations in days",
+      "stageNumber":"Number"
+     },
     "placeholder": {
       "name": "a name",
       "description": "a description",
@@ -1325,7 +1327,9 @@
       "sprint": "Select a sprint",
       "role": "Select a role",
       "applicationPath": "an application path",
-      "serviceUrl": "a service URL"
+      "serviceUrl": "a service URL",
+      "duration":1,
+      "stageNumber":0
     },
     "buttons": {
       "editor": "Edit",

@@ -1,5 +1,5 @@
 import React from "react";
-import { AlphaSlider, Button, Group, Modal, Stack, TextInput } from "@mantine/core";
+import { AlphaSlider, Button, Group, Modal, NumberInput, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
@@ -15,10 +15,13 @@ const StageSettings = ({ open, close, updateNode, node }) => {
       name: "",
       color: "",
       alpha: "",
+      stageNumber:0,
+      duration:1
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
+      stageNumber: (val) => (val ? null : t("validation.required")),
       // color: (val) => (val ? null : t("validation.required")),
     },
   });
@@ -35,7 +38,7 @@ const StageSettings = ({ open, close, updateNode, node }) => {
         form.setFieldValue("color", config.ARR_COLORS[0]);
         form.setFieldValue("alpha", 0.2);
       }
-    }else {
+    } else {
       form.setFieldValue("color", config.ARR_COLORS[0]);
       form.setFieldValue("alpha", 0.2);
     }
@@ -51,6 +54,18 @@ const StageSettings = ({ open, close, updateNode, node }) => {
     const ret = (
       <TextInput
         disabled={disabled}
+        label={t("businessProcessModel.label." + field)}
+        placeholder={t("businessProcessModel.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
+  const createNumberField = (field) => {
+    const ret = (
+      <NumberInput
         label={t("businessProcessModel.label." + field)}
         placeholder={t("businessProcessModel.placeholder." + field)}
         {...form.getInputProps(field)}
@@ -76,7 +91,8 @@ const StageSettings = ({ open, close, updateNode, node }) => {
       centered
     >
       <Stack w={"100%"} spacing={"xs"}>
-        <form    autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             updateTask(values);
           })}
@@ -85,7 +101,12 @@ const StageSettings = ({ open, close, updateNode, node }) => {
             {createTextField("name")}
           </Group>
 
-          <Stack mt={"xs"} spacing={"xs"}>
+          <Group mt={"xs"} grow>
+            {createNumberField("stageNumber")}
+            {createNumberField("duration")}
+          </Group>
+
+          <Stack mt={"md"} spacing={"xs"}>
             <CustomColorPicker {...form.getInputProps("color")} swatchesPerRow={18} format={"rgba"} />
             <AlphaSlider
               color={form.getInputProps("color").value}

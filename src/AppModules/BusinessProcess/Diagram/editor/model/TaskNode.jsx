@@ -59,15 +59,35 @@ function TaskNode(props) {
         >
           {data.label}
         </div>
+
         <div
           style={{
-            color: "#777",
-            fontWeight: "600",
-            fontSize: "12px",
-            textAlign: "left",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {data?.role?.name}
+          <div
+            style={{
+              color: "#777",
+              fontWeight: "600",
+              fontSize: "12px",
+              textAlign: "left",
+            }}
+          >
+            {data?.role?.name}
+          </div>
+
+          <div
+            style={{
+              color: "#777",
+              fontWeight: "500",
+              fontSize: "10px",
+              textAlign: "right",
+            }}
+          >
+            {data.duration}
+          </div>
         </div>
       </div>
 

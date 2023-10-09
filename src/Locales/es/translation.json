@@ -1305,7 +1305,9 @@
       "search":"Buscar...",
       "noData":"sin datos",
       "businessProcessList":"Lista de procesos de negocio",
-      "businessProcessesSeleted":"Procesos de negocio seleccionados"
+      "businessProcessesSeleted":"Procesos de negocio seleccionados",
+      "duration":"Duracion en dias",
+      "stageNumber":"Numero"
     },
     "placeholder": {
       "name": "un nombre",

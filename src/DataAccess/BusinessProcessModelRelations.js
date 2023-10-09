@@ -39,7 +39,7 @@ async function deleteBusinessProcessModelRelation(parameters) {
     API.businessProcessModelRelation.delete +
     "processModel/" +
     parameters.processModelId +
-    "/fromModel/" +
+    "/formModel/" +
     parameters.formModelId;
 
   const res = await fetch(url, requestOptions);
