@@ -335,7 +335,7 @@ const Diagram = () => {
           data: {
             label: t.name,
             role: getRoleById(t.requiredRole),
-            duration: t.duration,
+            duration: t.durationInDays,
             stageNumber: t.number,
             color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
@@ -355,7 +355,7 @@ const Diagram = () => {
           parentNode: t.stageId,
           data: {
             label: t.name,
-            duration: t.duration,
+            duration: t.durationInDays,
             role: getRoleById(t.requiredRole),
             color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
@@ -495,7 +495,7 @@ const Diagram = () => {
         };
 
         if(node.type === "stageNode"){
-          node.stageNumber = values.stageNumber;
+          node.data.stageNumber = values.stageNumber;
         }
       }
 

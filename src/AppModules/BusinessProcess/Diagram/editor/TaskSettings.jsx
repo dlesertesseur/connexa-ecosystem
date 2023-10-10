@@ -117,7 +117,7 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
     }
 
     form.setFieldValue("automatic", node.data.automatic);
-    // form.setFieldValue("applicationPath", node.data.applicationPath);
+    form.setFieldValue("duration", node.data.duration);
     form.setFieldValue("serviceUrl", node.data.serviceUrl);
   };
 

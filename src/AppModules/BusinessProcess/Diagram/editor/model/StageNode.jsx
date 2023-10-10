@@ -47,17 +47,27 @@ const StageNode = ({ data, selected }) => {
             {data.label}
           </div>
 
-          <div
-            style={{
-              color: "#777",
-              fontWeight: "600",
-              fontSize: "16px",
-              textAlign: "right",
-              paddingRight:5
-            }}
-          >
-            {data.stageNumber}
-          </div>
+          {data.stageNumber ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "#000",
+                fontWeight: "600",
+                fontSize: "16px",
+                margin: 3,
+                padding: 3,
+                borderRadius: 50,
+                border: "1px solid #bbb",
+                background: "#ccc",
+                minWidth: 20,
+                minHeight: 20,
+              }}
+            >
+              {data.stageNumber}
+            </div>
+          ) : null}
         </div>
 
         <div
@@ -66,11 +76,11 @@ const StageNode = ({ data, selected }) => {
             fontWeight: "500",
             fontSize: "10px",
             textAlign: "right",
-            paddingRight:5,
-            paddingBottom:5
+            paddingRight: 5,
+            paddingBottom: 5,
           }}
         >
-          {data.duration}
+          {data.duration ? `${data.duration} d` : null}
         </div>
       </div>
 

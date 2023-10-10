@@ -64,7 +64,7 @@ function TaskNode(props) {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           <div
@@ -80,13 +80,14 @@ function TaskNode(props) {
 
           <div
             style={{
+              display:"flex",
               color: "#777",
               fontWeight: "500",
-              fontSize: "10px",
+              fontSize: "12px",
               textAlign: "right",
             }}
           >
-            {data.duration}
+            {data.duration ? `${data.duration} d` : null}
           </div>
         </div>
       </div>

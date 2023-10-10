@@ -15,8 +15,8 @@ const StageSettings = ({ open, close, updateNode, node }) => {
       name: "",
       color: "",
       alpha: "",
-      stageNumber:0,
-      duration:1
+      stageNumber:null,
+      duration:null
     },
 
     validate: {
@@ -28,6 +28,8 @@ const StageSettings = ({ open, close, updateNode, node }) => {
 
   const getData = async () => {
     form.setFieldValue("name", node.data.label);
+    form.setFieldValue("duration", node.data.duration);
+    form.setFieldValue("stageNumber", node.data.stageNumber);
 
     if (node.data.color) {
       const colorInfo = rgbaToHexAndAlpha(node.data.color);

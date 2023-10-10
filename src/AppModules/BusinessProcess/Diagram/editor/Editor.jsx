@@ -58,6 +58,8 @@ const Editor = () => {
             dimensiony: n.height,
             type: n.type,
             stageId: n.parentNode,
+            durationInDays:n.data.duration,
+            number:n.data.stageNumber
           };
 
           stages.push(stage);
@@ -81,6 +83,7 @@ const Editor = () => {
             dimensiony: n.height,
             type: n.type,
             stageId: n.parentNode,
+            durationInDays:n.data.duration
           };
 
           tasks.push(task);
