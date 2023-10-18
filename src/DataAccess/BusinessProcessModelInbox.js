@@ -37,8 +37,6 @@ async function createBusinessProcessModelInstance(parameters) {
       body: body,
     };
 
-console.log("createBusinessProcessModelInstance body-> ", body);
-
     const url = API.businessProcessModelInbox.createInstance;
     const res = await fetch(url, requestOptions);
     const data = await res.json();

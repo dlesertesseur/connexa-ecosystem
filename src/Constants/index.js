@@ -390,6 +390,10 @@ export const API = {
     findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/process-model-form-model-relations/",
   },
 
+  businessProcessInstanceRelation: {
+    findAllById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/process-instance-form-instance-relations/",
+  },
+
   businessProcessModel: {
     save: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models",
     create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-models",

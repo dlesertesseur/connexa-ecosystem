@@ -1,25 +1,50 @@
 import React from "react";
 import InstanceFormPanel from "./InstanceFormPanel";
-import { Stack } from "@mantine/core";
+import ResponceNotification from "../../../../Modal/ResponceNotification";
+import { LoadingOverlay, Stack } from "@mantine/core";
 import { useEffect } from "react";
 import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { findAllBusinessProcessInstanceRelationsById } from "../../../../DataAccess/BusinessProcessInstanceRelations";
+import { useTranslation } from "react-i18next";
 
 const Index = ({ task }) => {
   const { user } = useSelector((state) => state.auth.value);
   const [formId, setFormId] = useState(null);
   const [parentId, setParentId] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const getData = async () => {
-    const id = "d6c0f8ba-2d1f-4162-9fdf-d1d609bc56a4";
-    const params = { token: user.token, id: id };
+    setLoading(true);
     try {
-      const instanceNode = await findFormInstanceById(params);
-      setFormId(instanceNode.options);
-      setParentId(instanceNode.id);
+      let params = { token: user.token, id: task.businessProcessInstanceId };
+      const relation = await findAllBusinessProcessInstanceRelationsById(params);
+
+      if(relation && relation.length > 0){
+        const id = relation[0].formInstanceId
+        params = { token: user.token, id: id };
+        const instanceNode = await findFormInstanceById(params);
+
+        if (instanceNode.error) {
+          throw new Error(instanceNode.error);
+        } else {
+          setFormId(instanceNode.options);
+          setParentId(instanceNode.id);
+        }
+      }else{
+        throw new Error(t("status.error"));
+      }
+
+      setLoading(false);
+
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      setError(error.message);
+      setFormId(null);
+      setParentId(null);
     }
   };
 
@@ -36,6 +61,18 @@ const Index = ({ task }) => {
       })}
     >
       <InstanceFormPanel task={task} formId={formId} type={"FORM"} parentId={parentId} />
+
+      <LoadingOverlay visible={loading} />
+
+      <ResponceNotification
+        opened={error ? true : false}
+        code={error}
+        onClose={() => {
+          setError(null);
+        }}
+        title={t("status.error")}
+        text={error}
+      />
     </Stack>
   );
 };

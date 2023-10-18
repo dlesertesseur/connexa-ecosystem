@@ -5,11 +5,10 @@ import InstanceFormContex from "./Context";
 import uuid from "react-uuid";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import { useSelector } from "react-redux";
-import { LoadingOverlay, Stack } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { findFormInstanceById, updateFormInstance } from "../../../../DataAccess/FormInstance";
-import { findDataSourceById } from "../../../../DataAccess/DataSource";
 import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
 import { arrayToMapByProp } from "../../../../Util";
 
@@ -81,7 +80,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
     panels?.forEach((p) => {
       const group = widgetByPanel?.get(p.id);
       group?.forEach((f) => {
-        ret[f.name] = f.type === "TEXTINPUT" || f.widget === "TEXTAREA" ? "" : null;
+        ret[f.name] = f.type === "TEXTINPUT" || f.widget === "TEXTAREA" ? "" : undefined;
       });
     });
 
@@ -363,9 +362,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
             );
           })}
         </Routes>
-      ) : (
-        <LoadingOverlay visible={true} />
-      )}
+      ) : null}
 
       <ResponceNotification
         opened={error ? true : false}
