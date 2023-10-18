@@ -331,7 +331,7 @@ export const authSlice = createSlice({
 
     [byUserId.fulfilled]: (state, { payload }) => {
       if (payload.error) {
-        state.value.error = payload;
+        state.value.error = payload.message;
       } else {
         if (payload !== null) {
           const organizations = payload;
