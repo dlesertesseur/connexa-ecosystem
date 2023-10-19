@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Checkbox, Container, Group, Modal, Select, Stack } from "@mantine/core";
+import { Button, Checkbox, Container, Group, Modal, Select, Stack, TextInput } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -47,13 +47,14 @@ const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEn
   useEffect(() => {
     if (open && selectedEntity) {
       form.setFieldValue("entity", selectedEntity.options);
-      setChecked(selectedEntity.type === "COLLECTION<SUBFORM>" ? true : false );
+      setChecked(selectedEntity.type === "COLLECTION<SUBFORM>" ? true : false);
     }
   }, [selectedEntity, open]);
 
   const form = useForm({
     initialValues: {
       entity: "",
+      label: "",
     },
 
     validate: {
@@ -65,13 +66,14 @@ const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEn
     <Modal opened={open} onClose={close} title={t("document.entityDefinition.title.addEntity")} size={"md"}>
       <Container>
         <Stack spacing={"xs"}>
-          <form   autoComplete="false"
+          <form
+            autoComplete="false"
             onSubmit={form.onSubmit((values) => {
               const entity = rows.find((e) => e.id === values.entity);
               if (selectedEntity) {
-                updateEntity(entity, checked);
+                updateEntity(entity, checked, values.label);
               } else {
-                addEntity(entity, checked);
+                addEntity(entity, checked, values.label);
               }
               close();
             })}
@@ -84,6 +86,14 @@ const EntitySelectionModal = ({ open, close, addEntity, selectedEntity, updateEn
                   return { value: e.id, label: e.name };
                 })}
                 {...form.getInputProps("entity")}
+              />
+            </Group>
+
+            <Group grow spacing={"xs"} mb={"md"}>
+              <TextInput
+                label={t("document.entityDefinition.label.label")}
+                placeholder={t("document.field.placeholder.label")}
+                {...form.getInputProps("label")}
               />
             </Group>
 

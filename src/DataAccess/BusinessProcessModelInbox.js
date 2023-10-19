@@ -119,9 +119,6 @@ async function releaseTask(parameters) {
   };
 
   const url = API.businessProcessModelInbox.releaseTask;
-
-  console.log("releaseTask requestOptions ->", requestOptions);
-
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 
@@ -146,9 +143,6 @@ async function takeTask(parameters) {
   };
 
   const url = API.businessProcessModelInbox.takeTask;
-
-  console.log("takeTask url ->", url);
-
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 

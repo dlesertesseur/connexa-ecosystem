@@ -93,7 +93,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
     panels?.forEach((p) => {
       const group = widgetByPanel?.get(p.id);
       group?.forEach((f) => {
-        if (f.required) {
+        if (f.required && f.required === 'true') {
           ret[f.name] = (val) => (val ? null : t("validation.required"));
         }
       });

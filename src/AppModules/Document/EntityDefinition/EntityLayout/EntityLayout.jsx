@@ -219,24 +219,27 @@ const EntityLayout = ({ back }) => {
     setRelatedEntities(ret);
   };
 
-  const addRelatedEntity = (entity, collection) => {
+  const addRelatedEntity = (entity, collection, label) => {
     const obj = {
       id: uuid(),
       options: entity.id,
       name: entity.name,
-      label: entity.label,
+      label: label ? label : entity.label,
       description: entity.description,
       type: collection ? "COLLECTION<SUBFORM>" : "SUBFORM",
     };
     setRelatedEntities([...relatedEntities, obj]);
   };
 
-  const updateRelatedEntity = (entity, collection) => {
+  const updateRelatedEntity = (entity, collection, label) => {
     const objIndex = relatedEntities.findIndex((obj) => obj.options === selectedRelatedEntity.options);
 
     if (objIndex >= 0) {
       relatedEntities[objIndex].options = entity.id;
       relatedEntities[objIndex].type = collection ? "COLLECTION<SUBFORM>" : "SUBFORM";
+      if(label){
+        relatedEntities[objIndex].label = label; 
+      }
     }
     setRelatedEntities([...relatedEntities]);
   };

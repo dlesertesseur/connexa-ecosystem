@@ -277,7 +277,7 @@ export const uploadImage = async (parameters) => {
 
     return data;
   } catch (error) {
-    return(error);
+    return error;
   }
 };
 
@@ -305,23 +305,18 @@ const getAllImages = async (parameters) => {
 };
 
 async function deleteUserImage(parameters) {
-  try {
-    const requestOptions = {
-      method: "DELETE",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: parameters.token,
-      },
-    };
+  const requestOptions = {
+    method: "DELETE",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token: parameters.token,
+    },
+  };
 
-    const url = API.user.deleteImage + parameters.id;
-    await fetch(url, requestOptions).then((response) => {
-      return response;
-    });
-  } catch (error) {
-    return error;
-  }
+  const url = API.user.deleteImage + parameters.id;
+  const response = await fetch(url, requestOptions);
+  return response;
 }
 
 export {

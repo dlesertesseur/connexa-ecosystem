@@ -168,7 +168,6 @@ const DynamicApp = ({ app }) => {
 
     try {
       const ret = await takeTask(params);
-      console.log("onTakeTask takeTask ret ->", ret);
       if (ret.status !== 200) {
         setError(ret.error);
       } else {
