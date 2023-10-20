@@ -8,10 +8,7 @@ import StageNode from "./model/StageNode";
 import InitNode from "./model/InitNode";
 import { Controls, MarkerType, ReactFlow, ReactFlowProvider, useEdgesState, useNodesState } from "reactflow";
 import { useEffect } from "react";
-import {
-  findBusinessProcessInstanceById,
-  findBusinessProcessInstanceLogById,
-} from "../../../../DataAccess/BusinessProcessModel";
+import { findBusinessProcessInstanceById } from "../../../../DataAccess/BusinessProcessModel";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useMemo } from "react";
@@ -24,7 +21,6 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
-  // const [businessProcessModelLog, setBusinessProcessModelLog] = useState(null);
   const [roles, setRoles] = useState(null);
   const { height, width } = useViewportSize();
 
@@ -54,15 +50,11 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
     params = { token: user.token, id: businessProcessInstanceId };
     const ret = await findBusinessProcessInstanceById(params);
     setBusinessProcessModel(ret);
-
-    // const log = await findBusinessProcessInstanceLogById(params);
-    // setBusinessProcessModelLog(log);
   };
 
   useEffect(() => {
     if (open) {
       getData();
-      //setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 800 });
     }
   }, [businessProcessInstanceId]);
 
@@ -99,6 +91,17 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
     return defaultValue;
   };
 
+  const getTaskColor = (task) => {
+    let defaultValue = null;
+
+    if (task.status !== "Finished") {
+      defaultValue = task.backgroundColor;
+    } else {
+      defaultValue = "rgba(220,220,220,1)";
+    }
+    return defaultValue;
+  };
+
   const getDefaultBorderColor = (type) => {
     let defaultValue = null;
 
@@ -126,7 +129,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
           data: {
             label: t.name,
             role: getRoleById(t.requiredRole),
-            color: t.id === taskId ? "rgba(0,255,0,1)" : t.backgroundColor,
+            color: t.id === taskId ? "rgba(0,255,0,1)" : getTaskColor(t),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
             width: t.dimensionx,
             height: t.dimensiony,

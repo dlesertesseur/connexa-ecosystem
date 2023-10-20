@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import CrudFrame from "../../../Components/Crud/CrudFrame";
 import Editor from "./editor/Editor";
+import FormSelector from "./FormSelector/FormSelector";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
@@ -12,8 +13,6 @@ import { findAllBusinessProcessModel } from "../../../DataAccess/BusinessProcess
 import { IconEditCircle, IconPaperclip, IconVariable } from "@tabler/icons-react";
 import { findAllSprints } from "../../../DataAccess/Sprints";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
-import Parameters from "./parameters/Parameters";
-import FormSelector from "./FormSelector/FormSelector";
 
 const DynamicApp = ({ app }) => {
   const { user, organizationSelected } = useSelector((state) => state.auth.value);
@@ -101,12 +100,12 @@ const DynamicApp = ({ app }) => {
             key: "businessProcessModel.buttons.forms",
             element: <FormSelector back={"../"} />,
           },
-          {
-            path: "parameters",
-            icon: <IconVariable size={20} />,
-            key: "businessProcessModel.buttons.parameters",
-            element: <Parameters back={"../"} />,
-          },
+          // {
+          //   path: "parameters",
+          //   icon: <IconVariable size={20} />,
+          //   key: "businessProcessModel.buttons.parameters",
+          //   element: <Parameters back={"../"} />,
+          // },
         ]}
       />
 

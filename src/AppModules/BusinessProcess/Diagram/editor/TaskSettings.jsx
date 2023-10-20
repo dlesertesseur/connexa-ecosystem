@@ -11,6 +11,7 @@ import {
   Select,
   Stack,
   TextInput,
+  Textarea,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
@@ -30,15 +31,15 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
   const form = useForm({
     initialValues: {
       name: "",
+      description: "",
       role: "",
       color: "rgba(255,255,255,0.4)",
       alpha: "",
       borderColor: "rgba(0,0,0,0.99)",
       automatic: false,
-      // applicationPath: "",
       serviceUrl: "",
       sprint: "",
-      duration:1
+      duration: 1,
     },
 
     validate: {
@@ -76,6 +77,7 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
 
   const getData = async () => {
     form.setFieldValue("name", node.data.label);
+    form.setFieldValue("description", node.data.description);
 
     if (node.data.role) {
       form.setFieldValue("role", node.data.role.id);
@@ -85,7 +87,7 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
 
     if (node.data.sprint) {
       const sprints = node.data.sprint;
-      const ret = sprints.map(s => s.id);
+      const ret = sprints.map((s) => s.id);
       form.setFieldValue("sprint", ret);
     } else {
       form.setFieldValue("sprint", null);
@@ -140,6 +142,19 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
     return ret;
   };
 
+  const createTextArea = (field, disabled = false) => {
+    const ret = (
+      <Textarea
+        disabled={disabled}
+        label={t("businessProcessModel.label." + field)}
+        placeholder={t("businessProcessModel.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
   const createNumberField = (field) => {
     const ret = (
       <NumberInput
@@ -151,7 +166,7 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
 
     return ret;
   };
-  
+
   const updateTask = (values) => {
     updateNode(values);
     close();
@@ -168,13 +183,18 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       centered
     >
       <Stack w={"100%"} spacing={"xs"}>
-        <form    autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             updateTask(values);
           })}
         >
           <Group mt={"xs"} grow>
             {createTextField("name")}
+          </Group>
+
+          <Group mt={"xs"} grow>
+            {createTextArea("description")}
           </Group>
 
           <Grid mt={"xs"}>

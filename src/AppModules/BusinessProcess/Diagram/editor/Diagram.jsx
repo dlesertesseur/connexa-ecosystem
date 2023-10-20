@@ -484,6 +484,7 @@ const Diagram = () => {
         node.data = {
           ...node.data,
           label: values.name,
+          description: values.description,
           role: assignedRole,
           duration: values.duration,
           color: colorRgba,
