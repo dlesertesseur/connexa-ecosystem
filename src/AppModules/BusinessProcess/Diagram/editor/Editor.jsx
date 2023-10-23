@@ -102,6 +102,7 @@ const Editor = () => {
     });
 
     const initialTask = tasks.find((t) => t.type === "initNode");
+    //const endTask = tasks.find((t) => t.type === "endNode");
 
     const params = {
       token: user.token,

@@ -1,58 +1,51 @@
-import { useState } from "react";
-import { Handle, NodeResizer, Position } from "reactflow";
+import { Handle, Position } from "reactflow";
 
 function InitNode(props) {
-  const { data, isConnectable, selected, id } = props;
-  const [nodeSize, setNodeSize] = useState({ width: data?.width, height: data?.height });
+  const { data, isConnectable, selected} = props;
 
   return (
-    <>
-      <NodeResizer
-        nodeId={id}
-        color="#ff0071"
-        isVisible={selected}
-        minWidth={100}
-        minHeight={30}
-        handleStyle={{ width: 6, height: 6 }}
-        onResize={(evt, params) => {
-          setNodeSize({ width: params.width, height: params.height });
-        }}
-      />
-
+    <div
+      style={{
+        border: selected ? "3px solid rgb(255, 0, 204)" : "3px solid rgb(0, 0, 255)",
+        background: selected ? "rgba(255, 0, 204, 0.2)" : "rgba(0, 0, 255, 0.2)",
+        display: "flex",
+        flexDirection: "column",
+        width: `${data.label.visualLength}px`,
+        height: "50px",
+        paddingInline: "20px",
+        borderRadius: "36px",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
+      <Handle type="source" position={Position.Bottom} isConnectable={isConnectable} />
 
-      <div
+      <label
+        htmlFor="label"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          border: "3px solid",
-          background: selected ? "rgba(255, 0, 0, 0.2)" : data?.color,
-          borderColor: selected ? "rgba(255, 0, 0, 0.8)" : data?.borderColor,
-          padding: "5px",
-          borderRadius: "5px",
-          height: `${nodeSize.height}px`,
-          width: `${nodeSize.width}px`,
+          display: "block",
+          color: selected ? "rgb(255, 0, 204)" : "rgb(0, 0, 255)",
+          fontWeight: "600",
+          fontSize: "16px",
+          textAlign: "center",
         }}
       >
-        <label
-          htmlFor="label"
-          style={{
-            color: "#000",
-            fontWeight: "600",
-            fontSize: "16px",
-            textAlign: "center",
-          }}
-        >
-          {data.label}
-        </label>
-        <label htmlFor="roles" className="task-node-roles">
-          {data?.role?.name}
-        </label>
-      </div>
-
-      <Handle type="source" position={Position.Bottom} isConnectable={isConnectable} />
-    </>
+        {data.label}
+      </label>
+      <label
+        htmlFor="roles"
+        style={{
+          display: "block",
+          color: selected ? "rgb(255, 0, 204)" : "rgb(64, 64, 255)",
+          fontWeight: "600",
+          fontSize: "12px",
+          textAlign: "center",
+        }}
+      >
+        {data?.role?.name}
+      </label>
+    </div>
   );
 }
 

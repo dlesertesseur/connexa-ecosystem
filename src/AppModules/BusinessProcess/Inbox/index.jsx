@@ -232,6 +232,18 @@ const DynamicApp = ({ app }) => {
     setLoading(false);
   };
 
+  const sendToScrumMaster = async (task) => {
+    // const params = {
+    //   token: user.token,
+    //   taskId: task.id,
+    // };
+
+    // setLoading(true);
+    // const outgoing = await getAllOutgoingTaskByTaskId(params);
+    // setOutgoingTasks(outgoing);
+    // setLoading(false);
+  };
+
   const onViewTask = (task) => {
     setTask(task);
   };
@@ -311,6 +323,7 @@ const DynamicApp = ({ app }) => {
         onTransferTask,
         onViewTask,
         getTransferOptions,
+        sendToScrumMaster,
         setOutgoingTasks,
         outgoingTasks,
       }}

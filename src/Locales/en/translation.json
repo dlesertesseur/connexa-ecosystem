@@ -1307,6 +1307,7 @@
       "join": "Join",
       "status": "Status",
       "init": "Init",
+      "end": "End",
       "automatic": "Automatic",
       "applicationPath": "Application",
       "serviceUrl": "Service URL",
@@ -1389,8 +1390,10 @@
       "release": "Release",
       "doit": "Do it",
       "transfer": "Transfer",
+      "advance":"Advance",
       "back": "Back",
-      "viewOnDiagram": "View"
+      "viewOnDiagram": "View",
+      "sendToScrunMaster":"Send to scrum master"
     },
     "label": {
       "selectTask": "Select task"

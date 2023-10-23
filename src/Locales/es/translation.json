@@ -1296,6 +1296,7 @@
       "join": "Join",
       "status": "Status",
       "init": "Inicio",
+      "end": "Fin",
       "automatic": "Automatica",
       "applicationPath": "Aplicacion",
       "serviceUrl": "URL de Servicio",
@@ -1376,8 +1377,10 @@
       "release": "Liberar",
       "doit": "Hacerla",
       "transfer": "Transferir",
+      "advance":"Avanzar",
       "back": "Volver",
-      "viewOnDiagram": "Ver"
+      "viewOnDiagram": "Ver",
+      "sendToScrunMaster":"Enviar al scrum master"
     },
     "messages": {
       "creation": "Instancia de modelo de proceso creada correctamente"

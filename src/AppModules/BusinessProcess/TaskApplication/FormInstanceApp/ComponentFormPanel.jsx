@@ -427,14 +427,14 @@ const ComponentFormPanel = ({
 
               {panels?.length > 0 ? (
                 <Group position="right" pt={"md"}>
-                  <Button type="submit">{t("button.accept")}</Button>
+                  <Button type="submit">{t("button.save")}</Button>
                   <Button
                     onClick={() => {
                       navigate("../../");
                       form.reset();
                     }}
                   >
-                    {t("button.cancel")}
+                    {t("button.close")}
                   </Button>
                 </Group>
               ) : (

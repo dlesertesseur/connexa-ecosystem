@@ -25,6 +25,8 @@ import { LoadingOverlay } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { arrayToMapByProp, hexToRgba } from "../../../../Util";
 import EdgeSettings from "./EdgeSettings";
+import EndNode from "./model/EndNode";
+import FinalTaskSettings from "./FinalTaskSettings";
 
 const Diagram = () => {
   const reactFlowRef = useRef();
@@ -41,7 +43,14 @@ const Diagram = () => {
 
   const delPressed = useKeyPress("Delete");
   const nodeTypes = useMemo(
-    () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode, initNode: InitNode }),
+    () => ({
+      taskNode: TaskNode,
+      forkNode: ForkNode,
+      joinNode: JoinNode,
+      stageNode: StageNode,
+      initNode: InitNode,
+      endNode: EndNode,
+    }),
     []
   );
 
@@ -91,6 +100,9 @@ const Diagram = () => {
       case "initNode":
         defaultName = t("businessProcessModel.label.init");
         break;
+      case "endNode":
+        defaultName = t("businessProcessModel.label.end");
+        break;
       case "forkNode":
         defaultName = "forkNode";
         break;
@@ -110,6 +122,7 @@ const Diagram = () => {
         break;
       case "taskNode":
       case "initNode":
+      case "endNode":
       case "forkNode":
       case "joinNode":
         defaultValue = "rgba(255,255,255,1)";
@@ -129,6 +142,7 @@ const Diagram = () => {
         defaultValue = 100;
         break;
       case "initNode":
+      case "endNode":
       case "forkNode":
       case "joinNode":
         break;
@@ -147,6 +161,7 @@ const Diagram = () => {
         defaultValue = 30;
         break;
       case "initNode":
+      case "endNode":
       case "forkNode":
       case "joinNode":
         break;
@@ -165,6 +180,7 @@ const Diagram = () => {
         defaultValue = "rgba(0,0,0,1)";
         break;
       case "initNode":
+      case "endNode":
         defaultValue = "rgba(255,0,0,1)";
         break;
     }
@@ -181,6 +197,7 @@ const Diagram = () => {
 
       case "taskNode":
       case "initNode":
+      case "endNode":
         defaultValue = 300;
         break;
 
@@ -215,7 +232,7 @@ const Diagram = () => {
       data: {
         label: getName(type),
         role: "",
-        duration:0,
+        duration: 0,
         width: getDefaultWidth(type),
         height: getDefaultHeight(type),
         color: getDefaultColor(type),
@@ -495,7 +512,7 @@ const Diagram = () => {
           sprint: assignedSprint,
         };
 
-        if(node.type === "stageNode"){
+        if (node.type === "stageNode") {
           node.data.stageNumber = values.stageNumber;
         }
       }
@@ -529,7 +546,11 @@ const Diagram = () => {
       <TaskSettings
         node={selectedNode}
         updateNode={updateNode}
-        open={selectedNode?.type === "taskNode" || selectedNode?.type === "initNode" ? true : false}
+        open={
+          selectedNode?.type === "taskNode"
+            ? true
+            : false
+        }
         close={() => {
           setSelectedNode(null);
         }}
@@ -546,6 +567,15 @@ const Diagram = () => {
         node={selectedNode}
         updateNode={updateNode}
         open={selectedNode?.type === "stageNode" ? true : false}
+        close={() => {
+          setSelectedNode(null);
+        }}
+      />
+
+      <FinalTaskSettings
+        node={selectedNode}
+        updateNode={updateNode}
+        open={selectedNode?.type === "initNode" ? true : false}
         close={() => {
           setSelectedNode(null);
         }}

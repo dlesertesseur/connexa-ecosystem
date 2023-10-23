@@ -83,6 +83,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
         break;
       case "taskNode":
       case "initNode":
+      case "endNode":
       case "forkNode":
       case "joinNode":
         defaultValue = "rgba(255,255,255,1)";
@@ -114,6 +115,9 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
         break;
       case "initNode":
         defaultValue = "rgba(255,0,0,1)";
+        break;
+      case "endNode":
+        defaultValue = "rgba(0,0,255,1)";
         break;
     }
     return defaultValue;

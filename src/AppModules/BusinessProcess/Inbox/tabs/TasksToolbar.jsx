@@ -3,10 +3,11 @@ import { Button, Group, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { AbmStateContext } from "../Context";
+import { IconSend } from "@tabler/icons-react";
 
 const TasksToolbar = ({ task }) => {
   const { t } = useTranslation();
-  const { onDoTask, onTakeTask, onReleaseTask, getTransferOptions, onViewTask, loading } = useContext(AbmStateContext);
+  const { onDoTask, onTakeTask, onReleaseTask, getTransferOptions, sendToScrumMaster, onViewTask, loading } = useContext(AbmStateContext);
 
   const isDisabled = (button) => {
     let ret = true;
@@ -22,7 +23,8 @@ const TasksToolbar = ({ task }) => {
             break;
           case "release":
           case "doit":
-          case "transfer":
+          case "advance":
+          case "sendToScrumMaster":
             ret = task.userId === null;
             break;
         }
@@ -59,8 +61,11 @@ const TasksToolbar = ({ task }) => {
         </Button>
       </Group>
       <Group spacing={"xs"}>
-        <Button disabled={isDisabled("transfer")} loading={loading} onClick={() => getTransferOptions(task)}>
-          <Text>{t("businessProcessModelInbox.buttons.transfer")}</Text>
+        <Button disabled={isDisabled("sendToScrumMaster")} loading={loading} rightIcon={<IconSend size={18}/>} onClick={() => sendToScrumMaster(task)}>
+          <Text>{t("businessProcessModelInbox.buttons.sendToScrunMaster")}</Text>
+        </Button>
+        <Button disabled={isDisabled("advance")} loading={loading} onClick={() => getTransferOptions(task)}>
+          <Text>{t("businessProcessModelInbox.buttons.advance")}</Text>
         </Button>
       </Group>
     </Group>
