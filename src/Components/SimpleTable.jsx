@@ -123,7 +123,6 @@ export default function SimpleTable({
   loading = false,
   rowSelected,
   setRowSelected,
-  searchBox = false,
   headerHeight = 230,
 }) {
   const { classes, cx } = useStyles();
@@ -150,15 +149,6 @@ export default function SimpleTable({
     setSortedData(sortData(data, { sortBy: field, reversed, search }));
   };
 
-  // const handleSearchChange = (event) => {
-  //   const { value } = event.currentTarget;
-  //   setSearch(value);
-  //   {
-  //     setRowSelected ? setRowSelected(null) : null;
-  //   }
-  //   setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
-  // };
-
   const formatData = (data, format) => {
     let ret = data;
 
@@ -167,8 +157,13 @@ export default function SimpleTable({
         case "round":
           ret = Math.round(data * 100) / 100;
           break;
+
         case "bool":
           ret = data ? t("label.true") : t("label.false");
+          break;
+
+        case "percentage":
+          ret = `${data ? Math.round(data * 10) / 10 : 0} %`;
           break;
 
         default:
@@ -237,19 +232,6 @@ export default function SimpleTable({
 
   return (
     <Stack>
-      {/* <Group position="right">
-        {searchBox ? (
-          <Group grow>
-            <TextInput
-              placeholder={t("placeholder.search")}
-              icon={<IconSearch size={14} stroke={1.5} />}
-              value={search}
-              onChange={handleSearchChange}
-            />
-          </Group>
-        ) : null}
-      </Group> */}
-
       <ScrollArea sx={{ height: wSize.height - headerHeight }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
         <LoadingOverlay visible={loading} overlayBlur={2} />
 

@@ -6,6 +6,7 @@ import ForkNode from "./model/ForkNode";
 import JoinNode from "./model/JoinNode";
 import StageNode from "./model/StageNode";
 import InitNode from "./model/InitNode";
+import EndNode from "./model/EndNode";
 import { Controls, MarkerType, ReactFlow, ReactFlowProvider, useEdgesState, useNodesState } from "reactflow";
 import { useEffect } from "react";
 import { findBusinessProcessInstanceById } from "../../../../DataAccess/BusinessProcessModel";
@@ -16,7 +17,7 @@ import { Modal } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { findAllByOrganizationId } from "../../../../DataAccess/OrganizationRole";
 
-const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, taskId }) => {
+const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, taskId = null }) => {
   const { user, organizationSelected } = useSelector((state) => state.auth.value);
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
@@ -25,7 +26,14 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
   const { height, width } = useViewportSize();
 
   const nodeTypes = useMemo(
-    () => ({ taskNode: TaskNode, forkNode: ForkNode, joinNode: JoinNode, stageNode: StageNode, initNode: InitNode }),
+    () => ({
+      taskNode: TaskNode,
+      forkNode: ForkNode,
+      joinNode: JoinNode,
+      stageNode: StageNode,
+      initNode: InitNode,
+      endNode: EndNode,
+    }),
     []
   );
 
@@ -49,7 +57,11 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
 
     params = { token: user.token, id: businessProcessInstanceId };
     const ret = await findBusinessProcessInstanceById(params);
-    setBusinessProcessModel(ret);
+    if (ret.error) {
+     console.log(ret.error);
+    } else {
+      setBusinessProcessModel(ret);
+    }
   };
 
   useEffect(() => {

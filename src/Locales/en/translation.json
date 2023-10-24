@@ -1588,5 +1588,22 @@
       "code": "a code"
     },
     "columns": ["Code", "Name", "Description"]
+  },
+
+  "businessProcessInstances": {
+    "buttons": {
+      "viewOnDiagram": "View diagram",
+      "viewDocument": "View document"
+    },
+    "label": {
+    },
+    "columns": {
+      "values": ["Name", "Description", "Progress"]
+    },
+    "tabs": {
+      "executing": "Executing",
+      "finished": "Finished",
+      "cancelled": "Cancelled"
+    }
   }
 }

@@ -358,12 +358,13 @@ export const API = {
     findAllComexTransportationMode: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/transportation-mode",
     findAllComexBarcodeTypes: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/barcodes",
     findAllComexMeasureUnits: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/measureUnits",
-    findComexRecapItems: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items?importationId=",
+    findComexRecapItems:
+      config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items?importationId=",
     findComexRecapItemById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items?itemId=",
     comexRecapAddItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
     comexRecapUpdateItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
     comexRecapDeleteItem: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items/",
-    comexRecapAddItemImage: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items-images/"
+    comexRecapAddItemImage: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations-items-images/",
   },
 
   businessProcess: {
@@ -391,7 +392,8 @@ export const API = {
   },
 
   businessProcessInstanceRelation: {
-    findAllById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/process-instance-form-instance-relations/",
+    findAllById:
+      config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/process-instance-form-instance-relations/",
   },
 
   businessProcessModel: {
@@ -405,18 +407,20 @@ export const API = {
   },
 
   businessProcessModelInbox: {
-    findAllbusinessProcessModelByRoleId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
+    findAllbusinessProcessModelByRoleId:
+      config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
     findAllTasksByRoleId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
     createInstance: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
     getAllOutgoingTaskByTaskId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
-    executeTask:config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
-    releaseTask:config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
-    takeTask:config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox"
+    executeTask: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
+    releaseTask: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
+    takeTask: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
   },
 
   businessProcessInstance: {
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance/",
+    findAllByStatus: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance/status/",
   },
 
   businessProcessInstanceLog: {

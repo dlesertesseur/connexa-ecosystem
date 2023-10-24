@@ -1598,6 +1598,24 @@
       "description": "una descripcion"
     },
     "columns": ["Codigo", "Nombre", "Description"]
+  },
+
+  "businessProcessInstances": {
+    "buttons": {
+      "viewOnDiagram": "Ver diagrama",
+      "viewDocument": "Ver documento"
+    },
+    "label": {
+    },
+    "columns": {
+      "values": ["Nombre", "Descripcion", "Progreso"]
+    },
+    "tabs": {
+      "executing": "En ejecucion",
+      "finished": "Terminados",
+      "cancelled": "Cancelados"
+
+    }
   }
 
 }
