@@ -3,8 +3,7 @@ import CollectionFormPanel from "./CollectionFormPanel";
 import ComponentFormPanel from "./ComponentFormPanel";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import { useSelector } from "react-redux";
-import { Stack } from "@mantine/core";
-import { Route, Routes } from "react-router-dom";
+import { Stack, Tabs } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
 
@@ -105,7 +104,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
     if (panels) {
       const config = {
         initialValues: createInitialValues(panels),
-        validate: createValidations(panels),
+        //validate: createValidations(panels),
       };
       setFormConfig(config);
     }
@@ -118,52 +117,83 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
 
   return (
     <>
-      {formDefinition ? (
-        <Routes>
-          <Route
-            path="/*"
-            element={
-              <Stack spacing={"xs"}>
-                {isACollectionObjects() ? (
-                  <CollectionFormPanel
-                    formData={formDefinition}
-                    options={options}
-                    panels={panels}
-                    widgetByPanel={widgetByPanel}
-                    formConfig={formConfig}
-                    relatedEntities={relatedEntities}
-                    parentId={parentId}
-                    widgetByName={widgetByName}
-                  />
-                ) : (
-                  <ComponentFormPanel
-                    formData={formDefinition}
-                    options={options}
-                    panels={panels}
-                    widgetByPanel={widgetByPanel}
-                    formConfig={formConfig}
-                    relatedEntities={relatedEntities}
-                    parentId={parentId}
-                    widgetByName={widgetByName}
-                    mode={type}
-                  />
-                )}
-              </Stack>
-            }
-          ></Route>
+      {relatedEntities && relatedEntities.length > 0 ? (
+        <Tabs variant="outline" defaultValue="base">
+          <Tabs.List>
+            <Tabs.Tab value="base">
+              General
+            </Tabs.Tab>
+
+            {relatedEntities.map((re) => {
+              return (
+                <Tabs.Tab key={re.options} value={re.options}>
+                  {re.label}
+                </Tabs.Tab>
+              );
+            })}
+          </Tabs.List>
+
+          <Tabs.Panel value="base">
+            <Stack spacing={"xs"}>
+              {isACollectionObjects() ? (
+                <CollectionFormPanel
+                  formData={formDefinition}
+                  options={options}
+                  panels={panels}
+                  widgetByPanel={widgetByPanel}
+                  formConfig={formConfig}
+                  parentId={parentId}
+                  widgetByName={widgetByName}
+                />
+              ) : (
+                <ComponentFormPanel
+                  formData={formDefinition}
+                  options={options}
+                  panels={panels}
+                  widgetByPanel={widgetByPanel}
+                  formConfig={formConfig}
+                  parentId={parentId}
+                  widgetByName={widgetByName}
+                  mode={type}
+                />
+              )}
+            </Stack>
+          </Tabs.Panel>
+
           {relatedEntities.map((re) => {
-            //const collection = re.type === "COLLECTION<SUBFORM>" ? true : false;
             return (
-              <Route
-                key={re.options}
-                path={`${re.name}/*`}
-                element={<InstanceFormPanel formId={re.options} type={re.type} parentId={parentId} />}
-              />
+              <Tabs.Panel key={re.options} value={re.options}>
+                <InstanceFormPanel formId={re.options} type={re.type} parentId={parentId} />
+              </Tabs.Panel>
             );
           })}
-        </Routes>
-      ) : null}
-
+        </Tabs>
+      ) : (
+        <Stack spacing={"xs"}>
+          {isACollectionObjects() ? (
+            <CollectionFormPanel
+              formData={formDefinition}
+              options={options}
+              panels={panels}
+              widgetByPanel={widgetByPanel}
+              formConfig={formConfig}
+              parentId={parentId}
+              widgetByName={widgetByName}
+            />
+          ) : (
+            <ComponentFormPanel
+              formData={formDefinition}
+              options={options}
+              panels={panels}
+              widgetByPanel={widgetByPanel}
+              formConfig={formConfig}
+              parentId={parentId}
+              widgetByName={widgetByName}
+              mode={type}
+            />
+          )}
+        </Stack>
+      )}
       <ResponceNotification
         opened={error ? true : false}
         onClose={() => {

@@ -13,8 +13,6 @@ import {
   Textarea,
 } from "@mantine/core";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useWindowSize } from "../../../../Hook";
 import { useForm } from "@mantine/form";
 import { useSelector } from "react-redux";
@@ -38,9 +36,8 @@ const ComponentFormPanel = ({
   widgetByName,
 }) => {
   const { user } = useSelector((state) => state.auth.value);
-  const { t } = useTranslation();
   const wsize = useWindowSize();
-  const navigate = useNavigate();
+
   const [datasourceValuesById, setDatasourceValuesById] = useState(new Map());
 
   const form = useForm(formConfig);
@@ -79,7 +76,7 @@ const ComponentFormPanel = ({
       case "TEXTINPUT":
         ret = (
           <TextInput
-            disabled={mode === "DELETE" ? true : false}
+            disabled={true}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -91,7 +88,7 @@ const ComponentFormPanel = ({
       case "TEXTAREA":
         ret = (
           <Textarea
-            disabled={mode === "DELETE" ? true : false}
+            disabled={true}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -103,7 +100,7 @@ const ComponentFormPanel = ({
       case "NUMBERINPUT":
         ret = (
           <NumberInput
-            disabled={mode === "DELETE" ? true : false}
+            disabled={true}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -115,7 +112,7 @@ const ComponentFormPanel = ({
       case "SELECT":
         ret = (
           <Select
-            disabled={mode === "DELETE" ? true : false}
+            disabled={true}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -128,7 +125,7 @@ const ComponentFormPanel = ({
       case "CHECKBOX":
         ret = (
           <Checkbox
-            disabled={mode === "DELETE" ? true : false}
+            disabled={true}
             key={field.id}
             label={field.label}
             placeholder={field.name}
@@ -139,7 +136,7 @@ const ComponentFormPanel = ({
 
       case "LABEL":
         ret = (
-          <Stack disabled={mode === "DELETE" ? true : false} key={field.id} spacing={0} align={"flex-start"}>
+          <Stack key={field.id} spacing={0} align={"flex-start"}>
             <Text size="xl" weight={700}>
               {field.label}
             </Text>
@@ -153,7 +150,7 @@ const ComponentFormPanel = ({
       case "DATE":
         ret = (
           <DatePicker
-            disabled={mode === "DELETE" ? true : false}
+            disabled={true}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -166,7 +163,7 @@ const ComponentFormPanel = ({
       case "TIME":
         ret = (
           <TimeInput
-            disabled={mode === "DELETE" ? true : false}
+            disabled={true}
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -268,7 +265,7 @@ const ComponentFormPanel = ({
   };
 
   useEffect(() => {
-    if (parentId) {
+    if (parentId && Object.values(formConfig).length > 0) {
       getData();
     }
   }, [parentId]);
@@ -330,45 +327,11 @@ const ComponentFormPanel = ({
         </Group>
       )}
 
-      {relatedEntities ? (
-        <Group position="left" spacing={"xs"} mb={"xs"}>
-          {relatedEntities.map((re) => {
-            return (
-              <Button
-                key={re.id}
-                onClick={() => {
-                  navigate(`${re.name}`);
-                }}
-              >
-                {re.label}
-              </Button>
-            );
-          })}
-        </Group>
-      ) : null}
-
       <Container size={options?.size} w={"100%"}>
         <Stack spacing={"xs"} w={"100%"}>
           <form autoComplete="false">
             <ScrollArea offsetScrollbars h={wsize.height - totalHeaderHeight - (relatedEntities?.length > 0 ? 36 : 0)}>
               {buildForm(panels)}
-
-              {panels?.length > 0 ? (
-                <Group position="right" pt={"md"}>
-                  <Button
-                    onClick={() => {
-                      navigate("../../");
-                      form.reset();
-                    }}
-                  >
-                    {t("button.close")}
-                  </Button>
-                </Group>
-              ) : (
-                <Group grow>
-                  <LoadingOverlay visible={true} />
-                </Group>
-              )}
             </ScrollArea>
           </form>
         </Stack>

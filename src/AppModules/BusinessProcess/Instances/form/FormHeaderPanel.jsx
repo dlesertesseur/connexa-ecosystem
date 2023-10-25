@@ -6,18 +6,10 @@ const FormHeaderPanel = ({ name, description }) => {
     <Stack
       justify="stretch"
       spacing={"xs"}
-      sx={(theme) => ({
-        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
-        width: "100%",
-      })}
     >
       <Stack
         spacing={0}
         align={"flex-start"}
-        sx={(theme) => ({
-          backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[0],
-          height: "48px",
-        })}
       >
         <Text size="xl" weight={700}>
           {name}

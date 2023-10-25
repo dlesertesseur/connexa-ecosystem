@@ -57,7 +57,7 @@ const TasksToolbar = ({ task }) => {
             onViewTask(task);
           }}
         >
-          <Text>{t("businessProcessModelInbox.buttons.viewOnDiagram")}</Text>
+          <Text>{t("businessProcessModelInbox.buttons.viewDiagram")}</Text>
         </Button>
       </Group>
       <Group spacing={"xs"}>

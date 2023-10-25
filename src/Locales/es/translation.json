@@ -1602,10 +1602,14 @@
 
   "businessProcessInstances": {
     "buttons": {
-      "viewOnDiagram": "Ver diagrama",
-      "viewDocument": "Ver documento"
+      "viewDiagram": "Ver diagrama",
+      "viewDocument": "Ver documento",
+      "viewLog": "View historial"
     },
     "label": {
+    },
+    "title": {
+      "viewDocument": "Documento asociado"
     },
     "columns": {
       "values": ["Nombre", "Descripcion", "Progreso"]

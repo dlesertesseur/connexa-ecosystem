@@ -421,6 +421,7 @@ export const API = {
   businessProcessInstance: {
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance/",
     findAllByStatus: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance/status/",
+    findAllLogById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance-log/",
   },
 
   businessProcessInstanceLog: {
