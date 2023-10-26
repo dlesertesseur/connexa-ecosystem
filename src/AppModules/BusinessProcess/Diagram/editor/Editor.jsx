@@ -36,12 +36,12 @@ const Editor = () => {
 
   const onSave = async () => {
     const tasks = [];
-    const stages = [];
+    const sprints = [];
 
     nodes.forEach((n) => {
       switch (n.type) {
-        case "stageNode":
-          const stage = {
+        case "sprintNode":
+          const sprint = {
             id: n.id,
             name: n.data.label,
             locationx: n.position.x,
@@ -57,12 +57,11 @@ const Editor = () => {
             dimensionx: n.width,
             dimensiony: n.height,
             type: n.type,
-            stageId: n.parentNode,
-            durationInDays:n.data.duration,
-            number:n.data.stageNumber
+            durationInDays: n.data.duration,
+            number: n.data.sprintNumber,
           };
 
-          stages.push(stage);
+          sprints.push(sprint);
           break;
 
         default:
@@ -82,8 +81,8 @@ const Editor = () => {
             dimensionx: n.width,
             dimensiony: n.height,
             type: n.type,
-            stageId: n.parentNode,
-            durationInDays:n.data.duration
+            sprintId: n.parentNode,
+            durationInDays: n.data.duration,
           };
 
           tasks.push(task);
@@ -110,7 +109,7 @@ const Editor = () => {
       name: businessProcessModel.name,
       description: businessProcessModel.description,
       tasks: tasks,
-      stages: stages,
+      sprints: sprints,
       transitions: transitions,
       initialTaskId: initialTask ? initialTask.id : null,
       requiredRole: initialTask ? initialTask.requiredRole : null,

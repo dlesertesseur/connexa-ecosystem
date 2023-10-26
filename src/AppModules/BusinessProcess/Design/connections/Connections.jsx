@@ -33,14 +33,15 @@ const Connections = () => {
     setBusinessProcess(ret);
 
     let tasks = [];
-    ret.stages.forEach((stage) => {
-      if (stage.statusses) {
-        stage.statusses.forEach((status) => {
+    
+    ret.sprints.forEach((sprint) => {
+      if (sprint.statusses) {
+        sprint.statusses.forEach((status) => {
           const data = status.tasks.map((t) => {
             return {
               id: t.id,
-              stageId: stage.id,
-              stageName: stage.name,
+              sprintId: sprint.id,
+              stageName: sprint.name,
               statusId: status.id,
               statusName: status.name,
               taskName: t.name,
@@ -50,7 +51,6 @@ const Connections = () => {
         });
       }
     });
-
     setRows(tasks);
 
     setLoading(false);

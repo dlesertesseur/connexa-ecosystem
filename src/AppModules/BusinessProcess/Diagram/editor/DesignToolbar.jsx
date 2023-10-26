@@ -46,7 +46,7 @@ const DesignToolbar = ({ onSave, onExport }) => {
           <DragButton text={t("businessProcessModel.label.task")} onDragStart={(event) => onDragStart(event, "taskNode")} />
           <DragButton text={t("businessProcessModel.label.fork")} onDragStart={(event) => onDragStart(event, "forkNode")} />
           <DragButton text={t("businessProcessModel.label.join")} onDragStart={(event) => onDragStart(event, "joinNode")} />
-          <DragButton text={t("businessProcessModel.label.stage")} onDragStart={(event) => onDragStart(event, "stageNode")} />
+          <DragButton text={t("businessProcessModel.label.sprint")} onDragStart={(event) => onDragStart(event, "sprintNode")} />
         </Group>
         <Group>
           <Button size="xs" onClick={onBack}>

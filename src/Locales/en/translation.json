@@ -1289,6 +1289,7 @@
       "stage": "Stage",
       "actionDefaultName": "new Action",
       "stageDefaultName": "new Stage",
+      "sprintDefaultName": "new Sprint",
       "taskDefaultName": "new Task",
       "parameters": "Parameters",
       "connections": "Connections",
@@ -1319,7 +1320,8 @@
       "businessProcessList":"Business process list",
       "businessProcessesSeleted":"Selected business processes",
       "duration":"Durations in days",
-      "stageNumber":"Number"
+      "stageNumber":"Number",
+      "sprintNumber":"Number"
      },
     "placeholder": {
       "name": "a name",
@@ -1330,7 +1332,8 @@
       "applicationPath": "an application path",
       "serviceUrl": "a service URL",
       "duration":1,
-      "stageNumber":0
+      "stageNumber":0,
+      "sprintNumber":0
     },
     "buttons": {
       "editor": "Edit",
@@ -1392,7 +1395,7 @@
       "transfer": "Transfer",
       "advance":"Advance",
       "back": "Back",
-      "viewOnDiagram": "View",
+      "viewDiagram": "View",
       "sendToScrunMaster":"Send to scrum master"
     },
     "label": {
@@ -1597,10 +1600,12 @@
       "viewLog": "View events"
     },
     "label": {
+      "sprints":"Sprints list"
     },
     "title": {
       "viewDocument": "Associated document",
-      "viewLog": "Events list"
+      "viewLog": "Events list",
+      "configSprintTimes": "Configure sprint times"
     },
     "columns": {
       "values": ["Name", "Description", "Progress"]

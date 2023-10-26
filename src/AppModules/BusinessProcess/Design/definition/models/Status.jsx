@@ -11,16 +11,16 @@ import { useTranslation } from "react-i18next";
 import { DesignerStateContext } from "../../Context";
 import { useState } from "react";
 
-const Status = ({ stageId, id, name }) => {
+const Status = ({ sprintId, id, name }) => {
   const scrollRef = useRef();
   const { t } = useTranslation();
   const [sprint, setSprint] = useState(null);
   const { businessProcess, setBusinessProcess, editing, sprints } = useContext(DesignerStateContext);
 
   let taskList = [];
-  const stage = businessProcess?.stages.find((s) => s.id === stageId);
-  if (stage) {
-    const action = stage.statusses.find((a) => a.id === id);
+  const sprintFound = businessProcess?.sprints.find((s) => s.id === sprintId);
+  if (sprintFound) {
+    const action = sprintFound.statusses.find((a) => a.id === id);
     if (action) {
       taskList = action.tasks;
       taskList.sort((a, b) => a.place - b.place);
@@ -29,9 +29,9 @@ const Status = ({ stageId, id, name }) => {
 
   const addTask = () => {
     const task = { id: uuid(), name: t("businessProcess.label.taskDefaultName") };
-    const stage = businessProcess.stages.find((s) => s.id === stageId);
-    if (stage) {
-      const status = stage.statusses.find((a) => a.id === id);
+    const sprintFound = businessProcess.sprints.find((s) => s.id === sprintId);
+    if (sprintFound) {
+      const status = sprintFound.statusses.find((a) => a.id === id);
       if (status) {
         status.tasks.push(task);
 
@@ -46,18 +46,18 @@ const Status = ({ stageId, id, name }) => {
   };
 
   const deleteAction = (id) => {
-    const stage = businessProcess.stages.find((s) => s.id === stageId);
-    if (stage) {
-      const ret = stage.statusses.filter((a) => a.id !== id);
-      stage.statusses = ret;
+    const sprintFound = businessProcess.sprints.find((s) => s.id === sprintId);
+    if (sprintFound) {
+      const ret = sprintFound.statusses.filter((a) => a.id !== id);
+      sprintFound.statusses = ret;
       setBusinessProcess({ ...businessProcess });
     }
   };
 
   const updateStatus = (id, data) => {
-    const stage = businessProcess.stages.find((s) => s.id === stageId);
-    if (stage) {
-      const status = stage.statusses.find((a) => a.id === id);
+    const sprintFound = businessProcess.sprints.find((s) => s.id === sprintId);
+    if (sprintFound) {
+      const status = sprintFound.statusses.find((a) => a.id === id);
       if (status) {
         status.name = data;
       }
@@ -68,9 +68,9 @@ const Status = ({ stageId, id, name }) => {
   const onChangeSprint = (e) => {
     setSprint(e);
 
-    const stage = businessProcess.stages.find((s) => s.id === stageId);
-    if (stage) {
-      const status = stage.statusses.find((a) => a.id === id);
+    const sprintFound = businessProcess.sprints.find((s) => s.id === sprintId);
+    if (sprintFound) {
+      const status = sprintFound.statusses.find((a) => a.id === id);
       if (status) {
         status.sprint = e;
       }
@@ -116,7 +116,7 @@ const Status = ({ stageId, id, name }) => {
 
       <ScrollArea ref={scrollRef} >
         {taskList?.map((t) => (
-          <Task key={t.id} name={t.name} stageId={stageId} actionId={id} id={t.id} />
+          <Task key={t.id} name={t.name} sprintId={sprintId} actionId={id} id={t.id} />
         ))}
       </ScrollArea>
 

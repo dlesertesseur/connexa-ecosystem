@@ -103,7 +103,7 @@ const Stage = ({ id, name }) => {
 
           <ScrollArea h={wSize.height - HEADER_HIGHT - 110} ref={scrollRef}>
             {statussesList?.map((a) => (
-              <Status key={a.id} name={a.name} stageId={id} id={a.id} />
+              <Status key={a.id} name={a.name} sprintId={id} id={a.id} />
             ))}
             {editing ? <AddStatus newAction={newAction} /> : null}
           </ScrollArea>

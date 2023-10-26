@@ -7,6 +7,7 @@ async function saveBusinessProcessModel(parameters) {
     description: parameters.description,
     tasks: parameters.tasks,
     stages: parameters.stages,
+    sprints: parameters.sprints,
     transitions: parameters.transitions,
     initialTaskId: parameters.initialTaskId,
     requiredRole: parameters.requiredRole

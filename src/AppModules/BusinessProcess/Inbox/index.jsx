@@ -35,6 +35,7 @@ const DynamicApp = ({ app }) => {
   const [tabName, setTabName] = useState("businessProcessModelTab");
   const [applicationTaksComponent, setApplicationTaskComponent] = useState(null);
   const [outgoingTasks, setOutgoingTasks] = useState(null);
+  const [createdBusinessProcessId, setCreatedBusinessProcessId] = useState(null);
   const [task, setTask] = useState(false);
   const navigate = useNavigate();
 
@@ -134,29 +135,33 @@ const DynamicApp = ({ app }) => {
   }, [user, reload, time]);
 
   const createProcessModelInstance = async (values) => {
-    const params = {
-      token: user.token,
-      userId: user.id,
-      name: values.name,
-      description: values.description,
-      businessProcessModelId: values.businessProcessModelId,
-    };
-    try {
-      setLoading(true);
-      const ret = await createBusinessProcessModelInstance(params);
+    // const params = {
+    //   token: user.token,
+    //   userId: user.id,
+    //   name: values.name,
+    //   description: values.description,
+    //   businessProcessModelId: values.businessProcessModelId,
+    // };
+    // try {
+    //   setLoading(true);
+    //   const ret = await createBusinessProcessModelInstance(params);
 
-      if (ret.error) {
-        setError(ret.message);
-        console.log("createBusinessProcessModelInstance -> Error", ret.message);
-      } else {
-        if (ret && ret.id) {
-          setCreationStatut(t("businessProcessModelInbox.messages.creation"));
-        }
-      }
-    } catch (error) {
-      setError(error);
-    }
+    //   if (ret.error) {
+    //     setError(ret.message);
+    //     console.log("createBusinessProcessModelInstance -> Error", ret.message);
+    //   } else {
+    //     if (ret && ret.id) {
+    //       //setCreationStatut(t("businessProcessModelInbox.messages.creation"));
+    //       setCreatedBusinessProcessId(ret.id);
+    //     }
+    //   }
+    // } catch (error) {
+    //   setError(error);
+    // }
     setLoading(false);
+
+    setCreatedBusinessProcessId("821469ba-fd42-4b26-8d3d-9db4db84cc48");
+
   };
 
   const onTakeTask = async (task) => {
@@ -326,6 +331,8 @@ const DynamicApp = ({ app }) => {
         sendToScrumMaster,
         setOutgoingTasks,
         outgoingTasks,
+        createdBusinessProcessId,
+        setCreatedBusinessProcessId
       }}
     >
       <AppHeader app={app} />

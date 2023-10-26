@@ -19,7 +19,7 @@ const Design = () => {
   const [editing, setEditing] = useState(true);
   const [saving, setSaving] = useState(false);
   const [businessProcess, setBusinessProcess] = useState(null);
-  const [selectedStageId, setSelectedStageId] = useState(null);
+  const [selectedSprintId, setSelectedSprintId] = useState(null);
   const [selectedActionId, setSelectedActionId] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [openTaskSettings, setOpenTaskSettings] = useState(false);
@@ -88,8 +88,8 @@ const Design = () => {
           setOpenTaskSettings,
           selectedTaskId,
           setSelectedTaskId,
-          selectedStageId,
-          setSelectedStageId,
+          selectedSprintId,
+          setSelectedSprintId,
           selectedActionId,
           setSelectedActionId,
           saving,

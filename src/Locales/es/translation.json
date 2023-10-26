@@ -1197,6 +1197,7 @@
       "stage": "Stage",
       "actionDefaultName": "nueva Accion",
       "stageDefaultName": "nuevo Stage",
+      "sprintDefaultName": "nuevo Sprint",
       "taskDefaultName": "nueva Tarea",
       "parameters": "Parametros",
       "connections": "Conexiones",
@@ -1278,6 +1279,7 @@
       "stage": "Stage",
       "actionDefaultName": "nueva Accion",
       "stageDefaultName": "nuevo Stage",
+      "sprintDefaultName": "nuevo Sprint",
       "taskDefaultName": "nueva Tarea",
       "parameters": "Parametros",
       "connections": "Conexiones",
@@ -1308,7 +1310,8 @@
       "businessProcessList":"Lista de procesos de negocio",
       "businessProcessesSeleted":"Procesos de negocio seleccionados",
       "duration":"Duracion en dias",
-      "stageNumber":"Numero"
+      "stageNumber":"Numero",
+      "sprintNumber":"Numero"
     },
     "placeholder": {
       "name": "un nombre",
@@ -1379,7 +1382,7 @@
       "transfer": "Transferir",
       "advance":"Avanzar",
       "back": "Volver",
-      "viewOnDiagram": "Ver",
+      "viewDiagram": "Ver",
       "sendToScrunMaster":"Enviar al scrum master"
     },
     "messages": {
@@ -1607,10 +1610,12 @@
       "viewLog": "View historial"
     },
     "label": {
+      "sprints":"Lista de sprints"
     },
     "title": {
       "viewDocument": "Documento asociado",
-      "viewLog": "Linea de tiempo de eventos"
+      "viewLog": "Linea de tiempo de eventos",
+      "configSprintTimes": "Configurar tiempos de sprints"
     },
     "columns": {
       "values": ["Nombre", "Descripcion", "Progreso"]

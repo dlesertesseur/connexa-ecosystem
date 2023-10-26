@@ -25,7 +25,7 @@ import CustomColorPicker from "../../../../Components/CustomColorPicker";
 
 const TaskSettings = ({ open, close, updateNode, node }) => {
   const { t } = useTranslation();
-  const { roles, sprints } = useContext(AbmStateContext);
+  const { roles } = useContext(AbmStateContext);
   const [data, setData] = useState(null);
 
   const form = useForm({
@@ -38,7 +38,6 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       borderColor: "rgba(0,0,0,0.99)",
       automatic: false,
       serviceUrl: "",
-      sprint: "",
       duration: 1,
     },
 
@@ -83,14 +82,6 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       form.setFieldValue("role", node.data.role.id);
     } else {
       form.setFieldValue("role", null);
-    }
-
-    if (node.data.sprint) {
-      const sprints = node.data.sprint;
-      const ret = sprints.map((s) => s.id);
-      form.setFieldValue("sprint", ret);
-    } else {
-      form.setFieldValue("sprint", null);
     }
 
     if (node.data.color) {
@@ -206,15 +197,7 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
                 {...form.getInputProps("role")}
               />
             </Grid.Col>
-            <Grid.Col span={6}>
-              <MultiSelect
-                maxSelectedValues={3}
-                label={t("businessProcessModel.label.sprint")}
-                placeholder={t("businessProcessModel.placeholder.sprint")}
-                data={sprints}
-                {...form.getInputProps("sprint")}
-              />
-            </Grid.Col>
+            <Grid.Col span={6}>{createNumberField("duration")}</Grid.Col>
           </Grid>
 
           <Grid mt={"xs"}>
@@ -222,10 +205,6 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
               <Checkbox label={t("businessProcessModel.label.automatic")} {...form.getInputProps("automatic")} />
             </Grid.Col>
           </Grid>
-
-          <Group mt={"xs"} w={160}>
-            {createNumberField("duration")}
-          </Group>
 
           <Group mt={"xs"} grow>
             {createTextField("serviceUrl", !form.getInputProps("automatic").value)}

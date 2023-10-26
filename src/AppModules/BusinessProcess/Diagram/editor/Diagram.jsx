@@ -18,15 +18,17 @@ import ReactFlow, {
 import uuid from "react-uuid";
 import TaskSettings from "./TaskSettings";
 import StageSettings from "./StageSettings";
+import EdgeSettings from "./EdgeSettings";
+import EndNode from "./model/EndNode";
+import FinalTaskSettings from "./FinalTaskSettings";
+import SprintNode from "./model/SprintNode";
+import SprintSettings from "./SprintSettings";
 import { useWindowSize } from "../../../../Hook";
 import { AbmStateContext, EditorStateContext } from "../Context";
 import { useRef } from "react";
 import { LoadingOverlay } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { arrayToMapByProp, hexToRgba } from "../../../../Util";
-import EdgeSettings from "./EdgeSettings";
-import EndNode from "./model/EndNode";
-import FinalTaskSettings from "./FinalTaskSettings";
 
 const Diagram = () => {
   const reactFlowRef = useRef();
@@ -50,6 +52,7 @@ const Diagram = () => {
       stageNode: StageNode,
       initNode: InitNode,
       endNode: EndNode,
+      sprintNode: SprintNode,
     }),
     []
   );
@@ -91,8 +94,8 @@ const Diagram = () => {
     let defaultName = null;
 
     switch (type) {
-      case "stageNode":
-        defaultName = t("businessProcessModel.label.stage");
+      case "sprintNode":
+        defaultName = t("businessProcessModel.label.sprint");
         break;
       case "taskNode":
         defaultName = t("businessProcessModel.label.task");
@@ -120,6 +123,9 @@ const Diagram = () => {
       case "stageNode":
         defaultValue = "rgba(255,0,0,0.1)";
         break;
+      case "sprintNode":
+        defaultValue = "rgba(0,0,255,0.1)";
+        break;
       case "taskNode":
       case "initNode":
       case "endNode":
@@ -138,6 +144,9 @@ const Diagram = () => {
       case "stageNode":
         defaultValue = 200;
         break;
+      case "sprintNode":
+        defaultValue = 300;
+        break;
       case "taskNode":
         defaultValue = 100;
         break;
@@ -154,6 +163,9 @@ const Diagram = () => {
     let defaultValue = null;
 
     switch (type) {
+      case "sprintNode":
+        defaultValue = 300;
+        break;
       case "stageNode":
         defaultValue = 200;
         break;
@@ -173,6 +185,9 @@ const Diagram = () => {
     let defaultValue = null;
 
     switch (type) {
+      case "sprintNode":
+        defaultValue = "rgba(0,0,255,1)";
+        break;
       case "stageNode":
         defaultValue = "rgba(255,0,0,1)";
         break;
@@ -192,6 +207,7 @@ const Diagram = () => {
 
     switch (type) {
       case "stageNode":
+      case "sprintNode":
         defaultValue = 0;
         break;
 
@@ -266,8 +282,8 @@ const Diagram = () => {
   };
 
   const onNodeDragStop = (evt, node) => {
-    if (node && node.type !== "stageNode") {
-      if (targetNode && targetNode?.type === "stageNode" && targetNode?.id !== node.id) {
+    if (node && node.type !== "sprintNode") {
+      if (targetNode && targetNode?.type === "sprintNode" && targetNode?.id !== node.id) {
         const ret = nodes.map((n) => {
           let ret = null;
           if (n.id === node.id) {
@@ -345,7 +361,27 @@ const Diagram = () => {
 
   useEffect(() => {
     if (businessProcessModel) {
-      const stages = businessProcessModel.stages.map((t) => {
+      // const stages = businessProcessModel?.stages.map((t) => {
+      //   const type = t.type ? t.type : getTypeNode(t);
+      //   const ret = {
+      //     id: t.id,
+      //     data: {
+      //       label: t.name,
+      //       role: getRoleById(t.requiredRole),
+      //       duration: t.durationInDays,
+      //       stageNumber: t.number,
+      //       color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
+      //       borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
+      //       width: t.dimensionx,
+      //       height: t.dimensiony,
+      //     },
+      //     position: { x: t.locationx, y: t.locationy },
+      //     type: type,
+      //   };
+      //   return ret;
+      // });
+
+      const sprints = businessProcessModel?.sprints.map((t) => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
@@ -353,7 +389,7 @@ const Diagram = () => {
             label: t.name,
             role: getRoleById(t.requiredRole),
             duration: t.durationInDays,
-            stageNumber: t.number,
+            sprintNumber: t.number,
             color: t.backgroundColor ? t.backgroundColor : getDefaultColor(type),
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
             width: t.dimensionx,
@@ -369,7 +405,7 @@ const Diagram = () => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
-          parentNode: t.stageId,
+          parentNode: t.sprintId,
           data: {
             label: t.name,
             duration: t.durationInDays,
@@ -404,7 +440,8 @@ const Diagram = () => {
         return ret;
       });
 
-      const totalNodes = stages.concat(nodes);
+      //const totalNodes = stages.concat(nodes);
+      const totalNodes = sprints.concat(nodes);
       setNodes(totalNodes);
       setEdges(edges);
     }
@@ -412,37 +449,37 @@ const Diagram = () => {
 
   useEffect(() => {
     if (delPressed) {
-      let edgesToRemove = [];
+      let containersToRemove = [];
 
-      const nodesToRemove = nodes.filter((n) => n.selected && n.type !== "stageNode");
+      const nodesToRemove = nodes.filter((n) => n.selected && (n.type !== "stageNode" || n.type !== "sprintNode"));
 
-      const stageToRemove = nodes.filter((n) => n.selected && n.type === "stageNode");
-      const stageToRemoveId = stageToRemove.map((s) => s.id);
+      const containerToRemove = nodes.filter((n) => n.selected && (n.type === "stageNode" || n.type === "sprintNode"));
+      const containerToRemoveId = containerToRemove.map((s) => s.id);
 
-      const stageById = arrayToMapByProp("id", stageToRemove);
+      const containerById = arrayToMapByProp("id", containerToRemove);
 
       const otherNodes = nodes.filter((n) => !n.selected);
 
       if (nodesToRemove.length > 0) {
         nodesToRemove.forEach((n) => {
           const connectedEdges = getConnectedEdges([n], edges);
-          edgesToRemove = edgesToRemove.concat(connectedEdges.map((e) => e.id));
+          containersToRemove = containersToRemove.concat(connectedEdges.map((e) => e.id));
         });
 
-        const otherEdges = edges.filter((e) => !edgesToRemove.includes(e.id));
+        const otherContainers = edges.filter((e) => !containersToRemove.includes(e.id));
 
         setNodes(otherNodes);
-        setEdges(otherEdges);
+        setEdges(otherContainers);
       }
 
-      if (stageToRemoveId && stageToRemoveId.length > 0) {
+      if (containerToRemoveId && containerToRemoveId.length > 0) {
         otherNodes.forEach((n) => {
-          if (stageToRemoveId.includes(n.parentNode)) {
-            const stage = stageById.get(n.parentNode);
+          if (containerToRemoveId.includes(n.parentNode)) {
+            const container = containerById.get(n.parentNode);
             n.parentNode = null;
-            if (stage) {
-              n.position.x = n.position.x + stage.position.x;
-              n.position.y = n.position.y + stage.position.y;
+            if (container) {
+              n.position.x = n.position.x + container.position.x;
+              n.position.y = n.position.y + container.position.y;
             }
           }
         });
@@ -515,6 +552,10 @@ const Diagram = () => {
         if (node.type === "stageNode") {
           node.data.stageNumber = values.stageNumber;
         }
+
+        if (node.type === "sprintNode") {
+          node.data.sprintNumber = values.sprintNumber;
+        }
       }
 
       return node;
@@ -546,11 +587,7 @@ const Diagram = () => {
       <TaskSettings
         node={selectedNode}
         updateNode={updateNode}
-        open={
-          selectedNode?.type === "taskNode"
-            ? true
-            : false
-        }
+        open={selectedNode?.type === "taskNode" ? true : false}
         close={() => {
           setSelectedNode(null);
         }}
@@ -563,10 +600,20 @@ const Diagram = () => {
           setSelectedEdge(null);
         }}
       />
+
       <StageSettings
         node={selectedNode}
         updateNode={updateNode}
         open={selectedNode?.type === "stageNode" ? true : false}
+        close={() => {
+          setSelectedNode(null);
+        }}
+      />
+
+      <SprintSettings
+        node={selectedNode}
+        updateNode={updateNode}
+        open={selectedNode?.type === "sprintNode" ? true : false}
         close={() => {
           setSelectedNode(null);
         }}

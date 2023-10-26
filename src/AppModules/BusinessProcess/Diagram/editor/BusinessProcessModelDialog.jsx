@@ -58,7 +58,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
     params = { token: user.token, id: businessProcessInstanceId };
     const ret = await findBusinessProcessInstanceById(params);
     if (ret.error) {
-     console.log(ret.error);
+      console.log(ret.error);
     } else {
       setBusinessProcessModel(ret);
     }
@@ -91,6 +91,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
 
     switch (type) {
       case "stageNode":
+      case "sprintNode":
         defaultValue = "rgba(255,0,0,0.1)";
         break;
       case "taskNode":
@@ -119,6 +120,9 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
     let defaultValue = null;
 
     switch (type) {
+      case "sprintNode":
+        defaultValue = "rgba(0,0,255,1)";
+        break;
       case "stageNode":
         defaultValue = "rgba(255,0,0,1)";
         break;
@@ -141,7 +145,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
-          parentNode: t.stageId,
+          parentNode: t.sprintId,
           data: {
             label: t.name,
             role: getRoleById(t.requiredRole),

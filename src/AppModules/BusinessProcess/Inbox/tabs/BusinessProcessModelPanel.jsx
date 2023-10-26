@@ -9,6 +9,7 @@ import { AbmStateContext } from "../Context";
 import SimpleTable from "../../../../Components/SimpleTable";
 import BusinessProcessModelInboxToolbar from "./BusinessProcessModelInboxToolbar";
 import CreateProcessInstanceDialog from "./CreateProcessInstanceDialog";
+import ConfigSprintTimesDialog from "./ConfigSprintTimesDialog";
 
 const BusinessProcessModelPanel = ({ name }) => {
   const { t } = useTranslation();
@@ -16,7 +17,8 @@ const BusinessProcessModelPanel = ({ name }) => {
   const [processModel, setProcessModel] = useState(null);
   const [openCreateProcessInstance, setOpenCreateProcessInstance] = useState(false);
 
-  const { processModelList, createProcessModelInstance } = useContext(AbmStateContext);
+  const { processModelList, createProcessModelInstance, createdBusinessProcessId, setCreatedBusinessProcessId } =
+    useContext(AbmStateContext);
 
   let col = 0;
   const cols = t("businessProcessModelInbox.columns.processModel", { returnObjects: true });
@@ -34,8 +36,8 @@ const BusinessProcessModelPanel = ({ name }) => {
 
   const create = (values) => {
     setOpenCreateProcessInstance(false);
-    createProcessModelInstance({...values, businessProcessModelId: processModel.id});
-  }
+    createProcessModelInstance({ ...values, businessProcessModelId: processModel.id });
+  };
 
   return (
     <>
@@ -45,8 +47,17 @@ const BusinessProcessModelPanel = ({ name }) => {
           setOpenCreateProcessInstance(false);
         }}
         processModel={processModel}
-        onCreate={create} 
+        onCreate={create}
       />
+
+      <ConfigSprintTimesDialog
+        open={createdBusinessProcessId}
+        close={() => {
+          setCreatedBusinessProcessId(false);
+        }}
+        processInstanceId={createdBusinessProcessId}
+      />
+
       <Tabs.Panel value={name} pt="xs">
         <Routes>
           <Route

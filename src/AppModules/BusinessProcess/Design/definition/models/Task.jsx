@@ -1,18 +1,18 @@
 import React from "react";
 import EditTextField from "./EditTextField";
-import { ActionIcon, Badge, Card, Group, Paper, Stack, Text } from "@mantine/core";
+import { ActionIcon, Badge, Group, Paper, Stack } from "@mantine/core";
 import { IconSettings, IconTrash } from "@tabler/icons-react";
 import { useContext } from "react";
 import { DesignerStateContext } from "../../Context";
 
-const Task = ({ stageId, actionId, id, name }) => {
+const Task = ({ sprintId, actionId, id, name }) => {
   const {
     businessProcess,
     setBusinessProcess,
     editing,
     setOpenTaskSettings,
     setSelectedTaskId,
-    setSelectedStageId,
+    setSelectedSprintId,
     setSelectedActionId,
     rolesByTask,
     roles
@@ -21,9 +21,9 @@ const Task = ({ stageId, actionId, id, name }) => {
   const assignedRoles = rolesByTask?.get(id);
 
   const deleteTask = (id) => {
-    const stage = businessProcess.stages.find((s) => s.id === stageId);
-    if (stage) {
-      const action = stage.statusses.find((a) => a.id === actionId);
+    const sprintFound = businessProcess.sprints.find((s) => s.id === sprintId);
+    if (sprintFound) {
+      const action = sprintFound.statusses.find((a) => a.id === actionId);
       if (action) {
         const ret = action.tasks.filter((t) => t.id !== id);
         action.tasks = ret;
@@ -33,9 +33,9 @@ const Task = ({ stageId, actionId, id, name }) => {
   };
 
   const updateTask = (id, data) => {
-    const stage = businessProcess.stages.find((s) => s.id === stageId);
-    if (stage) {
-      const action = stage.statusses.find((a) => a.id === actionId);
+    const sprintFound = businessProcess.sprints.find((s) => s.id === sprintId);
+    if (sprintFound) {
+      const action = sprintFound.statusses.find((a) => a.id === actionId);
       if (action) {
         const task = action.tasks.find((t) => t.id === id);
         if (task) {
@@ -73,7 +73,7 @@ const Task = ({ stageId, actionId, id, name }) => {
           <Group noWrap spacing={3}>
             <ActionIcon
               onClick={() => {
-                setSelectedStageId(stageId);
+                setSelectedSprintId(sprintId);
                 setSelectedActionId(actionId);
                 setSelectedTaskId(id);
                 setOpenTaskSettings(true);
