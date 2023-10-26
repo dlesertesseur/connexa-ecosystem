@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import ResponceNotification from "../../../Modal/ResponceNotification";
 import AppHeader from "../../../Components/AppHeader";
 import TabLabel from "./TabLabel";
+import BusinessProcessInstancePanel from "./BusinessProcessInstancePanel";
+import BusinessProcessModelDialog from "../Diagram/editor/BusinessProcessModelDialog";
+import FormDialog from "./form/FormDialog";
+import BusinessProcessInstanceLogDialog from "./BusinessProcessInstanceLogDialog";
 import { useTranslation } from "react-i18next";
 import { AbmStateContext } from "./Context";
 import { LoadingOverlay, Tabs } from "@mantine/core";
@@ -9,10 +13,9 @@ import { findAllBusinessProcessInstanceRelationsById } from "../../../DataAccess
 import { findFormInstanceById } from "../../../DataAccess/FormInstance";
 import { useSelector } from "react-redux";
 import { findAllBusinessProcessInstancesLog } from "../../../DataAccess/BusinessProcessInstance";
-import BusinessProcessInstancePanel from "./BusinessProcessInstancePanel";
-import BusinessProcessModelDialog from "../Diagram/editor/BusinessProcessModelDialog";
-import FormDialog from "./form/FormDialog";
-import BusinessProcessInstanceLogDialog from "./BusinessProcessInstanceLogDialog";
+import { findUserById } from "../../../DataAccess/User";
+import { convertMilisegToYYYYMMDDHHMISS } from "../../../Util";
+import { API } from "../../../Constants";
 
 const DynamicApp = ({ app }) => {
   const { t } = useTranslation();
@@ -87,7 +90,35 @@ const DynamicApp = ({ app }) => {
     try {
       let params = { token: user.token, id: rowSelected };
       const logs = await findAllBusinessProcessInstancesLog(params);
-      setLogs(logs);
+
+      const userById = new Map();
+      const userIds = [...new Set(logs.map((obj) => obj.userId))];
+      for (let index = 0; index < userIds.length; index++) {
+        const id = userIds[index];
+        if (id) {
+          try {
+            const userData = await findUserById({ token: user.token, id: id });
+            if (userData) {
+              userById.set(id, userData);
+            }
+          } catch (error) {
+            console.log("onViewLog error -> ", error);
+          }
+        }
+      }
+
+      const data = logs.map((l) => {
+        const u = userById.get(l.userId);
+        const ret = {
+          text: l.message.replace(/\([^)]*\)/g, ""),
+          date: convertMilisegToYYYYMMDDHHMISS(new Date(l.dateAndTime)),
+          user: u !== undefined ? `${u.firstname}, ${u.lastname}` : l.source,
+          photo: u !== undefined ? `${API.productImages.baseUrl}${u.image}` : null,
+        };
+        return ret;
+      });
+
+      setLogs(data);
     } catch (error) {
       setLoading(false);
       setError(error.message);
@@ -125,11 +156,7 @@ const DynamicApp = ({ app }) => {
         parentId={parentId}
       />
 
-      <BusinessProcessInstanceLogDialog
-        open={logs}
-        close={() => setLogs(null)}
-        logs={logs}
-      />
+      <BusinessProcessInstanceLogDialog open={logs} close={() => setLogs(null)} logs={logs} />
 
       <ResponceNotification
         opened={error ? true : false}

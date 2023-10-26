@@ -1599,7 +1599,8 @@
     "label": {
     },
     "title": {
-      "viewDocument": "Associated document"
+      "viewDocument": "Associated document",
+      "viewLog": "Events list"
     },
     "columns": {
       "values": ["Name", "Description", "Progress"]
