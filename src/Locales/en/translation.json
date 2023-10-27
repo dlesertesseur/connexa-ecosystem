@@ -1600,7 +1600,16 @@
       "viewLog": "View events"
     },
     "label": {
-      "sprints":"Sprints list"
+      "startDate":"Start date",
+      "endDate":"End date",
+      "sprints":"Sprints list",
+      "duration":"Durations in days",
+      "name":"Name",
+      "description":"Description"
+    },
+    "placeholder":{
+      "name":"a name",
+      "description":"a description"
     },
     "title": {
       "viewDocument": "Associated document",

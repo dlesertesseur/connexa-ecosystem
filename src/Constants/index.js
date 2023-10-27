@@ -411,6 +411,8 @@ export const API = {
       config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
     findAllTasksByRoleId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
     createInstance: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",
+    saveInstance: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/save",
+    createTemplate: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/create/",
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
     getAllOutgoingTaskByTaskId: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox/",
     executeTask: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-inbox",

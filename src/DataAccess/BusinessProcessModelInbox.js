@@ -80,14 +80,14 @@ async function executeTask(parameters) {
   const body = JSON.stringify({
     userId: parameters.userId,
     originTaskId: parameters.originTaskId,
-    targetTaskId: parameters.targetTaskId
+    targetTaskId: parameters.targetTaskId,
   });
 
   const requestOptions = {
     method: "PATCH",
     mode: "cors",
     headers: {
-      "accept": "application/json",
+      accept: "application/json",
       "Content-Type": "application/json",
       token: parameters.token,
     },
@@ -105,7 +105,7 @@ async function releaseTask(parameters) {
   const body = JSON.stringify({
     userId: parameters.userId,
     taskId: parameters.taskId,
-    action: "Release"
+    action: "Release",
   });
 
   const requestOptions = {
@@ -129,7 +129,7 @@ async function takeTask(parameters) {
   const body = JSON.stringify({
     userId: parameters.userId,
     taskId: parameters.taskId,
-    action: "Take"
+    action: "Take",
   });
 
   const requestOptions = {
@@ -149,6 +149,58 @@ async function takeTask(parameters) {
   return data;
 }
 
+async function createBusinessProcessModelInstanceTemplate(parameters) {
+  try {
+    const requestOptions = {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+    };
+
+    const url = API.businessProcessModelInbox.createTemplate + parameters.businessProcessModelId;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
+async function saveBusinessProcessModelInstance(parameters) {
+  try {
+    const param = {
+      "parameters": {
+        "businessProcessModelId": parameters.businessProcessModelId,
+        "userId": parameters.userId,
+      },
+      "businessProcessInstance":parameters.businessProcessInstance
+    }
+    const body = JSON.stringify(param);
+
+    const requestOptions = {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        token: parameters.token,
+      },
+      body: body,
+    };
+
+    const url = API.businessProcessModelInbox.saveInstance;
+    const res = await fetch(url, requestOptions);
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
 export {
   findAllBusinessProcessModelByRole,
   createBusinessProcessModelInstance,
@@ -156,5 +208,7 @@ export {
   getAllOutgoingTaskByTaskId,
   executeTask,
   releaseTask,
-  takeTask
+  takeTask,
+  createBusinessProcessModelInstanceTemplate,
+  saveBusinessProcessModelInstance,
 };

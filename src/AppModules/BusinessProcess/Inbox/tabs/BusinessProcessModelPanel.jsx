@@ -8,7 +8,6 @@ import { useContext } from "react";
 import { AbmStateContext } from "../Context";
 import SimpleTable from "../../../../Components/SimpleTable";
 import BusinessProcessModelInboxToolbar from "./BusinessProcessModelInboxToolbar";
-import CreateProcessInstanceDialog from "./CreateProcessInstanceDialog";
 import ConfigSprintTimesDialog from "./ConfigSprintTimesDialog";
 
 const BusinessProcessModelPanel = ({ name }) => {
@@ -17,8 +16,7 @@ const BusinessProcessModelPanel = ({ name }) => {
   const [processModel, setProcessModel] = useState(null);
   const [openCreateProcessInstance, setOpenCreateProcessInstance] = useState(false);
 
-  const { processModelList, createProcessModelInstance, createdBusinessProcessId, setCreatedBusinessProcessId } =
-    useContext(AbmStateContext);
+  const { processModelList, createdBusinessProcessId } = useContext(AbmStateContext);
 
   let col = 0;
   const cols = t("businessProcessModelInbox.columns.processModel", { returnObjects: true });
@@ -34,28 +32,29 @@ const BusinessProcessModelPanel = ({ name }) => {
     }
   }, [rowSelected]);
 
-  const create = (values) => {
-    setOpenCreateProcessInstance(false);
-    createProcessModelInstance({ ...values, businessProcessModelId: processModel.id });
-  };
+  // const create = (values) => {
+  //   setOpenCreateProcessInstance(false);
+  //   createProcessModelInstance({ ...values, businessProcessModelId: processModel.id });
+  // };
 
   return (
     <>
-      <CreateProcessInstanceDialog
+      {/* <CreateProcessInstanceDialog
         open={openCreateProcessInstance}
         close={() => {
           setOpenCreateProcessInstance(false);
         }}
         processModel={processModel}
         onCreate={create}
-      />
+      /> */}
 
       <ConfigSprintTimesDialog
-        open={createdBusinessProcessId}
+        open={openCreateProcessInstance}
         close={() => {
-          setCreatedBusinessProcessId(false);
+          setOpenCreateProcessInstance(false);
         }}
-        processInstanceId={createdBusinessProcessId}
+        title={processModel?.name}
+        businessProcessModelId={processModel?.id}
       />
 
       <Tabs.Panel value={name} pt="xs">

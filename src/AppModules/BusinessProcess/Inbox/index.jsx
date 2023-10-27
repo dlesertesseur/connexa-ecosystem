@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { AbmStateContext } from "./Context";
 import { LoadingOverlay, Tabs } from "@mantine/core";
 import {
-  createBusinessProcessModelInstance,
   executeTask,
   findAllBusinessProcessModelByRole,
   findAllTaskByRoleId,
@@ -73,7 +72,7 @@ const DynamicApp = ({ app }) => {
       const roles = await findAllByOrganizationId(params);
       rolesMap = rolesToRoleById(roles);
       const userRole = await getRoleBySiteIdAndUserId(params);
-      
+
       if (userRole) {
         let tasks = [];
         for (const role of userRole) {
@@ -116,7 +115,7 @@ const DynamicApp = ({ app }) => {
                 applicationPath: applicationPath,
                 automatic: automatic,
                 serviceUrl: serviceUrl,
-                businesProcessName:t.businessProcessInstanceName
+                businesProcessName: t.businessProcessInstanceName,
               };
             });
             tasks = tasks.concat(ret);
@@ -133,36 +132,6 @@ const DynamicApp = ({ app }) => {
     getData();
     console.log("getting data...");
   }, [user, reload, time]);
-
-  const createProcessModelInstance = async (values) => {
-    // const params = {
-    //   token: user.token,
-    //   userId: user.id,
-    //   name: values.name,
-    //   description: values.description,
-    //   businessProcessModelId: values.businessProcessModelId,
-    // };
-    // try {
-    //   setLoading(true);
-    //   const ret = await createBusinessProcessModelInstance(params);
-
-    //   if (ret.error) {
-    //     setError(ret.message);
-    //     console.log("createBusinessProcessModelInstance -> Error", ret.message);
-    //   } else {
-    //     if (ret && ret.id) {
-    //       //setCreationStatut(t("businessProcessModelInbox.messages.creation"));
-    //       setCreatedBusinessProcessId(ret.id);
-    //     }
-    //   }
-    // } catch (error) {
-    //   setError(error);
-    // }
-    setLoading(false);
-
-    setCreatedBusinessProcessId("821469ba-fd42-4b26-8d3d-9db4db84cc48");
-
-  };
 
   const onTakeTask = async (task) => {
     const params = {
@@ -242,7 +211,6 @@ const DynamicApp = ({ app }) => {
     //   token: user.token,
     //   taskId: task.id,
     // };
-
     // setLoading(true);
     // const outgoing = await getAllOutgoingTaskByTaskId(params);
     // setOutgoingTasks(outgoing);
@@ -321,7 +289,6 @@ const DynamicApp = ({ app }) => {
         processModelList,
         tasksList,
         loading,
-        createProcessModelInstance,
         onDoTask,
         onTakeTask,
         onReleaseTask,
@@ -332,7 +299,7 @@ const DynamicApp = ({ app }) => {
         setOutgoingTasks,
         outgoingTasks,
         createdBusinessProcessId,
-        setCreatedBusinessProcessId
+        setCreatedBusinessProcessId,
       }}
     >
       <AppHeader app={app} />

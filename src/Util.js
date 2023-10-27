@@ -297,6 +297,15 @@ function convertMilisegToYYYYMMDDHHMISS(milisegundos) {
   return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
 
+function convertMilisegToYYYYMMDD(milisegundos) {
+  const fecha = new Date(milisegundos);
+  const year = fecha.getFullYear();
+  const month = String(fecha.getMonth() + 1).padStart(2, '0');
+  const day = String(fecha.getDate()).padStart(2, '0');
+  
+  return `${year}/${month}/${day}`;
+}
+
 function hexToRgba(hex, alpha) {
   // Elimina el "#" del formato hexadecimal si está presente
   hex = hex.replace(/^#/, '');
@@ -379,6 +388,7 @@ export {
   formatDateToDDMMYYYY,
   lpad,
   convertMilisegToYYYYMMDDHHMISS,
+  convertMilisegToYYYYMMDD,
   hexToRgba,
   rgbaToHexAndAlpha,
   arrayToMap,

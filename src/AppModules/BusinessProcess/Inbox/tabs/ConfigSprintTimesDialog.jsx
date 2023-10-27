@@ -1,41 +1,70 @@
-import React, { useState } from "react";
-import { Button, Group, Modal, NumberInput, ScrollArea, Stack, Title } from "@mantine/core";
+import React, { useContext, useState } from "react";
+import { Button, Group, Modal, NumberInput, Paper, ScrollArea, Stack, Text, TextInput, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
-import { findBusinessProcessInstanceById } from "../../../../DataAccess/BusinessProcessModel";
 import { useSelector } from "react-redux";
+import { convertMilisegToYYYYMMDD } from "../../../../Util";
+import {
+  createBusinessProcessModelInstanceTemplate,
+  saveBusinessProcessModelInstance,
+} from "../../../../DataAccess/BusinessProcessModelInbox";
+import { AbmStateContext } from "../Context";
 
-const ConfigSprintTimesDialog = ({ open, close, processInstanceId }) => {
+const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId }) => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
 
   const [instance, setInstance] = useState(null);
+  const [sprints, setSprints] = useState([]);
+  const [baseDate] = useState(Date.now());
+
+  const { setError } = useContext(AbmStateContext);
 
   const form = useForm({
     initialValues: {
-      // name: "",
-      // description: "",
+      name: "",
+      description: "",
     },
 
     validate: {
-      // name: (val) => (val ? null : t("validation.required")),
-      // description: (val) => (val ? null : t("validation.required")),
+      name: (val) => (val ? null : t("validation.required")),
+      description: (val) => (val ? null : t("validation.required")),
     },
   });
+
+  const createTextField = (field, disabled = false) => {
+    const ret = (
+      <TextInput
+        disabled={disabled}
+        label={t("businessProcessInstances.label." + field)}
+        placeholder={t("businessProcessInstances.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
 
   const getData = async () => {
     let params = {
       token: user.token,
-      id: processInstanceId,
+      userId: user.id,
+      name: "",
+      description: "",
+      businessProcessModelId: businessProcessModelId,
     };
 
     try {
-      const ret = await findBusinessProcessInstanceById(params);
+      const ret = await createBusinessProcessModelInstanceTemplate(params);
       if (ret.error) {
         console.log(ret.error);
       } else {
-        console.log("ConfigSprintTimesDialog findBusinessProcessInstanceById -> ", ret);
+        if (ret?.sprints) {
+          const sortedSprints = ret.sprints;
+          sortedSprints.sort((a, b) => a.number - b.number);
+          setSprints(sortedSprints);
+        }
         setInstance(ret);
       }
     } catch (error) {
@@ -44,11 +73,10 @@ const ConfigSprintTimesDialog = ({ open, close, processInstanceId }) => {
   };
 
   useEffect(() => {
-    if (processInstanceId) {
+    if (businessProcessModelId && open) {
       getData();
-      console.log("ConfigSprintTimesDialog processInstanceId -> ", processInstanceId);
     }
-  }, [processInstanceId]);
+  }, [businessProcessModelId, open]);
 
   useEffect(() => {
     if (open) {
@@ -57,12 +85,72 @@ const ConfigSprintTimesDialog = ({ open, close, processInstanceId }) => {
   }, [open]);
 
   useEffect(() => {
-    if (instance) {
-      instance.sprints?.map((s) => {
+    if (sprints) {
+      sprints.map((s) => {
         form.setFieldValue(s.name, s.durationInDays);
       });
     }
-  }, [instance]);
+  }, [sprints]);
+
+  const calculateDate = (actualIndex) => {
+    let ret = null;
+    let totalDays = 0;
+
+    if (actualIndex >= 0) {
+      for (let index = 0; index < actualIndex; index++) {
+        const duration = form.getInputProps(sprints[index].name).value;
+        if (duration) {
+          totalDays += duration;
+        }
+      }
+      ret = convertMilisegToYYYYMMDD(baseDate + totalDays * 24 * 60 * 60 * 1000);
+    }
+    return ret;
+  };
+
+  const onSave = async (values) => {
+    const fields = Object.keys(values);
+    let hasError = false;
+
+    for (let index = 0; index < fields.length; index++) {
+      if (!values[fields[index]]) {
+        form.setFieldError(fields[index], t("validation.required"));
+        hasError = true;
+      }
+    }
+
+    if (!hasError) {
+      const ret = { ...instance };
+      ret.name = values.name;
+      ret.description = values.description;
+
+      const sprints = ret.sprints;
+      for (let index = 0; index < sprints.length; index++) {
+        sprints[index].durationInDays = form.getInputProps(sprints[index].name).value;
+        sprints[index]["startDate"] = calculateDate(index);
+        sprints[index]["endDate"] = calculateDate(index + 1);
+      }
+
+      try {
+        const params = {
+          token: user.token,
+          businessProcessModelId: businessProcessModelId,
+          userId: user.id,
+          businessProcessInstance: ret,
+        };
+        const data = await saveBusinessProcessModelInstance(params);
+
+        console.log(data);
+
+        if (data.error) {
+          setError(data.error);
+        }
+        close();
+      } catch (error) {
+        setError(error);
+      }
+    }
+  };
 
   return (
     <Modal
@@ -71,23 +159,59 @@ const ConfigSprintTimesDialog = ({ open, close, processInstanceId }) => {
       onClose={() => {
         close();
       }}
-      title={t("businessProcessInstances.title.configSprintTimes")}
+      title={title}
       centered
     >
       <Stack w={"100%"} spacing={"xs"}>
-        <Title order={4}>{t("businessProcessInstances.label.sprints")}</Title>
+        <Group mt={"xs"} grow>
+          {createTextField("name")}
+        </Group>
+        <Group mt={"xs"} mb={"xs"} grow>
+          {createTextField("description")}
+        </Group>
+
+        <Title order={5}>{t("businessProcessInstances.label.sprints")}</Title>
         <form
           autoComplete="false"
           onSubmit={form.onSubmit((values) => {
-            console.log(values);
+            onSave(values);
           })}
         >
           <ScrollArea h={400}>
-            {instance?.sprints?.map((s) => {
+            {sprints.map((s, index) => {
               const ret = (
-                <Group mt={"xs"} grow>
-                  <NumberInput key={s.id} label={s.name} description={s.description} {...form.getInputProps(s.name)} />
-                </Group>
+                <Paper key={s.id} p={"xs"} withBorder mb={"xs"}>
+                  <Stack mb={"xs"}>
+                    <Title order={5}>{s.name}</Title>
+                    {s.description ? <Text size={"xs"}>{s.description} </Text> : null}
+                  </Stack>
+                  <Group position="apart">
+                    <Stack spacing={"xs"}>
+                      <Group position="apart">
+                        <Text size={"sm"} weight={"normal"}>
+                          {t("businessProcessInstances.label.startDate")}
+                        </Text>
+                        <Text size={"sm"} weight={"normal"}>
+                          {calculateDate(index)}
+                        </Text>
+                      </Group>
+
+                      <Group position="apart">
+                        <Text size={"sm"}>{t("businessProcessInstances.label.endDate")}</Text>
+                        <Text size={"sm"} weight={"normal"}>
+                          {calculateDate(index + 1)}
+                        </Text>
+                      </Group>
+                    </Stack>
+
+                    <NumberInput
+                      // allowNegative={false}
+                      // clampBehavior="strict"
+                      label={t("businessProcessInstances.label.duration")}
+                      {...form.getInputProps(s.name)}
+                    />
+                  </Group>
+                </Paper>
               );
               return ret;
             })}
@@ -98,6 +222,7 @@ const ConfigSprintTimesDialog = ({ open, close, processInstanceId }) => {
             <Button
               onClick={() => {
                 close();
+                setSprints([]);
               }}
             >
               {t("button.cancel")}

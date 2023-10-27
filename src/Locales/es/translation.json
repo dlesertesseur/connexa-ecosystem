@@ -1610,8 +1610,18 @@
       "viewLog": "View historial"
     },
     "label": {
-      "sprints":"Lista de sprints"
+      "startDate":"Fecha de inicio",
+      "endDate":"Fecha de fin",
+      "sprints":"Lista de sprints",
+      "duration":"Duracion en dias",
+      "name":"Name",
+      "description":"Description"
     },
+    "placeholder":{
+      "name":"un nombre",
+      "description":"una descripcion"
+    },
+
     "title": {
       "viewDocument": "Documento asociado",
       "viewLog": "Linea de tiempo de eventos",
