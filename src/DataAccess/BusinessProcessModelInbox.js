@@ -186,7 +186,7 @@ async function saveBusinessProcessModelInstance(parameters) {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        token: parameters.token,
+        apikey: parameters.token,
       },
       body: body,
     };
