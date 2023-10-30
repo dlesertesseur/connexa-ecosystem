@@ -16,7 +16,7 @@ const BusinessProcessModelPanel = ({ name }) => {
   const [processModel, setProcessModel] = useState(null);
   const [openCreateProcessInstance, setOpenCreateProcessInstance] = useState(false);
 
-  const { processModelList, createdBusinessProcessId } = useContext(AbmStateContext);
+  const { processModelList } = useContext(AbmStateContext);
 
   let col = 0;
   const cols = t("businessProcessModelInbox.columns.processModel", { returnObjects: true });
@@ -32,22 +32,8 @@ const BusinessProcessModelPanel = ({ name }) => {
     }
   }, [rowSelected]);
 
-  // const create = (values) => {
-  //   setOpenCreateProcessInstance(false);
-  //   createProcessModelInstance({ ...values, businessProcessModelId: processModel.id });
-  // };
-
   return (
     <>
-      {/* <CreateProcessInstanceDialog
-        open={openCreateProcessInstance}
-        close={() => {
-          setOpenCreateProcessInstance(false);
-        }}
-        processModel={processModel}
-        onCreate={create}
-      /> */}
-
       <ConfigSprintTimesDialog
         open={openCreateProcessInstance}
         close={() => {

@@ -7,7 +7,17 @@ import { IconSend } from "@tabler/icons-react";
 
 const TasksToolbar = ({ task }) => {
   const { t } = useTranslation();
-  const { onDoTask, onTakeTask, onReleaseTask, getTransferOptions, sendToScrumMaster, onViewTask, loading } = useContext(AbmStateContext);
+  const {
+    onDoTask,
+    onTakeTask,
+    onReleaseTask,
+    getTransferOptions,
+    sendToScrumMaster,
+    onViewTask,
+    loading,
+    takingTask,
+    releasingTask,
+  } = useContext(AbmStateContext);
 
   const isDisabled = (button) => {
     let ret = true;
@@ -37,10 +47,10 @@ const TasksToolbar = ({ task }) => {
   return (
     <Group spacing={0} position="apart">
       <Group spacing={"xs"}>
-        <Button disabled={isDisabled("take")} onClick={() => onTakeTask(task)}>
+        <Button disabled={isDisabled("take")} loading={takingTask} onClick={() => onTakeTask(task)}>
           <Text>{t("businessProcessModelInbox.buttons.take")}</Text>
         </Button>
-        <Button disabled={isDisabled("release")} onClick={() => onReleaseTask(task)}>
+        <Button disabled={isDisabled("release")} loading={releasingTask} onClick={() => onReleaseTask(task)}>
           <Text>{t("businessProcessModelInbox.buttons.release")}</Text>
         </Button>
         <Button
@@ -61,7 +71,12 @@ const TasksToolbar = ({ task }) => {
         </Button>
       </Group>
       <Group spacing={"xs"}>
-        <Button disabled={isDisabled("sendToScrumMaster")} loading={loading} rightIcon={<IconSend size={18}/>} onClick={() => sendToScrumMaster(task)}>
+        <Button
+          disabled={isDisabled("sendToScrumMaster")}
+          loading={loading}
+          rightIcon={<IconSend size={18} />}
+          onClick={() => sendToScrumMaster(task)}
+        >
           <Text>{t("businessProcessModelInbox.buttons.sendToScrunMaster")}</Text>
         </Button>
         <Button disabled={isDisabled("advance")} loading={loading} onClick={() => getTransferOptions(task)}>

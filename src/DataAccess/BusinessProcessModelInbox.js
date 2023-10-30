@@ -160,7 +160,7 @@ async function createBusinessProcessModelInstanceTemplate(parameters) {
       },
     };
 
-    const url = API.businessProcessModelInbox.createTemplate + parameters.businessProcessModelId;
+    const url = API.businessProcessModelInbox.createTemplate + parameters.businessProcessModelId +"/"+ parameters.userId;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 

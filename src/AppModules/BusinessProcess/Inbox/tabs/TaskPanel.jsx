@@ -56,7 +56,6 @@ const TaskPanel = ({ name }) => {
                 <SimpleTable
                   data={tasksList}
                   columns={columns}
-                  loading={loading}
                   rowSelected={rowSelected}
                   setRowSelected={setRowSelected}
                   headerHeight={HEADER_HIGHT + 64}

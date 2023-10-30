@@ -16,6 +16,7 @@ import { useMemo } from "react";
 import { Modal } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { findAllByOrganizationId } from "../../../../DataAccess/OrganizationRole";
+import SprintNode from "./model/SprintNode";
 
 const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, taskId = null }) => {
   const { user, organizationSelected } = useSelector((state) => state.auth.value);
@@ -31,6 +32,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
       forkNode: ForkNode,
       joinNode: JoinNode,
       stageNode: StageNode,
+      sprintNode: SprintNode,
       initNode: InitNode,
       endNode: EndNode,
     }),
@@ -160,7 +162,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
         return ret;
       });
 
-      const stages = businessProcessModel?.stages?.map((t) => {
+      const sprints = businessProcessModel?.sprints?.map((t) => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
@@ -171,6 +173,8 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
             borderColor: t.borderColor ? t.borderColor : getDefaultBorderColor(type),
             width: t.dimensionx,
             height: t.dimensiony,
+            sprintNumber:t.number,
+            duration:t.durationInDays
           },
           position: { x: t.locationx, y: t.locationy },
           type: type,
@@ -197,7 +201,7 @@ const BusinessProcessModelDialog = ({ open, close, businessProcessInstanceId, ta
         return ret;
       });
 
-      const totalNodes = stages.concat(nodes);
+      const totalNodes = sprints.concat(nodes);
       setNodes(totalNodes);
       setEdges(edges);
     }

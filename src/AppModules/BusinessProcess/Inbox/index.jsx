@@ -36,6 +36,8 @@ const DynamicApp = ({ app }) => {
   const [outgoingTasks, setOutgoingTasks] = useState(null);
   const [createdBusinessProcessId, setCreatedBusinessProcessId] = useState(null);
   const [task, setTask] = useState(false);
+  const [takingTask, setTakingTask] = useState(false);
+  const [releasingTask, setReleasingTask] = useState(false);
   const navigate = useNavigate();
 
   const [time, setTime] = useState();
@@ -134,6 +136,7 @@ const DynamicApp = ({ app }) => {
   }, [user, reload, time]);
 
   const onTakeTask = async (task) => {
+    setTakingTask(true);
     const params = {
       token: user.token,
       userId: user.id,
@@ -150,9 +153,13 @@ const DynamicApp = ({ app }) => {
     } catch (error) {
       setError(error);
     }
+
+    setTakingTask(false);
   };
 
   const onReleaseTask = async (task) => {
+
+    setReleasingTask(true);
     const params = {
       token: user.token,
       userId: user.id,
@@ -161,7 +168,6 @@ const DynamicApp = ({ app }) => {
 
     try {
       const ret = await releaseTask(params);
-      console.log("onReleaseTask releaseTask ret ->", ret);
       if (ret.status !== 200) {
         setError(ret.error);
       } else {
@@ -170,6 +176,7 @@ const DynamicApp = ({ app }) => {
     } catch (error) {
       setError(error);
     }
+    setReleasingTask(false);
   };
 
   const onTransferTask = async (origingTaskId, targetTaskId) => {
@@ -300,6 +307,8 @@ const DynamicApp = ({ app }) => {
         outgoingTasks,
         createdBusinessProcessId,
         setCreatedBusinessProcessId,
+        releasingTask,
+        takingTask
       }}
     >
       <AppHeader app={app} />

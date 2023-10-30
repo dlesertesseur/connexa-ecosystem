@@ -41,7 +41,7 @@ const BusinessProcessInstanceLogDialog = ({ open, close, logs }) => {
           <Timeline bulletSize={32} lineWidth={2}>
             {logs?.map((l) => {
               const ret = (
-                <Timeline.Item key={l.id} bullet={getBullet(l)} title={l.date}>
+                <Timeline.Item key={l.date} bullet={getBullet(l)} title={l.date}>
                   <Text size="sm">{l.text}</Text>
                   <Text c="dimmed" size="xs" mt={4}>
                     {l.user}
