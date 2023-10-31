@@ -1292,6 +1292,7 @@
       "sprint": "Sprint",
       "searchRol": "Buscar rol",
       "rolesList": "Roles",
+      "role": "Rol",
       "assignedRoles": "Roles asignados",
       "task": "Tarea",
       "fork": "Fork",
@@ -1305,13 +1306,13 @@
       "borderColor": "Color de borde",
       "bidirectionalConnection": "Conexión bidireccional",
       "forms": "Formularios",
-      "search":"Buscar...",
-      "noData":"sin datos",
-      "businessProcessList":"Lista de procesos de negocio",
-      "businessProcessesSeleted":"Procesos de negocio seleccionados",
-      "duration":"Duracion en dias",
-      "stageNumber":"Numero",
-      "sprintNumber":"Numero"
+      "search": "Buscar...",
+      "noData": "sin datos",
+      "businessProcessList": "Lista de procesos de negocio",
+      "businessProcessesSeleted": "Procesos de negocio seleccionados",
+      "duration": "Duracion en dias",
+      "stageNumber": "Numero",
+      "sprintNumber": "Numero"
     },
     "placeholder": {
       "name": "un nombre",
@@ -1367,8 +1368,8 @@
       },
       "columns": ["Stage", "Business status", "Task"]
     },
-    "relation":{
-      "title":"List of available forms",
+    "relation": {
+      "title": "List of available forms",
       "columns": ["Nombre", "Descripcion"]
     }
   },
@@ -1380,10 +1381,10 @@
       "release": "Liberar",
       "doit": "Hacerla",
       "transfer": "Transferir",
-      "advance":"Avanzar",
+      "advance": "Avanzar",
       "back": "Volver",
       "viewDiagram": "Ver",
-      "sendToScrunMaster":"Enviar al scrum master"
+      "sendToScrunMaster": "Enviar al scrum master"
     },
     "messages": {
       "creation": "Instancia de modelo de proceso creada correctamente"
@@ -1436,9 +1437,9 @@
         "relation": "Coleccion",
         "entity": "una entidad",
         "formTest": "Probar formulario",
-        "newRecord":"Nuevo",
-        "updateRecord":"Modificar",
-        "deleteRecord":"Eliminar"
+        "newRecord": "Nuevo",
+        "updateRecord": "Modificar",
+        "deleteRecord": "Eliminar"
       },
       "placeholder": {
         "name": "un nombre",
@@ -1563,11 +1564,11 @@
     "columns": ["Nombre", "Descripcion"],
 
     "buttons": {
-      "values":"Valores"
+      "values": "Valores"
     },
 
     "label": {
-      "values":"Valores",
+      "values": "Valores",
       "code": "Codigo",
       "name": "Nombre",
       "description": "Descripcion"
@@ -1605,21 +1606,22 @@
 
   "businessProcessInstances": {
     "buttons": {
-      "viewDiagram": "Ver diagrama",
-      "viewDocument": "Ver documento",
-      "viewLog": "View historial"
+      "viewDiagram": "Diagrama",
+      "viewDocument": "Documento",
+      "viewLog": "Historial",
+      "viewSprints": "Sprints"
     },
     "label": {
-      "startDate":"Fecha de inicio",
-      "endDate":"Fecha de fin",
-      "sprints":"Lista de sprints",
-      "duration":"Duracion en dias",
-      "name":"Name",
-      "description":"Description"
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin",
+      "sprints": "Lista de sprints",
+      "duration": "Duracion en dias",
+      "name": "Name",
+      "description": "Description"
     },
-    "placeholder":{
-      "name":"un nombre",
-      "description":"una descripcion"
+    "placeholder": {
+      "name": "un nombre",
+      "description": "una descripcion"
     },
 
     "title": {
@@ -1634,8 +1636,12 @@
       "executing": "En ejecucion",
       "finished": "Terminados",
       "cancelled": "Cancelados"
-
     }
-  }
+  },
 
+  "taskStatuses": {
+    "inactive": "Inactiva",
+    "active": "Activa",
+    "finished": "Terminada"
+  }
 }

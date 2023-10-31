@@ -9,7 +9,7 @@ import { clearError, create, findAllCountries } from "../../../Features/Product"
 import { useNavigate } from "react-router-dom";
 import { actions } from "../../../Constants";
 
-export function CreatePage({ onLoadGrid }) {
+export function CreatePage() {
   const { t } = useTranslation();
   const { user, projectSelected } = useSelector((state) => state.auth.value);
   const { brands } = useSelector((state) => state.brand.value);

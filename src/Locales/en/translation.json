@@ -1302,6 +1302,7 @@
       "sprint": "Sprint",
       "searchRol": "Search",
       "rolesList": "Roles",
+      "role": "Role",
       "assignedRoles": "Assigned roles",
       "task": "Task",
       "fork": "Fork",
@@ -1315,14 +1316,14 @@
       "borderColor": "Border color",
       "bidirectionalConnection": "Bidirectional connection",
       "forms": "Forms",
-      "search":"Search...",
-      "noData":"Nothing found",
-      "businessProcessList":"Business process list",
-      "businessProcessesSeleted":"Selected business processes",
-      "duration":"Durations in days",
-      "stageNumber":"Number",
-      "sprintNumber":"Number"
-     },
+      "search": "Search...",
+      "noData": "Nothing found",
+      "businessProcessList": "Business process list",
+      "businessProcessesSeleted": "Selected business processes",
+      "duration": "Durations in days",
+      "stageNumber": "Number",
+      "sprintNumber": "Number"
+    },
     "placeholder": {
       "name": "a name",
       "description": "a description",
@@ -1331,9 +1332,9 @@
       "role": "Select a role",
       "applicationPath": "an application path",
       "serviceUrl": "a service URL",
-      "duration":1,
-      "stageNumber":0,
-      "sprintNumber":0
+      "duration": 1,
+      "stageNumber": 0,
+      "sprintNumber": 0
     },
     "buttons": {
       "editor": "Edit",
@@ -1380,8 +1381,8 @@
       },
       "columns": ["Stage", "Business status", "Task"]
     },
-    "relation":{
-      "title":"Lista de formularios disponibles",
+    "relation": {
+      "title": "Lista de formularios disponibles",
       "columns": ["Name", "Description"]
     }
   },
@@ -1393,10 +1394,10 @@
       "release": "Release",
       "doit": "Do it",
       "transfer": "Transfer",
-      "advance":"Advance",
+      "advance": "Advance",
       "back": "Back",
       "viewDiagram": "View",
-      "sendToScrunMaster":"Send to scrum master"
+      "sendToScrunMaster": "Send to scrum master"
     },
     "label": {
       "selectTask": "Select task"
@@ -1445,9 +1446,9 @@
         "relation": "Collection",
         "entity": "Entity",
         "formTest": "Form Test",
-        "newRecord":"New",
-        "updateRecord":"Update",
-        "deleteRecord":"Delete"
+        "newRecord": "New",
+        "updateRecord": "Update",
+        "deleteRecord": "Delete"
       },
       "placeholder": {
         "name": "a name",
@@ -1462,7 +1463,6 @@
         "addEntity": "Select related entity",
         "viewDoc": "See document layout",
         "testForm": "Test Form"
-
       }
     },
 
@@ -1553,7 +1553,7 @@
     "columns": ["Name", "Description"],
 
     "buttons": {
-      "values":"Values"
+      "values": "Values"
     },
 
     "label": {
@@ -1580,7 +1580,7 @@
       "delete": "Delete value"
     },
     "label": {
-      "values":"Values",
+      "values": "Values",
       "name": "Name",
       "description": "Description",
       "code": "Code"
@@ -1595,21 +1595,22 @@
 
   "businessProcessInstances": {
     "buttons": {
-      "viewDiagram": "View diagram",
-      "viewDocument": "View document",
-      "viewLog": "View events"
+      "viewDiagram": "Diagram",
+      "viewDocument": "Document",
+      "viewLog": "Events",
+      "viewSprints": "Sprints"
     },
     "label": {
-      "startDate":"Start date",
-      "endDate":"End date",
-      "sprints":"Sprints list",
-      "duration":"Durations in days",
-      "name":"Name",
-      "description":"Description"
+      "startDate": "Start date",
+      "endDate": "End date",
+      "sprints": "Sprints list",
+      "duration": "Durations in days",
+      "name": "Name",
+      "description": "Description"
     },
-    "placeholder":{
-      "name":"a name",
-      "description":"a description"
+    "placeholder": {
+      "name": "a name",
+      "description": "a description"
     },
     "title": {
       "viewDocument": "Associated document",
@@ -1624,5 +1625,11 @@
       "finished": "Finished",
       "cancelled": "Cancelled"
     }
+  },
+
+  "taskStatuses": {
+    "inactive": "Inactive",
+    "active": "Active",
+    "finished":"Finished"
   }
 }
