@@ -1,5 +1,5 @@
 import "reactflow/dist/style.css";
-import "../../../Diagram.css"
+import "../../../Diagram.css";
 import React from "react";
 import { Controls, MarkerType, ReactFlow, ReactFlowProvider, useEdgesState, useNodesState } from "reactflow";
 import { useEffect } from "react";
@@ -7,7 +7,7 @@ import { findBusinessProcessInstanceById } from "../../../DataAccess/BusinessPro
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useMemo } from "react";
-import { Button, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Stack } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 import { useTranslation } from "react-i18next";
@@ -17,13 +17,13 @@ import StaticSprintNode from "./model/StaticSprintNode";
 import StaticTaskNode from "./model/StaticTaskNode";
 import InitNode from "./model/InitNode";
 import EndNode from "./model/EndNode";
-import SprintSettingsModal from "./SprintSettingsModal";
 import TaskSettingsModal from "./TaskSettingsModal";
 import HeaderPanel from "./HeaderPanel";
+import { IconDeviceFloppy } from "@tabler/icons-react";
 
-const BusinessProcessDiagramInstacePanel = ({ businessProcessInstanceId, taskId = null, onBack }) => {
+const BusinessProcessDiagramInstacePanel = ({ businessProcessInstance, taskId = null, onBack }) => {
   const { user, organizationSelected } = useSelector((state) => state.auth.value);
-  const [businessProcessInstance, setBusinessProcessInstance] = useState(null);
+  const [businessProcessInstanceLocal, setBusinessProcessInstanceLocal] = useState(null);
   const [roles, setRoles] = useState([]);
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
@@ -62,20 +62,20 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstanceId, taskId 
     const roles = await findAllByOrganizationId(params);
     setRoles(roles);
 
-    params = { token: user.token, id: businessProcessInstanceId };
+    params = { token: user.token, id: businessProcessInstance.id };
     const ret = await findBusinessProcessInstanceById(params);
     if (ret.error) {
       console.log(ret.error);
     } else {
-      setBusinessProcessInstance(ret);
+      setBusinessProcessInstanceLocal(ret);
     }
   };
 
   useEffect(() => {
-    if (businessProcessInstanceId) {
+    if (businessProcessInstance?.id) {
       getData();
     }
-  }, [businessProcessInstanceId]);
+  }, [businessProcessInstance]);
 
   const getTypeNode = (task) => {
     let ret = null;
@@ -157,8 +157,8 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstanceId, taskId 
   };
 
   useEffect(() => {
-    if (businessProcessInstance) {
-      const nodes = businessProcessInstance?.tasks?.map((t) => {
+    if (businessProcessInstanceLocal) {
+      const nodes = businessProcessInstanceLocal?.tasks?.map((t) => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
@@ -171,7 +171,7 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstanceId, taskId 
             width: t.dimensionx,
             height: t.dimensiony,
             duration: t.durationInDays,
-            status: t.status
+            status: t.status,
           },
           position: { x: t.locationx, y: t.locationy },
           type: type,
@@ -179,7 +179,7 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstanceId, taskId 
         return ret;
       });
 
-      const sprints = businessProcessInstance?.sprints?.map((t) => {
+      const sprints = businessProcessInstanceLocal?.sprints?.map((t) => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
@@ -199,7 +199,7 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstanceId, taskId 
         return ret;
       });
 
-      const edges = businessProcessInstance?.transitions?.map((e) => {
+      const edges = businessProcessInstanceLocal?.transitions?.map((e) => {
         let ret = {
           id: e.id,
           source: e.originTaskId,
@@ -222,18 +222,32 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstanceId, taskId 
       setNodes(totalNodes);
       setEdges(edges);
     }
-  }, [businessProcessInstance]);
+  }, [businessProcessInstanceLocal]);
 
-  const updateNode = () => {
+  const onSave = () => {};
 
-  }
+  const updateNode = () => {};
 
   return (
     <ReactFlowProvider>
       <Stack spacing={"xs"}>
-        <HeaderPanel businessProcessInstance={businessProcessInstance} onBack={onBack}/>
+        <HeaderPanel
+          businessProcessInstance={businessProcessInstance}
+          onBack={onBack}
+          title={t("businessProcessInstances.title.viewDiagram")}
+        >
+          <ActionIcon
+            color="blue"
+            variant="filled"
+            onClick={() => {
+              onSave();
+            }}
+          >
+            <IconDeviceFloppy size="20" />
+          </ActionIcon>
+        </HeaderPanel>
         {width && height ? (
-          <div style={{ height: `${height - 202}px`, width: `${width - 310}px`, border: "solid 1px #e5e5e5" }}>
+          <div style={{ height: `${height - 242}px`, width: `${width - 310}px`, border: "solid 1px #e5e5e5" }}>
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -262,15 +276,6 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstanceId, taskId 
           setSelectedNode(null);
         }}
       />
-
-      {/* <SprintSettingsModal
-        node={selectedNode}
-        updateNode={updateNode}
-        open={selectedNode?.type === "sprintNode" ? true : false}
-        close={() => {
-          setSelectedNode(null);
-        }}
-      /> */}
     </ReactFlowProvider>
   );
 };

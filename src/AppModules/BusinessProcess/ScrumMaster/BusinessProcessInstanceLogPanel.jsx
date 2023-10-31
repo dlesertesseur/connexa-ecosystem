@@ -1,10 +1,10 @@
 import React from "react";
+import HeaderPanel from "./HeaderPanel";
 import { Avatar, ScrollArea, Stack, Text, Timeline } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconCheck } from "@tabler/icons-react";
 import { useWindowSize } from "../../../Hook";
 import { useState } from "react";
-import HeaderPanel from "./HeaderPanel";
 import { useEffect } from "react";
 import { findAllBusinessProcessInstancesLog } from "../../../DataAccess/BusinessProcessInstance";
 import { findUserById } from "../../../DataAccess/User";
@@ -15,10 +15,10 @@ import { useSelector } from "react-redux";
 import { API } from "../../../Constants";
 
 const BusinessProcessInstanceLogPanel = ({ businessProcessInstance, onBack }) => {
-  const { t } = useTranslation();
   const wsize = useWindowSize();
-  const headerHeight = 200;
+  const headerHeight = 250;
   const { user } = useSelector((state) => state.auth.value);
+  const { t } = useTranslation();
 
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -82,14 +82,18 @@ const BusinessProcessInstanceLogPanel = ({ businessProcessInstance, onBack }) =>
   }, [businessProcessInstance]);
 
   return (
-    <Stack>
-      <HeaderPanel businessProcessInstance={businessProcessInstance} onBack={onBack} />{" "}
+    <Stack spacing={"xs"}>
+      <HeaderPanel
+        businessProcessInstance={businessProcessInstance}
+        onBack={onBack}
+        title={t("businessProcessInstances.title.viewLog")}
+      />
       <ScrollArea sx={{ height: wsize.height - headerHeight }}>
         <Stack spacing={"xs"} justify="flex-start">
           <Timeline bulletSize={32} lineWidth={2}>
-            {logs?.map((l) => {
+            {logs?.map((l, index) => {
               const ret = (
-                <Timeline.Item key={l.date} bullet={getBullet(l)} title={l.date}>
+                <Timeline.Item key={index} bullet={getBullet(l)} title={l.date}>
                   <Text size="sm">{l.text}</Text>
                   <Text c="dimmed" size="xs" mt={4}>
                     {l.user}

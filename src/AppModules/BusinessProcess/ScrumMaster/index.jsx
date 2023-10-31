@@ -153,7 +153,7 @@ const DynamicApp = ({ app }) => {
           path="diagram"
           element={
             <BusinessProcessDiagramInstacePanel
-              businessProcessInstanceId={instanceId}
+              businessProcessInstance={instances?.find((i) => i.id === rowSelected)}
               onBack={() => {
                 navigate(-1);
               }}
@@ -172,7 +172,7 @@ const DynamicApp = ({ app }) => {
           path="log"
           element={
             <BusinessProcessInstanceLogPanel
-              businessProcessInstance = {instances?.find(i => i.id === rowSelected)}
+              businessProcessInstance={instances?.find((i) => i.id === rowSelected)}
               onBack={() => {
                 navigate(-1);
               }}

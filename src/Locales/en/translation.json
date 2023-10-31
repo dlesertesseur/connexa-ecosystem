@@ -1615,6 +1615,7 @@
     "title": {
       "viewDocument": "Associated document",
       "viewLog": "Events list",
+      "viewDiagram": "Business process diagram",
       "configSprintTimes": "Configure sprint times"
     },
     "columns": {
