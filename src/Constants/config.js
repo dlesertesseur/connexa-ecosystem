@@ -38,7 +38,7 @@ const config = {
   exportImageWidth: 1024 * 2,
   exportImageHeight: 768 * 2,
   breakpoints: ["xs", "sm", "md", "lg", "xl"],
-  taskStatuses: ["inactive", "active", "finished"],
+  taskStatuses: ["Inactive", "Active", "Finished"],
 };
 
 export { config };

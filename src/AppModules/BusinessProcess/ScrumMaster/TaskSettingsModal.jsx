@@ -41,7 +41,7 @@ const TaskSettingsModal = ({ open, close, updateNode, node }) => {
     }
 
     form.setFieldValue("duration", node.data.duration);
-    form.setFieldValue("status", node.data.status.toLowerCase());
+    form.setFieldValue("status", node.data.status);
   };
 
   useEffect(() => {
@@ -64,8 +64,8 @@ const TaskSettingsModal = ({ open, close, updateNode, node }) => {
   };
 
   const createSelectField = (field) => {
-    const list = config.taskStatuses.map((c) => {
-      return { value: c, label: t(`taskStatuses.${c}`) };
+    const list = config.taskStatuses.map((c) => { 
+      return { value: c, label: t(`taskStatuses.${c.toLowerCase()}`) };
     });
     const ret = (
       <Select label={t("businessProcessModel.label." + field)} data={list ? list : []} {...form.getInputProps(field)} />
@@ -98,7 +98,7 @@ const TaskSettingsModal = ({ open, close, updateNode, node }) => {
       onClose={() => {
         close();
       }}
-      title={node?.data.label}
+      title={t("businessProcessModel.title.taskSettings")}
       centered
     >
       <Stack w={"100%"} spacing={"xs"}>

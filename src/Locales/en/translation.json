@@ -1281,7 +1281,7 @@
       "update": "Update a business process model",
       "delete": "Delete a business process model",
       "taskSettings": "Task settings",
-      "connectorProperties": "Propiedades de conector"
+      "connectorProperties": "Connector properties"
     },
     "label": {
       "name": "Name",

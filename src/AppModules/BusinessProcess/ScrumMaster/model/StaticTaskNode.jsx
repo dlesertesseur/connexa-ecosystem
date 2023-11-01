@@ -1,8 +1,33 @@
 import { Handle, Position } from "reactflow";
 
+const indicatorSize = 10;
+const indicatorMargin = 3;
+
+const getColor = (statusTask) => {
+  let ret = null;
+
+  switch (statusTask) {
+    case "Inactive":
+      ret = "#f00";
+      break;
+
+    case "Active":
+      ret = "#0f0";
+      break;
+
+    case "Finished":
+      ret = "#bbb";
+      break;
+
+    default:
+      ret = "#bbb";
+      break;
+  }
+  return ret;
+};
+
 function StaticTaskNode(props) {
   const { data, isConnectable, selected } = props;
-
   return (
     <>
       <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
@@ -22,17 +47,18 @@ function StaticTaskNode(props) {
           width: `${data?.width}px`,
         }}
       >
-        {data.sprint ? (
+        {data.status ? (
           <div
             style={{
-              color: "#000",
-              fontWeight: "600",
-              fontSize: "8px",
-              textAlign: "right",
+              background: `${getColor(data.status)}`,
+              position: "absolute",
+              left: `${data?.width - (indicatorSize + indicatorMargin)}px`,
+              top: `${indicatorMargin}px`,
+              borderRadius: "36px",
+              width: `${indicatorSize}px`,
+              height: `${indicatorSize}px`,
             }}
-          >
-            {data.sprint.name}
-          </div>
+          ></div>
         ) : null}
 
         <div

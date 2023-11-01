@@ -8,7 +8,7 @@ import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
 import FormHeaderPanel from "./FormHeaderPanel";
 import SimpleTable from "../../../../Components/SimpleTable";
 
-const CollectionFormPanel = ({ formData, parentId }) => {
+const CollectionFormPanel = ({ formData, parentId, deltaY = 0 }) => {
   const { user } = useSelector((state) => state.auth.value);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [columns, setColumns] = useState([]);
@@ -74,7 +74,7 @@ const CollectionFormPanel = ({ formData, parentId }) => {
           loading={false}
           rowSelected={selectedRowId}
           setRowSelected={setSelectedRowId}
-          headerHeight={HEADER_HIGHT + HEADER + 32}
+          headerHeight={HEADER_HIGHT + HEADER + 32 + deltaY}
         />
       ) : (
         <Skeleton h={96} w={"100%"} />

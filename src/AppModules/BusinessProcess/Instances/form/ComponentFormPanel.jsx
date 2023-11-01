@@ -34,6 +34,7 @@ const ComponentFormPanel = ({
   title,
   selectedRowId,
   widgetByName,
+  deltaY = 0
 }) => {
   const { user } = useSelector((state) => state.auth.value);
   const wsize = useWindowSize();
@@ -41,7 +42,7 @@ const ComponentFormPanel = ({
   const [datasourceValuesById, setDatasourceValuesById] = useState(new Map());
 
   const form = useForm(formConfig);
-  const totalHeaderHeight = 260 + (title ? 60 : 0);
+  const totalHeaderHeight = 260 + deltaY + (title ? 60 : 0);
 
   const buildGroup = (group, index) => {
     const ret = (

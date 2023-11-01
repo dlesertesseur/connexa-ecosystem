@@ -32,7 +32,7 @@ const DynamicApp = ({ app }) => {
   const [processModelList, setProcessModelList] = useState(null);
   const [tasksList, setTasksList] = useState(null);
   const [tabName, setTabName] = useState("businessProcessModelTab");
-  const [applicationTaksComponent, setApplicationTaskComponent] = useState(null);
+  const [applicationTaskComponent, setApplicationTaskComponent] = useState(null);
   const [outgoingTasks, setOutgoingTasks] = useState(null);
   const [createdBusinessProcessId, setCreatedBusinessProcessId] = useState(null);
   const [task, setTask] = useState(false);
@@ -284,7 +284,7 @@ const DynamicApp = ({ app }) => {
 
   const onDoTask = async (task) => {
     await importModule(task);
-    navigate("applicationTaks", task);
+    navigate("applicationTask", task);
   };
 
   const ret = (
@@ -317,7 +317,7 @@ const DynamicApp = ({ app }) => {
 
       <Routes>
         <Route path="/*" element={tabs()}></Route>
-        <Route path="applicationTaks/*" element={applicationTaksComponent} />
+        <Route path="applicationTask/*" element={applicationTaskComponent} />
       </Routes>
 
       <ResponceNotification

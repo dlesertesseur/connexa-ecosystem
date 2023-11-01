@@ -71,14 +71,14 @@ const TasksToolbar = ({ task }) => {
         </Button>
       </Group>
       <Group spacing={"xs"}>
-        <Button
+        {/* <Button
           disabled={isDisabled("sendToScrumMaster")}
           loading={loading}
           rightIcon={<IconSend size={18} />}
           onClick={() => sendToScrumMaster(task)}
         >
           <Text>{t("businessProcessModelInbox.buttons.sendToScrunMaster")}</Text>
-        </Button>
+        </Button> */}
         <Button disabled={isDisabled("advance")} loading={loading} onClick={() => getTransferOptions(task)}>
           <Text>{t("businessProcessModelInbox.buttons.advance")}</Text>
         </Button>

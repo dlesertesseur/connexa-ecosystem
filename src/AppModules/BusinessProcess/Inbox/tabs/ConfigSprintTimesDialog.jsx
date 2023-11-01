@@ -108,6 +108,22 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
     return ret;
   };
 
+  const calculateMiliseconds = (actualIndex) => {
+    let ret = null;
+    let totalDays = 0;
+
+    if (actualIndex >= 0) {
+      for (let index = 0; index < actualIndex; index++) {
+        const duration = form.getInputProps(sprints[index].name).value;
+        if (duration) {
+          totalDays += duration;
+        }
+      }
+      ret = baseDate + totalDays * 24 * 60 * 60 * 1000;
+    }
+    return ret;
+  };
+
   const onSave = async (values) => {
     const fields = Object.keys(values);
     let hasError = false;
@@ -127,8 +143,8 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
       const sprints = ret.sprints;
       for (let index = 0; index < sprints.length; index++) {
         sprints[index].durationInDays = form.getInputProps(sprints[index].name).value;
-        sprints[index]["startDate"] = calculateDate(index);
-        sprints[index]["endDate"] = calculateDate(index + 1);
+        sprints[index]["startDate"] = calculateMiliseconds(index);
+        sprints[index]["endDate"] = calculateMiliseconds(index + 1);
       }
 
       try {

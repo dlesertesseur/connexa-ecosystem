@@ -7,7 +7,7 @@ import { Stack, Tabs } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { findEntityDefinitionById } from "../../../../DataAccess/EntityDefinition";
 
-const InstanceFormPanel = ({ formId, type, parentId }) => {
+const InstanceFormPanel = ({ formId, type, parentId, deltaY = 0 }) => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const [formDefinition, setFormDefinition] = useState(null);
@@ -144,6 +144,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
                   formConfig={formConfig}
                   parentId={parentId}
                   widgetByName={widgetByName}
+                  deltaY={deltaY}
                 />
               ) : (
                 <ComponentFormPanel
@@ -155,6 +156,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
                   parentId={parentId}
                   widgetByName={widgetByName}
                   mode={type}
+                  deltaY={deltaY}
                 />
               )}
             </Stack>
@@ -163,7 +165,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
           {relatedEntities.map((re) => {
             return (
               <Tabs.Panel key={re.options} value={re.options}>
-                <InstanceFormPanel formId={re.options} type={re.type} parentId={parentId} />
+                <InstanceFormPanel formId={re.options} type={re.type} parentId={parentId} deltaY={deltaY}/>
               </Tabs.Panel>
             );
           })}
@@ -179,6 +181,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
               formConfig={formConfig}
               parentId={parentId}
               widgetByName={widgetByName}
+              deltaY={deltaY}
             />
           ) : (
             <ComponentFormPanel
@@ -190,6 +193,7 @@ const InstanceFormPanel = ({ formId, type, parentId }) => {
               parentId={parentId}
               widgetByName={widgetByName}
               mode={type}
+              deltaY={deltaY}
             />
           )}
         </Stack>

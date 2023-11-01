@@ -36,6 +36,4 @@ async function findAllBusinessProcessInstancesLog(parameters) {
   }
 }
 
-export {
-  findAllBusinessProcessInstances, findAllBusinessProcessInstancesLog
-};
+export { findAllBusinessProcessInstances, findAllBusinessProcessInstancesLog};

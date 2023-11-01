@@ -20,17 +20,28 @@ import EndNode from "./model/EndNode";
 import TaskSettingsModal from "./TaskSettingsModal";
 import HeaderPanel from "./HeaderPanel";
 import { IconDeviceFloppy } from "@tabler/icons-react";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
+import { saveBusinessProcessModelInstanceTasks } from "../../../DataAccess/ScrumMaster";
 
-const BusinessProcessDiagramInstacePanel = ({ businessProcessInstance, taskId = null, onBack }) => {
+const BusinessProcessDiagramInstacePanel = ({
+  businessProcessInstanceId,
+  businessProcessInstanceName,
+  taskId = null,
+  onBack,
+}) => {
   const { user, organizationSelected } = useSelector((state) => state.auth.value);
-  const [businessProcessInstanceLocal, setBusinessProcessInstanceLocal] = useState(null);
+  const [businessProcessInstance, setBusinessProcessInstance] = useState(null);
   const [roles, setRoles] = useState([]);
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
+  const [saving, setSaving] = useState(false);
+
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const { height, width } = useViewportSize();
   const { t } = useTranslation();
+  const { setError } = useContext(AbmStateContext);
 
   const nodeTypes = useMemo(
     () => ({
@@ -62,20 +73,20 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstance, taskId = 
     const roles = await findAllByOrganizationId(params);
     setRoles(roles);
 
-    params = { token: user.token, id: businessProcessInstance.id };
+    params = { token: user.token, id: businessProcessInstanceId };
     const ret = await findBusinessProcessInstanceById(params);
     if (ret.error) {
       console.log(ret.error);
     } else {
-      setBusinessProcessInstanceLocal(ret);
+      setBusinessProcessInstance(ret);
     }
   };
 
   useEffect(() => {
-    if (businessProcessInstance?.id) {
+    if (businessProcessInstanceId) {
       getData();
     }
-  }, [businessProcessInstance]);
+  }, [businessProcessInstanceId]);
 
   const getTypeNode = (task) => {
     let ret = null;
@@ -157,8 +168,8 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstance, taskId = 
   };
 
   useEffect(() => {
-    if (businessProcessInstanceLocal) {
-      const nodes = businessProcessInstanceLocal?.tasks?.map((t) => {
+    if (businessProcessInstance) {
+      const nodes = businessProcessInstance?.tasks?.map((t) => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
@@ -179,7 +190,7 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstance, taskId = 
         return ret;
       });
 
-      const sprints = businessProcessInstanceLocal?.sprints?.map((t) => {
+      const sprints = businessProcessInstance?.sprints?.map((t) => {
         const type = t.type ? t.type : getTypeNode(t);
         const ret = {
           id: t.id,
@@ -199,7 +210,7 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstance, taskId = 
         return ret;
       });
 
-      const edges = businessProcessInstanceLocal?.transitions?.map((e) => {
+      const edges = businessProcessInstance?.transitions?.map((e) => {
         let ret = {
           id: e.id,
           source: e.originTaskId,
@@ -222,17 +233,66 @@ const BusinessProcessDiagramInstacePanel = ({ businessProcessInstance, taskId = 
       setNodes(totalNodes);
       setEdges(edges);
     }
-  }, [businessProcessInstanceLocal]);
+  }, [businessProcessInstance]);
 
-  const onSave = () => {};
+  const onSave = async () => {
+    const tasks = [];
 
-  const updateNode = () => {};
+    nodes.forEach((n) => {
+      if (n.type === "taskNode") {
+        const task = {
+          id: n.id,
+          status: n.data.status,
+          durationInDays: n.data.duration,
+        };
+
+        tasks.push(task);
+      }
+    });
+
+    const params = {
+      token: user.token,
+      userId: user.id,
+      businessProcessInstanceId: businessProcessInstanceId,
+      tasks: tasks,
+    };
+
+    setSaving(true);
+    try {
+      const ret = await saveBusinessProcessModelInstanceTasks(params);
+      setSaving(false);
+
+      if (ret.error) {
+        setSaving(false);
+        setError(ret.error);
+      }
+    } catch (error) {
+      setSaving(false);
+      setError(error);
+    }
+  };
+
+  const updateNode = (values) => {
+    const ret = nodes.map((node) => {
+      if (node.id === selectedNode.id) {
+        node.data = {
+          ...node.data,
+          duration: values.duration,
+          status: values.status,
+        };
+      }
+
+      return node;
+    });
+
+    setNodes(ret);
+  };
 
   return (
     <ReactFlowProvider>
       <Stack spacing={"xs"}>
         <HeaderPanel
-          businessProcessInstance={businessProcessInstance}
+          businessProcessInstanceName={businessProcessInstanceName}
           onBack={onBack}
           title={t("businessProcessInstances.title.viewDiagram")}
         >

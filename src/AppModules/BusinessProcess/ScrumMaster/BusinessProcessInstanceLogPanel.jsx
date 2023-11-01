@@ -14,7 +14,7 @@ import { AbmStateContext } from "./Context";
 import { useSelector } from "react-redux";
 import { API } from "../../../Constants";
 
-const BusinessProcessInstanceLogPanel = ({ businessProcessInstance, onBack }) => {
+const BusinessProcessInstanceLogPanel = ({ businessProcessInstanceId, businessProcessInstanceName, onBack }) => {
   const wsize = useWindowSize();
   const headerHeight = 250;
   const { user } = useSelector((state) => state.auth.value);
@@ -76,15 +76,15 @@ const BusinessProcessInstanceLogPanel = ({ businessProcessInstance, onBack }) =>
   };
 
   useEffect(() => {
-    if (businessProcessInstance && businessProcessInstance.id) {
+    if (businessProcessInstanceId) {
       getData();
     }
-  }, [businessProcessInstance]);
+  }, [businessProcessInstanceId]);
 
   return (
     <Stack spacing={"xs"}>
       <HeaderPanel
-        businessProcessInstance={businessProcessInstance}
+        businessProcessInstanceName={businessProcessInstanceName}
         onBack={onBack}
         title={t("businessProcessInstances.title.viewLog")}
       />

@@ -1270,7 +1270,7 @@
       "create": "Nuevo model de proceso de negocio",
       "update": "Modificar un model de proceso de negocio",
       "delete": "Eliminar un model de proceso de negocio",
-      "taskSettings": "Configuracion de tarea",
+      "taskSettings": "Propiedades de tarea",
       "connectorProperties": "Connector properties"
     },
     "label": {

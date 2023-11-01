@@ -13,10 +13,11 @@ import { convertMilisegToYYYYMMDDHHMISS } from "../../../Util";
 import { API } from "../../../Constants";
 import { findAllBusinessProcessInstances } from "../../../DataAccess/BusinessProcessInstance";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import BusinessProcessDiagramInstacePanel from "./BusinessProcessModelInstancePanel";
 import { useEffect } from "react";
-import BusinessProcessInstanceLogDialog from "./BusinessProcessInstanceLogPanel";
+import BusinessProcessDiagramInstacePanel from "./BusinessProcessModelInstancePanel";
 import BusinessProcessInstanceLogPanel from "./BusinessProcessInstanceLogPanel";
+import BusinessProcessIntanceSprintsPanel from "./BusinessProcessIntanceSprintsPanel";
+import BusinessProcessInstanceFormPanel from "./BusinessProcessInstanceFormPanel";
 
 const DynamicApp = ({ app }) => {
   const { t } = useTranslation();
@@ -86,47 +87,11 @@ const DynamicApp = ({ app }) => {
     navigate("diagram");
   };
 
-  const onViewSprints = (rowSelected) => {
+  const onViewSprints = () => {
     navigate("sprints");
   };
 
-  const onViewLog = async (rowSelected) => {
-    // try {
-    //   let params = { token: user.token, id: rowSelected };
-    //   const logs = await findAllBusinessProcessInstancesLog(params);
-
-    //   const userById = new Map();
-    //   const userIds = [...new Set(logs.map((obj) => obj.userId))];
-    //   for (let index = 0; index < userIds.length; index++) {
-    //     const id = userIds[index];
-    //     if (id) {
-    //       try {
-    //         const userData = await findUserById({ token: user.token, id: id });
-    //         if (userData) {
-    //           userById.set(id, userData);
-    //         }
-    //       } catch (error) {
-    //         console.log("onViewLog error -> ", error);
-    //       }
-    //     }
-    //   }
-
-    //   const data = logs.map((l) => {
-    //     const u = userById.get(l.userId);
-    //     const ret = {
-    //       text: l.message.replace(/\([^)]*\)/g, ""),
-    //       date: convertMilisegToYYYYMMDDHHMISS(new Date(l.dateAndTime)),
-    //       user: u !== undefined ? `${u.firstname}, ${u.lastname}` : l.source,
-    //       photo: u !== undefined ? `${API.productImages.baseUrl}${u.image}` : null,
-    //     };
-    //     return ret;
-    //   });
-
-    //   setLogs(data);
-    // } catch (error) {
-    //   setLoading(false);
-    //   setError(error.message);
-    // }
+  const onViewLog = async () => {
     navigate("log");
   };
 
@@ -153,7 +118,8 @@ const DynamicApp = ({ app }) => {
           path="diagram"
           element={
             <BusinessProcessDiagramInstacePanel
-              businessProcessInstance={instances?.find((i) => i.id === rowSelected)}
+              businessProcessInstanceId={rowSelected}
+              businessProcessInstanceName={instances?.find((i) => i.id === rowSelected)?.name}
               onBack={() => {
                 navigate(-1);
               }}
@@ -163,16 +129,21 @@ const DynamicApp = ({ app }) => {
         <Route
           path="form"
           element={
-            <Group>
-              <Text>{"FORM"}</Text>
-            </Group>
+            <BusinessProcessInstanceFormPanel
+              businessProcessInstanceId={rowSelected}
+              businessProcessInstanceName={instances?.find((i) => i.id === rowSelected)?.name}
+              onBack={() => {
+                navigate(-1);
+              }}
+            />
           }
         />
         <Route
           path="log"
           element={
             <BusinessProcessInstanceLogPanel
-              businessProcessInstance={instances?.find((i) => i.id === rowSelected)}
+              businessProcessInstanceId={rowSelected}
+              businessProcessInstanceName={instances?.find((i) => i.id === rowSelected)?.name}
               onBack={() => {
                 navigate(-1);
               }}
@@ -182,9 +153,13 @@ const DynamicApp = ({ app }) => {
         <Route
           path="sprints"
           element={
-            <Group>
-              <Text>{"SPTRINTS"}</Text>
-            </Group>
+            <BusinessProcessIntanceSprintsPanel
+              businessProcessInstanceId={rowSelected}
+              businessProcessInstanceName={instances?.find((i) => i.id === rowSelected)?.name}
+              onBack={() => {
+                navigate(-1);
+              }}
+            />
           }
         />
       </Routes>
