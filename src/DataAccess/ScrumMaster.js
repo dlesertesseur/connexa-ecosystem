@@ -1,7 +1,13 @@
 import { API } from "../Constants";
 
-const saveBusinessProcessModelInstanceTasks = async (parameters) => {
-  const body = JSON.stringify(parameters.tasks);
+const scrumMasterSaveTasks = async (parameters) => {
+  const params = {
+    tasks: parameters.tasks,
+    businessProcessInstanceId: parameters.businessProcessInstanceId,
+    userId: parameters.userId,
+  };
+
+  const body = JSON.stringify(params);
 
   const requestOptions = {
     method: "PUT",
@@ -13,10 +19,45 @@ const saveBusinessProcessModelInstanceTasks = async (parameters) => {
     body: body,
   };
 
-  const res = await fetch(API.businessProcessInstanceTasks.save, requestOptions);
-  const data = await res.json();
+  const res = await fetch(API.scrumMaster.saveTasks, requestOptions);
+  let data = null;
+  if (res.status !== 200) {
+    data = await res.json();
+  } else {
+    data = "";
+  }
 
   return data;
 };
 
-export { saveBusinessProcessModelInstanceTasks };
+const scrumMasterSaveSprints = async (parameters) => {
+  const params = {
+    sprints: parameters.sprints,
+    businessProcessInstanceId: parameters.businessProcessInstanceId,
+    userId: parameters.userId,
+  };
+
+  const body = JSON.stringify(params);
+
+  const requestOptions = {
+    method: "PUT",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token: parameters.token,
+    },
+    body: body,
+  };
+
+  const res = await fetch(API.scrumMaster.saveSprints, requestOptions);
+  let data = null;
+  if (res.status !== 200) {
+    data = await res.json();
+  } else {
+    data = "";
+  }
+
+  return data;
+};
+
+export { scrumMasterSaveTasks, scrumMasterSaveSprints };

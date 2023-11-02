@@ -426,8 +426,9 @@ export const API = {
     findAllLogById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance-log/",
   },
 
-  businessProcessInstanceTasks: {
-    save: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance-task",
+  scrumMaster: {
+    saveTasks: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/scrum-master/update/tasks",
+    saveSprints: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/scrum-master/update/sprints",
   },
 
   businessProcessInstanceLog: {

@@ -7,10 +7,14 @@ import { findBusinessProcessInstanceById } from "../../../DataAccess/BusinessPro
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useMemo } from "react";
-import { ActionIcon, Stack } from "@mantine/core";
+import { ActionIcon, LoadingOverlay, Stack } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 import { useTranslation } from "react-i18next";
+import { IconDeviceFloppy } from "@tabler/icons-react";
+import { useContext } from "react";
+import { AbmStateContext } from "./Context";
+import { scrumMasterSaveTasks } from "../../../DataAccess/ScrumMaster";
 import ForkNode from "./model/ForkNode";
 import JoinNode from "./model/JoinNode";
 import StaticSprintNode from "./model/StaticSprintNode";
@@ -19,10 +23,6 @@ import InitNode from "./model/InitNode";
 import EndNode from "./model/EndNode";
 import TaskSettingsModal from "./TaskSettingsModal";
 import HeaderPanel from "./HeaderPanel";
-import { IconDeviceFloppy } from "@tabler/icons-react";
-import { useContext } from "react";
-import { AbmStateContext } from "./Context";
-import { saveBusinessProcessModelInstanceTasks } from "../../../DataAccess/ScrumMaster";
 
 const BusinessProcessDiagramInstacePanel = ({
   businessProcessInstanceId,
@@ -259,7 +259,7 @@ const BusinessProcessDiagramInstacePanel = ({
 
     setSaving(true);
     try {
-      const ret = await saveBusinessProcessModelInstanceTasks(params);
+      const ret = await scrumMasterSaveTasks(params);
       setSaving(false);
 
       if (ret.error) {
@@ -297,6 +297,7 @@ const BusinessProcessDiagramInstacePanel = ({
           title={t("businessProcessInstances.title.viewDiagram")}
         >
           <ActionIcon
+            disabled={saving}
             color="blue"
             variant="filled"
             onClick={() => {
@@ -321,6 +322,7 @@ const BusinessProcessDiagramInstacePanel = ({
               snapGrid={[10, 10]}
               minZoom={0.1}
             >
+              <LoadingOverlay visible={saving} zIndex={1000} />
               <Controls />
             </ReactFlow>
           </div>

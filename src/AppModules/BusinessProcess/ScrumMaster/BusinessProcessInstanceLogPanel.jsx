@@ -1,6 +1,6 @@
 import React from "react";
 import HeaderPanel from "./HeaderPanel";
-import { Avatar, ScrollArea, Stack, Text, Timeline } from "@mantine/core";
+import { Avatar, LoadingOverlay, ScrollArea, Stack, Text, Timeline } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconCheck } from "@tabler/icons-react";
 import { useWindowSize } from "../../../Hook";
@@ -37,6 +37,7 @@ const BusinessProcessInstanceLogPanel = ({ businessProcessInstanceId, businessPr
   };
 
   const getData = async () => {
+    setLoading(true);
     try {
       let params = { token: user.token, id: rowSelected };
       const logs = await findAllBusinessProcessInstancesLog(params);
@@ -69,6 +70,7 @@ const BusinessProcessInstanceLogPanel = ({ businessProcessInstanceId, businessPr
       });
 
       setLogs(data);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       setError(error.message);
@@ -89,6 +91,7 @@ const BusinessProcessInstanceLogPanel = ({ businessProcessInstanceId, businessPr
         title={t("businessProcessInstances.title.viewLog")}
       />
       <ScrollArea sx={{ height: wsize.height - headerHeight }}>
+        <LoadingOverlay visible={loading} zIndex={1000} />
         <Stack spacing={"xs"} justify="flex-start">
           <Timeline bulletSize={32} lineWidth={2}>
             {logs?.map((l, index) => {

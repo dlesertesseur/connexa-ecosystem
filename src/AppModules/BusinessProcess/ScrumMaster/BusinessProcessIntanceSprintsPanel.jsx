@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
 import {
   ActionIcon,
-  Button,
+  Box,
   Container,
   Group,
+  LoadingOverlay,
   NumberInput,
   Paper,
   ScrollArea,
   Stack,
   Text,
-  TextInput,
   Title,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
@@ -19,50 +19,27 @@ import { useSelector } from "react-redux";
 import { convertMilisegToYYYYMMDD } from "../../../Util";
 import { AbmStateContext } from "./Context";
 import { findBusinessProcessInstanceById } from "../../../DataAccess/BusinessProcessModel";
-import HeaderPanel from "./HeaderPanel";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useViewportSize } from "@mantine/hooks";
+import { scrumMasterSaveSprints } from "../../../DataAccess/ScrumMaster";
+import HeaderPanel from "./HeaderPanel";
 
-const BusinessProcessIntanceSprintsPanel = ({
-  businessProcessInstanceId,
-  businessProcessInstanceName,
-  taskId = null,
-  onBack,
-}) => {
+const BusinessProcessIntanceSprintsPanel = ({ businessProcessInstanceId, businessProcessInstanceName, onBack }) => {
   const { t } = useTranslation();
   const { height } = useViewportSize();
   const { user } = useSelector((state) => state.auth.value);
 
   const [instance, setInstance] = useState(null);
   const [sprints, setSprints] = useState([]);
+  const [saving, setSaving] = useState(false);
   const [baseDate] = useState(Date.now());
 
   const { setError } = useContext(AbmStateContext);
 
   const form = useForm({
-    initialValues: {
-      name: "",
-      description: "",
-    },
-
-    validate: {
-      name: (val) => (val ? null : t("validation.required")),
-      description: (val) => (val ? null : t("validation.required")),
-    },
+    initialValues: {},
+    validate: {},
   });
-
-  const createTextField = (field, disabled = false) => {
-    const ret = (
-      <TextInput
-        disabled={disabled}
-        label={t("businessProcessInstances.label." + field)}
-        placeholder={t("businessProcessInstances.placeholder." + field)}
-        {...form.getInputProps(field)}
-      />
-    );
-
-    return ret;
-  };
 
   const getData = async () => {
     const params = { token: user.token, id: businessProcessInstanceId };
@@ -131,12 +108,13 @@ const BusinessProcessIntanceSprintsPanel = ({
           totalDays += duration;
         }
       }
-      ret = (baseDate + totalDays * 24 * 60 * 60 * 1000);
+      ret = baseDate + totalDays * 24 * 60 * 60 * 1000;
     }
     return ret;
   };
 
-  const onSave = async (values) => {
+  const onSave = async () => {
+    const values = form.values;
     const fields = Object.keys(values);
     let hasError = false;
 
@@ -148,35 +126,33 @@ const BusinessProcessIntanceSprintsPanel = ({
     }
 
     if (!hasError) {
-      const ret = { ...instance };
-      ret.name = values.name;
-      ret.description = values.description;
-
-      const sprints = ret.sprints;
+      const sprints = instance.sprints;
       for (let index = 0; index < sprints.length; index++) {
         sprints[index].durationInDays = form.getInputProps(sprints[index].name).value;
         sprints[index]["startDate"] = calculateMiliseconds(index);
         sprints[index]["endDate"] = calculateMiliseconds(index + 1);
       }
 
-      // try {
-      //   const params = {
-      //     token: user.token,
-      //     businessProcessModelId: businessProcessModelId,
-      //     userId: user.id,
-      //     businessProcessInstance: ret,
-      //   };
-      //   const data = await saveBusinessProcessModelInstance(params);
+      const params = {
+        token: user.token,
+        userId: user.id,
+        businessProcessInstanceId: businessProcessInstanceId,
+        sprints: sprints,
+      };
 
-      //   console.log(data);
+      setSaving(true);
+      try {
+        const ret = await scrumMasterSaveSprints(params);
+        setSaving(false);
 
-      //   if (data.error) {
-      //     setError(data.error);
-      //   }
-      //   close();
-      // } catch (error) {
-      //   setError(error);
-      // }
+        if (ret.error) {
+          setSaving(false);
+          setError(ret.error);
+        }
+      } catch (error) {
+        setSaving(false);
+        setError(error);
+      }
     }
   };
 
@@ -188,10 +164,11 @@ const BusinessProcessIntanceSprintsPanel = ({
         title={t("businessProcessInstances.title.configSprintTimes")}
       >
         <ActionIcon
+          disabled={saving}
           color="blue"
           variant="filled"
           onClick={() => {
-            //onSave();
+            onSave();
           }}
         >
           <IconDeviceFloppy size="20" />
@@ -199,24 +176,10 @@ const BusinessProcessIntanceSprintsPanel = ({
       </HeaderPanel>
 
       <Stack w={"100%"} spacing={"xs"} mt={"xs"} s>
-        {/* <Group mt={"xs"} grow>
-          {createTextField("name")}
-        </Group>
-        <Group mt={"xs"} mb={"xs"} grow>
-          {createTextField("description")}
-        </Group> */}
-
-        <form
-          autoComplete="false"
-          onSubmit={form.onSubmit((values) => {
-            onSave(values);
-          })}
-        >
+        <form autoComplete="false">
           <Container size={"lg"}>
-            {/* <Text size={"sm"} weight={600} mb={"xs"}>
-              {t("businessProcessInstances.label.sprints")}
-            </Text> */}
             <ScrollArea offsetScrollbars h={height - 264}>
+              <LoadingOverlay visible={saving} zIndex={1000} />
               {sprints.map((s, index) => {
                 const ret = (
                   <Paper key={s.id} p={"xs"} withBorder mb={"xs"}>
@@ -255,17 +218,6 @@ const BusinessProcessIntanceSprintsPanel = ({
                 return ret;
               })}
             </ScrollArea>
-            {/* <Group position="right" mt={"xl"}>
-            <Button type="submit">{t("button.accept")}</Button>
-            <Button
-              onClick={() => {
-                close();
-                setSprints([]);
-              }}
-            >
-              {t("button.cancel")}
-            </Button>
-          </Group> */}
           </Container>
         </form>
       </Stack>
