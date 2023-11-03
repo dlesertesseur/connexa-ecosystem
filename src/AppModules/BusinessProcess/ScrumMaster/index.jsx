@@ -13,6 +13,7 @@ import BusinessProcessDiagramInstacePanel from "./BusinessProcessModelInstancePa
 import BusinessProcessInstanceLogPanel from "./BusinessProcessInstanceLogPanel";
 import BusinessProcessIntanceSprintsPanel from "./BusinessProcessIntanceSprintsPanel";
 import BusinessProcessInstanceFormPanel from "./BusinessProcessInstanceFormPanel";
+import BusinessProcessInstanceGanttPanel from "./BusinessProcessInstanceGanttPanel";
 
 const DynamicApp = ({ app }) => {
   const { t } = useTranslation();
@@ -60,6 +61,10 @@ const DynamicApp = ({ app }) => {
     navigate("log");
   };
 
+  const onViewGantt = async () => {
+    navigate("gantt");
+  };
+
   const ret = (
     <AbmStateContext.Provider
       value={{
@@ -68,6 +73,7 @@ const DynamicApp = ({ app }) => {
         onViewDiagram,
         onViewLog,
         onViewSprints,
+        onViewGantt,
         setRowSelected,
         rowSelected,
         instances,
@@ -119,6 +125,18 @@ const DynamicApp = ({ app }) => {
           path="sprints"
           element={
             <BusinessProcessIntanceSprintsPanel
+              businessProcessInstanceId={rowSelected}
+              businessProcessInstanceName={instances?.find((i) => i.id === rowSelected)?.name}
+              onBack={() => {
+                navigate(-1);
+              }}
+            />
+          }
+        />
+        <Route
+          path="gantt"
+          element={
+            <BusinessProcessInstanceGanttPanel
               businessProcessInstanceId={rowSelected}
               businessProcessInstanceName={instances?.find((i) => i.id === rowSelected)?.name}
               onBack={() => {

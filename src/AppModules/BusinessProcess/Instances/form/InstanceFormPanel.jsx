@@ -80,19 +80,19 @@ const InstanceFormPanel = ({ formId, type, parentId, deltaY = 0 }) => {
     return ret;
   };
 
-  const createValidations = () => {
-    const ret = {};
+  // const createValidations = () => {
+  //   const ret = {};
 
-    panels?.forEach((p) => {
-      const group = widgetByPanel?.get(p.id);
-      group?.forEach((f) => {
-        if (f.required && f.required === "true") {
-          ret[f.name] = (val) => (val ? null : t("validation.required"));
-        }
-      });
-    });
-    return ret;
-  };
+  //   panels?.forEach((p) => {
+  //     const group = widgetByPanel?.get(p.id);
+  //     group?.forEach((f) => {
+  //       if (f.required && f.required === "true") {
+  //         ret[f.name] = (val) => (val ? null : t("validation.required"));
+  //       }
+  //     });
+  //   });
+  //   return ret;
+  // };
 
   useEffect(() => {
     if (formId) {
@@ -121,7 +121,7 @@ const InstanceFormPanel = ({ formId, type, parentId, deltaY = 0 }) => {
         <Tabs variant="outline" defaultValue="base">
           <Tabs.List>
             <Tabs.Tab value="base">
-              General
+              {t("businessProcessInstances.label.general")}
             </Tabs.Tab>
 
             {relatedEntities.map((re) => {

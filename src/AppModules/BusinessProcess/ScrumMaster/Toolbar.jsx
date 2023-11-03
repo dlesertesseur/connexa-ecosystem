@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Group, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
-const Toolbar = ({ rowSelected, onViewDiagram, onViewDocument, onViewLog, onViewSprints }) => {
+const Toolbar = ({ rowSelected, onViewDiagram, onViewDocument, onViewLog, onViewSprints, onViewGantt }) => {
   const { t } = useTranslation();
 
   return (
@@ -21,6 +21,10 @@ const Toolbar = ({ rowSelected, onViewDiagram, onViewDocument, onViewLog, onView
 
       <Button disabled={!rowSelected} onClick={onViewSprints}>
         <Text>{t("businessProcessInstances.buttons.viewSprints")}</Text>
+      </Button>
+
+      <Button disabled={!rowSelected} onClick={onViewGantt}>
+        <Text>{t("businessProcessInstances.buttons.viewGantt")}</Text>
       </Button>
     </Group>
   );

@@ -1609,7 +1609,8 @@
       "viewDiagram": "Diagrama",
       "viewDocument": "Documento",
       "viewLog": "Historial",
-      "viewSprints": "Sprints"
+      "viewSprints": "Sprints",
+      "viewGantt": "Gantt"
     },
     "label": {
       "startDate": "Fecha de inicio",
@@ -1617,7 +1618,8 @@
       "sprints": "Lista de sprints",
       "duration": "Duracion en dias",
       "name": "Name",
-      "description": "Description"
+      "description": "Description",
+      "general": "General"
     },
     "placeholder": {
       "name": "un nombre",
@@ -1627,7 +1629,8 @@
     "title": {
       "viewDocument": "Documento asociado",
       "viewLog": "Linea de tiempo de eventos",
-      "viewDiagram": "Diagram de proceso",
+      "viewDiagram": "Diagram de instancia de proceso",
+      "viewGantt": "Gantt",
       "configSprintTimes": "Configurar tiempos de sprints"
     },
     "columns": {

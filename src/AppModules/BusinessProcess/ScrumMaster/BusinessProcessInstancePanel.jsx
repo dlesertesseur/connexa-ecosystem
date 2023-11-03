@@ -8,7 +8,7 @@ import Toolbar from "./Toolbar";
 
 const BusinessProcessInstancePanel = () => {
   const { t } = useTranslation();
-  const { onViewDiagram, onViewDocument, onViewLog, onViewSprints, setRowSelected, rowSelected, instances } =
+  const { onViewDiagram, onViewDocument, onViewLog, onViewSprints, onViewGantt, setRowSelected, rowSelected, instances } =
     useContext(AbmStateContext);
 
   let col = 0;
@@ -34,6 +34,9 @@ const BusinessProcessInstancePanel = () => {
         }}
         onViewSprints={() => {
           onViewSprints(rowSelected);
+        }}
+        onViewGantt={() => {
+          onViewGantt(rowSelected);
         }}
       />
       <SimpleTable

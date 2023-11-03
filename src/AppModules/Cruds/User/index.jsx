@@ -57,8 +57,8 @@ const DynamicApp = ({ app }) => {
       width:80
     },
     // { headerName: cols[col++], fieldName: "nid", align: "right" },
-    { headerName: cols[2], fieldName: "lastname", align: "left"},
-    { headerName: cols[3], fieldName: "firstname", align: "left" },
+    { headerName: cols[2], fieldName: "firstname", align: "left"},
+    { headerName: cols[3], fieldName: "lastname", align: "left" },
     // { headerName: cols[col++], fieldName: "birthDate", align: "center" },
     // { headerName: cols[col++], fieldName: "address", align: "left" },
     // { headerName: cols[col++], fieldName: "phone", align: "left" },

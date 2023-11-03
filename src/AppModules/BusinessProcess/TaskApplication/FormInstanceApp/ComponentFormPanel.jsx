@@ -128,6 +128,7 @@ const ComponentFormPanel = ({
       case "SELECT":
         ret = (
           <Select
+            searchable
             disabled={mode === "DELETE" ? true : false}
             key={field.id}
             withAsterisk={field.required}

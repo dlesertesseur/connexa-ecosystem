@@ -38,6 +38,7 @@
     "@types/three": "^0.152.1",
     "dayjs": "^1.11.5",
     "embla-carousel-react": "^7.0.3",
+    "gantt-task-react": "^0.3.9",
     "html-to-image": "^1.11.11",
     "i18next": "^22.0.4",
     "i18next-browser-languagedetector": "^7.0.0",

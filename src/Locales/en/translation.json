@@ -1598,7 +1598,8 @@
       "viewDiagram": "Diagram",
       "viewDocument": "Document",
       "viewLog": "Events",
-      "viewSprints": "Sprints"
+      "viewSprints": "Sprints",
+      "viewGantt": "Gantt"
     },
     "label": {
       "startDate": "Start date",
@@ -1606,7 +1607,8 @@
       "sprints": "Sprints list",
       "duration": "Durations in days",
       "name": "Name",
-      "description": "Description"
+      "description": "Description",
+      "general": "General"
     },
     "placeholder": {
       "name": "a name",
@@ -1615,8 +1617,9 @@
     "title": {
       "viewDocument": "Associated document",
       "viewLog": "Events list",
-      "viewDiagram": "Business process diagram",
-      "configSprintTimes": "Configure sprint times"
+      "viewDiagram": "Business process instance diagram",
+      "viewGantt": "Business process instance gantt",
+      "configSprintTimes": "Configure instance sprint times"
     },
     "columns": {
       "values": ["Name", "Description", "Progress"]
