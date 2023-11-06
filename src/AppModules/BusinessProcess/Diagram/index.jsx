@@ -62,6 +62,7 @@ const DynamicApp = ({ app }) => {
   const columns = [
     { headerName: cols[col++], fieldName: "name", align: "left" },
     { headerName: cols[col++], fieldName: "description", align: "left" },
+    { headerName: cols[col++], fieldName: "status", align: "left" },
   ];
 
   const ret = rows ? (

@@ -12,7 +12,6 @@ import BusinessProcessInstancePanel from "./BusinessProcessInstancePanel";
 import BusinessProcessDiagramInstacePanel from "./BusinessProcessModelInstancePanel";
 import BusinessProcessInstanceLogPanel from "./BusinessProcessInstanceLogPanel";
 import BusinessProcessIntanceSprintsPanel from "./BusinessProcessIntanceSprintsPanel";
-import BusinessProcessInstanceFormPanel from "./BusinessProcessInstanceFormPanel";
 import BusinessProcessInstanceGanttPanel from "./BusinessProcessInstanceGanttPanel";
 
 const DynamicApp = ({ app }) => {
@@ -97,7 +96,7 @@ const DynamicApp = ({ app }) => {
             />
           }
         />
-        <Route
+        {/* <Route
           path="form"
           element={
             <BusinessProcessInstanceFormPanel
@@ -108,7 +107,7 @@ const DynamicApp = ({ app }) => {
               }}
             />
           }
-        />
+        /> */}
         <Route
           path="log"
           element={

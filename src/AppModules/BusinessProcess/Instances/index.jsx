@@ -4,7 +4,7 @@ import AppHeader from "../../../Components/AppHeader";
 import TabLabel from "./TabLabel";
 import BusinessProcessInstancePanel from "./BusinessProcessInstancePanel";
 import BusinessProcessModelDialog from "../Diagram/editor/BusinessProcessModelDialog";
-import FormDialog from "./form/FormDialog";
+import FormDialog from "./doc/FormDialog";
 import BusinessProcessInstanceLogDialog from "./BusinessProcessInstanceLogDialog";
 import { useTranslation } from "react-i18next";
 import { AbmStateContext } from "./Context";
@@ -28,6 +28,8 @@ const DynamicApp = ({ app }) => {
   const [formId, setFormId] = useState(null);
   const [parentId, setParentId] = useState(null);
   const [logs, setLogs] = useState(null);
+  const [showDoc, setShowDoc] = useState(false);
+  const [showDiagram, setShowDiagram] = useState(false);
 
   const tabs = () => {
     return (
@@ -54,35 +56,35 @@ const DynamicApp = ({ app }) => {
 
   const onViewDocument = async (rowSelected) => {
     // setLoading(true);
-
-    try {
-      let params = { token: user.token, id: rowSelected };
-      const relation = await findAllBusinessProcessInstanceRelationsById(params);
-
-      if (relation && relation.length > 0) {
-        const id = relation[0].formInstanceId;
-        params = { token: user.token, id: id };
-        const instanceNode = await findFormInstanceById(params);
-
-        if (instanceNode.error) {
-          throw new Error(instanceNode.error);
-        } else {
-          setFormId(instanceNode.options);
-          setParentId(instanceNode.id);
-        }
-      } else {
-        throw new Error(t("status.error"));
-      }
-    } catch (error) {
-      setLoading(false);
-      setError(error.message);
-      setFormId(null);
-      setParentId(null);
-    }
-    setLoading(false);
+    // try {
+    //   let params = { token: user.token, id: rowSelected };
+    //   const relation = await findAllBusinessProcessInstanceRelationsById(params);
+    //   if (relation && relation.length > 0) {
+    //     const id = relation[0].formInstanceId;
+    //     params = { token: user.token, id: id };
+    //     const instanceNode = await findFormInstanceById(params);
+    //     if (instanceNode.error) {
+    //       throw new Error(instanceNode.error);
+    //     } else {
+    //       setFormId(instanceNode.options);
+    //       setParentId(instanceNode.id);
+    //     }
+    //   } else {
+    //     throw new Error(t("status.error"));
+    //   }
+    // } catch (error) {
+    //   setLoading(false);
+    //   setError(error.message);
+    //   setFormId(null);
+    //   setParentId(null);
+    // }
+    // setLoading(false);
+    setShowDoc(true);
+    setInstanceId(rowSelected);
   };
 
   const onViewDiagram = (rowSelected) => {
+    setShowDiagram(true);
     setInstanceId(rowSelected);
   };
 
@@ -141,20 +143,14 @@ const DynamicApp = ({ app }) => {
       {tabs()}
 
       <BusinessProcessModelDialog
-        open={instanceId}
-        close={() => setInstanceId(null)}
-        businessProcessInstanceId={instanceId}
-      />
+        open={showDiagram}
+        close={() => setShowDiagram(false)}
+        businessProcessInstanceId={instanceId}/>
 
-      <FormDialog
-        open={formId && parentId}
-        close={() => {
-          setFormId(null);
-          setParentId(null);
-        }}
-        formId={formId}
-        parentId={parentId}
-      />
+      <FormDialog 
+        open={showDoc} 
+        close={() => setShowDoc(false)} 
+        businessProcessInstanceId={instanceId} />
 
       <BusinessProcessInstanceLogDialog open={logs} close={() => setLogs(null)} logs={logs} />
 

@@ -1,4 +1,14 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Skeleton } from "@mantine/core";
+import {
+  Title,
+  Container,
+  Button,
+  Group,
+  LoadingOverlay,
+  ScrollArea,
+  TextInput,
+  Skeleton,
+  Select,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -9,8 +19,8 @@ import { HEADER_HIGHT } from "../../../Constants";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { AbmStateContext } from "./Context";
-import { findBusinessProcessById, saveBusinessProcess } from "../../../DataAccess/BusinessProcess";
 import { findBusinessProcessModelById, saveBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
+import { bpStatus } from "../../../Constants/Statuses";
 
 export function UpdatePage() {
   const { t } = useTranslation();
@@ -21,16 +31,19 @@ export function UpdatePage() {
   const navigate = useNavigate();
 
   const { selectedRowId, setReload, setError } = useContext(AbmStateContext);
+  const [statuses] = useState(bpStatus);
 
   const form = useForm({
     initialValues: {
       description: "",
       name: "",
+      status: null,
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
       description: (val) => (val ? null : t("validation.required")),
+      status: (val) => (val ? null : t("validation.required")),
     },
   });
 
@@ -57,6 +70,21 @@ export function UpdatePage() {
     return ret;
   };
 
+  const createSelectField = (field, data) => {
+    const list = data?.map((c) => {
+      return { value: c.id, label: c.value };
+    });
+
+    const ret = businessProcessModel ? (
+      <Select label={t("businessProcessModel.label." + field)} data={list ? list : []} {...form.getInputProps(field)} />
+    ) : (
+      <Skeleton visible={true} h={40}></Skeleton>
+    );
+    return ret;
+
+    return ret;
+  };
+
   const onClose = () => {
     navigate("../");
   };
@@ -66,6 +94,7 @@ export function UpdatePage() {
       if (businessProcessModel) {
         form.setFieldValue("name", businessProcessModel.name);
         form.setFieldValue("description", businessProcessModel.description);
+        form.setFieldValue("status", businessProcessModel.status);
       }
     };
     f();
@@ -78,9 +107,10 @@ export function UpdatePage() {
       id: businessProcessModel.id,
       name: values.name,
       description: values.description,
+      status:values.status,
       tasks: businessProcessModel.tasks,
       transitions: businessProcessModel.transitions,
-      initialTaskId:businessProcessModel.initialTaskId
+      initialTaskId: businessProcessModel.initialTaskId,
     };
 
     setWorking(true);
@@ -116,7 +146,8 @@ export function UpdatePage() {
           {t("businessProcessModel.title.update")}
         </Title>
 
-        <form    autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onUpdate(values);
           })}
@@ -129,6 +160,9 @@ export function UpdatePage() {
                 </Group>
                 <Group mb={"md"} grow>
                   {createTextField("description")}
+                </Group>
+                <Group mb={"md"} grow>
+                  {createSelectField("status", statuses)}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

@@ -1329,7 +1329,7 @@
       "connections": "Conexiones",
       "forms": "Formularios"
     },
-    "columns": ["Nombre", "Descripcion"],
+    "columns": ["Nombre", "Descripcion", "Estado"],
     "parameters": {
       "title": {
         "create": "Nuevo parametro",

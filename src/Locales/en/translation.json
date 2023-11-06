@@ -1342,7 +1342,7 @@
       "connections": "Connections",
       "forms": "Forms"
     },
-    "columns": ["Name", "Description"],
+    "columns": ["Name", "Description", "Status"],
     "parameters": {
       "title": {
         "create": "New parameter",

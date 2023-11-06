@@ -11,9 +11,9 @@ const Toolbar = ({ rowSelected, onViewDiagram, onViewDocument, onViewLog, onView
         <Text>{t("businessProcessInstances.buttons.viewDiagram")}</Text>
       </Button>
 
-      <Button disabled={!rowSelected} onClick={onViewDocument}>
+      {/* <Button disabled={!rowSelected} onClick={onViewDocument}>
         <Text>{t("businessProcessInstances.buttons.viewDocument")}</Text>
-      </Button>
+      </Button> */}
 
       <Button disabled={!rowSelected} onClick={onViewLog}>
         <Text>{t("businessProcessInstances.buttons.viewLog")}</Text>

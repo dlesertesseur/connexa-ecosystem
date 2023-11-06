@@ -1,5 +1,5 @@
 import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Skeleton } from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Skeleton, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -25,6 +25,7 @@ export function DeletePage() {
     initialValues: {
       description: "",
       name: "",
+      status: "",
     },
 
     validate: {},
@@ -48,6 +49,19 @@ export function DeletePage() {
         placeholder={t("businessProcessModel.placeholder." + field)}
         {...form.getInputProps(field)}
       />
+    ) : (
+      <Skeleton visible={true} h={40}></Skeleton>
+    );
+    return ret;
+  };
+
+  const createSelectField = (field, data) => {
+    const list = data?.map((c) => {
+      return { value: c.id, label: c.value };
+    });
+
+    const ret = businessProcessModel ? (
+      <Select disabled label={t("businessProcessModel.label." + field)} data={list ? list : []} {...form.getInputProps(field)} />
     ) : (
       <Skeleton visible={true} h={40}></Skeleton>
     );
@@ -80,6 +94,7 @@ export function DeletePage() {
       if (businessProcessModel) {
         form.setFieldValue("name", businessProcessModel.name);
         form.setFieldValue("description", businessProcessModel.description);
+        form.setFieldValue("status", businessProcessModel.status);
       }
     };
     f();
@@ -128,6 +143,9 @@ export function DeletePage() {
                 </Group>
                 <Group mb={"md"} grow>
                   {createTextField("description")}
+                </Group>
+                <Group mb={"md"} grow>
+                  {createSelectField("status")}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

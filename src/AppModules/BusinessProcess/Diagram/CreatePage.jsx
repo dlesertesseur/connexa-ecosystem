@@ -54,6 +54,7 @@ export function CreatePage() {
       token: user.token,
       name: values.name,
       description: values.description,
+      status: bpStatus[0].id,
       tasks: [],
       transitions: [],
       initialTaskId:null

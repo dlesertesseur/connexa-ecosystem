@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   Container,
   Group,
@@ -11,6 +12,8 @@ import {
   Textarea,
 } from "@mantine/core";
 import React, { useEffect } from "react";
+import FormHeaderPanel from "./FormHeaderPanel";
+import { useNavigate } from "react-router-dom";
 import { useWindowSize } from "../../../../Hook";
 import { useForm } from "@mantine/form";
 import { useSelector } from "react-redux";
@@ -18,7 +21,6 @@ import { findFormInstanceById } from "../../../../DataAccess/FormInstance";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import { useState } from "react";
 import { findDataSourceById } from "../../../../DataAccess/DataSource";
-import FormHeaderPanel from "./FormHeaderPanel";
 
 const ComponentFormPanel = ({
   formData,
@@ -32,15 +34,15 @@ const ComponentFormPanel = ({
   title,
   selectedRowId,
   widgetByName,
-  deltaY = 0
+  root
 }) => {
   const { user } = useSelector((state) => state.auth.value);
   const wsize = useWindowSize();
-
+  const navigate = useNavigate();
   const [datasourceValuesById, setDatasourceValuesById] = useState(new Map());
 
   const form = useForm(formConfig);
-  const totalHeaderHeight = 260 + deltaY + (title ? 60 : 0);
+  const totalHeaderHeight = 230 + (title ? 30 : 0);
 
   const buildGroup = (group, index) => {
     const ret = (
@@ -75,7 +77,7 @@ const ComponentFormPanel = ({
       case "TEXTINPUT":
         ret = (
           <TextInput
-            disabled={true}
+            disabled
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -87,7 +89,7 @@ const ComponentFormPanel = ({
       case "TEXTAREA":
         ret = (
           <Textarea
-            disabled={true}
+            disabled
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -99,7 +101,7 @@ const ComponentFormPanel = ({
       case "NUMBERINPUT":
         ret = (
           <NumberInput
-            disabled={true}
+            disabled
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -111,7 +113,8 @@ const ComponentFormPanel = ({
       case "SELECT":
         ret = (
           <Select
-            disabled={true}
+            searchable
+            disabled
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -124,7 +127,7 @@ const ComponentFormPanel = ({
       case "CHECKBOX":
         ret = (
           <Checkbox
-            disabled={true}
+            disabled
             key={field.id}
             label={field.label}
             placeholder={field.name}
@@ -135,7 +138,7 @@ const ComponentFormPanel = ({
 
       case "LABEL":
         ret = (
-          <Stack key={field.id} spacing={0} align={"flex-start"}>
+          <Stack disabled key={field.id} spacing={0} align={"flex-start"}>
             <Text size="xl" weight={700}>
               {field.label}
             </Text>
@@ -149,7 +152,7 @@ const ComponentFormPanel = ({
       case "DATE":
         ret = (
           <DatePicker
-            disabled={true}
+            disabled
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -162,7 +165,7 @@ const ComponentFormPanel = ({
       case "TIME":
         ret = (
           <TimeInput
-            disabled={true}
+            disabled
             key={field.id}
             withAsterisk={field.required}
             label={field.label}
@@ -264,7 +267,7 @@ const ComponentFormPanel = ({
   };
 
   useEffect(() => {
-    if (parentId && Object.values(formConfig).length > 0) {
+    if (parentId) {
       getData();
     }
   }, [parentId]);
@@ -316,8 +319,9 @@ const ComponentFormPanel = ({
 
   return (
     <Stack spacing={"xs"} p={"xs"} justify="flex-start">
+
       {title === undefined ? (
-        <FormHeaderPanel name={formData?.label} description={formData?.description} />
+        <FormHeaderPanel name={formData?.label} description={formData?.description} root={root}/>
       ) : (
         <Group position={"center"}>
           <Text size={"lg"} weight={600}>
@@ -326,9 +330,28 @@ const ComponentFormPanel = ({
         </Group>
       )}
 
+      {relatedEntities ? (
+        <Group position="left" spacing={"xs"} mb={"xs"}>
+          {relatedEntities.map((re) => {
+            return (
+              <Button
+                key={re.id}
+                onClick={() => {
+                  navigate(`${re.name}`);
+                }}
+              >
+                {re.label}
+              </Button>
+            );
+          })}
+        </Group>
+      ) : null}
+
       <Container size={options?.size} w={"100%"}>
         <Stack spacing={"xs"} w={"100%"}>
-          <form autoComplete="false">
+          <form
+            autoComplete="false"
+          >
             <ScrollArea offsetScrollbars h={wsize.height - totalHeaderHeight - (relatedEntities?.length > 0 ? 36 : 0)}>
               {buildForm(panels)}
             </ScrollArea>
