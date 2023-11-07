@@ -108,6 +108,7 @@ const Editor = () => {
       id: businessProcessModel.id,
       name: businessProcessModel.name,
       description: businessProcessModel.description,
+      status:businessProcessModel.status,
       tasks: tasks,
       sprints: sprints,
       transitions: transitions,

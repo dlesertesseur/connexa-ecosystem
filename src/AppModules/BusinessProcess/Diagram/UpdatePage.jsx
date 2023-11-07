@@ -109,8 +109,10 @@ export function UpdatePage() {
       description: values.description,
       status:values.status,
       tasks: businessProcessModel.tasks,
+      sprints: businessProcessModel.sprints,
       transitions: businessProcessModel.transitions,
       initialTaskId: businessProcessModel.initialTaskId,
+      requiredRole: businessProcessModel.requiredRole,
     };
 
     setWorking(true);

@@ -28,6 +28,7 @@ const SprintSettings = ({ open, close, updateNode, node }) => {
 
   const getData = async () => {
     form.setFieldValue("name", node.data.label);
+    form.setFieldValue("description", node.data.description);
     form.setFieldValue("duration", node.data.duration);
     form.setFieldValue("sprintNumber", node.data.sprintNumber);
 

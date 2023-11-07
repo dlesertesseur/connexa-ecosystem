@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from "react";
 import { AbmStateContext } from "./Context";
 import { HEADER_HIGHT } from "../../../Constants";
 import { deleteBusinessProcessModel, findBusinessProcessModelById } from "../../../DataAccess/BusinessProcessModel";
+import { bpStatus } from "../../../Constants/Statuses";
 
 export function DeletePage() {
   const { t } = useTranslation();
@@ -17,6 +18,7 @@ export function DeletePage() {
   const [working, setWorking] = useState(false);
   const [businessProcessModel, setBusinessProcessModel] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [statuses] = useState(bpStatus);
 
   const navigate = useNavigate();
   const { selectedRowId, setReload, setError } = useContext(AbmStateContext);
@@ -145,7 +147,7 @@ export function DeletePage() {
                   {createTextField("description")}
                 </Group>
                 <Group mb={"md"} grow>
-                  {createSelectField("status")}
+                  {createSelectField("status", statuses)}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

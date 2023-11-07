@@ -10,7 +10,7 @@ import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { findAllBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
-import { IconEditCircle, IconPaperclip, IconVariable } from "@tabler/icons-react";
+import { IconEditCircle, IconPaperclip } from "@tabler/icons-react";
 import { findAllSprints } from "../../../DataAccess/Sprints";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
 
@@ -100,13 +100,7 @@ const DynamicApp = ({ app }) => {
             icon: <IconPaperclip size={20} />,
             key: "businessProcessModel.buttons.forms",
             element: <FormSelector back={"../"} />,
-          },
-          // {
-          //   path: "parameters",
-          //   icon: <IconVariable size={20} />,
-          //   key: "businessProcessModel.buttons.parameters",
-          //   element: <Parameters back={"../"} />,
-          // },
+          }
         ]}
       />
 
