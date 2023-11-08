@@ -838,6 +838,27 @@
       "columns": ["Name", "value"],
       "align": ["left", "left"],
       "width": ["40%", "60%"]
+    },
+
+    "businessGoal": {
+      "title": {
+        "create": "Create a new business goal",
+        "update": "Update business goal",
+        "delete": "Delete business goal"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "startDate": "Start date",
+        "endDate": "End date"
+      },
+      "placeholder": {
+        "name": "a name",
+        "description": "a description",
+        "startDate": "a start date",
+        "endDate": "an end date"
+      },
+      "columns": ["Name", "Description", "Start date", "End date"]
     }
   },
 
@@ -1634,6 +1655,6 @@
   "taskStatuses": {
     "inactive": "Inactive",
     "active": "Active",
-    "finished":"Finished"
+    "finished": "Finished"
   }
 }

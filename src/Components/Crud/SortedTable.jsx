@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { API } from "../../Constants";
 import { useWindowSize } from "../../Hook";
+import { convertMilisegToYYYYMMDD, convertMilisegToYYYYMMDDHHMISS } from "../../Util";
 
 const useStyles = createStyles((theme) => ({
   selectedRow: {
@@ -223,6 +224,14 @@ export default function SortedTable({
         ret = data ? t("label.true") : t("label.false");
         break;
 
+      case "date":
+        ret = data ? convertMilisegToYYYYMMDD(data) : "----/--/--";
+        break;
+
+      case "dateTime":
+        ret = data ? convertMilisegToYYYYMMDDHHMISS(data) : "----/--/--";
+        break;
+
       default:
         ret = formatData(data, cell.format);
         break;
@@ -317,11 +326,7 @@ export default function SortedTable({
               ))}
 
               {actionButtons?.map((r) => (
-                <Button
-                  key={r.text}
-                  onClick={r.onClick}
-                  disabled={r.disabled}
-                >
+                <Button key={r.text} onClick={r.onClick} disabled={r.disabled}>
                   {r.icon ? (
                     <Group position="apart" spacing={"xs"}>
                       {r.icon} {t(r.text)}

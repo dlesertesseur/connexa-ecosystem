@@ -435,6 +435,14 @@ export const API = {
     getById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-instance-log/",
   },
 
+  businessGoal: {
+    create: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-goals",
+    update: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-goals",
+    delete: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-goals/",
+    findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-goals",
+    findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-goals/",
+  },
+
   entityDefinition: {
     findAll: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models",
     findById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/form-models/",

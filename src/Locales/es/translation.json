@@ -835,6 +835,27 @@
       "columns": ["Nombre", "Valor"],
       "align": ["left", "left"],
       "width": ["40%", "60%"]
+    },
+
+    "businessGoal": {
+      "title": {
+        "create": "Crear un nuevo objetivo de negocio",
+        "update": "Modificar objetivo de negocio",
+        "delete": "Eliminar objetivo de negocio"
+      },
+      "label": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "startDate": "Feca de inicio",
+        "endDate": "Fecha de fin"
+      },
+      "placeholder": {
+        "name": "un nombre",
+        "description": "una descripcion",
+        "startDate": "una fecha de inicio",
+        "endDate": "una fecha de fin"
+      },
+      "columns": ["Nombre", "Descripcion", "Fecha de inicio", "Fecha de fin"]
     }
   },
 
