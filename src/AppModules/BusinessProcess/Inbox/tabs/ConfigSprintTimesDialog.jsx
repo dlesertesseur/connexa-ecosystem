@@ -1,5 +1,18 @@
 import React, { useContext, useState } from "react";
-import { Button, Group, Modal, NumberInput, Paper, ScrollArea, Stack, Text, TextInput, Title } from "@mantine/core";
+import {
+  Button,
+  Group,
+  LoadingOverlay,
+  Modal,
+  NumberInput,
+  Paper,
+  ScrollArea,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
@@ -10,15 +23,16 @@ import {
   saveBusinessProcessModelInstance,
 } from "../../../../DataAccess/BusinessProcessModelInbox";
 import { AbmStateContext } from "../Context";
+import { findAllBusinessGoals } from "../../../../DataAccess/BusinessGoal";
+import { DatePicker } from "@mantine/dates";
 
-const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId }) => {
-  const { t } = useTranslation();
+const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, asociateBusinessGoal = false }) => {
+  const { t, i18n } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
-
   const [instance, setInstance] = useState(null);
-  const [sprints, setSprints] = useState([]);
-  const [baseDate] = useState(Date.now());
-
+  const [sprints, setSprints] = useState(null);
+  const [goals, setGoals] = useState(null);
+  const [baseDate, setBaseDate] = useState(new Date());
   const { setError } = useContext(AbmStateContext);
 
   const form = useForm({
@@ -30,6 +44,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
     validate: {
       name: (val) => (val ? null : t("validation.required")),
       description: (val) => (val ? null : t("validation.required")),
+      businessGoal : asociateBusinessGoal ? (val) => (val ? null : t("validation.required")) : null
     },
   });
 
@@ -46,6 +61,33 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
     return ret;
   };
 
+  const createDateField = (field) => {
+    const ret = (
+      <DatePicker
+        locale={i18n.language}
+        inputFormat="YYYY/MM/DD"
+        firstDayOfWeek="sunday"
+        label={t("businessProcessInstances.label." + field)}
+        placeholder={t("businessProcessInstances.placeholder." + field)}
+        value={baseDate} onChange={setBaseDate} 
+      />
+    );
+
+    return ret;
+  };
+
+  const createSelectField = (field, data) => {
+    const ret = (
+      <Select
+        label={t("businessProcessInstances.label." + field)}
+        data={data ? data : []}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
   const getData = async () => {
     let params = {
       token: user.token,
@@ -54,6 +96,8 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
       description: "",
       businessProcessModelId: businessProcessModelId,
     };
+
+    setBaseDate(new Date());
 
     try {
       const ret = await createBusinessProcessModelInstanceTemplate(params);
@@ -65,6 +109,16 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
           sortedSprints.sort((a, b) => a.number - b.number);
           setSprints(sortedSprints);
         }
+
+        if (asociateBusinessGoal) {
+          const goals = await findAllBusinessGoals(params);
+          const list = goals.map((g) => {
+            const ret = { value: g.id, label: g.name };
+            return ret;
+          });
+          setGoals(list);
+        }
+
         setInstance(ret);
       }
     } catch (error) {
@@ -103,7 +157,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
           totalDays += duration;
         }
       }
-      ret = convertMilisegToYYYYMMDD(baseDate + totalDays * 24 * 60 * 60 * 1000);
+      ret = convertMilisegToYYYYMMDD(baseDate.getTime() + totalDays * 24 * 60 * 60 * 1000);
     }
     return ret;
   };
@@ -119,7 +173,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
           totalDays += duration;
         }
       }
-      ret = baseDate + totalDays * 24 * 60 * 60 * 1000;
+      ret = baseDate.getTime() + totalDays * 24 * 60 * 60 * 1000;
     }
     return ret;
   };
@@ -168,6 +222,72 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
     }
   };
 
+  const createHorizontalSprintCard = (s, index) => {
+    const ret = (
+      <Paper key={s.id} p={"xs"} withBorder mb={"xs"}>
+        <Stack mb={"xs"}>
+          <Title order={5}>{s.name}</Title>
+          {s.description ? <Text size={"xs"}>{s.description} </Text> : null}
+        </Stack>
+        <Group position="apart">
+          <Stack spacing={"xs"}>
+            <Group position="apart">
+              <Text size={"sm"} weight={"normal"}>
+                {t("businessProcessInstances.label.startDate")}
+              </Text>
+              <Text size={"sm"} weight={"normal"}>
+                {calculateDate(index)}
+              </Text>
+            </Group>
+
+            <Group position="apart">
+              <Text size={"sm"}>{t("businessProcessInstances.label.endDate")}</Text>
+              <Text size={"sm"} weight={"normal"}>
+                {calculateDate(index + 1)}
+              </Text>
+            </Group>
+          </Stack>
+
+          <NumberInput label={t("businessProcessInstances.label.duration")} {...form.getInputProps(s.name)} />
+        </Group>
+      </Paper>
+    );
+
+    return ret;
+  };
+
+  const createVerticalSprintCard = (s, index) => {
+    const ret = (
+      <Paper key={s.id} p={"xs"} withBorder mb={"xs"} w={200} bg={"gray.1"}>
+        <Stack mb={"xs"}>
+          <Title order={5}>{s.name}</Title>
+          {s.description ? <Text size={"xs"}>{s.description} </Text> : null}
+          <Group>
+            <Text size={"sm"} weight={"normal"}>
+              {t("businessProcessInstances.label.startDate")}
+            </Text>
+            <Text size={"sm"} weight={"normal"}>
+              {calculateDate(index)}
+            </Text>
+          </Group>
+
+          <Group>
+            <Text size={"sm"}>{t("businessProcessInstances.label.endDate")}</Text>
+            <Text size={"sm"} weight={"normal"}>
+              {calculateDate(index + 1)}
+            </Text>
+          </Group>
+
+          <Group>
+            <NumberInput label={t("businessProcessInstances.label.duration")} {...form.getInputProps(s.name)} />
+          </Group>
+        </Stack>
+      </Paper>
+    );
+
+    return ret;
+  };
+
   return (
     <Modal
       size={"lg"}
@@ -179,60 +299,39 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId })
       centered
     >
       <Stack w={"100%"} spacing={"xs"}>
-        <Group mt={"xs"} grow>
-          {createTextField("name")}
-        </Group>
-        <Group mt={"xs"} mb={"xs"} grow>
-          {createTextField("description")}
-        </Group>
-
-        <Title order={5}>{t("businessProcessInstances.label.sprints")}</Title>
         <form
           autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onSave(values);
           })}
         >
-          <ScrollArea h={400}>
-            {sprints.map((s, index) => {
-              const ret = (
-                <Paper key={s.id} p={"xs"} withBorder mb={"xs"}>
-                  <Stack mb={"xs"}>
-                    <Title order={5}>{s.name}</Title>
-                    {s.description ? <Text size={"xs"}>{s.description} </Text> : null}
-                  </Stack>
-                  <Group position="apart">
-                    <Stack spacing={"xs"}>
-                      <Group position="apart">
-                        <Text size={"sm"} weight={"normal"}>
-                          {t("businessProcessInstances.label.startDate")}
-                        </Text>
-                        <Text size={"sm"} weight={"normal"}>
-                          {calculateDate(index)}
-                        </Text>
-                      </Group>
+          <Stack h={"100%"} spacing={"xs"}>
+            <Group grow mb={"xs"}>
+              {createTextField("name")}
+            </Group>
+            <Group grow mb={"xs"}>
+              {createTextField("description")}
+            </Group>
 
-                      <Group position="apart">
-                        <Text size={"sm"}>{t("businessProcessInstances.label.endDate")}</Text>
-                        <Text size={"sm"} weight={"normal"}>
-                          {calculateDate(index + 1)}
-                        </Text>
-                      </Group>
-                    </Stack>
+            <Group mb={"xs"} grow>
+              {asociateBusinessGoal ? createSelectField("businessGoal", goals) : null}
+              {createDateField("startDate")}
+            </Group>
+            <Text size={"sm"} weight={600}>
+              {t("businessProcessInstances.label.sprints")}
+            </Text>
 
-                    <NumberInput
-                      // allowNegative={false}
-                      // clampBehavior="strict"
-                      label={t("businessProcessInstances.label.duration")}
-                      {...form.getInputProps(s.name)}
-                    />
-                  </Group>
-                </Paper>
-              );
-              return ret;
-            })}
-          </ScrollArea>
-
+            <ScrollArea h={240} offsetScrollbars>
+              {sprints ? (
+                sprints.map((s, index) => {
+                  const ret = createHorizontalSprintCard(s, index);
+                  return ret;
+                })
+              ) : (
+                <LoadingOverlay visible={true} />
+              )}
+            </ScrollArea>
+          </Stack>
           <Group position="right" mt={"xl"}>
             <Button type="submit">{t("button.accept")}</Button>
             <Button

@@ -8,6 +8,7 @@ import {
   TextInput,
   Skeleton,
   Select,
+  Checkbox,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
@@ -38,6 +39,7 @@ export function UpdatePage() {
       description: "",
       name: "",
       status: null,
+      associateBusinessGoal: false,
     },
 
     validate: {
@@ -81,6 +83,19 @@ export function UpdatePage() {
       <Skeleton visible={true} h={40}></Skeleton>
     );
     return ret;
+  };
+
+  const createCheckBoxField = (field) => {
+    const ret = businessProcessModel ? (
+      <Checkbox
+        labelPosition="left"
+        label={t("businessProcessModel.label." + field)}
+        placeholder={t("businessProcessModel.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    ) : (
+      <Skeleton visible={true} h={40}></Skeleton>
+    );
 
     return ret;
   };
@@ -95,6 +110,7 @@ export function UpdatePage() {
         form.setFieldValue("name", businessProcessModel.name);
         form.setFieldValue("description", businessProcessModel.description);
         form.setFieldValue("status", businessProcessModel.status);
+        form.setFieldValue("associateBusinessGoal", businessProcessModel.associateBusinessGoal);
       }
     };
     f();
@@ -107,7 +123,7 @@ export function UpdatePage() {
       id: businessProcessModel.id,
       name: values.name,
       description: values.description,
-      status:values.status,
+      status: values.status,
       tasks: businessProcessModel.tasks,
       sprints: businessProcessModel.sprints,
       transitions: businessProcessModel.transitions,
@@ -165,6 +181,9 @@ export function UpdatePage() {
                 </Group>
                 <Group mb={"md"} grow>
                   {createSelectField("status", statuses)}
+                </Group>
+                <Group mb={"md"} grow>
+                  {createCheckBoxField("associateBusinessGoal")}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

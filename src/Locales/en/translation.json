@@ -1343,7 +1343,8 @@
       "businessProcessesSeleted": "Selected business processes",
       "duration": "Durations in days",
       "stageNumber": "Number",
-      "sprintNumber": "Number"
+      "sprintNumber": "Number",
+      "associateBusinessGoal":"Associate a business objective"
     },
     "placeholder": {
       "name": "a name",
@@ -1629,11 +1630,15 @@
       "duration": "Durations in days",
       "name": "Name",
       "description": "Description",
-      "general": "General"
+      "general": "General",
+      "businessGoal":"Business goal",
+      "baseDate": "Starting date"
     },
     "placeholder": {
       "name": "a name",
-      "description": "a description"
+      "description": "a description",
+      "businessGoal":"a business goal",
+      "baseDate": "a date"
     },
     "title": {
       "viewDocument": "Associated document",

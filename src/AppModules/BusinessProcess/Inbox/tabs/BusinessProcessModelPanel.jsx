@@ -41,6 +41,8 @@ const BusinessProcessModelPanel = ({ name }) => {
         }}
         title={processModel?.name}
         businessProcessModelId={processModel?.id}
+        //asociateBusinessGoal={processModel?.asociateBusinessGoal}
+        asociateBusinessGoal={true}
       />
 
       <Tabs.Panel value={name} pt="xs">

@@ -1,5 +1,16 @@
 import DeleteConfirmation from "../../../Modal/DeleteConfirmation";
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Skeleton, Select } from "@mantine/core";
+import {
+  Title,
+  Container,
+  Button,
+  Group,
+  LoadingOverlay,
+  ScrollArea,
+  TextInput,
+  Skeleton,
+  Select,
+  Checkbox,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -28,6 +39,7 @@ export function DeletePage() {
       description: "",
       name: "",
       status: "",
+      associateBusinessGoal: false,
     },
 
     validate: {},
@@ -63,10 +75,31 @@ export function DeletePage() {
     });
 
     const ret = businessProcessModel ? (
-      <Select disabled label={t("businessProcessModel.label." + field)} data={list ? list : []} {...form.getInputProps(field)} />
+      <Select
+        disabled
+        label={t("businessProcessModel.label." + field)}
+        data={list ? list : []}
+        {...form.getInputProps(field)}
+      />
     ) : (
       <Skeleton visible={true} h={40}></Skeleton>
     );
+    return ret;
+  };
+
+  const createCheckBoxField = (field) => {
+    const ret = businessProcessModel ? (
+      <Checkbox
+        disabled
+        labelPosition="left"
+        label={t("businessProcessModel.label." + field)}
+        placeholder={t("businessProcessModel.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    ) : (
+      <Skeleton visible={true} h={40}></Skeleton>
+    );
+
     return ret;
   };
 
@@ -97,6 +130,7 @@ export function DeletePage() {
         form.setFieldValue("name", businessProcessModel.name);
         form.setFieldValue("description", businessProcessModel.description);
         form.setFieldValue("status", businessProcessModel.status);
+        form.setFieldValue("associateBusinessGoal", businessProcessModel.associateBusinessGoal);
       }
     };
     f();
@@ -132,7 +166,8 @@ export function DeletePage() {
           {t("businessProcessModel.title.delete")}
         </Title>
 
-        <form autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             setConfirmModalOpen(true);
           })}
@@ -148,6 +183,9 @@ export function DeletePage() {
                 </Group>
                 <Group mb={"md"} grow>
                   {createSelectField("status", statuses)}
+                </Group>
+                <Group mb={"md"} grow>
+                  {createCheckBoxField("associateBusinessGoal")}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

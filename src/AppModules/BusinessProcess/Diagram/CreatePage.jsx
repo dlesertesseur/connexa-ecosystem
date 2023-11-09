@@ -1,4 +1,4 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput } from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Checkbox } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -24,6 +24,7 @@ export function CreatePage() {
     initialValues: {
       description: "",
       name: "",
+      associateBusinessGoal: false,
     },
 
     validate: {
@@ -44,20 +45,33 @@ export function CreatePage() {
     return ret;
   };
 
+  const createCheckBoxField = (field) => {
+    const ret = (
+      <Checkbox
+        labelPosition="left"
+        label={t("businessProcessModel.label." + field)}
+        placeholder={t("businessProcessModel.placeholder." + field)}
+        {...form.getInputProps(field)}
+      />
+    );
+
+    return ret;
+  };
+
   const onClose = () => {
     navigate("../");
   };
 
   const onCreate = async (values) => {
     const params = {
-      id:uuid(),
+      id: uuid(),
       token: user.token,
       name: values.name,
       description: values.description,
       status: bpStatus[0].id,
       tasks: [],
       transitions: [],
-      initialTaskId:null
+      initialTaskId: null,
     };
     setWorking(true);
     try {
@@ -94,7 +108,8 @@ export function CreatePage() {
           {t("businessProcessModel.title.create")}
         </Title>
 
-        <form   autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onCreate(values);
           })}
@@ -107,6 +122,9 @@ export function CreatePage() {
                 </Group>
                 <Group mb={"md"} grow>
                   {createTextField("description")}
+                </Group>
+                <Group mb={"md"} grow>
+                  {createCheckBoxField("associateBusinessGoal")}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">
