@@ -15,7 +15,6 @@ import { GraphRouter } from "../../../Helpers/graphRouter";
 import { hideNotification, showNotification } from "@mantine/notifications";
 import { useTranslation } from "react-i18next";
 import {
-  authenticate,
   getLocationStatus,
   getLocationTypes,
   getLocations,

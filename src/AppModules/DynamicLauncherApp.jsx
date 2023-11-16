@@ -1,5 +1,5 @@
-import React, { lazy, useEffect, useState } from "react";
-import { Alert, Center } from "@mantine/core";
+import React, { useEffect, useState } from "react";
+import { Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { Suspense } from "react";
 
@@ -11,20 +11,27 @@ const DynamicLauncherApp = ({ app }) => {
     let ret = null;
     const arr = app.path.split("/");
 
-    if (arr.length > 2) {
-      ret = { path: arr[1], appName: arr[2] };
-    }else{
-      ret = { path: arr[0], appName: arr[1] };
+    let path = "";
+    const size = arr.length - 1;
+    for (let index = 0; index < size; index++) {
+      if (arr[index].length > 0) {
+        path += `${arr[index]}`;
+
+        if (index < size - 1) {
+          path += `/`;
+        }
+      }
     }
 
+    ret = { path: path, appName: arr[arr.length - 1] };
     return ret;
   };
 
   const importModule = async (app) => {
+    const basePath = "/src/AppModules";
     const { path, appName } = processAppPath(app);
     try {
-      const comp = await import(`./${path}/${appName}/index.jsx`);
-
+      const comp = await import(/* @vite-ignore */ `${basePath}/${path}/${appName}/index.jsx`);
       const { default: DynamicApp } = comp;
       setComponent(<DynamicApp app={app} />);
     } catch (error) {

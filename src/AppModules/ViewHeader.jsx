@@ -1,9 +1,9 @@
 import React from "react";
-import { Stack, Text } from "@mantine/core";
+import { Divider, Stack, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { findTranslatedField } from "../Util";
 
-const ViewHeader = ({app}) => {
+const ViewHeader = ({app, divider = false}) => {
   const { i18n } = useTranslation();
 
   return (
@@ -21,6 +21,8 @@ const ViewHeader = ({app}) => {
       <Text size="xs" color="dimmed">
         {findTranslatedField(i18n.language, app, "description")}
       </Text>
+
+      {divider ? <Divider w={"100%"} mt={"xs"}/> : null}
     </Stack>
   );
 };
