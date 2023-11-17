@@ -1669,6 +1669,17 @@
     }
   },
 
+  "importations": {
+    "columns": ["Referencia", "Producto", "Analista", "Evento", "Pais de origen", "Requerido en CD", "Canal"],
+
+    "label": {
+    },
+
+    "title": {
+    }
+  },
+
+
   "taskStatuses": {
     "inactive": "Inactiva",
     "active": "Activa",

@@ -1,22 +1,22 @@
-import { Container, Flex, Grid, Stack } from "@mantine/core";
-import React from "react";
-import { useSelector } from "react-redux";
+import { Stack } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { findAllImportationStatuses } from "../../../../DataAccess/Custom/DGN/Importations";
-import { useState } from "react";
-import { useEffect } from "react";
-import ResponceNotification from "../../../../Modal/ResponceNotification";
-import ImportarionCard from "./ImportarionCard";
-import AppHeader from "../../../../Components/AppHeader";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import React from "react";
+import ResponceNotification from "../../../../Modal/ResponceNotification";
+import AppHeader from "../../../../Components/AppHeader";
 import ImportationStatusDetail from "./ImportationStatusDetail";
+import ImportationsPanel from "./ImportationsPanel";
+import { findAllImportationStatuses } from "../../../../DataAccess/Custom/DGN/Importations";
+import { useSelector } from "react-redux";
 
 const DynamicApp = ({ app }) => {
-  const { user } = useSelector((state) => state.auth.value);
   const { t } = useTranslation();
+  const [error, setError] = useState(null);
+
+  const { user } = useSelector((state) => state.auth.value);
   const [statuses, setStatuses] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const getData = async () => {
     const params = {
@@ -44,21 +44,12 @@ const DynamicApp = ({ app }) => {
     <Stack w={"100%"} spacing={0}>
       <AppHeader app={app} />
 
-      {statuses ? (
-        <Container size={"xl"} mt={"md"}>
-          <Routes>
-            <Route
-              path="/"
-              element={<Flex wrap={"wrap"} gap={"xs"} justify="flex-start" align="stretch">
-                {statuses.map((s) => (
-                  <ImportarionCard key={s} status={s} />
-                ))}
-              </Flex>}
-            />
-            <Route exact path="/importationStatus" element={<ImportationStatusDetail/>} />
-          </Routes>
-        </Container>
-      ) : null}
+      <Stack spacing={"xs"} mt={"md"}>
+        <Routes>
+          <Route path="/" element={<ImportationsPanel statuses={statuses} />} />
+          <Route exact path="/importationStatusDetail" element={<ImportationStatusDetail setError={setError} />} />
+        </Routes>
+      </Stack>
 
       <ResponceNotification
         opened={error ? true : false}

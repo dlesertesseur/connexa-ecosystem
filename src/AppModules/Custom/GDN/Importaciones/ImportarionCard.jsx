@@ -41,7 +41,7 @@ const ImportarionCard = ({ status }) => {
             status: status
           },
         };
-        navigate("importationStatus", params);
+        navigate("importationStatusDetail", params);
       }}
     >
       <Card shadow="sm" padding="lg" radius="md" withBorder w={"300px"}>

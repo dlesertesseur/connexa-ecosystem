@@ -33,29 +33,26 @@ async function findAllImportationStatuses(params) {
   const url = "http://192.168.0.12:8085/comex/api/v1/importations/statuses"; //config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations/statuses";
   const res = await fetch(url, requestOptions);
   const data = await res.json();
-  if(data.error){
-    throw(new Error(data.error));
+  if (data.error) {
+    throw new Error(data.error);
   }
   return data;
 }
 
 async function findImportationsByStatus(params) {
-  try {
-    const requestOptions = {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: params.token,
-      },
-    };
+  const requestOptions = {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: params.token,
+    },
+  };
 
-    const res = await fetch(url, requestOptions);
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    return error;
-  }
+  const url = `http://192.168.0.12:8085/comex/api/v1/importations/${params.status}`;
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
+  return data;
 }
 
 async function findImportationStatusCount(params) {
@@ -71,8 +68,8 @@ async function findImportationStatusCount(params) {
   const url = `http://192.168.0.12:8085/comex/api/v1/importations/${params.status}/count`; //config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations/statuses";
   const res = await fetch(url, requestOptions);
   const data = await res.json();
-  if(data.error){
-    throw(new Error(data.error));
+  if (data.error) {
+    throw new Error(data.error);
   }
   return data;
 }

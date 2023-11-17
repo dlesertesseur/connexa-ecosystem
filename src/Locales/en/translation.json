@@ -1657,6 +1657,16 @@
     }
   },
 
+  "importations": {
+    "columns": ["Reference", "Product", "Analyst", "Event", "Country of origin", "Required in warehouse", "Channel"],
+
+    "label": {
+    },
+
+    "title": {
+    }
+  },
+
   "taskStatuses": {
     "inactive": "Inactive",
     "active": "Active",

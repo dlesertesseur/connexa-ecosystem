@@ -232,7 +232,7 @@ export default function SimpleTable({
 
   return (
     <Stack>
-      <ScrollArea sx={{ height: wSize.height - headerHeight }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+      <ScrollArea offsetScrollbars sx={{ height: wSize.height - headerHeight }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
         <LoadingOverlay visible={loading} overlayBlur={2} />
 
         <Table horizontalSpacing="xs" verticalSpacing="xs" striped highlightOnHover withBorder withColumnBorders>
