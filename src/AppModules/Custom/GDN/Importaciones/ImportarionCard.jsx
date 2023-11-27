@@ -13,9 +13,9 @@ const ImportarionCard = ({ status }) => {
   const [partials, setPartials] = useState(null);
 
   const calculatePartialsTotals = (rows) => {
-    const outOfDate = 0;
-    const onTime = 0;
-    const notRegistered = 0;
+    let outOfDate = 0;
+    let onTime = 0;
+    let notRegistered = 0;
 
     if (rows) {
       const actualtDate = Date.now();
@@ -33,7 +33,7 @@ const ImportarionCard = ({ status }) => {
         }
       });
     }
-    
+
     const ret = {
       outOfDate: outOfDate,
       onTime: onTime,
