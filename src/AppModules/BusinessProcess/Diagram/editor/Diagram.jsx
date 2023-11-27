@@ -20,9 +20,9 @@ import TaskSettings from "./TaskSettings";
 import StageSettings from "./StageSettings";
 import EdgeSettings from "./EdgeSettings";
 import EndNode from "./model/EndNode";
-import FinalTaskSettings from "./FinalTaskSettings";
 import SprintNode from "./model/SprintNode";
 import SprintSettings from "./SprintSettings";
+import InitTaskSettings from "./InitTaskSettings";
 import { useWindowSize } from "../../../../Hook";
 import { AbmStateContext, EditorStateContext } from "../Context";
 import { useRef } from "react";
@@ -619,7 +619,7 @@ const Diagram = () => {
         }}
       />
 
-      <FinalTaskSettings
+      <InitTaskSettings
         node={selectedNode}
         updateNode={updateNode}
         open={selectedNode?.type === "initNode" ? true : false}

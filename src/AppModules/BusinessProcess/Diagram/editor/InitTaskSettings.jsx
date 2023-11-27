@@ -14,7 +14,7 @@ import { useContext } from "react";
 import { AbmStateContext } from "../Context";
 import { useEffect } from "react";
 
-const FinalTaskSettings = ({ open, close, updateNode, node }) => {
+const InitTaskSettings = ({ open, close, updateNode, node }) => {
   const { t } = useTranslation();
   const { roles } = useContext(AbmStateContext);
   const [data, setData] = useState(null);
@@ -85,10 +85,6 @@ const FinalTaskSettings = ({ open, close, updateNode, node }) => {
             updateTask(values);
           })}
         >
-          {/* <Group mt={"xs"} grow>
-            {createTextField("name")}
-          </Group> */}
-
           <Grid mt={"xs"}>
             <Grid.Col>
               <Select
@@ -116,4 +112,4 @@ const FinalTaskSettings = ({ open, close, updateNode, node }) => {
   );
 };
 
-export default FinalTaskSettings;
+export default InitTaskSettings;

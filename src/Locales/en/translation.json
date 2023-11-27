@@ -1344,7 +1344,9 @@
       "duration": "Durations in days",
       "stageNumber": "Number",
       "sprintNumber": "Number",
-      "associateBusinessGoal":"Associate a business objective"
+      "associateBusinessGoal":"Associate a business objective",
+      "businessGoalsList":"Business goals",
+      "hasBusinessGoal":"Has a business objective?"
     },
     "placeholder": {
       "name": "a name",
@@ -1356,8 +1358,7 @@
       "serviceUrl": "a service URL",
       "duration": 1,
       "stageNumber": 0,
-      "sprintNumber": 0
-    },
+      "sprintNumber": 0    },
     "buttons": {
       "editor": "Edit",
       "parameters": "Parameters",
