@@ -28,7 +28,8 @@ const DynamicApp = ({ app }) => {
       if (list.message) {
         setError(list.message);
       } else {
-        setStatuses(list);
+        const ret = list.filter(i => i !== "")
+        setStatuses(ret);
       }
     } catch (error) {
       setError(error);
