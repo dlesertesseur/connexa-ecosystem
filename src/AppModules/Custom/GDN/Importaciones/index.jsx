@@ -2,7 +2,7 @@ import { Stack } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { findAllImportationStatuses } from "../../../../DataAccess/Custom/DGN/Importations";
+import { findAllImportationStatuses, getProcessStatus } from "../../../../DataAccess/Custom/DGN/Importations";
 import { useSelector } from "react-redux";
 import React from "react";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
@@ -17,6 +17,7 @@ const DynamicApp = ({ app }) => {
   const { user } = useSelector((state) => state.auth.value);
   const [statuses, setStatuses] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [processControl, setProcessControl] = useState(null);
 
   const getData = async () => {
     const params = {
@@ -24,6 +25,11 @@ const DynamicApp = ({ app }) => {
     };
 
     try {
+      const processControl = await getProcessStatus(params);
+      if(processControl && processControl.length > 0){
+        setProcessControl(processControl[0]);
+      }
+
       const list = await findAllImportationStatuses(params);
       if (list.message) {
         setError(list.message);
@@ -47,7 +53,7 @@ const DynamicApp = ({ app }) => {
 
       <Stack spacing={"xs"} mt={"md"}>
         <Routes>
-          <Route path="/" element={<ImportationsPanel statuses={statuses} />} />
+          <Route path="/" element={<ImportationsPanel statuses={statuses} processControl={processControl}/>} />
           <Route exact path="/importationStatusDetail" element={<ImportationStatusDetail setError={setError} />} />
         </Routes>
       </Stack>

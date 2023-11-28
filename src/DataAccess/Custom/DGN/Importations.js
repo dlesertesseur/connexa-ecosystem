@@ -1,5 +1,7 @@
 import { config } from "../../../Constants/config";
 
+const baseUrl = config.SERVER + ":" + config.PORT + config.API_GDNAR_BASE;
+
 async function findAllImportations(params) {
   try {
     const requestOptions = {
@@ -11,7 +13,7 @@ async function findAllImportations(params) {
       },
     };
 
-    const url = config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations";
+    const url = `${baseUrl}/importations`;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
     return data;
@@ -30,7 +32,7 @@ async function findAllImportationStatuses(params) {
     },
   };
 
-  const url = "http://192.168.0.12:8085/comex/api/v1/importations/statuses"; //config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations/statuses";
+  const url = `${baseUrl}/importations/statuses`;
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   if (data.error) {
@@ -49,7 +51,7 @@ async function findImportationsByStatus(params) {
     },
   };
 
-  const url = `http://192.168.0.12:8085/comex/api/v1/importations/${params.status}`;
+  const url = `${baseUrl}/importations/${params.status}`;
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   return data;
@@ -65,7 +67,7 @@ async function findImportationStatusCount(params) {
     },
   };
 
-  const url = `http://192.168.0.12:8085/comex/api/v1/importations/${params.status}/count`; //config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/importations/statuses";
+  const url = `${baseUrl}/importations/${params.status}/count`;
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   if (data.error) {
@@ -84,11 +86,33 @@ async function findImportationsIndicatorsByStatus(params) {
     },
   };
 
-  const url = `http://192.168.0.12:8085/comex/api/v1/importations/${params.status}/indicators`;
+  const url = `${baseUrl}/importations/${params.status}/indicators`;
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   return data;
 }
 
+async function getProcessStatus(params) {
+  const requestOptions = {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: params.token,
+    },
+  };
 
-export { findAllImportations, findAllImportationStatuses, findImportationsByStatus, findImportationStatusCount, findImportationsIndicatorsByStatus };
+  const url = `${baseUrl}/process-control`;
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
+  return data;
+}
+
+export {
+  findAllImportations,
+  findAllImportationStatuses,
+  findImportationsByStatus,
+  findImportationStatusCount,
+  findImportationsIndicatorsByStatus,
+  getProcessStatus,
+};

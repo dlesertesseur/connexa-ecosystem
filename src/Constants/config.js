@@ -6,6 +6,8 @@ const config = {
   API_BASE: mode === "production" ? import.meta.env.VITE_APP_API_BASE_PROD : import.meta.env.VITE_APP_API_BASE_DEV,
   API_COMEX_BASE:
     mode === "production" ? import.meta.env.VITE_APP_COMEX_API_BASE_PROD : import.meta.env.VITE_APP_COMEX_API_BASE_DEV,
+  API_GDNAR_BASE:
+    mode === "production" ? import.meta.env.VITE_APP_GDNAR_API_BASE_PROD : import.meta.env.VITE_APP_GDNAR_API_BASE_DEV,
   API_WORKERS: import.meta.env.VITE_APP_API_WORKERS,
   WMS_API_BASE: import.meta.env.VITE_APP_API_WMS,
   WMS_IMAGE_URL: import.meta.env.VITE_APP_API_WMS_IMAGE_URL,

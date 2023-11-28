@@ -6,8 +6,9 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { useViewportSize } from "@mantine/hooks";
+import { convertMilisegToYYYYMMDDHHMISS } from "../../../../Util";
 
-const ImportationsPanel = ({ statuses }) => {
+const ImportationsPanel = ({ statuses, processControl }) => {
   const { height } = useViewportSize();
   const { t } = useTranslation();
   const [refresh, setRefresh] = useState(null);
@@ -19,18 +20,14 @@ const ImportationsPanel = ({ statuses }) => {
   return (
     <Stack spacing={0}>
       <Group position="apart" mb={"md"}>
-
-        <Group position="left" align="center">
-          <Title order={5}>{`${t("importations.label.lastUpdate")} :`}</Title>
-          <Text align="center" c="dimmed" size="xs" tt="uppercase" fw={500} mr={"xl"}>
-            {"2023/11/28 08:00"}
-          </Text>
-
-          <Title order={5}>{`${t("importations.label.nextUpdate")} :`}</Title>
-          <Text align="center" c="dimmed" size="xs" tt="uppercase" fw={500}>
-            {"2023/11/28 16:00"}
-          </Text>
-        </Group>
+        {processControl ? (
+          <Group position="left" align="center">
+            <Text size="md" weight={700}>{`${t("importations.label.lastUpdate")} :`}</Text>
+            <Text align="center" c="dimmed" size="md" fw={500}>
+              {convertMilisegToYYYYMMDDHHMISS(processControl?.dateAndTime)}
+            </Text>
+          </Group>
+        ) : null}
 
         <Button
           leftIcon={<IconRefresh size={20} />}
