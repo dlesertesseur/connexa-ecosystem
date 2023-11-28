@@ -2,13 +2,13 @@ import { Stack } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import { findAllImportationStatuses } from "../../../../DataAccess/Custom/DGN/Importations";
+import { useSelector } from "react-redux";
 import React from "react";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import AppHeader from "../../../../Components/AppHeader";
 import ImportationStatusDetail from "./ImportationStatusDetail";
 import ImportationsPanel from "./ImportationsPanel";
-import { findAllImportationStatuses } from "../../../../DataAccess/Custom/DGN/Importations";
-import { useSelector } from "react-redux";
 
 const DynamicApp = ({ app }) => {
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ const DynamicApp = ({ app }) => {
       if (list.message) {
         setError(list.message);
       } else {
-        const ret = list.filter(i => i !== "")
+        const ret = list.filter((i) => i !== "");
         setStatuses(ret);
       }
     } catch (error) {

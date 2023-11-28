@@ -1675,6 +1675,11 @@
     "columns": ["Referencia", "Producto", "Analista", "Evento", "Pais de origen", "Requerido en CD", "Canal"],
 
     "label": {
+      "outOfDate":"Vencidas",
+      "onTime":"A tiempo",
+      "notRegistered":"N/D",
+      "lastUpdate":"Última actualización",
+      "nextUpdate":"Próxima actualización"
     },
 
     "title": {

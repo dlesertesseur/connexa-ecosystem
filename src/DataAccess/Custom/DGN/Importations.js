@@ -74,4 +74,21 @@ async function findImportationStatusCount(params) {
   return data;
 }
 
-export { findAllImportations, findAllImportationStatuses, findImportationsByStatus, findImportationStatusCount };
+async function findImportationsIndicatorsByStatus(params) {
+  const requestOptions = {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: params.token,
+    },
+  };
+
+  const url = `http://192.168.0.12:8085/comex/api/v1/importations/${params.status}/indicators`;
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
+  return data;
+}
+
+
+export { findAllImportations, findAllImportationStatuses, findImportationsByStatus, findImportationStatusCount, findImportationsIndicatorsByStatus };
