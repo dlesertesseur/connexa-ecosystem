@@ -374,7 +374,7 @@ export default function SortedTable({
 
       {filterSelection ? filterSelection : null}
 
-      <ScrollArea sx={{ height: wSize.height - headerHeight }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+      <ScrollArea sx={{ height: wSize.height - headerHeight }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)} offsetScrollbars>
         <LoadingOverlay visible={loading} overlayBlur={2} />
 
         <Table horizontalSpacing="xs" verticalSpacing="xs" striped highlightOnHover withBorder withColumnBorders>

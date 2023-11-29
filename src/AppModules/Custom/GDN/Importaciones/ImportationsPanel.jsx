@@ -1,6 +1,6 @@
 import React from "react";
 import ImportarionCard from "./ImportarionCard";
-import { Button, Divider, Flex, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { Button, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
