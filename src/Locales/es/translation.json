@@ -1334,9 +1334,9 @@
       "duration": "Duracion en dias",
       "stageNumber": "Numero",
       "sprintNumber": "Numero",
-      "associateBusinessGoal":"Asociar un objetivo de negocio",
-      "businessGoalsList":"Objetivos de negocio",
-      "hasBusinessGoal":"¿Tiene un objetivo de negocio?"
+      "associateBusinessGoal": "Asociar un objetivo de negocio",
+      "businessGoalsList": "Objetivos de negocio",
+      "hasBusinessGoal": "¿Tiene un objetivo de negocio?"
     },
     "placeholder": {
       "name": "un nombre",
@@ -1644,13 +1644,13 @@
       "name": "Name",
       "description": "Description",
       "general": "General",
-      "businessGoal":"Objetivo de negocio",
+      "businessGoal": "Objetivo de negocio",
       "baseDate": "Fecha de inicio"
     },
     "placeholder": {
       "name": "un nombre",
       "description": "una descripcion",
-      "businessGoal":"un objetivo de negocio",
+      "businessGoal": "un objetivo de negocio",
       "baseDate": "una fecha"
     },
 
@@ -1672,20 +1672,32 @@
   },
 
   "importations": {
-    "columns": ["Referencia", "Producto", "Analista", "Evento", "Pais de origen", "Requerido en CD", "Canal"],
+    "columns": [
+      "Referencia",
+      "Producto",
+      "Analista",
+      "Evento",
+      "Pais origen",
+      "Valor",
+      "Moneda",
+      "Incoterm",
+      "FOB",
+      "Proveedor",
+      "Fecha",
+      "Requerido en CD",
+      "Canal"
+    ],
 
     "label": {
-      "outOfDate":"Vencidas",
-      "onTime":"A tiempo",
-      "notRegistered":"N/D",
-      "lastUpdate":"Última actualización",
-      "nextUpdate":"Próxima actualización"
+      "outOfDate": "Vencidas",
+      "onTime": "A tiempo",
+      "notRegistered": "N/D",
+      "lastUpdate": "Última actualización",
+      "nextUpdate": "Próxima actualización"
     },
 
-    "title": {
-    }
+    "title": {}
   },
-
 
   "taskStatuses": {
     "inactive": "Inactiva",

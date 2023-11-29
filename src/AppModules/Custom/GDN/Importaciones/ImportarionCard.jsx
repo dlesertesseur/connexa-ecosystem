@@ -3,10 +3,15 @@ import { Card, Group, Skeleton, Stack, Text, UnstyledButton } from "@mantine/cor
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { findImportationStatusCount, findImportationsIndicatorsByStatus } from "../../../../DataAccess/Custom/DGN/Importations";
+import {
+  findImportationStatusCount,
+  findImportationsIndicatorsByStatus,
+} from "../../../../DataAccess/Custom/DGN/Importations";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import ImportationParialValue from "./ImportationParialValue";
+import ImportationPartialValue from "./ImportationPartialValue";
+import ImportationTotalValue from "./ImportationTotalValue";
+import ImportationCurrencyValue from "./ImportationCurrencyValue";
 
 const ImportarionCard = ({ status, lastUpdate }) => {
   const { t } = useTranslation();
@@ -54,39 +59,47 @@ const ImportarionCard = ({ status, lastUpdate }) => {
         navigate("importationStatusDetail", params);
       }}
     >
-      <Card shadow="sm" padding="lg" radius="md" withBorder w={"350px"}>
+      <Card shadow="sm" padding="lg" radius="md" withBorder w={"320px"}>
         <Stack h={"240px"} align="center">
           <Group grow justify="center" align="center" h={"30%"}>
-            <Text size={"md"} fw={500} align="center">
+            <Text size={"lg"} fw={700} align="center">
               {status}
             </Text>
           </Group>
 
           {count ? (
-            <Group grow justify={"flex-start"} align="center" h={"60%"}>
-              <Text size={"56px"} weight={650} align="center">
-                {count}
-              </Text>
+            <Group position="apart" w={"100%"}>
+              <Group grow align="center" w={"50%"}>
+                <ImportationTotalValue value={count} />
+              </Group>
+
+              <Stack spacing={"xs"} justify="flex-start" h={"100%"}>
+                {partials?.values?.map((v) => {
+                  if (v.amount > 0) {
+                    return <ImportationCurrencyValue currency={v.currency} value={Math.round(v.amount)} />;
+                  } else {
+                    return null;
+                  }
+                })}
+              </Stack>
             </Group>
           ) : (
             <Group justify="center" align="center" h={"60%"}>
               <Skeleton height={80} w={80} circle mb="xl" />
             </Group>
           )}
+
           {partials ? (
-            <Group grow position="center" align="center" h={"60%"} w={"100%"} spacing={"xs"}>
-              {partials.dateInThePastCount ? (
-                <ImportationParialValue title={t("importations.label.outOfDate")} value={partials.dateInThePastCount} />
-              ) : null}
-              {partials.dateInTheFutureCount ? (
-                <ImportationParialValue title={t("importations.label.onTime")} value={partials.dateInTheFutureCount} />
-              ) : null}
-              {partials.withoutDateCount ? (
-                <ImportationParialValue title={t("importations.label.notRegistered")} value={partials.withoutDateCount} />
-              ) : null}
+            <Group grow position="center" align="center" w={"100%"} spacing={"xs"}>
+              <ImportationPartialValue title={t("importations.label.outOfDate")} value={partials.dateInThePastCount} />
+              <ImportationPartialValue title={t("importations.label.onTime")} value={partials.dateInTheFutureCount} />
+              <ImportationPartialValue
+                title={t("importations.label.notRegistered")}
+                value={partials.withoutDateCount}
+              />
             </Group>
           ) : (
-            <Group position="center" align="center" h={"60%"} w={"100%"} spacing={"xs"}>
+            <Group position="center" align="center" w={"100%"} spacing={"xs"}>
               <Skeleton height={50} w={50} mb="md" radius={"md"} />
               <Skeleton height={50} w={50} mb="md" radius={"md"} />
               <Skeleton height={50} w={50} mb="md" radius={"md"} />

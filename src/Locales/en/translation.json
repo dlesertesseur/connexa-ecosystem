@@ -1344,9 +1344,9 @@
       "duration": "Durations in days",
       "stageNumber": "Number",
       "sprintNumber": "Number",
-      "associateBusinessGoal":"Associate a business objective",
-      "businessGoalsList":"Business goals",
-      "hasBusinessGoal":"Has a business objective?"
+      "associateBusinessGoal": "Associate a business objective",
+      "businessGoalsList": "Business goals",
+      "hasBusinessGoal": "Has a business objective?"
     },
     "placeholder": {
       "name": "a name",
@@ -1358,7 +1358,8 @@
       "serviceUrl": "a service URL",
       "duration": 1,
       "stageNumber": 0,
-      "sprintNumber": 0    },
+      "sprintNumber": 0
+    },
     "buttons": {
       "editor": "Edit",
       "parameters": "Parameters",
@@ -1632,13 +1633,13 @@
       "name": "Name",
       "description": "Description",
       "general": "General",
-      "businessGoal":"Business goal",
+      "businessGoal": "Business goal",
       "baseDate": "Starting date"
     },
     "placeholder": {
       "name": "a name",
       "description": "a description",
-      "businessGoal":"a business goal",
+      "businessGoal": "a business goal",
       "baseDate": "a date"
     },
     "title": {
@@ -1659,18 +1660,31 @@
   },
 
   "importations": {
-    "columns": ["Reference", "Product", "Analyst", "Event", "Country of origin", "Required in warehouse", "Channel"],
+    "columns": [
+      "Reference",
+      "Product",
+      "Analyst",
+      "Event",
+      "Country of origin",
+      "Value",
+      "Currency",
+      "Incoterm",
+      "FOB",
+      "Provider",
+      "Date",
+      "Required in warehouse",
+      "Channel"
+    ],
 
     "label": {
-      "outOfDate":"Out of date",
-      "onTime":"On time",
-      "notRegistered":"N/A",
-      "lastUpdate":"Last update",
-      "nextUpdate":"Next update"
+      "outOfDate": "Out of date",
+      "onTime": "On time",
+      "notRegistered": "N/A",
+      "lastUpdate": "Last update",
+      "nextUpdate": "Next update"
     },
 
-    "title": {
-    }
+    "title": {}
   },
 
   "taskStatuses": {

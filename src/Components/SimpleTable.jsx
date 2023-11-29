@@ -17,6 +17,7 @@ import { IconSelector, IconChevronDown, IconChevronUp } from "@tabler/icons-reac
 import { useTranslation } from "react-i18next";
 import { API } from "../Constants";
 import { useWindowSize } from "../Hook";
+import { convertMilisegToYYYYMMDD } from "../Util";
 
 const useStyles = createStyles((theme) => ({
   selectedRow: {
@@ -71,7 +72,7 @@ function Th({ children, reversed, sorted, onSort }) {
     <th className={classes.th}>
       <UnstyledButton onClick={onSort} className={classes.control}>
         {onSort ? (
-          <Group position="apart">
+          <Group position="apart" noWrap>
             <Text weight={500} size="sm">
               {children}
             </Text>
@@ -166,6 +167,13 @@ export default function SimpleTable({
           ret = `${data ? Math.round(data * 10) / 10 : 0} %`;
           break;
 
+        case "date":
+          if (data) {
+            ret = convertMilisegToYYYYMMDD(data);
+          }else{
+            ret = "----/--/--";
+          }
+          break;
         default:
           break;
       }
@@ -232,7 +240,11 @@ export default function SimpleTable({
 
   return (
     <Stack>
-      <ScrollArea offsetScrollbars sx={{ height: wSize.height - headerHeight }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+      <ScrollArea
+        offsetScrollbars
+        sx={{ height: wSize.height - headerHeight }}
+        onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
+      >
         <LoadingOverlay visible={loading} overlayBlur={2} />
 
         <Table horizontalSpacing="xs" verticalSpacing="xs" striped highlightOnHover withBorder withColumnBorders>

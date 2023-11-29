@@ -23,13 +23,18 @@ const ImportationStatusDetail = ({ setError }) => {
   let col = 0;
   const cols = t("importations.columns", { returnObjects: true });
   const columns = [
-    { headerName: cols[col++], fieldName: "referencia", align: "left" },
-    { headerName: cols[col++], fieldName: "producto", align: "left" },
-    { headerName: cols[col++], fieldName: "analista", align: "left" },
-    { headerName: cols[col++], fieldName: "evento", align: "left" },
-    { headerName: cols[col++], fieldName: "paisOrigen", align: "left" },
-    { headerName: cols[col++], fieldName: "necesidadEnCd", align: "center" },
-    { headerName: cols[col++], fieldName: "canal", align: "left" },
+    { headerName: cols[col++], fieldName: "referencia", align: "left", width: "200px" },
+    { headerName: cols[col++], fieldName: "shpProducto", align: "left",width: "200px"},
+    { headerName: cols[col++], fieldName: "shpAnalista", align: "left",width: "200px" },
+    { headerName: cols[col++], fieldName: "shpEvento", align: "left",width: "200px" },
+    { headerName: cols[col++], fieldName: "shpPaisOrigen", align: "left",width: "200px" },
+    { headerName: cols[col++], fieldName: "docValor", align: "right",width: "200px" },
+    { headerName: cols[col++], fieldName: "docMoneda", align: "left" ,width: "200px"},
+    { headerName: cols[col++], fieldName: "docIncoterm", align: "left",width: "200px" },
+    { headerName: cols[col++], fieldName: "docFob", align: "right",width: "200px" },
+    { headerName: cols[col++], fieldName: "shpProveedor", align: "left",width: "200px" },
+    { headerName: cols[col++], fieldName: "docFecha", align: "center", format: "date",width: "200px" },
+    { headerName: cols[col++], fieldName: "shpNecesidadEnCd", align: "center",width: "200px" },
   ];
 
   const getData = async () => {
