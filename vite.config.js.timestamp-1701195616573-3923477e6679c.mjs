@@ -1,0 +1,21 @@
+// vite.config.js
+import { defineConfig } from "file:///C:/work/proyectos/zeetrex/connexa-ecosystem/platform/node_modules/vite/dist/node/index.js";
+import react from "file:///C:/work/proyectos/zeetrex/connexa-ecosystem/platform/node_modules/@vitejs/plugin-react/dist/index.mjs";
+var vite_config_default = defineConfig({
+  plugins: [react()],
+  base: "/connexa-cli/platform",
+  resolve: {
+    alias: {
+      "@": "/src"
+      // Establece un alias para acceder a la carpeta src fácilmente
+    }
+  },
+  build: {
+    outDir: "./dist/connexa-cli/platform"
+    // Directorio de salida personalizado
+  }
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcuanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCJDOlxcXFx3b3JrXFxcXHByb3llY3Rvc1xcXFx6ZWV0cmV4XFxcXGNvbm5leGEtZWNvc3lzdGVtXFxcXHBsYXRmb3JtXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ZpbGVuYW1lID0gXCJDOlxcXFx3b3JrXFxcXHByb3llY3Rvc1xcXFx6ZWV0cmV4XFxcXGNvbm5leGEtZWNvc3lzdGVtXFxcXHBsYXRmb3JtXFxcXHZpdGUuY29uZmlnLmpzXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ltcG9ydF9tZXRhX3VybCA9IFwiZmlsZTovLy9DOi93b3JrL3Byb3llY3Rvcy96ZWV0cmV4L2Nvbm5leGEtZWNvc3lzdGVtL3BsYXRmb3JtL3ZpdGUuY29uZmlnLmpzXCI7aW1wb3J0IHsgZGVmaW5lQ29uZmlnIH0gZnJvbSBcInZpdGVcIjtcclxuaW1wb3J0IHJlYWN0IGZyb20gXCJAdml0ZWpzL3BsdWdpbi1yZWFjdFwiO1xyXG5cclxuLy8gaHR0cHM6Ly92aXRlanMuZGV2L2NvbmZpZy9cclxuZXhwb3J0IGRlZmF1bHQgZGVmaW5lQ29uZmlnKHtcclxuICBwbHVnaW5zOiBbcmVhY3QoKV0sXHJcbiAgYmFzZTogJy9jb25uZXhhLWNsaS9wbGF0Zm9ybScsXHJcbiAgcmVzb2x2ZToge1xyXG4gICAgYWxpYXM6IHtcclxuICAgICAgJ0AnOiAnL3NyYycgLy8gRXN0YWJsZWNlIHVuIGFsaWFzIHBhcmEgYWNjZWRlciBhIGxhIGNhcnBldGEgc3JjIGZcdTAwRTFjaWxtZW50ZVxyXG4gICAgfVxyXG4gIH0sXHJcbiAgYnVpbGQ6IHtcclxuICAgIG91dERpcjogJy4vZGlzdC9jb25uZXhhLWNsaS9wbGF0Zm9ybScsIC8vIERpcmVjdG9yaW8gZGUgc2FsaWRhIHBlcnNvbmFsaXphZG9cclxuICB9LFxyXG59KTtcclxuIl0sCiAgIm1hcHBpbmdzIjogIjtBQUEwVixTQUFTLG9CQUFvQjtBQUN2WCxPQUFPLFdBQVc7QUFHbEIsSUFBTyxzQkFBUSxhQUFhO0FBQUEsRUFDMUIsU0FBUyxDQUFDLE1BQU0sQ0FBQztBQUFBLEVBQ2pCLE1BQU07QUFBQSxFQUNOLFNBQVM7QUFBQSxJQUNQLE9BQU87QUFBQSxNQUNMLEtBQUs7QUFBQTtBQUFBLElBQ1A7QUFBQSxFQUNGO0FBQUEsRUFDQSxPQUFPO0FBQUEsSUFDTCxRQUFRO0FBQUE7QUFBQSxFQUNWO0FBQ0YsQ0FBQzsiLAogICJuYW1lcyI6IFtdCn0K

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Alert } from "@mantine/core";
+import React, { lazy, useEffect, useState } from "react";
+import { Alert, LoadingOverlay } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { Suspense } from "react";
 
@@ -28,11 +28,28 @@ const DynamicLauncherApp = ({ app }) => {
   };
 
   const importModule = async (app) => {
-    const basePath = "/src/AppModules";
+    const basePath = ".";
     const { path, appName } = processAppPath(app);
+
+    // try {
+    //   console.log("##### importModule -> ", `${basePath}/${path}/${appName}/index.jsx`);
+
+    //   const comp = await import(/* @vite-ignore */ `${basePath}/${path}/${appName}/index.jsx`);
+    //   const DynamicApp = comp.default;
+    //   setComponent(<DynamicApp app={app} />);
+
+    // } catch (error) {
+    //   console.log("DynamicLauncherApp error ->", error);
+    //   setError(error);
+    // }
+
     try {
-      const comp = await import(/* @vite-ignore */ `${basePath}/${path}/${appName}/index.jsx`);
-      const { default: DynamicApp } = comp;
+      // let appPath = basePath + "/" + path + "/" + appName;
+      // console.log("import appPath -> ", appPath);
+
+      const comp = await import(/* @vite-ignore */ basePath + "/" + path + "/" + appName);
+
+      const DynamicApp = comp.default;
       setComponent(<DynamicApp app={app} />);
     } catch (error) {
       console.log("DynamicLauncherApp error ->", error);
@@ -55,8 +72,10 @@ const DynamicLauncherApp = ({ app }) => {
   const process = error ? errorComp : waiting;
 
   return (
-    // <Center style={{ width: "100%", height: "100%" }}>{component ? <Suspense>{component}</Suspense> : process}</Center>
-    component ? <Suspense>{component}</Suspense> : process
+    <>
+      <Suspense fallback={<LoadingOverlay overlayOpacity={0.5} />}>{component}</Suspense>
+      {error ? errorComp : null}
+    </>
   );
 };
 
