@@ -67,7 +67,7 @@ async function findImportationStatusCount(params) {
     },
   };
 
-  const url = `${baseUrl}/importations/${params.status}/count`;
+  const url = `${baseUrl}/importations/count?status=${params.status}`;
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   if (data.error) {
@@ -86,7 +86,7 @@ async function findImportationsIndicatorsByStatus(params) {
     },
   };
 
-  const url = `${baseUrl}/importations/${params.status}/indicators`;
+  const url = `${baseUrl}/importations/indicators?status=${params.status}`;
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   return data;
