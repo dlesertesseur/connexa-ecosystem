@@ -29,12 +29,12 @@ const ImportarionCard = ({ status, lastUpdate }) => {
       status: status,
     };
 
-    if(businessObjectiveSelected !== t("importations.label.all")){
-      params.event=businessObjectiveSelected;
+    if (businessObjectiveSelected !== t("importations.label.all")) {
+      params.event = businessObjectiveSelected;
     }
 
-    if(analystSelected !== t("importations.label.all")){
-      params.analyst=analystSelected;
+    if (analystSelected !== t("importations.label.all")) {
+      params.analyst = analystSelected;
     }
 
     setCount(0);
@@ -70,7 +70,7 @@ const ImportarionCard = ({ status, lastUpdate }) => {
         navigate("importationStatusDetail", params);
       }}
     >
-      <Card shadow="sm" padding="lg" radius="md" withBorder w={"320px"}>
+      <Card shadow="sm" padding="lg" radius="md" withBorder w={"350px"}>
         <Stack h={"240px"} align="center">
           <Group grow justify="center" align="center" h={"30%"}>
             <Text size={"lg"} fw={700} align="center">
@@ -79,22 +79,24 @@ const ImportarionCard = ({ status, lastUpdate }) => {
           </Group>
 
           {count > -1 ? (
-            <Group position="apart" w={"100%"}>
-              <Group grow align="center" w={"50%"}>
+            <Group grow position="apart" w={"100%"}>
+              <Group grow align="center">
                 <ImportationTotalValue value={count} />
               </Group>
 
-              <Stack spacing={"xs"} justify="flex-start" h={"100%"}>
-                {partials?.values?.map((v) => {
-                  if (v.amount > 0) {
-                    return (
-                      <ImportationCurrencyValue key={v.currency} currency={v.currency} value={Math.round(v.amount)} />
-                    );
-                  } else {
-                    return null;
-                  }
-                })}
-              </Stack>
+              <Group grow h={"100%"}>
+                <Stack spacing={0} justify="flex-start" h={"100%"}>
+                  {partials?.values?.map((v) => {
+                    if (v.amount > 0) {
+                      return (
+                        <ImportationCurrencyValue key={v.currency} currency={v.currency} value={Math.round(v.amount)} />
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
+                </Stack>
+              </Group>
             </Group>
           ) : (
             <Group justify="center" align="center" h={"60%"}>
@@ -104,11 +106,15 @@ const ImportarionCard = ({ status, lastUpdate }) => {
 
           {partials ? (
             <Group grow position="center" align="center" w={"100%"} spacing={"xs"}>
-              <ImportationPartialValue title={t("importations.label.outOfDate")} value={partials.dateInThePastCount} />
-              <ImportationPartialValue title={t("importations.label.onTime")} value={partials.dateInTheFutureCount} />
               <ImportationPartialValue
                 title={t("importations.label.notRegistered")}
                 value={partials.withoutDateCount}
+              />
+              <ImportationPartialValue title={t("importations.label.onTime")} value={partials.dateInTheFutureCount} />
+              <ImportationPartialValue
+                title={t("importations.label.outOfDate")}
+                value={partials.dateInThePastCount}
+                color={"red"}
               />
             </Group>
           ) : (

@@ -1,5 +1,5 @@
 import { Group, Text } from "@mantine/core";
-import { IconCoin, IconCurrencyDollar, IconCurrencyEuro, IconCurrencyYuan } from "@tabler/icons-react";
+import { IconCurrencyDollar, IconCurrencyEuro, IconCurrencyYuan } from "@tabler/icons-react";
 import React from "react";
 
 const ImportationCurrencyValue = ({ currency, value }) => {
@@ -7,32 +7,38 @@ const ImportationCurrencyValue = ({ currency, value }) => {
     let ret = null;
     switch (currency) {
       case "DOL":
-        ret = <IconCurrencyDollar size={20} />;
+        ret = <IconCurrencyDollar size={16} />;
         break;
       case "EUR":
-        ret = <IconCurrencyEuro size={20} />;
+        ret = <IconCurrencyEuro size={16} />;
         break;
       case "CNY":
-        ret = <IconCurrencyYuan size={20} />;
-        break;
-
-      default:
-        ret = <IconCoin size={20} />;
+        ret = <IconCurrencyYuan size={16} />;
         break;
     }
     return ret;
   };
+
+  const getValue = (value) => {
+    const numberFormat = new Intl.NumberFormat("es", {
+      maximumFractionDigits: 0,
+    });
+
+    const ret = numberFormat.format(value);
+    return ret;
+  };
+
   return (
-    <Group position="apart" spacing={0} align="center">
-      <Group spacing={0}>
-        {getIcon(currency)}
-        <Text size={"xs"} weight={600} align="center" mr={"xs"}>
-          {currency}
+    <Group w={"100%"} position="apart" spacing={0} align="center">
+      <Group spacing={0} position="apart" w={40}>
+        <Text size={"xs"} weight={600} align="center">
+          {currency ? currency : "---"}
         </Text>
+        {getIcon(currency)}
       </Group>
 
-      <Text size={"xs"} weight={600} align="center">
-        {`${value}`}
+      <Text size={"md"} weight={600} align="center">
+        {getValue(value)}
       </Text>
     </Group>
   );
