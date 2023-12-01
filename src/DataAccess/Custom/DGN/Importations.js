@@ -51,7 +51,15 @@ async function findImportationsByStatus(params) {
     },
   };
 
-  const url = `${baseUrl}/importations/${params.status}`;
+  //const url = `${baseUrl}/importations/${params.status}`;
+
+  const event = params.event ? `&event=${params.event}` : null;
+  const analyst = params.analyst ? `&analyst=${params.analyst}` : null;
+
+  const url = `${baseUrl}/importations?status=${params.status}${event ? event : ""}${analyst ? analyst : ""}`;
+
+console.log("findImportationsByStatus url -> ", url);
+
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   return data;
@@ -67,7 +75,11 @@ async function findImportationStatusCount(params) {
     },
   };
 
-  const url = `${baseUrl}/importations/count?status=${params.status}`;
+  const event = params.event ? `&event=${params.event}` : null;
+  const analyst = params.analyst ? `&analyst=${params.analyst}` : null;
+
+  const url = `${baseUrl}/importations/count?status=${params.status}${event ? event : ""}${analyst ? analyst : ""}`;
+
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   if (data.error) {
@@ -86,7 +98,10 @@ async function findImportationsIndicatorsByStatus(params) {
     },
   };
 
-  const url = `${baseUrl}/importations/indicators?status=${params.status}`;
+  const event = params.event ? `&event=${params.event}` : null;
+  const analyst = params.analyst ? `&analyst=${params.analyst}` : null;
+  const url = `${baseUrl}/importations/indicators?status=${params.status}${event ? event : ""}${analyst ? analyst : ""}`;
+
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   return data;
@@ -108,6 +123,45 @@ async function getProcessStatus(params) {
   return data;
 }
 
+async function findAllBusinessObjectives(params) {
+  const requestOptions = {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: params.token,
+    },
+  };
+
+  const url = `${baseUrl}/importations/events`;
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
+  if (data.error) {
+    throw new Error(data.error);
+  }
+  return data;
+}
+
+async function findAllAnalysts(params) {
+  const requestOptions = {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: params.token,
+    },
+  };
+
+  const url = `${baseUrl}/importations/analists`;
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
+  if (data.error) {
+    throw new Error(data.error);
+  }
+  return data;
+}
+
+
 export {
   findAllImportations,
   findAllImportationStatuses,
@@ -115,4 +169,6 @@ export {
   findImportationStatusCount,
   findImportationsIndicatorsByStatus,
   getProcessStatus,
+  findAllBusinessObjectives,
+  findAllAnalysts
 };

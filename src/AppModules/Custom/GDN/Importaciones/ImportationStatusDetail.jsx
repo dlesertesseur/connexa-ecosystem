@@ -3,12 +3,14 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { useLocation, useNavigate } from "react-router-dom";
-import React from "react";
-import SimpleTable from "../../../../Components/SimpleTable";
-import ImportationStatusDetailToolbar from "./ImportationStatusDetailToolbar";
 import { useSelector } from "react-redux";
 import { findImportationsByStatus } from "../../../../DataAccess/Custom/DGN/Importations";
 import { useEffect } from "react";
+import { useImportationContext } from "./ImportationContextProvider";
+import React from "react";
+import SimpleTable from "../../../../Components/SimpleTable";
+import ImportationStatusDetailToolbar from "./ImportationStatusDetailToolbar";
+
 
 const ImportationStatusDetail = ({ setError }) => {
   const { t } = useTranslation();
@@ -37,11 +39,23 @@ const ImportationStatusDetail = ({ setError }) => {
     { headerName: cols[col++], fieldName: "shpNecesidadEnCd", align: "center",width: "200px" },
   ];
 
+  const { businessObjectiveSelected, analystSelected } = useImportationContext();
+  
   const getData = async () => {
     const params = {
       token: user.token,
       status: status,
     };
+
+    
+    if(businessObjectiveSelected !== t("importations.label.all")){
+      params.event=businessObjectiveSelected;
+    }
+
+    if(analystSelected !== t("importations.label.all")){
+      params.analyst=analystSelected;
+    }
+
 
     try {
       setLoading(true);

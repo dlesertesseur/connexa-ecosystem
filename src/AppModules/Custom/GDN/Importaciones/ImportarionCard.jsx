@@ -12,19 +12,30 @@ import { useTranslation } from "react-i18next";
 import ImportationPartialValue from "./ImportationPartialValue";
 import ImportationTotalValue from "./ImportationTotalValue";
 import ImportationCurrencyValue from "./ImportationCurrencyValue";
+import { useImportationContext } from "./ImportationContextProvider";
 
 const ImportarionCard = ({ status, lastUpdate }) => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const navigate = useNavigate();
-  const [count, setCount] = useState(null);
+  const [count, setCount] = useState(-1);
   const [partials, setPartials] = useState(null);
+
+  const { businessObjectiveSelected, analystSelected } = useImportationContext();
 
   const getData = async () => {
     const params = {
       token: user.token,
       status: status,
     };
+
+    if(businessObjectiveSelected !== t("importations.label.all")){
+      params.event=businessObjectiveSelected;
+    }
+
+    if(analystSelected !== t("importations.label.all")){
+      params.analyst=analystSelected;
+    }
 
     setCount(0);
     setPartials(null);
@@ -67,7 +78,7 @@ const ImportarionCard = ({ status, lastUpdate }) => {
             </Text>
           </Group>
 
-          {count ? (
+          {count > -1 ? (
             <Group position="apart" w={"100%"}>
               <Group grow align="center" w={"50%"}>
                 <ImportationTotalValue value={count} />
@@ -76,7 +87,9 @@ const ImportarionCard = ({ status, lastUpdate }) => {
               <Stack spacing={"xs"} justify="flex-start" h={"100%"}>
                 {partials?.values?.map((v) => {
                   if (v.amount > 0) {
-                    return <ImportationCurrencyValue currency={v.currency} value={Math.round(v.amount)} />;
+                    return (
+                      <ImportationCurrencyValue key={v.currency} currency={v.currency} value={Math.round(v.amount)} />
+                    );
                   } else {
                     return null;
                   }

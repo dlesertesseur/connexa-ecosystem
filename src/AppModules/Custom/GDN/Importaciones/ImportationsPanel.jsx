@@ -7,11 +7,13 @@ import { useTranslation } from "react-i18next";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { useViewportSize } from "@mantine/hooks";
 import { convertMilisegToYYYYMMDDHHMISS } from "../../../../Util";
+import ImportationFilterDialog from "./ImportationFilterDialog";
 
-const ImportationsPanel = ({ statuses, processControl }) => {
+const ImportationsPanel = ({ statuses, processControl, businessObjectives, analysts }) => {
   const { height } = useViewportSize();
   const { t } = useTranslation();
   const [refresh, setRefresh] = useState(null);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const onRefresh = (e) => {
     setRefresh(new Date());
@@ -22,6 +24,20 @@ const ImportationsPanel = ({ statuses, processControl }) => {
       <Group position="apart" mb={"md"}>
         {processControl ? (
           <Group position="left" align="center">
+            <ImportationFilterDialog
+              businessObjectives={businessObjectives}
+              analysts={analysts}
+              opened={filterOpen}
+              open={() => {
+                setFilterOpen(true);
+              }}
+              close={() => {
+                setFilterOpen(false);
+              }}
+
+              onRefresh={onRefresh}
+            />
+
             <Text size="md" weight={700}>{`${t("importations.label.lastUpdate")} :`}</Text>
             <Text align="center" c="dimmed" size="md" fw={500}>
               {convertMilisegToYYYYMMDDHHMISS(processControl?.dateAndTime)}
@@ -30,7 +46,8 @@ const ImportationsPanel = ({ statuses, processControl }) => {
         ) : null}
 
         <Button
-          leftIcon={<IconRefresh size={20} />}
+          size="xs"
+          leftIcon={<IconRefresh size={16} />}
           onClick={(e) => {
             onRefresh(e);
           }}

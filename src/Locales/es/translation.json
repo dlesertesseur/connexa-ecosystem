@@ -68,7 +68,8 @@
     "objectInspector": "Inspector de objetos",
     "assignNames": "Asignar nombres",
     "options": "Options",
-    "menu": "Menu"
+    "menu": "Menu",
+    "filters":"Filtros"
   },
 
   "label": {
@@ -1693,10 +1694,15 @@
       "onTime": "A tiempo",
       "notRegistered": "N/D",
       "lastUpdate": "Última actualización",
-      "nextUpdate": "Próxima actualización"
+      "nextUpdate": "Próxima actualización",
+      "businessObjective": "Objetivo de negocio",
+      "analyst":"Analista",
+      "all":"Todos"
     },
 
-    "title": {}
+    "filter": {
+      "title": "Seleccione los filtros"
+    }
   },
 
   "taskStatuses": {
