@@ -9,10 +9,10 @@ import {
 } from "../../../../DataAccess/Custom/DGN/Importations";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useImportationContext } from "./ImportationContextProvider";
 import ImportationPartialValue from "./ImportationPartialValue";
 import ImportationTotalValue from "./ImportationTotalValue";
 import ImportationCurrencyValue from "./ImportationCurrencyValue";
-import { useImportationContext } from "./ImportationContextProvider";
 
 const ImportarionCard = ({ status, lastUpdate }) => {
   const { t } = useTranslation();

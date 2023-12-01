@@ -1689,6 +1689,18 @@
       "Canal"
     ],
 
+    "items": {
+      "columns": [
+        "Codigo",
+        "Descripcion",
+        "Articulo",
+        "FOB",
+        "Unidad",
+        "Cantidad",
+        "Precio",
+        "Fecha"
+      ]
+    },
     "label": {
       "outOfDate": "Vencidas",
       "onTime": "A tiempo",

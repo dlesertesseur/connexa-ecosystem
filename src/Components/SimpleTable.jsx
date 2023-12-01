@@ -170,8 +170,18 @@ export default function SimpleTable({
         case "date":
           if (data) {
             ret = convertMilisegToYYYYMMDD(data);
-          }else{
-            ret = "----/--/--";
+          } else {
+            ret = "";
+          }
+          break;
+
+        case "strTodate":
+          if (data) {
+            const dateParts = data.split("/");
+            const d = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+            ret = convertMilisegToYYYYMMDD(d);
+          } else {
+            ret = "";
           }
           break;
         default:

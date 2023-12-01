@@ -15,6 +15,7 @@ import AppHeader from "../../../../Components/AppHeader";
 import ImportationStatusDetail from "./ImportationStatusDetail";
 import ImportationsPanel from "./ImportationsPanel";
 import ImportationProvider from "./ImportationContextProvider";
+import ImportationProductsDetail from "./ImportationProductsDetail";
 
 const DynamicApp = ({ app }) => {
   const { t } = useTranslation();
@@ -46,13 +47,13 @@ const DynamicApp = ({ app }) => {
         setStatuses(ret);
 
         let events = await findAllBusinessObjectives(params);
-        events = events.filter(e => e !== "");
-        events.unshift(t("importations.label.all"))	
+        events = events.filter((e) => e !== "");
+        events.unshift(t("importations.label.all"));
         setBusinessObjectives(events);
 
         let analysts = await findAllAnalysts(params);
-        analysts = analysts.filter(e => e !== "");
-        analysts.unshift(t("importations.label.all"))	
+        analysts = analysts.filter((e) => e !== "");
+        analysts.unshift(t("importations.label.all"));
         setAnalysts(analysts);
       }
     } catch (error) {
@@ -84,6 +85,7 @@ const DynamicApp = ({ app }) => {
               }
             />
             <Route exact path="/importationStatusDetail" element={<ImportationStatusDetail setError={setError} />} />
+            <Route exact path="/importationStatusDetail/productsDetail" element={<ImportationProductsDetail setError={setError} />} />
           </Routes>
         </ImportationProvider>
       </Stack>

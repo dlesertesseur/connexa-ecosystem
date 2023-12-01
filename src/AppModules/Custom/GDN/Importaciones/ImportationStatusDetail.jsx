@@ -36,17 +36,30 @@ const ImportationStatusDetail = ({ setError }) => {
     { headerName: cols[col++], fieldName: "docFob", align: "right",width: "200px" },
     { headerName: cols[col++], fieldName: "shpProveedor", align: "left",width: "200px" },
     { headerName: cols[col++], fieldName: "docFecha", align: "center", format: "date",width: "200px" },
-    { headerName: cols[col++], fieldName: "shpNecesidadEnCd", align: "center",width: "200px" },
+    { headerName: cols[col++], fieldName: "shpNecesidadEnCd", align: "center",format: "strTodate",width: "200px" },
   ];
 
   const { businessObjectiveSelected, analystSelected } = useImportationContext();
   
+  useEffect(() => {
+    if(rowSelected){
+      const found = rows.find(r => r.id === rowSelected);
+      const params = {
+        state: {
+          reference: found.referencia,
+          product:found.shpProducto,
+          status:status
+        },
+      };
+      navigate("productsDetail", params);
+    }
+  },[rowSelected])
+
   const getData = async () => {
     const params = {
       token: user.token,
       status: status,
     };
-
     
     if(businessObjectiveSelected !== t("importations.label.all")){
       params.event=businessObjectiveSelected;
@@ -55,7 +68,6 @@ const ImportationStatusDetail = ({ setError }) => {
     if(analystSelected !== t("importations.label.all")){
       params.analyst=analystSelected;
     }
-
 
     try {
       setLoading(true);

@@ -69,7 +69,7 @@
     "assignNames": "Assign names",
     "options": "Options",
     "menu": "Menu",
-    "filters":"Filters"
+    "filters": "Filters"
   },
 
   "label": {
@@ -1677,6 +1677,19 @@
       "Channel"
     ],
 
+    "items": {
+      "columns": [
+        "Code",
+        "Description",
+        "Article",
+        "FOB",
+        "Unit",
+        "Amount",
+        "Price",
+        "Date"
+      ]
+    },
+
     "label": {
       "outOfDate": "Out of date",
       "onTime": "On time",
@@ -1684,8 +1697,8 @@
       "lastUpdate": "Last update",
       "nextUpdate": "Next update",
       "businessObjective": "Business objective",
-      "analyst":"Analyst",
-      "all":"All"
+      "analyst": "Analyst",
+      "all": "All"
     },
 
     "filter": {

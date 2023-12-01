@@ -50,15 +50,10 @@ async function findImportationsByStatus(params) {
       apikey: params.token,
     },
   };
-
-  //const url = `${baseUrl}/importations/${params.status}`;
-
   const event = params.event ? `&event=${params.event}` : null;
   const analyst = params.analyst ? `&analyst=${params.analyst}` : null;
 
   const url = `${baseUrl}/importations?status=${params.status}${event ? event : ""}${analyst ? analyst : ""}`;
-
-console.log("findImportationsByStatus url -> ", url);
 
   const res = await fetch(url, requestOptions);
   const data = await res.json();
@@ -162,6 +157,28 @@ async function findAllAnalysts(params) {
 }
 
 
+async function findImportationsItemsByReference(params) {
+  const requestOptions = {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: params.token,
+    },
+  };
+
+  const url = `${baseUrl}/importations/items?reference=${params.reference}`;
+
+  console.log("findImportationsItemsByReference url -> ", url);
+
+  const res = await fetch(url, requestOptions);
+  const data = await res.json();
+  if (data.error) {
+    throw new Error(data.error);
+  }
+  return data;
+}
+
 export {
   findAllImportations,
   findAllImportationStatuses,
@@ -170,5 +187,6 @@ export {
   findImportationsIndicatorsByStatus,
   getProcessStatus,
   findAllBusinessObjectives,
-  findAllAnalysts
+  findAllAnalysts,
+  findImportationsItemsByReference
 };
