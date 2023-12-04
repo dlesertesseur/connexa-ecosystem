@@ -1345,7 +1345,7 @@
       "duration": "Durations in days",
       "stageNumber": "Number",
       "sprintNumber": "Number",
-      "associateBusinessGoal": "Associate a business objective",
+      "requiresEvent": "Associate a business objective",
       "businessGoalsList": "Business goals",
       "hasBusinessGoal": "Has a business objective?"
     },

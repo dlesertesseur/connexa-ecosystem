@@ -39,7 +39,7 @@ export function DeletePage() {
       description: "",
       name: "",
       status: "",
-      associateBusinessGoal: false,
+      requiresEvent: false,
     },
 
     validate: {},
@@ -130,7 +130,7 @@ export function DeletePage() {
         form.setFieldValue("name", businessProcessModel.name);
         form.setFieldValue("description", businessProcessModel.description);
         form.setFieldValue("status", businessProcessModel.status);
-        form.setFieldValue("associateBusinessGoal", businessProcessModel.associateBusinessGoal);
+        form.setFieldValue("requiresEvent", businessProcessModel.requiresEvent);
       }
     };
     f();
@@ -185,7 +185,7 @@ export function DeletePage() {
                   {createSelectField("status", statuses)}
                 </Group>
                 <Group mb={"md"} grow>
-                  {createCheckBoxField("associateBusinessGoal")}
+                  {createCheckBoxField("requiresEvent")}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

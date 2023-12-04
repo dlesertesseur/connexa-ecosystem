@@ -24,7 +24,7 @@ export function CreatePage() {
     initialValues: {
       description: "",
       name: "",
-      associateBusinessGoal: false,
+      requiresEvent: false,
     },
 
     validate: {
@@ -124,7 +124,7 @@ export function CreatePage() {
                   {createTextField("description")}
                 </Group>
                 <Group mb={"md"} grow>
-                  {createCheckBoxField("associateBusinessGoal")}
+                  {createCheckBoxField("requiresEvent")}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

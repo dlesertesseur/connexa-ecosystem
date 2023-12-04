@@ -11,7 +11,8 @@ async function saveBusinessProcessModel(parameters) {
     sprints: parameters.sprints,
     transitions: parameters.transitions,
     initialTaskId: parameters.initialTaskId,
-    requiredRole: parameters.requiredRole
+    requiredRole: parameters.requiredRole,
+    requiresEvent: parameters.requiresEvent,
   });
 
   const requestOptions = {

@@ -1335,7 +1335,7 @@
       "duration": "Duracion en dias",
       "stageNumber": "Numero",
       "sprintNumber": "Numero",
-      "associateBusinessGoal": "Asociar un objetivo de negocio",
+      "requiresEvent": "Asociar un objetivo de negocio",
       "businessGoalsList": "Objetivos de negocio",
       "hasBusinessGoal": "¿Tiene un objetivo de negocio?"
     },

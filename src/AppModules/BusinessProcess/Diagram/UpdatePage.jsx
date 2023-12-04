@@ -39,7 +39,7 @@ export function UpdatePage() {
       description: "",
       name: "",
       status: null,
-      associateBusinessGoal: false,
+      requiresEvent: false,
     },
 
     validate: {
@@ -92,6 +92,7 @@ export function UpdatePage() {
         label={t("businessProcessModel.label." + field)}
         placeholder={t("businessProcessModel.placeholder." + field)}
         {...form.getInputProps(field)}
+        checked={form.getInputProps(field).value}
       />
     ) : (
       <Skeleton visible={true} h={40}></Skeleton>
@@ -110,7 +111,7 @@ export function UpdatePage() {
         form.setFieldValue("name", businessProcessModel.name);
         form.setFieldValue("description", businessProcessModel.description);
         form.setFieldValue("status", businessProcessModel.status);
-        form.setFieldValue("associateBusinessGoal", businessProcessModel.associateBusinessGoal);
+        form.setFieldValue("requiresEvent", businessProcessModel.requiresEvent === "true" ? true: false);
       }
     };
     f();
@@ -129,6 +130,7 @@ export function UpdatePage() {
       transitions: businessProcessModel.transitions,
       initialTaskId: businessProcessModel.initialTaskId,
       requiredRole: businessProcessModel.requiredRole,
+      requiresEvent: values.requiresEvent,
     };
 
     setWorking(true);
@@ -183,7 +185,7 @@ export function UpdatePage() {
                   {createSelectField("status", statuses)}
                 </Group>
                 <Group mb={"md"} grow>
-                  {createCheckBoxField("associateBusinessGoal")}
+                  {createCheckBoxField("requiresEvent")}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">
