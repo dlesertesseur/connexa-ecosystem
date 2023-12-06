@@ -1693,7 +1693,7 @@
       "columns": [
         "Codigo",
         "Descripcion",
-        "Articulo",
+        "UPC",
         "FOB",
         "Unidad",
         "Cantidad",

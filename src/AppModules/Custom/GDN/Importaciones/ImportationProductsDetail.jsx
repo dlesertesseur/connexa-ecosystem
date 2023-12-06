@@ -26,7 +26,7 @@ const ImportationProductsDetail = ({ setError }) => {
   const columns = [
     { headerName: cols[col++], fieldName: "codigo", align: "right", width: "200px" },
     { headerName: cols[col++], fieldName: "descripcion", align: "left",width: "200px"},
-    { headerName: cols[col++], fieldName: "descripcionArt", align: "left",width: "200px" },
+    { headerName: cols[col++], fieldName: "upc", align: "left",width: "200px" },
     { headerName: cols[col++], fieldName: "fob", align: "right" , width: "200px" },
     { headerName: cols[col++], fieldName: "unidad", align: "left",width: "200px" },
     { headerName: cols[col++], fieldName: "cantidad", align: "right",width: "200px" },

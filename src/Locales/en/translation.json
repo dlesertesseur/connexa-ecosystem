@@ -1681,7 +1681,7 @@
       "columns": [
         "Code",
         "Description",
-        "Article",
+        "UPC",
         "FOB",
         "Unit",
         "Amount",
