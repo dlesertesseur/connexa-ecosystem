@@ -20,8 +20,6 @@ async function saveBusinessProcessModelRelation(parameters) {
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 
-  console.log("saveBusinessProcessModelRelation data -> ", data);
-
   return data;
 }
 
