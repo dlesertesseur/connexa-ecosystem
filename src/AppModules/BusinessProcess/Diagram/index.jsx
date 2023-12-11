@@ -10,9 +10,10 @@ import { UpdatePage } from "./UpdatePage";
 import { DeletePage } from "./DeletePage";
 import { AbmStateContext } from "./Context";
 import { findAllBusinessProcessModel } from "../../../DataAccess/BusinessProcessModel";
-import { IconEditCircle, IconPaperclip } from "@tabler/icons-react";
+import { IconBraces, IconEditCircle, IconPaperclip } from "@tabler/icons-react";
 import { findAllSprints } from "../../../DataAccess/Sprints";
 import { findAllByOrganizationId } from "../../../DataAccess/OrganizationRole";
+import Parameters from "./parameters/Parameters";
 
 const DynamicApp = ({ app }) => {
   const { user, organizationSelected } = useSelector((state) => state.auth.value);
@@ -100,6 +101,12 @@ const DynamicApp = ({ app }) => {
             icon: <IconPaperclip size={20} />,
             key: "businessProcessModel.buttons.forms",
             element: <FormSelector back={"../"} />,
+          },
+          {
+            path: "parameters",
+            icon: <IconBraces size={20} />,
+            key: "businessProcessModel.buttons.parameters",
+            element: <Parameters back={"../"} />,
           }
         ]}
       />

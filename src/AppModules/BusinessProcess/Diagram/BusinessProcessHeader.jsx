@@ -2,7 +2,6 @@ import React from "react";
 import { Breadcrumbs, Group, Skeleton, Text } from "@mantine/core";
 
 const BusinessProcessHeader = ({ businessProcess, text }) => {
-
   const items = [
     { title: businessProcess?.name, href: null },
     { title: text, href: null },

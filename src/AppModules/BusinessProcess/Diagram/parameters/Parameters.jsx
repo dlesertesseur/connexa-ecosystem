@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ResponceNotification from "../../../../Modal/ResponceNotification";
 import SortedTable from "../../../../Components/Crud/SortedTable";
+import BusinessProcessHeader from "../BusinessProcessHeader";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { CreatePage } from "./CreatePage";
@@ -11,8 +12,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { Stack } from "@mantine/core";
 import { useContext } from "react";
-import { findBusinessProcessModelById } from "../../../../DataAccess/BusinessProcessModel";
-import BusinessProcessHeader from "../BusinessProcessHeader";
+import { findAllBusinessProcessModel, findBusinessProcessModelById } from "../../../../DataAccess/BusinessProcessModel";
 
 const Parameters = () => {
   const { user } = useSelector((state) => state.auth.value);
@@ -48,8 +48,9 @@ const Parameters = () => {
   const cols = t("businessProcessModel.parameters.columns", { returnObjects: true });
   const columns = [
     { headerName: cols[col++], fieldName: "name", align: "left" },
-    { headerName: cols[col++], fieldName: "description", align: "left" },
-    { headerName: cols[col++], fieldName: "type", align: "left" },
+    { headerName: cols[col++], fieldName: "value", align: "left" },
+    { headerName: cols[col++], fieldName: "defatultValue", align: "left" },
+    { headerName: cols[col++], fieldName: "required", align: "center" },
   ];
 
   const ret = rows ? (

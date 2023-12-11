@@ -69,7 +69,7 @@
     "assignNames": "Asignar nombres",
     "options": "Options",
     "menu": "Menu",
-    "filters":"Filtros"
+    "filters": "Filtros"
   },
 
   "label": {
@@ -1363,15 +1363,16 @@
       },
       "label": {
         "name": "Nombre",
-        "description": "Descripcion",
-        "type": "Tipo"
+        "value": "Valor",
+        "defaultValue": "Valor defecto",
+        "required": "requerido"
       },
       "placeholder": {
-        "name": "un nombre",
-        "description": "una descripcion",
-        "type": "un tipo de parametro"
+        "name": "a name",
+        "value": "a value",
+        "defaultValue": "a value"
       },
-      "columns": ["Nombre", "Descripcion", "Tipo"]
+      "columns": ["Name", "Value", "Default", "Requied"]
     },
     "connections": {
       "title": {
@@ -1690,16 +1691,7 @@
     ],
 
     "items": {
-      "columns": [
-        "Codigo",
-        "Descripcion",
-        "UPC",
-        "FOB",
-        "Unidad",
-        "Cantidad",
-        "Precio",
-        "Fecha"
-      ]
+      "columns": ["Codigo", "Descripcion", "UPC", "FOB", "Unidad", "Cantidad", "Precio", "Fecha"]
     },
     "label": {
       "outOfDate": "Vencidas",
@@ -1708,8 +1700,8 @@
       "lastUpdate": "Última actualización",
       "nextUpdate": "Próxima actualización",
       "businessObjective": "Objetivo de negocio",
-      "analyst":"Analista",
-      "all":"Todos"
+      "analyst": "Analista",
+      "all": "Todos"
     },
 
     "filter": {

@@ -16,12 +16,9 @@ import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import {
-  findBusinessProcessParameterById,
-  updateBusinessProcessParameter,
-} from "../../../../DataAccess/BusinessProcess";
 import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
 import { AbmParametersStateContext } from "../Context";
+import { findBusinessProcessModelParameterById, updateBusinessProcessModelParameter } from "../../../../DataAccess/BusinessProcessModel";
 
 export function UpdatePage({ businessProcessId }) {
   const { t } = useTranslation();
@@ -80,7 +77,7 @@ export function UpdatePage({ businessProcessId }) {
 
   const getData = async () => {
     const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
-    const ret = await findBusinessProcessParameterById(params);
+    const ret = await findBusinessProcessModelParameterById(params);
     setProjectParameter(ret);
   };
 
@@ -111,7 +108,7 @@ export function UpdatePage({ businessProcessId }) {
 
     setWorking(true);
     try {
-      await updateBusinessProcessParameter(params);
+      await updateBusinessProcessModelParameter(params);
       setWorking(false);
       setReloadParameters(Date.now());
       navigate("../");

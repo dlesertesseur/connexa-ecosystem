@@ -1,14 +1,13 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Select } from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Checkbox } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
-import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
-import { createBusinessProcessParameter } from "../../../../DataAccess/BusinessProcess";
 import { useContext } from "react";
 import { AbmParametersStateContext } from "../Context";
+import { saveBusinessProcessModelParameter } from "../../../../DataAccess/BusinessProcessModel";
 
 export function CreatePage({businessProcessId}) {
   const { t } = useTranslation();
@@ -17,32 +16,26 @@ export function CreatePage({businessProcessId}) {
   const [working, setWorking] = useState(false);
   const {setReloadParameters} = useContext(AbmParametersStateContext)
 
-  const [parametersType] = useState(
-    PARAMETERS_TYPE.map((p) => {
-      return { value: p.id, label: p.name };
-    })
-  );
   const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
-      description: "",
       name: "",
-      type: "",
+      value: "",
+      defaultValue: "",
+      required: "",
     },
 
     validate: {
-      description: (val) => (val ? null : t("validation.required")),
       name: (val) => (val ? null : t("validation.required")),
-      type: (val) => (val ? null : t("validation.required")),
     },
   });
 
   const createTextField = (field) => {
     const ret = (
       <TextInput
-        label={t("businessProcess.parameters.label." + field)}
-        placeholder={t("businessProcess.parameters.placeholder." + field)}
+        label={t("businessProcessModel.parameters.label." + field)}
+        placeholder={t("businessProcessModel.parameters.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -50,18 +43,19 @@ export function CreatePage({businessProcessId}) {
     return ret;
   };
 
-  const createSelect = (field, data) => {
+  const createCheckBoxField = (field) => {
     const ret = (
-      <Select
-        label={t("businessProcess.parameters.label." + field)}
-        data={data ? data : []}
-        placeholder={t("businessProcess.parameters.placeholder." + field)}
+      <Checkbox
+        labelPosition="left"
+        label={t("businessProcessModel.parameters.label." + field)}
+        placeholder={t("businessProcessModel.parameters.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
 
     return ret;
   };
+
 
   const onClose = () => {
     navigate("../");
@@ -69,12 +63,12 @@ export function CreatePage({businessProcessId}) {
 
   const onCreate = async (values) => {
     const params = {
-      userId: user.id,
-      businessProcessId: businessProcessId,
+      token: user.token,
+      id: businessProcessId,
       values: { ...values },
     };
 
-    await createBusinessProcessParameter(params);
+    await saveBusinessProcessModelParameter(params);
     setReloadParameters(new Date());
     onClose();
   };
@@ -108,10 +102,13 @@ export function CreatePage({businessProcessId}) {
                   {createTextField("name")}
                 </Group>
                 <Group mb={"md"} grow>
-                  {createTextField("description")}
+                  {createTextField("value")}
+                </Group>
+                <Group mb={"md"} grow>
+                  {createTextField("defaultValue")}
                 </Group>
                 <Group mb={"md"}>
-                  {createSelect("type", parametersType)}
+                  {createCheckBoxField("required")}
                 </Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">

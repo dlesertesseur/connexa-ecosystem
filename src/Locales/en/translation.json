@@ -1376,15 +1376,17 @@
       },
       "label": {
         "name": "Name",
-        "description": "Description",
-        "type": "Type"
+        "value": "Value",
+        "defaultValue": "Default value",
+        "required": "Required"
       },
       "placeholder": {
         "name": "a name",
-        "description": "a description",
-        "type": "a parameter type"
+        "value": "a value",
+        "defaultValue": "a value",
+        "required": "required field"
       },
-      "columns": ["Name", "Description", "Type"]
+      "columns": ["Name", "Value", "Default", "Requied"]
     },
     "connections": {
       "title": {

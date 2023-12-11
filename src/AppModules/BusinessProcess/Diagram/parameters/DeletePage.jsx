@@ -6,12 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
 import { AbmParametersStateContext } from "../Context";
-import {
-  deleteBusinessProcessParameter,
-  findBusinessProcessParameterById,
-} from "../../../../DataAccess/BusinessProcess";
 import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
 import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
+import { deleteBusinessProcessModelParameter, findBusinessProcessModelParameterById } from "../../../../DataAccess/BusinessProcessModel";
 
 export function DeletePage({businessProcessId}) {
   const { t } = useTranslation();
@@ -69,7 +66,7 @@ export function DeletePage({businessProcessId}) {
 
   const getData = async () => {
     const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
-    const ret = await findBusinessProcessParameterById(params);
+    const ret = await findBusinessProcessModelParameterById(params);
     setProjectParameter(ret);
   };
 
@@ -90,7 +87,7 @@ export function DeletePage({businessProcessId}) {
 
     setWorking(true);
     try {
-      await deleteBusinessProcessParameter(params);
+      await deleteBusinessProcessModelParameter(params);
       setWorking(false);
       setReloadParameters(Date.now());
       setSelectedParameterId(null);
