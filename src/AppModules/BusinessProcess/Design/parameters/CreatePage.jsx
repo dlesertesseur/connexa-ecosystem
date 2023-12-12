@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
-import { createBusinessProcessParameter } from "../../../../DataAccess/BusinessProcess";
+import { saveBusinessProcess } from "../../../../DataAccess/BusinessProcess";
 import { useContext } from "react";
 import { AbmParametersStateContext } from "../Context";
 import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
@@ -74,7 +74,7 @@ export function CreatePage({businessProcessId}) {
       values: { ...values },
     };
 
-    await createBusinessProcessParameter(params);
+    await saveBusinessProcess(params);
     setReloadParameters(new Date());
     onClose();
   };

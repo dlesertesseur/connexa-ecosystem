@@ -6,10 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
 import { AbmParametersStateContext } from "../Context";
-import {
-  deleteBusinessProcessParameter,
-  findBusinessProcessParameterById,
-} from "../../../../DataAccess/BusinessProcess";
 import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
 import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
 
@@ -68,9 +64,9 @@ export function DeletePage({businessProcessId}) {
   };
 
   const getData = async () => {
-    const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
-    const ret = await findBusinessProcessParameterById(params);
-    setProjectParameter(ret);
+    // const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
+    // const ret = await findBusinessProcessParameterById(params);
+    // setProjectParameter(ret);
   };
 
   useEffect(() => {
@@ -90,11 +86,11 @@ export function DeletePage({businessProcessId}) {
 
     setWorking(true);
     try {
-      await deleteBusinessProcessParameter(params);
-      setWorking(false);
-      setReloadParameters(Date.now());
-      setSelectedParameterId(null);
-      navigate("../");
+      // await deleteBusinessProcessParameter(params);
+      // setWorking(false);
+      // setReloadParameters(Date.now());
+      // setSelectedParameterId(null);
+      // navigate("../");
     } catch (error) {
       setWorking(false);
       setError(error);

@@ -1,13 +1,4 @@
-import {
-  Title,
-  Container,
-  Button,
-  Group,
-  LoadingOverlay,
-  ScrollArea,
-  TextInput,
-  Select,
-} from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -16,10 +7,6 @@ import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import {
-  findBusinessProcessParameterById,
-  updateBusinessProcessParameter,
-} from "../../../../DataAccess/BusinessProcess";
 import { AbmParametersStateContext } from "../Context";
 import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
 
@@ -36,7 +23,7 @@ export function UpdatePage({ businessProcessId }) {
       return { value: p.id, label: p.name };
     })
   );
-  
+
   const navigate = useNavigate();
 
   const form = useForm({
@@ -79,9 +66,9 @@ export function UpdatePage({ businessProcessId }) {
   };
 
   const getData = async () => {
-    const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
-    const ret = await findBusinessProcessParameterById(params);
-    setProjectParameter(ret);
+    // const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
+    // const ret = await findBusinessProcessParameterById(params);
+    // setProjectParameter(ret);
   };
 
   useEffect(() => {
@@ -110,15 +97,15 @@ export function UpdatePage({ businessProcessId }) {
     };
 
     setWorking(true);
-    try {
-      await updateBusinessProcessParameter(params);
-      setWorking(false);
-      setReloadParameters(Date.now());
-      navigate("../");
-    } catch (error) {
-      setWorking(false);
-      setError(error);
-    }
+    // try {
+    //   await updateBusinessProcessParameter(params);
+    //   setWorking(false);
+    //   setReloadParameters(Date.now());
+    //   navigate("../");
+    // } catch (error) {
+    //   setWorking(false);
+    //   setError(error);
+    // }
   };
 
   return (
@@ -138,7 +125,8 @@ export function UpdatePage({ businessProcessId }) {
           {t("businessProcess.parameters.title.update")}
         </Title>
 
-        <form    autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onUpdate(values);
           })}
