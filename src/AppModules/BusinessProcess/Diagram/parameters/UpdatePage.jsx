@@ -1,13 +1,4 @@
-import {
-  Title,
-  Container,
-  Button,
-  Group,
-  LoadingOverlay,
-  ScrollArea,
-  TextInput,
-  Select,
-} from "@mantine/core";
+import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Checkbox } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -16,9 +7,11 @@ import { useViewportSize } from "@mantine/hooks";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
 import { AbmParametersStateContext } from "../Context";
-import { findBusinessProcessModelParameterById, updateBusinessProcessModelParameter } from "../../../../DataAccess/BusinessProcessModel";
+import {
+  findBusinessProcessModelParameterById,
+  saveBusinessProcessModelParameter,
+} from "../../../../DataAccess/BusinessProcessModel";
 
 export function UpdatePage({ businessProcessId }) {
   const { t } = useTranslation();
@@ -28,33 +21,26 @@ export function UpdatePage({ businessProcessId }) {
   const [projectParameter, setProjectParameter] = useState();
   const { setReloadParameters, selectedParameterId } = useContext(AbmParametersStateContext);
 
-  const [parametersType] = useState(
-    PARAMETERS_TYPE.map((p) => {
-      return { value: p.id, label: p.name };
-    })
-  );
-  
   const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
-      description: "",
       name: "",
-      type: "",
+      value: "",
+      defaultValue: "",
+      required: false,
     },
 
     validate: {
-      description: (val) => (val ? null : t("validation.required")),
       name: (val) => (val ? null : t("validation.required")),
-      type: (val) => (val ? null : t("validation.required")),
     },
   });
 
   const createTextField = (field) => {
     const ret = (
       <TextInput
-        label={t("businessProcess.parameters.label." + field)}
-        placeholder={t("businessProcess.parameters.placeholder." + field)}
+        label={t("businessProcessModel.parameters.label." + field)}
+        placeholder={t("businessProcessModel.parameters.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -62,12 +48,13 @@ export function UpdatePage({ businessProcessId }) {
     return ret;
   };
 
-  const createSelect = (field, data) => {
+  const createCheckBoxField = (field) => {
     const ret = (
-      <Select
-        label={t("businessProcess.parameters.label." + field)}
-        data={data ? data : []}
-        placeholder={t("businessProcess.parameters.placeholder." + field)}
+      <Checkbox
+        labelPosition="left"
+        label={t("businessProcessModel.parameters.label." + field)}
+        placeholder={t("businessProcessModel.parameters.placeholder." + field)}
+        checked={form.getInputProps(field).value}
         {...form.getInputProps(field)}
       />
     );
@@ -76,7 +63,7 @@ export function UpdatePage({ businessProcessId }) {
   };
 
   const getData = async () => {
-    const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
+    const params = { token: user.token, id: selectedParameterId };
     const ret = await findBusinessProcessModelParameterById(params);
     setProjectParameter(ret);
   };
@@ -92,8 +79,9 @@ export function UpdatePage({ businessProcessId }) {
   useEffect(() => {
     if (projectParameter) {
       form.setFieldValue("name", projectParameter.name);
-      form.setFieldValue("description", projectParameter.description);
-      form.setFieldValue("type", projectParameter.type);
+      form.setFieldValue("value", projectParameter.value);
+      form.setFieldValue("defaultValue", projectParameter.defaultValue);
+      form.setFieldValue("required", projectParameter.required === "true" ? true : false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectParameter]);
@@ -101,14 +89,14 @@ export function UpdatePage({ businessProcessId }) {
   const onUpdate = async (values) => {
     const params = {
       token: user.token,
-      businessProcessId: businessProcessId,
-      paramId: selectedParameterId,
+      businessProcessModelId: businessProcessId,
+      id: selectedParameterId,
       values: values,
     };
 
     setWorking(true);
     try {
-      await updateBusinessProcessModelParameter(params);
+      await saveBusinessProcessModelParameter(params);
       setWorking(false);
       setReloadParameters(Date.now());
       navigate("../");
@@ -135,7 +123,8 @@ export function UpdatePage({ businessProcessId }) {
           {t("businessProcess.parameters.title.update")}
         </Title>
 
-        <form    autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             onUpdate(values);
           })}
@@ -147,9 +136,12 @@ export function UpdatePage({ businessProcessId }) {
                   {createTextField("name")}
                 </Group>
                 <Group mb={"md"} grow>
-                  {createTextField("description")}
+                  {createTextField("value")}
                 </Group>
-                <Group mb={"md"}>{createSelect("type", parametersType)}</Group>
+                <Group mb={"md"} grow>
+                  {createTextField("defaultValue")}
+                </Group>
+                <Group mb={"md"}>{createCheckBoxField("required")}</Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">
                 <Button type="submit">{t("button.accept")}</Button>

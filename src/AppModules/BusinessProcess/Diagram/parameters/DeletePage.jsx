@@ -1,4 +1,14 @@
-import { Title, Container, Button, Group, LoadingOverlay, ScrollArea, TextInput, Select } from "@mantine/core";
+import {
+  Title,
+  Container,
+  Button,
+  Group,
+  LoadingOverlay,
+  ScrollArea,
+  TextInput,
+  Select,
+  Checkbox,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -6,11 +16,13 @@ import { useNavigate } from "react-router-dom";
 import { useViewportSize } from "@mantine/hooks";
 import { useContext, useEffect, useState } from "react";
 import { AbmParametersStateContext } from "../Context";
-import { PARAMETERS_TYPE } from "../../../../Constants/DOCUMENTS";
 import DeleteConfirmation from "../../../../Modal/DeleteConfirmation";
-import { deleteBusinessProcessModelParameter, findBusinessProcessModelParameterById } from "../../../../DataAccess/BusinessProcessModel";
+import {
+  deleteBusinessProcessModelParameter,
+  findBusinessProcessModelParameterById,
+} from "../../../../DataAccess/BusinessProcessModel";
 
-export function DeletePage({businessProcessId}) {
+export function DeletePage({ businessProcessId }) {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const { height } = useViewportSize();
@@ -19,19 +31,14 @@ export function DeletePage({businessProcessId}) {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const { setReloadParameters, selectedParameterId, setSelectedParameterId } = useContext(AbmParametersStateContext);
 
-  const [parametersType] = useState(
-    PARAMETERS_TYPE.map((p) => {
-      return { value: p.id, label: p.name };
-    })
-  );
-
   const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
-      description: "",
+      value: "",
       name: "",
-      type: "",
+      defaultValue: "",
+      required: "",
     },
 
     validate: {},
@@ -41,8 +48,8 @@ export function DeletePage({businessProcessId}) {
     const ret = (
       <TextInput
         disabled={true}
-        label={t("businessProcess.parameters.label." + field)}
-        placeholder={t("businessProcess.parameters.placeholder." + field)}
+        label={t("businessProcessModel.parameters.label." + field)}
+        placeholder={t("businessProcessModel.parameters.placeholder." + field)}
         {...form.getInputProps(field)}
       />
     );
@@ -50,13 +57,14 @@ export function DeletePage({businessProcessId}) {
     return ret;
   };
 
-  const createSelect = (field, data) => {
+  const createCheckBoxField = (field) => {
     const ret = (
-      <Select
+      <Checkbox
         disabled={true}
-        label={t("businessProcess.parameters.label." + field)}
-        data={data ? data : []}
-        placeholder={t("businessProcess.parameters.placeholder." + field)}
+        labelPosition="left"
+        label={t("businessProcessModel.parameters.label." + field)}
+        placeholder={t("businessProcessModel.parameters.placeholder." + field)}
+        checked={form.getInputProps(field).value}
         {...form.getInputProps(field)}
       />
     );
@@ -65,7 +73,7 @@ export function DeletePage({businessProcessId}) {
   };
 
   const getData = async () => {
-    const params = { token: user.token, businessProcessId: businessProcessId, paramId: selectedParameterId };
+    const params = { token: user.token, id: selectedParameterId };
     const ret = await findBusinessProcessModelParameterById(params);
     setProjectParameter(ret);
   };
@@ -80,9 +88,7 @@ export function DeletePage({businessProcessId}) {
   const onDelete = async (values) => {
     const params = {
       token: user.token,
-      businessProcessId: businessProcessId,
-      paramId: selectedParameterId,
-      values: values,
+      id: selectedParameterId,
     };
 
     setWorking(true);
@@ -101,8 +107,9 @@ export function DeletePage({businessProcessId}) {
   useEffect(() => {
     if (projectParameter) {
       form.setFieldValue("name", projectParameter.name);
-      form.setFieldValue("description", projectParameter.description);
-      form.setFieldValue("type", projectParameter.type);
+      form.setFieldValue("value", projectParameter.value);
+      form.setFieldValue("defaultValue", projectParameter.defaultValue);
+      form.setFieldValue("required", projectParameter.required === "true" ? true : false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectParameter]);
@@ -136,7 +143,8 @@ export function DeletePage({businessProcessId}) {
           {t("businessProcess.parameters.title.delete")}
         </Title>
 
-        <form    autoComplete="false"
+        <form
+          autoComplete="false"
           onSubmit={form.onSubmit((values) => {
             setConfirmModalOpen(true);
           })}
@@ -148,9 +156,12 @@ export function DeletePage({businessProcessId}) {
                   {createTextField("name")}
                 </Group>
                 <Group mb={"md"} grow>
-                  {createTextField("description")}
+                  {createTextField("value")}
                 </Group>
-                <Group mb={"md"}>{createSelect("type", parametersType)}</Group>
+                <Group mb={"md"} grow>
+                  {createTextField("defaultValue")}
+                </Group>
+                <Group mb={"md"}>{createCheckBoxField("required")}</Group>
               </ScrollArea>
               <Group position="right" mt="xl" mb="xs">
                 <Button type="submit">{t("button.accept")}</Button>

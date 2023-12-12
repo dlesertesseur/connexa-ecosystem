@@ -1647,7 +1647,9 @@
       "description": "Description",
       "general": "General",
       "businessGoal": "Objetivo de negocio",
-      "baseDate": "Fecha de inicio"
+      "baseDate": "Fecha de inicio",
+      "requiredParameters": "Parametros requeridos"
+
     },
     "placeholder": {
       "name": "un nombre",

@@ -56,7 +56,6 @@ export function CreatePage({businessProcessId}) {
     return ret;
   };
 
-
   const onClose = () => {
     navigate("../");
   };
@@ -64,7 +63,7 @@ export function CreatePage({businessProcessId}) {
   const onCreate = async (values) => {
     const params = {
       token: user.token,
-      id: businessProcessId,
+      businessProcessModelId: businessProcessId,
       values: { ...values },
     };
 

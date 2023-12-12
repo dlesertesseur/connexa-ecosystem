@@ -25,12 +25,14 @@ import {
 import { AbmStateContext } from "../Context";
 import { findAllBusinessGoals } from "../../../../DataAccess/BusinessGoal";
 import { DatePicker } from "@mantine/dates";
+import { findAllBusinessProcessModelParameters } from "../../../../DataAccess/BusinessProcessModel";
 
 const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, asociateBusinessGoal = false }) => {
   const { t, i18n } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const [instance, setInstance] = useState(null);
   const [sprints, setSprints] = useState(null);
+  const [parameters, setParameters] = useState(null);
   const [goals, setGoals] = useState(null);
   const [baseDate, setBaseDate] = useState(new Date());
   const { setError } = useContext(AbmStateContext);
@@ -44,7 +46,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
     validate: {
       name: (val) => (val ? null : t("validation.required")),
       description: (val) => (val ? null : t("validation.required")),
-      businessGoal : asociateBusinessGoal ? (val) => (val ? null : t("validation.required")) : null
+      businessGoal: asociateBusinessGoal ? (val) => (val ? null : t("validation.required")) : null,
     },
   });
 
@@ -69,7 +71,8 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
         firstDayOfWeek="sunday"
         label={t("businessProcessInstances.label." + field)}
         placeholder={t("businessProcessInstances.placeholder." + field)}
-        value={baseDate} onChange={setBaseDate} 
+        value={baseDate}
+        onChange={setBaseDate}
       />
     );
 
@@ -118,6 +121,14 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
           });
           setGoals(list);
         }
+
+        const data = await findAllBusinessProcessModelParameters({
+          token: user.token,
+          id: businessProcessModelId,
+        });
+
+        const parameters = data.filter((p) => p.required === "true");
+        setParameters(parameters);
 
         setInstance(ret);
       }
@@ -201,6 +212,11 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
         sprints[index]["endDate"] = calculateMiliseconds(index + 1);
       }
 
+      for (let index = 0; index < parameters.length; index++) {
+        parameters[index].value = form.getInputProps(parameters[index].name).value;
+      }
+      ret.parameters = parameters;
+
       try {
         const params = {
           token: user.token,
@@ -256,32 +272,13 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
     return ret;
   };
 
-  const createVerticalSprintCard = (s, index) => {
+  const createParametersCard = (s, index) => {
     const ret = (
-      <Paper key={s.id} p={"xs"} withBorder mb={"xs"} w={200} bg={"gray.1"}>
-        <Stack mb={"xs"}>
-          <Title order={5}>{s.name}</Title>
-          {s.description ? <Text size={"xs"}>{s.description} </Text> : null}
-          <Group>
-            <Text size={"sm"} weight={"normal"}>
-              {t("businessProcessInstances.label.startDate")}
-            </Text>
-            <Text size={"sm"} weight={"normal"}>
-              {calculateDate(index)}
-            </Text>
-          </Group>
-
-          <Group>
-            <Text size={"sm"}>{t("businessProcessInstances.label.endDate")}</Text>
-            <Text size={"sm"} weight={"normal"}>
-              {calculateDate(index + 1)}
-            </Text>
-          </Group>
-
-          <Group>
-            <NumberInput label={t("businessProcessInstances.label.duration")} {...form.getInputProps(s.name)} />
-          </Group>
-        </Stack>
+      <Paper key={s.id} p={"xs"} withBorder mb={"xs"}>
+        <TextInput label={s.name} 
+        defaultValue={s.defaultValue}
+        {...form.getInputProps(s.name)}
+        />
       </Paper>
     );
 
@@ -305,23 +302,26 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
             onSave(values);
           })}
         >
-          <Stack h={"100%"} spacing={"xs"}>
-            <Group grow mb={"xs"}>
-              {createTextField("name")}
-            </Group>
-            <Group grow mb={"xs"}>
-              {createTextField("description")}
-            </Group>
+          <ScrollArea h={400} offsetScrollbars>
+            <Stack h={"100%"} spacing={"xs"}>
+              <Group grow mb={"xs"}>
+                {createTextField("name")}
+              </Group>
+              <Group grow mb={"xs"}>
+                {createTextField("description")}
+              </Group>
 
-            <Group mb={"xs"} grow>
-              {asociateBusinessGoal ? createSelectField("businessGoal", goals) : null}
-              {createDateField("startDate")}
-            </Group>
-            <Text size={"sm"} weight={600}>
-              {t("businessProcessInstances.label.sprints")}
-            </Text>
+              <Group mb={"xs"} grow>
+                {asociateBusinessGoal ? createSelectField("businessGoal", goals) : null}
+                {createDateField("startDate")}
+              </Group>
 
-            <ScrollArea h={240} offsetScrollbars>
+              {sprints ? (
+                <Text size={"sm"} weight={600}>
+                  {t("businessProcessInstances.label.sprints")}
+                </Text>
+              ) : null}
+
               {sprints ? (
                 sprints.map((s, index) => {
                   const ret = createHorizontalSprintCard(s, index);
@@ -330,8 +330,23 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
               ) : (
                 <LoadingOverlay visible={true} />
               )}
-            </ScrollArea>
-          </Stack>
+
+              {parameters ? (
+                <Text size={"sm"} weight={600}>
+                  {t("businessProcessInstances.label.requiredParameters")}
+                </Text>
+              ) : null}
+
+              {parameters ? (
+                parameters.map((s, index) => {
+                  const ret = createParametersCard(s, index);
+                  return ret;
+                })
+              ) : (
+                <LoadingOverlay visible={true} />
+              )}
+            </Stack>
+          </ScrollArea>
           <Group position="right" mt={"xl"}>
             <Button type="submit">{t("button.accept")}</Button>
             <Button

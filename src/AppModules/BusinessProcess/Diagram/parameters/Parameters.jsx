@@ -12,7 +12,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { HEADER_HIGHT } from "../../../../Constants";
 import { Stack } from "@mantine/core";
 import { useContext } from "react";
-import { findAllBusinessProcessModel, findBusinessProcessModelById } from "../../../../DataAccess/BusinessProcessModel";
+import { findAllBusinessProcessModelParameters, findBusinessProcessModelById } from "../../../../DataAccess/BusinessProcessModel";
 
 const Parameters = () => {
   const { user } = useSelector((state) => state.auth.value);
@@ -32,9 +32,10 @@ const Parameters = () => {
     const params = { token: user.token, id: selectedRowId };
 
     try {
-      const ret = await findBusinessProcessModelById(params);
-      setBusinessProcessModel(ret);
-      setRows(ret.parameters ? ret.parameters : []);
+      const bm = await findBusinessProcessModelById(params);
+      setBusinessProcessModel(bm);
+      const ret = await findAllBusinessProcessModelParameters(params);
+      setRows(ret ? ret : []);
     } catch (error) {
       setError(error); 
     }
@@ -49,8 +50,8 @@ const Parameters = () => {
   const columns = [
     { headerName: cols[col++], fieldName: "name", align: "left" },
     { headerName: cols[col++], fieldName: "value", align: "left" },
-    { headerName: cols[col++], fieldName: "defatultValue", align: "left" },
-    { headerName: cols[col++], fieldName: "required", align: "center" },
+    { headerName: cols[col++], fieldName: "defaultValue", align: "left" },
+    { headerName: cols[col++], fieldName: "required", align: "center", format:"bool" },
   ];
 
   const ret = rows ? (

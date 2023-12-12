@@ -121,43 +121,15 @@ async function findBusinessProcessInstanceLogById(parameters) {
 async function saveBusinessProcessModelParameter(parameters) {
   try {
     const obj = {
-      businessProcessModelId: parameters.id,
+      businessProcessModelId: parameters.businessProcessModelId,
       name: parameters.values.name,
       value: parameters.values.value,
       defaultValue: parameters.values.defaultValue,
       required: parameters.values.required,
+      id: parameters.id,
     };
 
     const body = JSON.stringify(obj);
-
-    const requestOptions = {
-      method: "PUT",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        token: parameters.token,
-      },
-      body: body,
-    };
-
-    const url = API.businessProcess.saveBusinessProcessParameter;
-    const res = await fetch(url, requestOptions);
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    return error;
-  }
-}
-
-async function updateBusinessProcessModelParameter(parameters) {
-  try {
-    const body = JSON.stringify({
-      id: parameters.paramId,
-      name: parameters.values.name,
-      description: parameters.values.description,
-      type: parameters.values.type,
-    });
 
     const requestOptions = {
       method: "PUT",
@@ -204,14 +176,14 @@ async function findAllBusinessProcessModelParameters(parameters) {
     const requestOptions = {
       method: "GET",
       mode: "cors",
-      headers: { "Content-Type": "application/json", apikey: parameters.apikey },
+      headers: { "Content-Type": "application/json", token: parameters.token },
     };
 
-    const url = API.businessProcess.findAllBusinessProcessParameters + parameters.userId;
+    const url = API.businessProcess.findAllBusinessProcessParameters + parameters.id;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
-    return params;
+    return data;
   } catch (error) {
     return error;
   }
@@ -222,14 +194,14 @@ async function findBusinessProcessModelParameterById(parameters) {
     const requestOptions = {
       method: "GET",
       mode: "cors",
-      headers: { "Content-Type": "application/json", apikey: parameters.token },
+      headers: { "Content-Type": "application/json", token: parameters.token },
     };
 
-    const url = API.businessProcess.getBusinessProcessParameterById + parameters.userId;
+    const url = API.businessProcess.getBusinessProcessParameterById + parameters.id;
     const res = await fetch(url, requestOptions);
     const data = await res.json();
 
-    return param;
+    return data;
   } catch (error) {
     return error;
   }
@@ -244,7 +216,6 @@ export {
   findBusinessProcessInstanceById,
   findBusinessProcessInstanceLogById,
   saveBusinessProcessModelParameter,
-  updateBusinessProcessModelParameter,
   deleteBusinessProcessModelParameter,
   findAllBusinessProcessModelParameters,
   findBusinessProcessModelParameterById,

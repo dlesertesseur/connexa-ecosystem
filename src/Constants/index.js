@@ -377,7 +377,7 @@ export const API = {
     getBusinessProcessParameterById: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-model-parameters/",
     saveBusinessProcessParameter: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-model-parameters",
     deleteBusinessProcessParameter: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-model-parameters/",
-    findAllBusinessProcessParameters: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-model-parameters/all",
+    findAllBusinessProcessParameters: config.SERVER + ":" + config.PORT + config.API_COMEX_BASE + "/business-process-model-parameters/all/",
   },
 
   sprint: {

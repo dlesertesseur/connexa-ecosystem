@@ -1637,7 +1637,8 @@
       "description": "Description",
       "general": "General",
       "businessGoal": "Business goal",
-      "baseDate": "Starting date"
+      "baseDate": "Starting date",
+      "requiredParameters": "Required parameters"
     },
     "placeholder": {
       "name": "a name",
