@@ -19,39 +19,43 @@ const ImportationProductsDetail = ({ setError }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const {reference, product, status} = location.state;
+  const { reference, product, status } = location.state;
 
   let col = 0;
   const cols = t("importations.items.columns", { returnObjects: true });
   const columns = [
+    { headerName: cols[col++], fieldName: "image", type: "image", align: "center", width: "48" },
     { headerName: cols[col++], fieldName: "codigo", align: "right", width: "200px" },
-    { headerName: cols[col++], fieldName: "descripcion", align: "left",width: "200px"},
-    { headerName: cols[col++], fieldName: "upc", align: "left",width: "200px" },
-    { headerName: cols[col++], fieldName: "fob", align: "right" , width: "200px" },
-    { headerName: cols[col++], fieldName: "unidad", align: "left",width: "200px" },
-    { headerName: cols[col++], fieldName: "cantidad", align: "right",width: "200px" },
-    { headerName: cols[col++], fieldName: "valor", align: "right",width: "200px" },
-    { headerName: cols[col++], fieldName: "timestamp", align: "center", format: "date"},
+    { headerName: cols[col++], fieldName: "descripcion", align: "left", width: "200px" },
+    { headerName: cols[col++], fieldName: "upc", align: "left", width: "200px" },
+    { headerName: cols[col++], fieldName: "fob", align: "right", width: "200px" },
+    { headerName: cols[col++], fieldName: "unidad", align: "left", width: "200px" },
+    { headerName: cols[col++], fieldName: "cantidad", align: "right", width: "200px" },
+    { headerName: cols[col++], fieldName: "valor", align: "right", width: "200px" },
+    { headerName: cols[col++], fieldName: "timestamp", align: "center", format: "date" },
   ];
-  
+
   const getData = async () => {
     const params = {
       token: user.token,
       reference: reference,
-      status:status
+      status: status,
     };
 
     try {
       setLoading(true);
       const list = await findImportationsItemsByReference(params);
-
-      console.log("ImportationProductsDetail list ->", list);
       setLoading(false);
 
       if (list.message) {
         setError(list.message);
       } else {
-        setRows(list);
+        const rows = list.map((p) => {
+          const ret = { ...p };
+          ret.image = `/resources/gdnar_images/${p.upc}.jpg`;
+          return ret;
+        });
+        setRows(rows);
       }
     } catch (error) {
       setError(error);

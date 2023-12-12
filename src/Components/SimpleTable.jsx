@@ -184,6 +184,10 @@ export default function SimpleTable({
             ret = "";
           }
           break;
+
+        case "image":
+          ret = formatImage(data);
+          break;
         default:
           break;
       }
@@ -193,7 +197,12 @@ export default function SimpleTable({
 
   const formatImage = (data) => {
     const ret = data ? (
-      <Image src={API.productImages.baseUrl + data} alt={"Not found"} height={24} fit="contain" />
+      <Image
+        src={API.productImages.baseUrl + data}
+        alt={""}
+        width={48}
+        fit="contain"
+      />
     ) : null;
     return ret;
   };
