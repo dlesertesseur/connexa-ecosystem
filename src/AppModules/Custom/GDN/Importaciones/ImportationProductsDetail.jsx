@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import React from "react";
 import SimpleTable from "../../../../Components/SimpleTable";
 import ImportationProductsDetailToolbar from "./ImportationProductsDetailToolbar";
+import ImportationProductDetailDialog from "./ImportationProductDetailDialog";
 
 const ImportationProductsDetail = ({ setError }) => {
   const { t } = useTranslation();
@@ -16,6 +17,7 @@ const ImportationProductsDetail = ({ setError }) => {
   const [rows, setRows] = useState(null);
   const [loading, setLoading] = useState(false);
   const [rowSelected, setRowSelected] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -69,23 +71,43 @@ const ImportationProductsDetail = ({ setError }) => {
     }
   }, [reference]);
 
+  useEffect(() => {
+    if (rowSelected) {
+      const product = rows.find((r) => r.id === rowSelected);
+      if (product) {
+        setSelectedProduct(product);
+      }
+    }
+  }, [rowSelected]);
+
   return (
-    <Stack spacing={"xs"}>
-      <ImportationProductsDetailToolbar
-        title={`${status} / ${reference}`}
-        back={() => {
-          navigate(-1);
-        }}
-      />
-      <SimpleTable
-        data={rows}
-        columns={columns}
-        rowSelected={rowSelected}
-        setRowSelected={setRowSelected}
-        headerHeight={HEADER_HIGHT}
-        loading={loading}
-      />
-    </Stack>
+    <>
+      <Stack spacing={"xs"}>
+        <ImportationProductsDetailToolbar
+          title={`${status} / ${reference}`}
+          back={() => {
+            navigate(-1);
+          }}
+        />
+        <SimpleTable
+          data={rows}
+          columns={columns}
+          rowSelected={rowSelected}
+          setRowSelected={setRowSelected}
+          headerHeight={HEADER_HIGHT}
+          loading={loading}
+        />
+
+        <ImportationProductDetailDialog
+          title={rowSelected}
+          open={selectedProduct}
+          setOpen={() => {
+            setSelectedProduct(null);
+          }}
+          product={selectedProduct}
+        />
+      </Stack>
+    </>
   );
 };
 

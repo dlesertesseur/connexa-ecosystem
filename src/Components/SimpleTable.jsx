@@ -125,6 +125,7 @@ export default function SimpleTable({
   rowSelected,
   setRowSelected,
   headerHeight = 230,
+  onSelect = null
 }) {
   const { classes, cx } = useStyles();
   const { t } = useTranslation();
@@ -240,6 +241,7 @@ export default function SimpleTable({
         onClick={() => {
           {
             setRowSelected ? setRowSelected(row.id) : null;
+            onSelect ? onSelect(row) : null;
           }
         }}
         style={{ backgroundColor: row.id === rowSelected ? "#74C0FC" : "" }}

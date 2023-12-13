@@ -169,8 +169,6 @@ async function findImportationsItemsByReference(params) {
 
   const url = `${baseUrl}/importations/items?reference=${params.reference}`;
 
-  console.log("findImportationsItemsByReference url -> ", url);
-
   const res = await fetch(url, requestOptions);
   const data = await res.json();
   if (data.error) {
