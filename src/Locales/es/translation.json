@@ -1337,7 +1337,9 @@
       "sprintNumber": "Numero",
       "requiresEvent": "Asociar un objetivo de negocio",
       "businessGoalsList": "Objetivos de negocio",
-      "hasBusinessGoal": "¿Tiene un objetivo de negocio?"
+      "hasBusinessGoal": "¿Tiene un objetivo de negocio?",
+      "functionNane": "Function name",
+      "paramsInHeader": "Params in header"
     },
     "placeholder": {
       "name": "un nombre",
@@ -1346,7 +1348,9 @@
       "sprint": "Seleccione un sprint",
       "role": "Seleccione un rol",
       "applicationPath": "un path de aplicacion",
-      "serviceUrl": "una url de servicio"
+      "serviceUrl": "una url de servicio",
+      "functionNane": "nombre de la función para procesar la solicitud",
+      "paramsInHeader": "parámetros a incluir en el encabezado"
     },
     "buttons": {
       "design": "Editar",
@@ -1397,6 +1401,10 @@
     "relation": {
       "title": "List of available forms",
       "columns": ["Nombre", "Descripcion"]
+    },
+    "tab": {
+      "definition": "Definicion",
+      "process": "Procesamiento"
     }
   },
 
@@ -1649,7 +1657,6 @@
       "businessGoal": "Objetivo de negocio",
       "baseDate": "Fecha de inicio",
       "requiredParameters": "Parametros requeridos"
-
     },
     "placeholder": {
       "name": "un nombre",
@@ -1693,7 +1700,7 @@
     ],
 
     "items": {
-      "columns": ["Imagen","Codigo", "Descripcion", "UPC", "FOB", "Unidad", "Cantidad", "Precio", "Fecha"]
+      "columns": ["Imagen", "Codigo", "Descripcion", "UPC", "FOB", "Unidad", "Cantidad", "Precio", "Fecha"]
     },
     "label": {
       "outOfDate": "Vencidas",

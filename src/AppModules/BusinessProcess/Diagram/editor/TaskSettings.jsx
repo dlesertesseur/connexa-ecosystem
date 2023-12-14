@@ -6,10 +6,10 @@ import {
   Grid,
   Group,
   Modal,
-  MultiSelect,
   NumberInput,
   Select,
   Stack,
+  Tabs,
   TextInput,
   Textarea,
 } from "@mantine/core";
@@ -21,6 +21,8 @@ import { AbmStateContext } from "../Context";
 import { useEffect } from "react";
 import { rgbaToHexAndAlpha } from "../../../../Util";
 import { config } from "../../../../Constants/config";
+import { IconSettings } from "@tabler/icons-react";
+import { IconSettingsAutomation } from "@tabler/icons-react";
 import CustomColorPicker from "../../../../Components/CustomColorPicker";
 
 const TaskSettings = ({ open, close, updateNode, node }) => {
@@ -43,17 +45,6 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
-
-      // applicationPath: (val) => {
-      //   let ret = val ? null : t("validation.required");
-      //   if (!form.getInputProps("automatic").value) {
-      //     ret;
-      //   } else {
-      //     ret = null;
-      //   }
-      //   return ret;
-      // },
-
       serviceUrl: (val) => {
         let ret = val ? null : t("validation.required");
         if (form.getInputProps("automatic").value) {
@@ -173,78 +164,103 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       title={node?.data.label}
       centered
     >
-      <Stack w={"100%"} spacing={"xs"}>
-        <form
-          autoComplete="false"
-          onSubmit={form.onSubmit((values) => {
-            updateTask(values);
-          })}
-        >
-          <Group mt={"xs"} grow>
-            {createTextField("name")}
-          </Group>
+      <form
+        autoComplete="false"
+        onSubmit={form.onSubmit((values) => {
+          updateTask(values);
+        })}
+      >
+        <Tabs variant="outline" defaultValue="definition" h={440}>
+          <Tabs.List>
+            <Tabs.Tab value="definition" icon={<IconSettings size={16}/>}>
+              {t("businessProcessModel.tab.definition")}
+            </Tabs.Tab>
+            <Tabs.Tab value="process" icon={<IconSettingsAutomation size={16}/>}>
+              {t("businessProcessModel.tab.process")}
+            </Tabs.Tab>
+          </Tabs.List>
 
-          <Group mt={"xs"} grow>
-            {createTextArea("description")}
-          </Group>
+          <Tabs.Panel value="definition">
+            <Stack w={"100%"} spacing={"xs"}>
+              <Group mt={"xs"} grow>
+                {createTextField("name")}
+              </Group>
 
-          <Grid mt={"xs"}>
-            <Grid.Col span={6}>
-              <Select
-                label={t("businessProcessModel.label.rolesList")}
-                placeholder={t("businessProcessModel.placeholder.role")}
-                data={data}
-                {...form.getInputProps("role")}
-              />
-            </Grid.Col>
-            <Grid.Col span={6}>{createNumberField("duration")}</Grid.Col>
-          </Grid>
+              <Group mt={"xs"} grow>
+                {createTextArea("description")}
+              </Group>
 
-          <Grid mt={"xs"}>
-            <Grid.Col span={6}>
-              <Checkbox label={t("businessProcessModel.label.automatic")} {...form.getInputProps("automatic")} />
-            </Grid.Col>
-          </Grid>
+              <Grid mt={"xs"}>
+                <Grid.Col span={6}>
+                  <Select
+                    label={t("businessProcessModel.label.rolesList")}
+                    placeholder={t("businessProcessModel.placeholder.role")}
+                    data={data}
+                    {...form.getInputProps("role")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>{createNumberField("duration")}</Grid.Col>
+              </Grid>
 
-          <Group mt={"xs"} grow>
-            {createTextField("serviceUrl", !form.getInputProps("automatic").value)}
-          </Group>
+              <Grid mt={"xs"}>
+                <Grid.Col span={6}>
+                  <Stack mt={"xs"} spacing={"xs"}>
+                    <CustomColorPicker {...form.getInputProps("color")} swatchesPerRow={15} format={"rgba"} />
+                    <AlphaSlider
+                      color={form.getInputProps("color").value}
+                      {...form.getInputProps("alpha")}
+                      onChangeEnd={(evt) => {}}
+                    />
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Stack mt={"xs"} spacing={"xs"}>
+                    <CustomColorPicker
+                      {...form.getInputProps("borderColor")}
+                      swatchesPerRow={15}
+                      format={"rgba"}
+                      text={t("businessProcessModel.label.borderColor")}
+                    />
+                  </Stack>
+                </Grid.Col>
+              </Grid>
+            </Stack>
+          </Tabs.Panel>
 
-          <Grid mt={"xs"}>
-            <Grid.Col span={6}>
-              <Stack mt={"xs"} spacing={"xs"}>
-                <CustomColorPicker {...form.getInputProps("color")} swatchesPerRow={15} format={"rgba"} />
-                <AlphaSlider
-                  color={form.getInputProps("color").value}
-                  {...form.getInputProps("alpha")}
-                  onChangeEnd={(evt) => {}}
-                />
-              </Stack>
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Stack mt={"xs"} spacing={"xs"}>
-                <CustomColorPicker
-                  {...form.getInputProps("borderColor")}
-                  swatchesPerRow={15}
-                  format={"rgba"}
-                  text={t("businessProcessModel.label.borderColor")}
-                />
-              </Stack>
-            </Grid.Col>
-          </Grid>
+          <Tabs.Panel value="process">
+            <Stack w={"100%"} spacing={"xs"}>
+              <Grid mt={"xs"}>
+                <Grid.Col span={6}>
+                  <Checkbox label={t("businessProcessModel.label.automatic")} {...form.getInputProps("automatic")} />
+                </Grid.Col>
+              </Grid>
 
-          <Group position="right" mt={"xl"}>
-            <Button type="submit">{t("button.accept")}</Button>
-            <Button
-              onClick={() => {
-                close();
-              }}
-            >
-              {t("button.cancel")}
-            </Button>
-          </Group>
-        </form>
-      </Stack>
+              <Group mt={"xs"} grow>
+                {createTextArea("serviceUrl", !form.getInputProps("automatic").value)}
+              </Group>
+
+              <Group mt={"xs"} grow>
+                {createTextField("functionNane", !form.getInputProps("automatic").value)}
+              </Group>
+
+              <Group mt={"xs"} grow>
+                {createTextField("paramsInHeader", !form.getInputProps("automatic").value)}
+              </Group>
+            </Stack>
+          </Tabs.Panel>
+        </Tabs>
+
+        <Group position="right" mt={"xl"}>
+          <Button type="submit">{t("button.accept")}</Button>
+          <Button
+            onClick={() => {
+              close();
+            }}
+          >
+            {t("button.cancel")}
+          </Button>
+        </Group>
+      </form>
     </Modal>
   );
 };
