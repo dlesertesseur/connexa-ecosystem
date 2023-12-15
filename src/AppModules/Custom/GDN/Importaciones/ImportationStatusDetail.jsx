@@ -34,6 +34,7 @@ const ImportationStatusDetail = ({ setError }) => {
     { headerName: cols[col++], fieldName: "docMoneda", align: "left" ,width: "200px"},
     { headerName: cols[col++], fieldName: "docIncoterm", align: "left",width: "200px" },
     { headerName: cols[col++], fieldName: "docFob", align: "right",width: "200px" },
+    { headerName: cols[col++], fieldName: "shpFeus", align: "right",width: "200px" },
     { headerName: cols[col++], fieldName: "shpProveedor", align: "left",width: "200px" },
     { headerName: cols[col++], fieldName: "docFecha", align: "center", format: "date",width: "200px" },
     { headerName: cols[col++], fieldName: "shpNecesidadEnCd", align: "center",format: "strTodate",width: "200px" },

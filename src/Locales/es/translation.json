@@ -1693,6 +1693,7 @@
       "Moneda",
       "Incoterm",
       "FOB",
+      "FEUS",
       "Proveedor",
       "Fecha",
       "Requerido en CD",
@@ -1710,7 +1711,8 @@
       "nextUpdate": "Próxima actualización",
       "businessObjective": "Objetivo de negocio",
       "analyst": "Analista",
-      "all": "Todos"
+      "all": "Todos",
+      "feus":"FEUS"
     },
 
     "filter": {

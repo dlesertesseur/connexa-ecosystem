@@ -1682,6 +1682,7 @@
       "Currency",
       "Incoterm",
       "FOB",
+      "FEUS",
       "Provider",
       "Date",
       "Required in warehouse",
@@ -1700,7 +1701,8 @@
       "nextUpdate": "Next update",
       "businessObjective": "Business objective",
       "analyst": "Analyst",
-      "all": "All"
+      "all": "All",
+      "feus":"FEUS"
     },
 
     "filter": {

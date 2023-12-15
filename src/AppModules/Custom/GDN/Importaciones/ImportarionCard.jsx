@@ -70,7 +70,7 @@ const ImportarionCard = ({ status, lastUpdate }) => {
         navigate("importationStatusDetail", params);
       }}
     >
-      <Card shadow="sm" padding="lg" radius="md" withBorder w={"350px"}>
+      <Card shadow="sm" padding="lg" radius="md" withBorder w={"400px"}>
         <Stack h={"240px"} align="center">
           <Group grow justify="center" align="center" h={"30%"}>
             <Text size={"lg"} fw={700} align="center">
@@ -107,6 +107,10 @@ const ImportarionCard = ({ status, lastUpdate }) => {
           {partials ? (
             <Group grow position="center" align="center" w={"100%"} spacing={"xs"}>
               <ImportationPartialValue
+                title={t("importations.label.feus")}
+                value={Math.round(partials.feus * 10) / 10}
+              />
+              <ImportationPartialValue
                 title={t("importations.label.notRegistered")}
                 value={partials.withoutDateCount}
               />
@@ -119,6 +123,7 @@ const ImportarionCard = ({ status, lastUpdate }) => {
             </Group>
           ) : (
             <Group position="center" align="center" w={"100%"} spacing={"xs"}>
+              <Skeleton height={50} w={50} mb="md" radius={"md"} />
               <Skeleton height={50} w={50} mb="md" radius={"md"} />
               <Skeleton height={50} w={50} mb="md" radius={"md"} />
               <Skeleton height={50} w={50} mb="md" radius={"md"} />
