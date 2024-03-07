@@ -74,7 +74,7 @@ const DynamicApp = ({ app }) => {
       const roles = await findAllByOrganizationId(params);
       rolesMap = rolesToRoleById(roles);
       const userRole = await getRoleBySiteIdAndUserId(params);
-
+      
       if (userRole) {
         let tasks = [];
         for (const role of userRole) {
@@ -91,6 +91,7 @@ const DynamicApp = ({ app }) => {
           }
 
           const taskList = await findAllTaskByRoleId(params);
+
           if (taskList.length) {
             const ret = taskList.map((t) => {
               let userName = null;
@@ -107,7 +108,7 @@ const DynamicApp = ({ app }) => {
               //***************** EXTRA DATA *****************
               const applicationPath = "TaskApplication/FormInstanceApp";
               const automatic = false;
-              const serviceUrl = null;
+              const urlBase = null;
               //***************** EXTRA DATA *****************
 
               return {
@@ -116,7 +117,7 @@ const DynamicApp = ({ app }) => {
                 userName: userName,
                 applicationPath: applicationPath,
                 automatic: automatic,
-                serviceUrl: serviceUrl,
+                urlBase: urlBase,
                 businesProcessName: t.businessProcessInstanceName,
               };
             });

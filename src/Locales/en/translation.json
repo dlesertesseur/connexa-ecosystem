@@ -1334,7 +1334,7 @@
       "end": "End",
       "automatic": "Automatic",
       "applicationPath": "Application",
-      "serviceUrl": "Service URL",
+      "urlBase": "Service URL",
       "borderColor": "Border color",
       "bidirectionalConnection": "Bidirectional connection",
       "forms": "Forms",
@@ -1348,7 +1348,7 @@
       "requiresEvent": "Associate a business objective",
       "businessGoalsList": "Business goals",
       "hasBusinessGoal": "Has a business objective?",
-      "functionNane": "Function name",
+      "query": "Query",
       "paramsInHeader": "Params in header"
     },
     "placeholder": {
@@ -1358,11 +1358,11 @@
       "sprint": "Select a sprint",
       "role": "Select a role",
       "applicationPath": "an application path",
-      "serviceUrl": "a service URL",
+      "urlBase": "a service URL",
       "duration": 1,
       "stageNumber": 0,
       "sprintNumber": 0,
-      "functionNane": "function name to process the request",
+      "query": "Query name to process the request",
       "paramsInHeader": "parameters to include in header"
     },
     "buttons": {

@@ -1324,7 +1324,7 @@
       "end": "Fin",
       "automatic": "Automatica",
       "applicationPath": "Aplicacion",
-      "serviceUrl": "URL de Servicio",
+      "urlBase": "URL de Servicio",
       "borderColor": "Color de borde",
       "bidirectionalConnection": "Conexión bidireccional",
       "forms": "Formularios",
@@ -1338,7 +1338,7 @@
       "requiresEvent": "Asociar un objetivo de negocio",
       "businessGoalsList": "Objetivos de negocio",
       "hasBusinessGoal": "¿Tiene un objetivo de negocio?",
-      "functionNane": "Function name",
+      "query": "Consulta",
       "paramsInHeader": "Params in header"
     },
     "placeholder": {
@@ -1348,8 +1348,8 @@
       "sprint": "Seleccione un sprint",
       "role": "Seleccione un rol",
       "applicationPath": "un path de aplicacion",
-      "serviceUrl": "una url de servicio",
-      "functionNane": "nombre de la función para procesar la solicitud",
+      "urlBase": "una url de servicio",
+      "query": "nombre de la consulta para procesar la solicitud",
       "paramsInHeader": "parámetros a incluir en el encabezado"
     },
     "buttons": {

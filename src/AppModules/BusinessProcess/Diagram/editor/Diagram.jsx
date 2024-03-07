@@ -543,9 +543,10 @@ const Diagram = () => {
           duration: values.duration,
           color: colorRgba,
           borderColor: borderColorRgba,
-          automatic: values.automatic,
+          executionType: values.automatic ? "automatic" : "manual",
+          query:values.query,
           applicationPath: values.applicationPath,
-          serviceUrl: values.serviceUrl,
+          urlBase: values.urlBase,
           sprint: assignedSprint,
         };
 

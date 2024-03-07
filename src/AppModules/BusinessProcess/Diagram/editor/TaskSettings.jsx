@@ -39,13 +39,23 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       alpha: "",
       borderColor: "rgba(0,0,0,0.99)",
       automatic: false,
-      serviceUrl: "",
+      urlBase: "",
+      query: "",
       duration: 1,
     },
 
     validate: {
       name: (val) => (val ? null : t("validation.required")),
-      serviceUrl: (val) => {
+      urlBase: (val) => {
+        let ret = val ? null : t("validation.required");
+        if (form.getInputProps("automatic").value) {
+          ret;
+        } else {
+          ret = null;
+        }
+        return ret;
+      },
+      query: (val) => {
         let ret = val ? null : t("validation.required");
         if (form.getInputProps("automatic").value) {
           ret;
@@ -100,9 +110,10 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       form.setFieldValue("borderColor", config.ARR_COLORS[1]);
     }
 
-    form.setFieldValue("automatic", node.data.automatic);
+    form.setFieldValue("automatic", node.data.executionType === "automatic" ? true : false);
     form.setFieldValue("duration", node.data.duration);
-    form.setFieldValue("serviceUrl", node.data.serviceUrl);
+    form.setFieldValue("urlBase", node.data.urlBase);
+    form.setFieldValue("query", node.data.query);
   };
 
   useEffect(() => {
@@ -172,10 +183,10 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
       >
         <Tabs variant="outline" defaultValue="definition" h={440}>
           <Tabs.List>
-            <Tabs.Tab value="definition" icon={<IconSettings size={16}/>}>
+            <Tabs.Tab value="definition" icon={<IconSettings size={16} />}>
               {t("businessProcessModel.tab.definition")}
             </Tabs.Tab>
-            <Tabs.Tab value="process" icon={<IconSettingsAutomation size={16}/>}>
+            <Tabs.Tab value="process" icon={<IconSettingsAutomation size={16} />}>
               {t("businessProcessModel.tab.process")}
             </Tabs.Tab>
           </Tabs.List>
@@ -231,20 +242,20 @@ const TaskSettings = ({ open, close, updateNode, node }) => {
             <Stack w={"100%"} spacing={"xs"}>
               <Grid mt={"xs"}>
                 <Grid.Col span={6}>
-                  <Checkbox label={t("businessProcessModel.label.automatic")} {...form.getInputProps("automatic")} />
+                  <Checkbox
+                    label={t("businessProcessModel.label.automatic")}
+                    {...form.getInputProps("automatic")}
+                    checked={form.getInputProps("automatic").value}
+                  />
                 </Grid.Col>
               </Grid>
 
               <Group mt={"xs"} grow>
-                {createTextArea("serviceUrl", !form.getInputProps("automatic").value)}
+                {createTextArea("urlBase", !form.getInputProps("automatic").value)}
               </Group>
 
               <Group mt={"xs"} grow>
-                {createTextField("functionNane", !form.getInputProps("automatic").value)}
-              </Group>
-
-              <Group mt={"xs"} grow>
-                {createTextField("paramsInHeader", !form.getInputProps("automatic").value)}
+                {createTextField("query", !form.getInputProps("automatic").value)}
               </Group>
             </Stack>
           </Tabs.Panel>

@@ -83,7 +83,14 @@ const Editor = () => {
             type: n.type,
             sprintId: n.parentNode,
             durationInDays: n.data.duration,
+
+            description: n.data.description,
+            executionType: n.data.executionType,
+            query: n.data.query,
+            urlBase: n.data.urlBase,
           };
+
+          console.log("onSave -> ", task)
 
           tasks.push(task);
           break;
@@ -108,7 +115,7 @@ const Editor = () => {
       id: businessProcessModel.id,
       name: businessProcessModel.name,
       description: businessProcessModel.description,
-      status:businessProcessModel.status,
+      status: businessProcessModel.status,
       tasks: tasks,
       sprints: sprints,
       transitions: transitions,
