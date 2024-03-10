@@ -25,14 +25,13 @@ import {
 import { AbmStateContext } from "../Context";
 import { findAllBusinessGoals } from "../../../../DataAccess/BusinessGoal";
 import { DatePicker } from "@mantine/dates";
-import { findAllBusinessProcessModelParameters } from "../../../../DataAccess/BusinessProcessModel";
 
 const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, asociateBusinessGoal = false }) => {
   const { t, i18n } = useTranslation();
   const { user } = useSelector((state) => state.auth.value);
   const [instance, setInstance] = useState(null);
   const [sprints, setSprints] = useState(null);
-  const [parameters, setParameters] = useState(null);
+  // const [parameters, setParameters] = useState(null);
   const [goals, setGoals] = useState(null);
   const [baseDate, setBaseDate] = useState(new Date());
   const { setError } = useContext(AbmStateContext);
@@ -41,6 +40,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
     initialValues: {
       name: "",
       description: "",
+      externalId: "",
     },
 
     validate: {
@@ -122,13 +122,13 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
           setGoals(list);
         }
 
-        const data = await findAllBusinessProcessModelParameters({
-          token: user.token,
-          id: businessProcessModelId,
-        });
+        // const data = await findAllBusinessProcessModelParameters({
+        //   token: user.token,
+        //   id: businessProcessModelId,
+        // });
 
-        const parameters = data.filter((p) => p.required === "true");
-        setParameters(parameters);
+        // const parameters = data.filter((p) => p.required === "true");
+        // setParameters(parameters);
 
         setInstance(ret);
       }
@@ -204,6 +204,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
       const ret = { ...instance };
       ret.name = values.name;
       ret.description = values.description;
+      ret.externalId = values.externalId;
 
       const sprints = ret.sprints;
       for (let index = 0; index < sprints.length; index++) {
@@ -212,10 +213,10 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
         sprints[index]["endDate"] = calculateMiliseconds(index + 1);
       }
 
-      for (let index = 0; index < parameters.length; index++) {
-        parameters[index].value = form.getInputProps(parameters[index].name).value;
-      }
-      ret.parameters = parameters;
+      // for (let index = 0; index < parameters.length; index++) {
+      //   parameters[index].value = form.getInputProps(parameters[index].name).value;
+      // }
+      // ret.parameters = parameters;
 
       try {
         const params = {
@@ -275,10 +276,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
   const createParametersCard = (s, index) => {
     const ret = (
       <Paper key={s.id} p={"xs"} withBorder mb={"xs"}>
-        <TextInput label={s.name} 
-        defaultValue={s.defaultValue}
-        {...form.getInputProps(s.name)}
-        />
+        <TextInput label={s.name} defaultValue={s.defaultValue} {...form.getInputProps(s.name)} />
       </Paper>
     );
 
@@ -310,7 +308,9 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
               <Group grow mb={"xs"}>
                 {createTextField("description")}
               </Group>
-
+              <Group mb={"xs"} grow>
+                {createTextField("externalId")}
+              </Group>
               <Group mb={"xs"} grow>
                 {asociateBusinessGoal ? createSelectField("businessGoal", goals) : null}
                 {createDateField("startDate")}
@@ -331,7 +331,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
                 <LoadingOverlay visible={true} />
               )}
 
-              {parameters ? (
+              {/* {parameters ? (
                 <Text size={"sm"} weight={600}>
                   {t("businessProcessInstances.label.requiredParameters")}
                 </Text>
@@ -344,7 +344,7 @@ const ConfigSprintTimesDialog = ({ open, close, title, businessProcessModelId, a
                 })
               ) : (
                 <LoadingOverlay visible={true} />
-              )}
+              )} */}
             </Stack>
           </ScrollArea>
           <Group position="right" mt={"xl"}>

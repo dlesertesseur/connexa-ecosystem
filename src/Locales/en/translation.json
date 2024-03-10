@@ -1646,13 +1646,15 @@
       "general": "General",
       "businessGoal": "Business goal",
       "baseDate": "Starting date",
-      "requiredParameters": "Required parameters"
+      "requiredParameters": "Required parameters",
+      "externalId":"Business id"
     },
     "placeholder": {
       "name": "a name",
       "description": "a description",
       "businessGoal": "a business goal",
-      "baseDate": "a date"
+      "baseDate": "a date",
+      "externalId":"Code that identifies the entity"
     },
     "title": {
       "viewDocument": "Associated document",

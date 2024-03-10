@@ -69,7 +69,6 @@ async function getAllOutgoingTaskByTaskId(parameters) {
   };
 
   const url = API.businessProcessModelInbox.getAllOutgoingTaskByTaskId + parameters.taskId + "/outgoing";
-
   const res = await fetch(url, requestOptions);
   const data = await res.json();
 

@@ -1656,13 +1656,15 @@
       "general": "General",
       "businessGoal": "Objetivo de negocio",
       "baseDate": "Fecha de inicio",
-      "requiredParameters": "Parametros requeridos"
+      "requiredParameters": "Parametros requeridos",
+      "externalId":"Idenricador de negocio"
     },
     "placeholder": {
       "name": "un nombre",
       "description": "una descripcion",
       "businessGoal": "un objetivo de negocio",
-      "baseDate": "una fecha"
+      "baseDate": "una fecha",
+      "externalId":"Código que identifica a la entidad"
     },
 
     "title": {
